@@ -1,0 +1,41 @@
+{
+  "title": "Турнирная таблица",
+  "subtitle": "КПЛ сезон 2025",
+  "period": "Период проведения",
+  "participants": "Участники",
+  "tabs": {
+    "standings": "Турнирная таблица",
+    "results": "Результаты по турам"
+  },
+  "filters": {
+    "title": "Фильтры",
+    "tour": "Тур",
+    "all": "Все",
+    "home": "Дома",
+    "away": "В гостях"
+  },
+  "columns": {
+    "team": "Команда",
+    "played": "И",
+    "playedShort": "И",
+    "wins": "В",
+    "draws": "Н",
+    "losses": "П",
+    "goalsFor": "ЗМ",
+    "goalsAgainst": "ПМ",
+    "goalDiff": "РМ",
+    "points": "О",
+    "pointsShort": "О",
+    "form": "Форма",
+    "goalDiffShort": "РМ",
+    "nextMatch": "СМ"
+  },
+  "legend": {
+    "champion": "Чемпион",
+    "euroCups": "Еврокубки",
+    "relegation": "Вылет",
+    "win": "Победа",
+    "draw": "Ничья",
+    "loss": "Поражение"
+  }
+}

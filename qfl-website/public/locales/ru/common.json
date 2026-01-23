@@ -1,0 +1,85 @@
+{
+  "league": {
+    "name": "Қазақстан Премьер-Лигасы",
+    "shortName": "КПЛ",
+    "sponsor": "ALATAU CITY BANK",
+    "country": "ҚАЗАҚСТАН",
+    "premierLeague": "ПРЕМЬЕР-ЛИГАСЫ"
+  },
+  "buttons": {
+    "readMore": "Читать далее",
+    "fullTable": "Полная таблица",
+    "fullStats": "Полная статистика",
+    "allVideos": "Все видео",
+    "allMatches": "Все матчи",
+    "retry": "Попробовать снова",
+    "fullScorers": "Полный список бомбардиров",
+    "backToTable": "Вернуться к таблице"
+  },
+  "sections": {
+    "matchCenter": "Матч Центр",
+    "leagueTable": "Турнирная таблица",
+    "scorers": "Бомбардиры",
+    "seasonStats": "Статистика сезона КПЛ {{season}}"
+  },
+  "table": {
+    "position": "#",
+    "club": "КЛУБ",
+    "matches": "М",
+    "wins": "В",
+    "goalDifference": "РМ",
+    "points": "О",
+    "player": "Игрок",
+    "games": "Игры"
+  },
+  "playerStats": {
+    "goals": "Голы",
+    "assists": "Ассисты",
+    "cleanSheets": "Сухие матчи",
+    "cleanSheetsShort": "Сухие",
+    "goalsHeader": "Забитые голы",
+    "assistsHeader": "Результативные передачи",
+    "cleanSheetsHeader": "Сухие матчи",
+    "topScorers": "БОМБАРДИРЫ",
+    "topAssisters": "АССИСТЕНТЫ",
+    "topKeepers": "ВРАТАРИ"
+  },
+  "seasonStatLabels": {
+    "matchesPlayed": "Сыграно матчей",
+    "goalsScored": "Забито голов",
+    "avgPerMatch": "В среднем за матч",
+    "cleanSheets": "Сухие матчи",
+    "yellowCards": "Желтые карточки",
+    "redCards": "Красные карточки"
+  },
+  "noData": {
+    "noNews": "Нет новостей для отображения",
+    "noMatches": "Нет предстоящих матчей"
+  },
+  "matchCenter": {
+    "tour": "Тур {{number}}"
+  },
+  "news": "Новости",
+  "team": {
+    "founded": "Основан",
+    "coach": "Главный тренер",
+    "stadium": "Стадион",
+    "capacity": "Вместимость",
+    "position": "Позиция",
+    "form": "Форма",
+    "recentMatches": "Последние матчи",
+    "upcomingMatches": "Предстоящие матчи",
+    "squad": "Состав",
+    "statistics": "Статистика",
+    "teamNews": "Новости команды",
+    "viewAllNews": "Все новости",
+    "cleanSheets": "Сухие матчи",
+    "winPercentage": "Процент побед",
+    "positions": {
+      "GK": "Вратари",
+      "DEF": "Защитники",
+      "MID": "Полузащитники",
+      "FWD": "Нападающие"
+    }
+  }
+}

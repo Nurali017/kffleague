@@ -1,0 +1,22 @@
+{
+  "tournaments": {
+    "title": "ТУРНИРЛЕР",
+    "premierLeague": "ПРЕМЬЕР-ЛИГА",
+    "firstLeague": "БІРІНШІ ЛИГА",
+    "cup": "OLIMPBET ҚАЗАҚСТАН КУБОГЫ",
+    "superCup": "СУПЕРКУБОК",
+    "secondLeague": "ЕКІНШІ ЛИГА",
+    "womenLeague": "ӘЙЕЛДЕР ЛИГАСЫ"
+  },
+  "info": {
+    "title": "АҚПАРАТ",
+    "news": "ЖАҢАЛЫҚТАР",
+    "management": "БАСШЫЛЫҚ",
+    "documents": "ҚҰЖАТТАР",
+    "contacts": "БАЙЛАНЫСТАР"
+  },
+  "partners": {
+    "techPartner": "Official Tech, Data & Innovation Partner"
+  },
+  "copyright": "© {{year}} Қазақстан Премьер-лигасы. Материалдарды пайдалану кезінде ресми сайтқа сілтеме қажет."
+}

@@ -1,0 +1,22 @@
+{
+  "management": {
+    "title": "Руководство",
+    "description": "",
+    "showMore": "Подробнее",
+    "showLess": "Свернуть"
+  },
+  "contacts": {
+    "title": "Контакты",
+    "contactUs": "Связаться с нами",
+    "socialMedia": "Социальные сети",
+    "email": "Электронная почта",
+    "phone": "Телефон"
+  },
+  "documents": {
+    "title": "Документы",
+    "description": "Официальные документы лиги",
+    "view": "Просмотр",
+    "download": "Скачать",
+    "noDocuments": "Документы не найдены"
+  }
+}

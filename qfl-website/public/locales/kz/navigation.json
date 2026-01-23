@@ -1,0 +1,26 @@
+{
+  "items": {
+    "table": "Кесте",
+    "stats": "Статистика",
+    "teams": "Командалар",
+    "players": "Ойыншылар",
+    "referees": "Төрешілер",
+    "news": "Жаңалықтар",
+    "newsAll": "Барлық жаңалықтар",
+    "newsType": "Жаңалықтар",
+    "analytics": "Спорттық мақала",
+    "matches": "Матчтар",
+    "media": "Медиа",
+    "video": "Бейне",
+    "photo": "Фото",
+    "league": "Лига",
+    "management": "Басшылық",
+    "documents": "Құжаттар",
+    "contacts": "Байланыс"
+  },
+  "search": "Іздеу",
+  "searchPlaceholder": "Сайттан іздеу",
+  "profile": "Профиль",
+  "openMenu": "Мәзірді ашу",
+  "closeMenu": "Мәзірді жабу"
+}

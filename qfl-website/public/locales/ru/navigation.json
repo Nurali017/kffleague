@@ -1,0 +1,26 @@
+{
+  "items": {
+    "table": "Таблица",
+    "stats": "Статистика",
+    "teams": "Команды",
+    "players": "Игроки",
+    "referees": "Судьи",
+    "news": "Новости",
+    "newsAll": "Все новости",
+    "newsType": "Новости",
+    "analytics": "Спортивная статья",
+    "matches": "Матчи",
+    "media": "Медиа",
+    "video": "Видео",
+    "photo": "Фото",
+    "league": "Лига",
+    "management": "Руководство",
+    "documents": "Документы",
+    "contacts": "Контакты"
+  },
+  "search": "Поиск",
+  "searchPlaceholder": "Поиск по сайту",
+  "profile": "Профиль",
+  "openMenu": "Открыть меню",
+  "closeMenu": "Закрыть меню"
+}

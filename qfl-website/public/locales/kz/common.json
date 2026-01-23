@@ -1,0 +1,85 @@
+{
+  "league": {
+    "name": "Қазақстан Премьер-Лигасы",
+    "shortName": "ҚПЛ",
+    "sponsor": "ALATAU CITY BANK",
+    "country": "ҚАЗАҚСТАН",
+    "premierLeague": "ПРЕМЬЕР-ЛИГАСЫ"
+  },
+  "buttons": {
+    "readMore": "Толығырақ оқу",
+    "fullTable": "Толық кесте",
+    "fullStats": "Толық статистика",
+    "allVideos": "Барлық бейнелер",
+    "allMatches": "Барлық матчтар",
+    "retry": "Қайталап көру",
+    "fullScorers": "Бомбардирлердің толық тізімі",
+    "backToTable": "Кестеге оралу"
+  },
+  "sections": {
+    "matchCenter": "Матч Орталығы",
+    "leagueTable": "Турнир кестесі",
+    "scorers": "Бомбардирлер",
+    "seasonStats": "ҚПЛ {{season}} маусым статистикасы"
+  },
+  "table": {
+    "position": "#",
+    "club": "КЛУБ",
+    "matches": "М",
+    "wins": "Ж",
+    "goalDifference": "ГА",
+    "points": "О",
+    "player": "Ойыншы",
+    "games": "Ойындар"
+  },
+  "playerStats": {
+    "goals": "Голдар",
+    "assists": "Ассисттер",
+    "cleanSheets": "Құрғақ матчтар",
+    "cleanSheetsShort": "Құрғақ",
+    "goalsHeader": "Соғылған голдар",
+    "assistsHeader": "Нәтижелі пастар",
+    "cleanSheetsHeader": "Сухие матчи",
+    "topScorers": "СҮРМЕРГЕНДЕР",
+    "topAssisters": "АССИСТЕНТТЕР",
+    "topKeepers": "ҚАҚПАШЫЛАР"
+  },
+  "seasonStatLabels": {
+    "matchesPlayed": "Ойналған матчтар",
+    "goalsScored": "Соғылған голдар",
+    "avgPerMatch": "Матчқа орташа",
+    "cleanSheets": "Құрғақ матчтар",
+    "yellowCards": "Сары карточкалар",
+    "redCards": "Қызыл карточкалар"
+  },
+  "noData": {
+    "noNews": "Көрсетілетін жаңалықтар жоқ",
+    "noMatches": "Алдағы матчтар жоқ"
+  },
+  "matchCenter": {
+    "tour": "{{number}}-тур"
+  },
+  "news": "Жаңалықтар",
+  "team": {
+    "founded": "Құрылған",
+    "coach": "Бас жаттықтырушы",
+    "stadium": "Стадион",
+    "capacity": "Сыйымдылығы",
+    "position": "Позиция",
+    "form": "Форма",
+    "recentMatches": "Соңғы матчтар",
+    "upcomingMatches": "Алдағы матчтар",
+    "squad": "Құрам",
+    "statistics": "Статистика",
+    "teamNews": "Команда жаңалықтары",
+    "viewAllNews": "Барлық жаңалықтар",
+    "cleanSheets": "Құрғақ матчтар",
+    "winPercentage": "Жеңіс пайызы",
+    "positions": {
+      "GK": "Қақпашылар",
+      "DEF": "Қорғаушылар",
+      "MID": "Жартылай қорғаушылар",
+      "FWD": "Шабуылшылар"
+    }
+  }
+}

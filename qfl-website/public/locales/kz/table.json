@@ -1,0 +1,41 @@
+{
+  "title": "Турнир кестесі",
+  "subtitle": "ҚПЛ 2025 маусымы",
+  "period": "Өту мерзімі",
+  "participants": "Қатысушылар",
+  "tabs": {
+    "standings": "Турнирлік кесте",
+    "results": "Соңғы нәтижелер"
+  },
+  "filters": {
+    "title": "Сүзгілер",
+    "tour": "Тур",
+    "all": "Барлығы",
+    "home": "Үйде",
+    "away": "Қонақта"
+  },
+  "columns": {
+    "team": "Команда",
+    "played": "О",
+    "playedShort": "О",
+    "wins": "Ж",
+    "draws": "Т",
+    "losses": "Ж",
+    "goalsFor": "ГЗ",
+    "goalsAgainst": "ГП",
+    "goalDiff": "АМ",
+    "points": "О",
+    "pointsShort": "О",
+    "form": "Форма",
+    "goalDiffShort": "АМ",
+    "nextMatch": "КМ"
+  },
+  "legend": {
+    "champion": "Чемпион",
+    "euroCups": "Еурокубоктар",
+    "relegation": "Төмендеу",
+    "win": "Жеңіс",
+    "draw": "Тең",
+    "loss": "Жеңіліс"
+  }
+}

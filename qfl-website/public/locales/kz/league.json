@@ -1,0 +1,22 @@
+{
+  "management": {
+    "title": "Басшылық",
+    "description": "",
+    "showMore": "Толығырақ",
+    "showLess": "Жию"
+  },
+  "contacts": {
+    "title": "Байланыс",
+    "contactUs": "Бізбен байланысу",
+    "socialMedia": "Әлеуметтік желілер",
+    "email": "Электрондық пошта",
+    "phone": "Телефон"
+  },
+  "documents": {
+    "title": "Құжаттар",
+    "description": "Лиганың ресми құжаттары",
+    "view": "Қарау",
+    "download": "Жүктеу",
+    "noDocuments": "Құжаттар табылмады"
+  }
+}
