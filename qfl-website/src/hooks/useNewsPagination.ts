@@ -1,11 +1,7 @@
 import useSWR from 'swr';
+import { useTranslation } from 'react-i18next';
 import { newsService } from '@/lib/api/services';
-import { DEFAULT_LANGUAGE } from '@/api/endpoints';
 import { NewsArticle, NewsFilters } from '@/types';
-
-interface UseNewsPaginationOptions {
-  language?: string;
-}
 
 interface UseNewsPaginationResult {
   news: NewsArticle[];
@@ -19,14 +15,13 @@ interface UseNewsPaginationResult {
 export function useNewsPagination(
   filters: NewsFilters = {},
   page: number = 1,
-  limit: number = 12,
-  options: UseNewsPaginationOptions = {}
+  limit: number = 12
 ): UseNewsPaginationResult {
-  const { language = DEFAULT_LANGUAGE } = options;
+  const { i18n } = useTranslation();
 
   const { data, error, isLoading, mutate } = useSWR(
-    ['paginatedNews', language, JSON.stringify(filters), page, limit],
-    () => newsService.getPaginated(language, filters, page, limit),
+    ['paginatedNews', i18n.language, JSON.stringify(filters), page, limit],
+    () => newsService.getPaginated(i18n.language, filters, page, limit),
     {
       revalidateOnFocus: false,
       dedupingInterval: 30000, // 30 seconds

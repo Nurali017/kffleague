@@ -120,7 +120,7 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
               {/* Player Info */}
               <div className="flex-1 min-w-0">
                 <Link
-                  href={`/players/${event.player_id}`}
+                  href={`/player/${event.player_id}`}
                   className="block hover:text-[#1E4D8C] transition-colors"
                 >
                   <div className="text-[13px] font-semibold text-gray-800">

@@ -1,3 +1,4 @@
+export { useH2H } from './useH2H';
 export { useLeagueTable } from './useLeagueTable';
 export { useResultsGrid } from './useResultsGrid';
 export { useMatches } from './useMatches';
@@ -14,9 +15,17 @@ export { useNewsNavigation } from './useNewsNavigation';
 export { useDebounce } from './useDebounce';
 export { usePlayerStats } from './usePlayerStats';
 export { usePlayerLeaderboard } from './usePlayerLeaderboard';
-export { usePlayerDetail, usePlayerMatches } from './usePlayerDetail';
-export { useSeasonStats } from './useSeasonStats';
 export {
+  usePlayerDetail,
+  usePlayerMatches,
+  usePlayerSeasonStats,
+  usePlayerTeammates,
+  usePlayerTournaments,
+} from './usePlayerDetail';
+export { useSeasonStats } from './useSeasonStats';
+export { useTeamStatsTable } from './useTeamStatsTable';
+export {
+  useTeams,
   useTeamDetail,
   useTeamStats,
   useTeamPlayers,

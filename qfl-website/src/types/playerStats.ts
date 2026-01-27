@@ -6,8 +6,13 @@ export interface PlayerStat {
   team_id: number;
   team_name: string;
   team_logo: string;
+  position?: string;
+  top_role?: string;
   games_played: number;
+  games_starting?: number;
   minutes_played: number;
+  started?: number;
+  subbed_in?: number;
   goals: number | null;
   assists: number | null;
   goal_and_assist: number | null;

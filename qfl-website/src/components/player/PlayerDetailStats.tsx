@@ -1,8 +1,8 @@
 import React from 'react';
-import { PlayerStat } from '@/types/playerStats';
+import { PlayerPageStats } from '@/types/player';
 
 interface PlayerDetailStatsProps {
-    stats?: PlayerStat | null;
+    stats?: PlayerPageStats | null;
 }
 
 const StatItem = ({ label, value }: { label: string; value: number | string }) => (
@@ -60,8 +60,10 @@ const CircularChart = ({ value, label, color = "text-[#1E4D8C]" }: { value: numb
 export function PlayerDetailStats({ stats }: PlayerDetailStatsProps) {
     if (!stats) return null;
 
-    const passAccuracy = stats.pass_accuracy || 51;
-    const duelsWonPercentage = stats.duels_won_percentage || 44;
+    const passAccuracy = stats.pass_accuracy ?? 0;
+    const duels = stats.duels ?? 0;
+    const duelsWon = stats.duels_won ?? 0;
+    const duelsWonPercentage = duels > 0 ? Math.round((duelsWon / duels) * 100) : 0;
 
     return (
         <div className="w-full bg-white rounded-2xl p-8 md:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
@@ -79,23 +81,23 @@ export function PlayerDetailStats({ stats }: PlayerDetailStatsProps) {
                 {/* Center Grid - Stats */}
                 <div className="flex-1 w-full max-w-4xl">
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-y-10 gap-x-4">
-                        <StatItem value={stats.passes || 49} label="Пастардың барлығы" />
-                        <StatItem value={stats.goals || 0} label="Голдар" />
-                        <StatItem value={stats.assists || 0} label="Нәтижелі пастар" />
+                        <StatItem value={stats.passes ?? 0} label="Пастардың барлығы" />
+                        <StatItem value={stats.goals ?? 0} label="Голдар" />
+                        <StatItem value={stats.assists ?? 0} label="Нәтижелі пастар" />
                         <StatItem value={duelsWonPercentage} label="Сәтті жекпе-жектер" />
 
-                        <StatItem value={stats.shots || 2} label="Қақпаға соққылар" />
-                        <StatItem value={stats.shots_on_goal || 0} label="Қақпаға дөп бағытталған" />
-                        <StatItem value={stats.interception || 4} label="Допты тартып алу" />
-                        <StatItem value={stats.dribble || 5} label="Допты алып өту" />
+                        <StatItem value={stats.shots ?? 0} label="Қақпаға соққылар" />
+                        <StatItem value={stats.shots_on_goal ?? 0} label="Қақпаға дөп бағытталған" />
+                        <StatItem value={stats.interception ?? 0} label="Допты тартып алу" />
+                        <StatItem value={stats.dribble ?? 0} label="Допты алып өту" />
 
-                        <StatItem value={stats.key_passes || 25} label="Дәл пастар" />
-                        <StatItem value={stats.yellow_cards || 0} label="Сары қағаздар" />
-                        <StatItem value={stats.red_cards || 0} label="Қызыл қағаздар" />
-                        <StatItem value={stats.duels || 70} label="Жекпе-жектер" />
+                        <StatItem value={stats.key_passes ?? 0} label="Дәл пастар" />
+                        <StatItem value={stats.yellow_cards ?? 0} label="Сары қағаздар" />
+                        <StatItem value={stats.red_cards ?? 0} label="Қызыл қағаздар" />
+                        <StatItem value={stats.duels ?? 0} label="Жекпе-жектер" />
 
-                        <StatItem value={stats.passes || 25} label="Дөп пастар" />
-                        <StatItem value={stats.duels_won || 31} label="Жеңген саиыстар" />
+                        <StatItem value={stats.passes ?? 0} label="Дөп пастар" />
+                        <StatItem value={stats.duels_won ?? 0} label="Жеңген жекпе-жектер" />
                     </div>
                 </div>
 

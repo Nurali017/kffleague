@@ -42,15 +42,43 @@
     "events": "События",
     "protocol": "Протокол",
     "statistics": "Статистика",
+    "h2h": "H2H История",
     "media": "Медиа"
   },
   "h2h": {
     "title": "История встреч",
-    "totalMatches": "всего сыграно матчей",
-    "wins": "побед",
-    "draws": "ничьих",
-    "losses": "поражений",
-    "noMatches": "Нет данных о предыдущих встречах"
+    "totalMatches": "матчей всего",
+    "wins": "Побед",
+    "draws": "Ничьих",
+    "losses": "Поражений",
+    "noData": "Нет данных о предыдущих встречах",
+    "noMatches": "Нет данных о предыдущих встречах",
+    "currentForm": "Текущая форма",
+    "last5Matches": "Последние 5 матчей",
+    "seasonStats": "Показатели сезона",
+    "goalsPerGame": "Голов за игру",
+    "concededPerGame": "Пропущено за игру",
+    "cleanSheets": "Сухие матчи",
+    "winRate": "Победы (%)",
+    "previousMeetings": "История встреч",
+    "showAll": "Показать все",
+    "showLess": "Свернуть",
+    "loading": "Загрузка...",
+    "error": "Ошибка загрузки данных",
+    "goalsScored": "голов",
+    "tablePosition": "позиция",
+    "points": "Очки",
+    "seasonWins": "Побед",
+    "goalDiff": "Разница",
+    "tour": "Тур",
+    "form": {
+      "win": "П",
+      "draw": "Н",
+      "loss": "П",
+      "winFull": "Победа",
+      "drawFull": "Ничья",
+      "lossFull": "Поражение"
+    }
   },
   "media": {
     "title": "Медиа",
@@ -136,6 +164,12 @@
     "upcoming": "Предстоящие",
     "live": "В прямом эфире",
     "finished": "Завершенные"
+  },
+  "statisticsTab": {
+    "title": "Статистика",
+    "notAvailable": "Статистика матча пока недоступна",
+    "possessionPercent": "Владение (%)",
+    "shotsMissed": "Удары мимо"
   },
   "buyTicket": "Купить билет",
   "totalMatches": "Найдено матчей: {{count}}",

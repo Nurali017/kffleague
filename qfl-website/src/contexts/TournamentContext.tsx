@@ -20,6 +20,10 @@ import {
   isLeagueTournament,
   isCupTournament,
 } from '@/config/tournaments';
+import {
+  setTournamentCookie,
+  getClientTournamentCookie,
+} from '@/lib/tournament/cookies.client';
 
 const STORAGE_KEY = 'qfl_selected_tournament';
 
@@ -42,25 +46,27 @@ const TournamentContext = createContext<TournamentContextValue | null>(null);
 
 interface TournamentProviderProps {
   children: ReactNode;
+  initialTournamentId?: string;
 }
 
-export function TournamentProvider({ children }: TournamentProviderProps) {
+export function TournamentProvider({
+  children,
+  initialTournamentId,
+}: TournamentProviderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get initial tournament from URL or localStorage
+  // Get initial tournament: URL > server cookie > default
   const getInitialTournament = (): string => {
     const urlTournament = searchParams.get('tournament');
     if (urlTournament && getTournamentById(urlTournament)) {
       return urlTournament;
     }
 
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored && getTournamentById(stored)) {
-        return stored;
-      }
+    // Use server-provided initial value (from cookie)
+    if (initialTournamentId && getTournamentById(initialTournamentId)) {
+      return initialTournamentId;
     }
 
     return DEFAULT_TOURNAMENT_ID;
@@ -103,9 +109,10 @@ export function TournamentProvider({ children }: TournamentProviderProps) {
       const tournament = getTournamentById(id);
       if (tournament) {
         setTournamentId(id);
-        // Save to localStorage
+        // Save to both localStorage and cookie
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEY, id);
+          setTournamentCookie(id);
         }
         updateUrl({
           tournament: id,
@@ -137,9 +144,25 @@ export function TournamentProvider({ children }: TournamentProviderProps) {
       setTournamentId(urlTournament);
       if (typeof window !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, urlTournament);
+        setTournamentCookie(urlTournament);
       }
     }
   }, [searchParams]);
+
+  // Sync localStorage and cookie on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const cookieVal = getClientTournamentCookie();
+
+    // If localStorage has value but cookie doesn't, set cookie
+    if (stored && !cookieVal) {
+      setTournamentCookie(stored);
+    }
+    // If cookie has value but localStorage doesn't, set localStorage
+    if (cookieVal && !stored) {
+      localStorage.setItem(STORAGE_KEY, cookieVal);
+    }
+  }, []);
 
   const value = useMemo<TournamentContextValue>(
     () => ({

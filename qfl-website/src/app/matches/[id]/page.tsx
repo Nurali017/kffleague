@@ -5,16 +5,17 @@ import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useMatchDetail, useMatchEvents, useMatchLineup, useMatchStats } from '@/hooks';
 import { transformTeamStats } from '@/lib/api/transformers/matchTransformers';
+import { PlayerCountry } from '@/types';
 import { MatchHeader } from '@/components/MatchHeader';
 import { MatchTabs, TabId } from '@/components/match/MatchTabs';
-import { MatchEventsList } from '@/components/match/MatchEventsList';
 import { MatchVideoCard } from '@/components/match/MatchVideoCard';
-import { MatchStatsCard } from '@/components/match/MatchStatsCard';
-import { MatchInfoCard } from '@/components/match/MatchInfoCard';
 import { LineupField } from '@/components/match/LineupField';
-import { HeadToHeadMini } from '@/components/match/HeadToHeadMini';
+import { LineupFieldMini } from '@/components/match/LineupFieldMini';
 import { TournamentTableMini } from '@/components/match/TournamentTableMini';
 import { MatchStatisticsTab } from '@/components/match/MatchStatisticsTab';
+import { MiniKeyStats } from '@/components/match/MiniKeyStats';
+import { H2HContentCards } from '@/components/match/H2HContentCards';
+import { getTeamColor } from '@/lib/utils/teamLogos';
 
 function LoadingSkeleton() {
   return (
@@ -63,6 +64,25 @@ export default function MatchDetailPage() {
     );
   }, [stats, match]);
 
+  // Создать маппинг player_id -> country из lineup данных
+  const playerCountryMap = useMemo(() => {
+    const map: Record<string, PlayerCountry> = {};
+    if (lineup?.lineups) {
+      const allPlayers = [
+        ...(lineup.lineups.home_team?.starters || []),
+        ...(lineup.lineups.home_team?.substitutes || []),
+        ...(lineup.lineups.away_team?.starters || []),
+        ...(lineup.lineups.away_team?.substitutes || []),
+      ];
+      allPlayers.forEach(player => {
+        if (player.country) {
+          map[player.player_id] = player.country;
+        }
+      });
+    }
+    return map;
+  }, [lineup]);
+
   // Создать расширенный объект match со статистикой
   const matchWithStats = useMemo(() => {
     if (!match) return null;
@@ -97,6 +117,7 @@ export default function MatchDetailPage() {
         match={match}
         events={events?.events || []}
         eventsLoading={eventsLoading}
+        playerCountryMap={playerCountryMap}
       />
 
       {/* 2. Tab Navigation - Sticky & Full Width Container */}
@@ -117,105 +138,52 @@ export default function MatchDetailPage() {
           </div>
         )}
 
-        {/* Other tabs - with sidebar layout */}
-        {activeTab !== 'lineups' && (
+        {/* Statistics tab - full width without sidebar */}
+        {activeTab === 'statistics' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <MatchStatisticsTab match={matchWithStats || match} />
+          </div>
+        )}
+
+        {/* H2H tab - full width without sidebar */}
+        {activeTab === 'h2h' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <H2HContentCards homeTeam={match.home_team} awayTeam={match.away_team} seasonId={match.season_id ?? undefined} />
+          </div>
+        )}
+
+        {/* Overview tab - with sidebar layout */}
+        {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Left Column - main content */}
             <div className="space-y-8">
-              {activeTab === 'overview' && (
-                <>
-                  <MatchVideoCard />
-
-                  {/* Match Information Card */}
-                  <MatchInfoCard match={match} />
-
-                  {/* Expanded Team Statistics */}
-                  <MatchStatsCard
-                    homeTeam={match.home_team}
-                    awayTeam={match.away_team}
-                    stats={transformedStats ? [
-                      // Владение мячом
-                      {
-                        label: i18n.language === 'kz' ? 'Допқа иелік ету (%)' : i18n.language === 'en' ? 'Possession (%)' : 'Владение мячом (%)',
-                        homeValue: transformedStats.possession.home,
-                        awayValue: transformedStats.possession.away
-                      },
-                      // Удары
-                      {
-                        label: i18n.language === 'kz' ? 'Соққы' : i18n.language === 'en' ? 'Shots' : 'Удары',
-                        homeValue: transformedStats.shots.home,
-                        awayValue: transformedStats.shots.away
-                      },
-                      // Удары в створ
-                      {
-                        label: i18n.language === 'kz' ? 'Қақпаға тура тебілген соққылар' : i18n.language === 'en' ? 'Shots on Target' : 'Удары в створ',
-                        homeValue: transformedStats.shots_on_target.home,
-                        awayValue: transformedStats.shots_on_target.away
-                      },
-                      // Удары мимо (вычисляемое)
-                      {
-                        label: i18n.language === 'kz' ? 'Қиыс кеткен соққы' : i18n.language === 'en' ? 'Shots off Target' : 'Удары мимо',
-                        homeValue: transformedStats.shots.home - transformedStats.shots_on_target.home,
-                        awayValue: transformedStats.shots.away - transformedStats.shots_on_target.away
-                      },
-                      // Угловые
-                      {
-                        label: i18n.language === 'kz' ? 'Бұрыштамалар' : i18n.language === 'en' ? 'Corners' : 'Угловые',
-                        homeValue: transformedStats.corners.home,
-                        awayValue: transformedStats.corners.away
-                      },
-                      // Офсайды
-                      {
-                        label: i18n.language === 'kz' ? 'Ойыннан тыс қалу' : i18n.language === 'en' ? 'Offsides' : 'Офсайды',
-                        homeValue: transformedStats.offsides.home,
-                        awayValue: transformedStats.offsides.away
-                      },
-                      // Фолы
-                      {
-                        label: i18n.language === 'kz' ? 'Тәртіп бұзу' : i18n.language === 'en' ? 'Fouls' : 'Фолы',
-                        homeValue: transformedStats.fouls.home,
-                        awayValue: transformedStats.fouls.away
-                      },
-                      // Желтые карточки
-                      {
-                        label: i18n.language === 'kz' ? 'Сары қағаздар' : i18n.language === 'en' ? 'Yellow Cards' : 'Желтые карточки',
-                        homeValue: transformedStats.yellow_cards.home,
-                        awayValue: transformedStats.yellow_cards.away
-                      },
-                      // Красные карточки
-                      {
-                        label: i18n.language === 'kz' ? 'Қызыл қағаздар' : i18n.language === 'en' ? 'Red Cards' : 'Красные карточки',
-                        homeValue: transformedStats.red_cards.home,
-                        awayValue: transformedStats.red_cards.away
-                      },
-                    ] : undefined}
-                  />
-                </>
+              {match.video_url && (
+                <MatchVideoCard videoUrl={match.video_url} />
               )}
 
-              {activeTab === 'events' && (
-                <MatchEventsList
-                  events={events?.events || []}
-                  homeTeam={match.home_team}
-                  awayTeam={match.away_team}
-                  loading={eventsLoading}
-                />
-              )}
-
-              {activeTab === 'statistics' && (
-                <MatchStatisticsTab
-                  match={matchWithStats || match}
+              {/* Key Stats Section - after video */}
+              {matchWithStats?.stats && (
+                <MiniKeyStats
+                  stats={matchWithStats.stats}
+                  homeColor={getTeamColor(match.home_team.id) || '#1E4D8C'}
+                  awayColor={getTeamColor(match.away_team.id) || '#4DD0E1'}
                 />
               )}
             </div>
 
             {/* Right Sidebar - 380px fixed width */}
             <div className="space-y-6">
-              <HeadToHeadMini
+              <LineupFieldMini
+                lineups={lineup?.lineups}
                 homeTeam={match.home_team}
                 awayTeam={match.away_team}
+                loading={lineupLoading}
               />
-              <TournamentTableMini tourId={match.tour ?? undefined} />
+              <TournamentTableMini
+                seasonId={match.season_id ?? undefined}
+                homeTeamId={match.home_team.id}
+                awayTeamId={match.away_team.id}
+              />
             </div>
           </div>
         )}

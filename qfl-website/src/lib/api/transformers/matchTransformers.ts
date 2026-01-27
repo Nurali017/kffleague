@@ -94,6 +94,12 @@ export function transformLineupResponse(backendResponse: any): LineupResponse {
       position: mapPosition(p.position),
       is_captain: p.is_captain || false,
       photo_url: p.photo_url,
+      country: p.country ? {
+        id: p.country.id,
+        code: p.country.code,
+        name: p.country.name,
+        flag_url: p.country.flag_url,
+      } : undefined,
     }));
   };
 

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { useSeasonStats } from '@/hooks';
 
 // Simple icon components for the stats
@@ -58,12 +59,12 @@ interface StatItemProps {
 
 function StatItem({ label, value, icon, isFirst, isLast }: StatItemProps) {
   return (
-    <div className={`p-4 md:p-6 ${!isLast ? 'border-r border-gray-200 sm:border-r' : ''} ${!isLast ? 'border-b sm:border-b-0' : ''} hover:bg-gray-50 transition-all duration-200 group cursor-default`}>
-      <div className="text-[10px] md:text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">
+    <div className={`p-4 md:p-6 ${!isLast ? 'border-r border-gray-200 dark:border-slate-700 sm:border-r' : ''} ${!isLast ? 'border-b sm:border-b-0' : ''} hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200 group cursor-default`}>
+      <div className="text-[10px] md:text-xs font-bold text-gray-600 dark:text-slate-400 uppercase tracking-wide mb-2">
         {label}
       </div>
       <div className="flex items-center space-x-2">
-        <span className="text-2xl md:text-3xl font-black text-[#1E4D8C] transition-transform duration-300 group-hover:scale-105">
+        <span className="text-2xl md:text-3xl font-black text-[#1E4D8C] dark:text-blue-400 transition-transform duration-300 group-hover:scale-105">
           {value}
         </span>
         {icon && <span className="ml-2 transition-transform duration-300 group-hover:scale-110">{icon}</span>}
@@ -78,25 +79,25 @@ function formatNumber(num: number): string {
 
 function StatsSkeleton() {
   return (
-    <section className="py-4 bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse">
+    <section className="py-4 bg-white dark:bg-dark-surface border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden animate-pulse">
       <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
-          <div className="h-7 w-48 bg-gray-200 rounded" />
-          <div className="h-5 w-28 bg-gray-200 rounded" />
+          <div className="h-7 w-48 bg-gray-200 dark:bg-slate-700 rounded" />
+          <div className="h-5 w-28 bg-gray-200 dark:bg-slate-700 rounded" />
         </div>
         <div className="border border-gray-200 rounded-lg overflow-hidden">
           {[...Array(4)].map((_, rowIndex) => (
             <div key={rowIndex} className={`grid grid-cols-1 sm:grid-cols-3 ${rowIndex < 3 ? 'border-b border-gray-200' : ''}`}>
               {[...Array(3)].map((_, colIndex) => (
                 <div key={colIndex} className={`p-4 md:p-6 ${colIndex < 2 ? 'border-r border-gray-200 sm:border-r' : ''} ${colIndex < 2 ? 'border-b sm:border-b-0' : ''}`}>
-                  <div className="h-3 w-24 bg-gray-200 rounded mb-3" />
-                  <div className="h-8 w-16 bg-gray-200 rounded" />
+                  <div className="h-3 w-24 bg-gray-200 dark:bg-slate-700 rounded mb-3" />
+                  <div className="h-8 w-16 bg-gray-200 dark:bg-slate-700 rounded" />
                 </div>
               ))}
             </div>
           ))}
-          <div className="p-4 border-t border-gray-200">
-            <div className="h-3 w-3/4 bg-gray-200 rounded" />
+          <div className="p-4 border-t border-gray-200 dark:border-slate-700">
+            <div className="h-3 w-3/4 bg-gray-200 dark:bg-slate-700 rounded" />
           </div>
         </div>
       </div>
@@ -105,6 +106,7 @@ function StatsSkeleton() {
 }
 
 export function SeasonStats() {
+  const { t } = useTranslation('common');
   const { stats, loading, error } = useSeasonStats();
 
   if (loading) {
@@ -113,9 +115,9 @@ export function SeasonStats() {
 
   if (error || !stats) {
     return (
-      <section className="py-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+      <section className="py-4 bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4">
-          <p className="text-red-500">Ошибка загрузки статистики</p>
+          <p className="text-red-500">{t('seasonStats.loadError')}</p>
         </div>
       </section>
     );
@@ -123,52 +125,52 @@ export function SeasonStats() {
 
   const statsRows = [
     [
-      { label: 'СЫГРАННЫЕ МАТЧИ', value: formatNumber(stats.matches_played), icon: <MatchesIcon /> },
-      { label: 'ПОБЕДЫ', value: formatNumber(stats.wins) },
-      { label: 'НИЧЬИ', value: formatNumber(stats.draws) },
+      { label: t('seasonStats.matchesPlayed'), value: formatNumber(stats.matches_played), icon: <MatchesIcon /> },
+      { label: t('seasonStats.wins'), value: formatNumber(stats.wins) },
+      { label: t('seasonStats.draws'), value: formatNumber(stats.draws) },
     ],
     [
-      { label: 'ОБЩАЯ ПОСЕЩАЕМОСТЬ', value: formatNumber(stats.total_attendance) },
-      { label: 'ГОЛЫ', value: formatNumber(stats.total_goals), icon: <BallIcon /> },
-      { label: 'ГОЛЫ (СРЕДНЕЕ ЗА МАТЧ)', value: stats.goals_per_match.toFixed(2) },
+      { label: t('seasonStats.totalAttendance'), value: formatNumber(stats.total_attendance) },
+      { label: t('seasonStats.goals'), value: formatNumber(stats.total_goals), icon: <BallIcon /> },
+      { label: t('seasonStats.goalsPerMatch'), value: stats.goals_per_match.toFixed(2) },
     ],
     [
-      { label: 'ПЕНАЛЬТИ', value: formatNumber(stats.penalties) },
-      { label: 'ПЕНАЛЬТИ РЕАЛИЗОВАННЫЕ', value: formatNumber(stats.penalties_scored) },
-      { label: 'ФОЛЫ (СРЕДНЕЕ ЗА МАТЧ)', value: formatNumber(stats.fouls_per_match), icon: <WhistleIcon /> },
+      { label: t('seasonStats.penalties'), value: formatNumber(stats.penalties) },
+      { label: t('seasonStats.penaltiesScored'), value: formatNumber(stats.penalties_scored) },
+      { label: t('seasonStats.foulsPerMatch'), value: formatNumber(stats.fouls_per_match), icon: <WhistleIcon /> },
     ],
     [
-      { label: 'ЖЕЛТЫЕ КАРТОЧКИ', value: formatNumber(stats.yellow_cards), icon: <YellowCardIcon /> },
-      { label: 'ДВОЙНЫЕ ЖЕЛТЫЕ КАРТОЧКИ', value: formatNumber(stats.second_yellow_cards), icon: <DoubleYellowCardIcon /> },
-      { label: 'КРАСНЫЕ КАРТОЧКИ', value: formatNumber(stats.red_cards), icon: <RedCardIcon /> },
+      { label: t('seasonStats.yellowCards'), value: formatNumber(stats.yellow_cards), icon: <YellowCardIcon /> },
+      { label: t('seasonStats.doubleYellowCards'), value: formatNumber(stats.second_yellow_cards), icon: <DoubleYellowCardIcon /> },
+      { label: t('seasonStats.redCards'), value: formatNumber(stats.red_cards), icon: <RedCardIcon /> },
     ],
   ];
 
-  const seasonTitle = stats.season_name ? `Статистика ${stats.season_name}` : 'Статистика сезона';
+  const seasonTitle = stats.season_name ? t('seasonStats.title', { season: stats.season_name }) : t('seasonStats.titleDefault');
 
   return (
-    <section className="py-4 bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+    <section className="py-4 bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-[#1E4D8C]">
+          <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400">
             {seasonTitle}
           </h2>
           <Link
             href="/stats"
-            className="text-gray-500 font-medium text-sm hover:text-[#1E4D8C] flex items-center transition-colors group"
+            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center transition-colors group"
           >
-            Больше данных
+            {t('seasonStats.moreData')}
             <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
         </div>
 
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
           {statsRows.map((row, rowIndex) => (
             <div
               key={rowIndex}
-              className={`grid grid-cols-1 sm:grid-cols-3 ${rowIndex < statsRows.length - 1 ? 'border-b border-gray-200' : ''}`}
+              className={`grid grid-cols-1 sm:grid-cols-3 ${rowIndex < statsRows.length - 1 ? 'border-b border-gray-200 dark:border-slate-700' : ''}`}
             >
               {row.map((stat, colIndex) => (
                 <StatItem
@@ -182,8 +184,8 @@ export function SeasonStats() {
               ))}
             </div>
           ))}
-          <div className="p-4 text-xs text-gray-500 border-t border-gray-200">
-            * Приведенная выше статистика считается официальной через 24 часа после окончания последнего матча игрового тура.
+          <div className="p-4 text-xs text-gray-500 dark:text-slate-400 border-t border-gray-200 dark:border-slate-700">
+            {t('seasonStats.disclaimer')}
           </div>
         </div>
       </div>

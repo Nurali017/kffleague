@@ -39,7 +39,7 @@
     "cleanSheetsShort": "Құрғақ",
     "goalsHeader": "Соғылған голдар",
     "assistsHeader": "Нәтижелі пастар",
-    "cleanSheetsHeader": "Сухие матчи",
+    "cleanSheetsHeader": "Құрғақ матчтар",
     "topScorers": "СҮРМЕРГЕНДЕР",
     "topAssisters": "АССИСТЕНТТЕР",
     "topKeepers": "ҚАҚПАШЫЛАР"
@@ -60,6 +60,25 @@
     "tour": "{{number}}-тур"
   },
   "news": "Жаңалықтар",
+  "seasonStats": {
+    "matchesPlayed": "ОЙНАЛҒАН МАТЧТАР",
+    "wins": "ЖЕҢІСТЕР",
+    "draws": "ТЕҢ ОЙЫНДАР",
+    "totalAttendance": "ЖАЛПЫ КӨРЕРМЕНДЕР",
+    "goals": "ГОЛДАР",
+    "goalsPerMatch": "ГОЛДАР (МАТЧҚА ОРТАША)",
+    "penalties": "ПЕНАЛЬТИЛЕР",
+    "penaltiesScored": "ОРЫНДАЛҒАН ПЕНАЛЬТИЛЕР",
+    "foulsPerMatch": "ФОЛДАР (МАТЧҚА ОРТАША)",
+    "yellowCards": "САРЫ КАРТОЧКАЛАР",
+    "doubleYellowCards": "ЕКІНШІ САРЫ КАРТОЧКАЛАР",
+    "redCards": "ҚЫЗЫЛ КАРТОЧКАЛАР",
+    "title": "{{season}} статистикасы",
+    "titleDefault": "Маусым статистикасы",
+    "moreData": "Көбірек деректер",
+    "loadError": "Статистиканы жүктеу қатесі",
+    "disclaimer": "* Жоғарыда көрсетілген статистика ойын турының соңғы матчы аяқталғаннан кейін 24 сағат өткен соң ресми болып саналады."
+  },
   "team": {
     "founded": "Құрылған",
     "coach": "Бас жаттықтырушы",
@@ -81,5 +100,20 @@
       "MID": "Жартылай қорғаушылар",
       "FWD": "Шабуылшылар"
     }
+  },
+  "tableLegend": {
+    "champion": "Чемпион",
+    "europeanCups": "Еуропа кубоктары",
+    "relegation": "Түсу"
+  },
+  "playerLeaderboard": {
+    "title": "Маусым көшбасшылары",
+    "viewAllStats": "Барлық статистика",
+    "keyPasses": "Кілт. пастар",
+    "saves": "Сейвтер"
+  },
+  "newsSection": {
+    "title": "Жаңалықтар",
+    "viewAll": "Барлық жаңалықтар"
   }
 }

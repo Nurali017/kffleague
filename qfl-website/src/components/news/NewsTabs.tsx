@@ -9,12 +9,12 @@ interface NewsTabsProps {
 }
 
 export function NewsTabs({ activeTab, onTabChange, className = '' }: NewsTabsProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
 
   const tabs = [
-    { id: 'all' as const, label: t('news.allNews', 'Все новости') },
-    { id: 'news' as const, label: t('news.typeNews', 'Новости') },
-    { id: 'analytics' as const, label: t('news.typeAnalytics', 'Аналитика') },
+    { id: 'all' as const, label: t('allNews') },
+    { id: 'news' as const, label: t('typeNews') },
+    { id: 'analytics' as const, label: t('typeAnalytics') },
   ];
 
   return (

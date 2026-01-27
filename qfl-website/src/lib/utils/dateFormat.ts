@@ -67,3 +67,15 @@ export function formatDateRange(dates: string[], language: string): string {
 
   return `${startFormatted} - ${endFormatted}`;
 }
+
+export function formatMatchDayDate(dateStr: string, language: string): string {
+  const date = new Date(dateStr);
+  const locale = getLocale(language);
+
+  return date.toLocaleDateString(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}

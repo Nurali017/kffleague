@@ -1,23 +1,74 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { useLeagueTable } from '@/hooks';
 
 interface TournamentTableMiniProps {
-  tourId?: number;
+  seasonId?: number;
+  homeTeamId?: number;
+  awayTeamId?: number;
 }
 
-// Mock data for demonstration - in real app this would come from API
-// We highlight rows 1 (Home) and 4 (Away) for demo
-const mockTable = [
-  { pos: 1, team: 'Астана', played: 11, points: 28, highlight: 'home' },
-  { pos: 2, team: 'Ордабасы', played: 11, points: 25, highlight: null },
-  { pos: 3, team: 'Актобе', played: 11, points: 22, highlight: null },
-  { pos: 4, team: 'Кайрат', played: 11, points: 20, highlight: 'away' },
-  { pos: 5, team: 'Елимай', played: 11, points: 18, highlight: null },
-];
+export function TournamentTableMini({ seasonId, homeTeamId, awayTeamId }: TournamentTableMiniProps) {
+  const { standings: allStandings, loading, error } = useLeagueTable({
+    seasonId,
+  });
 
-export function TournamentTableMini({ tourId }: TournamentTableMiniProps) {
+  // Каждая команда ± 2 позиции
+  const standings = useMemo(() => {
+    if (!allStandings.length) return [];
+
+    const homePos = allStandings.find(s => s.team_id === homeTeamId)?.position ?? 1;
+    const awayPos = allStandings.find(s => s.team_id === awayTeamId)?.position ?? 1;
+
+    // Позиции для home команды (±2)
+    const homeRange = new Set<number>();
+    for (let i = Math.max(1, homePos - 2); i <= homePos + 2; i++) {
+      homeRange.add(i);
+    }
+
+    // Позиции для away команды (±2)
+    const awayRange = new Set<number>();
+    for (let i = Math.max(1, awayPos - 2); i <= awayPos + 2; i++) {
+      awayRange.add(i);
+    }
+
+    // Объединяем
+    const positions = new Set([...homeRange, ...awayRange]);
+
+    return allStandings.filter(s => positions.has(s.position));
+  }, [allStandings, homeTeamId, awayTeamId]);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h3 className="text-sm font-bold text-gray-900">Турнирная таблица</h3>
+        </div>
+        <div className="animate-pulse p-4 space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-8 bg-gray-100 rounded" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !standings.length) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h3 className="text-sm font-bold text-gray-900">Турнирная таблица</h3>
+        </div>
+        <div className="p-6 text-center text-sm text-gray-500">
+          Данные недоступны
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Header */}
@@ -42,9 +93,10 @@ export function TournamentTableMini({ tourId }: TournamentTableMiniProps) {
 
       {/* Table Body */}
       <div className="divide-y divide-gray-50">
-        {mockTable.map((row) => {
-          const isHome = row.highlight === 'home';
-          const isAway = row.highlight === 'away';
+        {standings.map((row) => {
+          const isHome = row.team_id === homeTeamId;
+          const isAway = row.team_id === awayTeamId;
+          const isHighlighted = isHome || isAway;
 
           let bgClass = 'bg-white hover:bg-gray-50';
           if (isHome) bgClass = 'bg-blue-50/50 hover:bg-blue-50';
@@ -52,40 +104,43 @@ export function TournamentTableMini({ tourId }: TournamentTableMiniProps) {
 
           return (
             <div
-              key={row.pos}
+              key={row.team_id}
               className={`flex items-center gap-2 px-4 py-3 transition-colors ${bgClass}`}
             >
               <span
-                className={`w-8 text-xs text-center font-bold ${row.highlight ? 'text-gray-900' : 'text-gray-500'
-                  }`}
+                className={`w-8 text-xs text-center font-bold ${isHighlighted ? 'text-gray-900' : 'text-gray-500'}`}
               >
-                {row.pos}
+                {row.position}
               </span>
 
               <div className="flex-1 flex items-center gap-2 min-w-0">
-                {/* Team Color Dot */}
-                {row.highlight && (
+                {/* Team Logo */}
+                {row.team_logo && (
+                  <img
+                    src={row.team_logo}
+                    alt={row.team_name || ''}
+                    className="w-5 h-5 object-contain flex-shrink-0"
+                  />
+                )}
+                {/* Team Color Dot for highlighted teams */}
+                {isHighlighted && !row.team_logo && (
                   <div
                     className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isHome ? 'bg-[#1E4D8C]' : 'bg-[#E5B73B]'}`}
                   />
                 )}
                 <span
-                  className={`text-xs truncate ${row.highlight ? 'font-bold text-gray-900' : 'font-medium text-gray-700'
-                    }`}
+                  className={`text-xs truncate ${isHighlighted ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}
                 >
-                  {row.team}
+                  {row.team_name}
                 </span>
               </div>
 
               <span className="w-8 text-center text-xs text-gray-500 font-medium">
-                {row.played}
+                {row.games_played}
               </span>
 
               <span
-                className={`w-8 text-center text-xs ${row.highlight
-                    ? 'font-black text-gray-900'
-                    : 'font-bold text-gray-700'
-                  }`}
+                className={`w-8 text-center text-xs ${isHighlighted ? 'font-black text-gray-900' : 'font-bold text-gray-700'}`}
               >
                 {row.points}
               </span>

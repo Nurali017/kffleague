@@ -21,7 +21,7 @@ export function LeagueTable() {
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-4">
+      <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-4">
         <ErrorMessage message={tErrors('loadTable')} onRetry={refetch} compact />
       </div>
     );
@@ -36,7 +36,7 @@ export function LeagueTable() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden h-full flex flex-col">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden h-full flex flex-col">
       {/* Header */}
       <div className="px-5 py-3 bg-[#1E4D8C]">
         <div className="flex items-center justify-between">
@@ -58,7 +58,7 @@ export function LeagueTable() {
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[28px_1fr_36px_44px_40px] gap-1 px-5 py-2 bg-gray-100 text-[11px] font-medium text-gray-500 uppercase tracking-wide">
+      <div className="grid grid-cols-[28px_1fr_36px_44px_40px] gap-1 px-5 py-2 bg-gray-100 dark:bg-slate-700 text-[11px] font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wide">
         <div className="text-center">#</div>
         <div>{t('table.club')}</div>
         <div className="text-center">{t('table.matches')}</div>
@@ -67,7 +67,7 @@ export function LeagueTable() {
       </div>
 
       {/* Table body */}
-      <div className="divide-y divide-gray-50 flex-1 overflow-y-auto">
+      <div className="divide-y divide-gray-50 dark:divide-slate-700 flex-1 overflow-y-auto">
         {standings.map((team) => {
           const logoUrl = team.team_logo || getTeamLogo(team.team_id);
           const teamColor = getTeamColor(team.team_id);
@@ -105,10 +105,10 @@ export function LeagueTable() {
                   />
                 )}
                 <motion.span
-                  className="text-xs text-gray-500 font-medium"
+                  className="text-xs text-gray-500 dark:text-slate-400 font-medium"
                   variants={{
-                    rest: { color: 'rgb(107 114 128)', fontWeight: 500 },
-                    hover: { color: '#1E4D8C', fontWeight: 700 },
+                    rest: { fontWeight: 500 },
+                    hover: { fontWeight: 700 },
                   }}
                 >
                   {team.position}
@@ -138,10 +138,10 @@ export function LeagueTable() {
                   {team.team_name[0]}
                 </motion.div>
                 <motion.span
-                  className="font-medium text-gray-900 text-sm truncate"
+                  className="font-medium text-gray-900 dark:text-slate-100 text-sm truncate"
                   variants={{
-                    rest: { color: 'rgb(17 24 39)', fontWeight: 500 },
-                    hover: { color: '#1E4D8C', fontWeight: 600 },
+                    rest: { fontWeight: 500 },
+                    hover: { fontWeight: 600 },
                   }}
                 >
                   {team.team_name}
@@ -150,7 +150,7 @@ export function LeagueTable() {
 
               {/* Stats */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C]"
+                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -159,7 +159,7 @@ export function LeagueTable() {
                 {team.games_played}
               </motion.div>
               <motion.div
-                className="text-center text-xs text-[#1E4D8C]"
+                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -170,10 +170,10 @@ export function LeagueTable() {
 
               {/* Points */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] font-bold"
+                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400 font-bold"
                 variants={{
-                  rest: { scale: 1, color: '#1E4D8C' },
-                  hover: { scale: 1.1, color: '#E5B73B', transition: { type: 'spring', stiffness: 400, damping: 20 } },
+                  rest: { scale: 1 },
+                  hover: { scale: 1.1, transition: { type: 'spring', stiffness: 400, damping: 20 } },
                 }}
               >
                 {team.points}
@@ -184,18 +184,18 @@ export function LeagueTable() {
       </div>
 
       {/* Legend */}
-      <div className="px-5 py-2.5 border-t border-gray-100 flex items-center gap-4 text-[11px] text-gray-400">
+      <div className="px-5 py-2.5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-4 text-[11px] text-gray-400 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E5B73B]" />
-          <span>Чемпион</span>
+          <span>{t('tableLegend.champion')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#1E4D8C]" />
-          <span>Еврокубки</span>
+          <span>{t('tableLegend.europeanCups')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-          <span>Вылет</span>
+          <span>{t('tableLegend.relegation')}</span>
         </div>
       </div>
     </div>

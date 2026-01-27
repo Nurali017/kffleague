@@ -58,8 +58,10 @@ export interface ResultsGridResponse {
 }
 
 export interface StadiumInfo {
+  id?: number;
   name: string;
   capacity: number;
+  city?: string;
   location?: string;
   image_url?: string;
 }
@@ -68,6 +70,8 @@ export interface StadiumInfo {
 export interface TeamDetail extends Team {
   full_name?: string;
   founded_year?: number;
+  city?: string;
+  website?: string;
   colors?: {
     primary: string;
     secondary: string;
@@ -87,8 +91,12 @@ export interface TeamPlayer {
   last_name: string;
   birthday: string;
   player_type: string;
-  country_name: string;
-  country_code: string;
+  country?: {
+    id: number;
+    code: string;
+    name: string;
+    flag_url: string | null;
+  } | null;
   photo_url?: string;
   age: number;
   top_role: string;
@@ -107,16 +115,31 @@ export interface SquadPlayer {
   player_id: string;
   first_name: string;
   last_name: string;
-  jersey_number: number;
-  position: 'GK' | 'DEF' | 'MID' | 'FWD';
-  photo_url?: string;
+  jersey_number: number | null;
+  position: string;
+  photo_url?: string | null;
   nationality?: string;
   country_code?: string;
-  age?: number;
+  age?: number | null;
   // Season stats (optional)
   games_played?: number;
   goals?: number;
   assists?: number;
+}
+
+// Coach from /teams/{id}/coaches endpoint
+export interface TeamCoach {
+  id: number;
+  first_name: string;
+  last_name: string;
+  photo_url?: string | null;
+  role: string;
+  country?: {
+    id: number;
+    code: string;
+    name: string;
+    flag_url: string | null;
+  } | null;
 }
 
 // Stats from /teams/{id}/stats endpoint
@@ -131,16 +154,65 @@ export interface TeamStats {
   goals_conceded: number;
   goal_difference: number;
   points: number;
+  // xG
+  xg?: number;
+  xg_per_match?: number;
+  opponent_xg?: number;
+  // Shots
   shots?: number;
   shots_on_goal?: number;
+  shots_off_goal?: number;
+  shot_per_match?: number;
+  goal_to_shot_ratio?: number;
+  // Possession
   possession_avg?: number;
+  // Passes
   passes?: number;
   pass_accuracy_avg?: number;
+  pass_per_match?: number;
+  pass_forward?: number;
+  pass_long?: number;
+  pass_long_ratio?: number;
+  pass_progressive?: number;
+  pass_cross?: number;
+  pass_cross_ratio?: number;
+  pass_to_box?: number;
+  pass_to_3rd?: number;
+  key_pass?: number;
+  key_pass_per_match?: number;
+  goal_pass?: number;
+  // Defense
+  tackle?: number;
+  tackle_per_match?: number;
+  interception?: number;
+  interception_per_match?: number;
+  recovery?: number;
+  recovery_per_match?: number;
+  // Duels
+  duel?: number;
+  duel_ratio?: number;
+  aerial_duel_offence?: number;
+  aerial_duel_offence_ratio?: number;
+  ground_duel_offence?: number;
+  ground_duel_offence_ratio?: number;
+  // Dribbles
+  dribble?: number;
+  dribble_per_match?: number;
+  dribble_ratio?: number;
+  // Discipline
   fouls?: number;
+  foul_taken?: number;
   yellow_cards?: number;
+  second_yellow_cards?: number;
   red_cards?: number;
+  // Set pieces
   corners?: number;
+  corner_per_match?: number;
   offsides?: number;
+  // Penalty
+  penalty?: number;
+  penalty_ratio?: number;
+  // Other
   clean_sheets?: number;
   extra_stats?: Record<string, any>;
 }

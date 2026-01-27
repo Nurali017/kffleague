@@ -153,14 +153,14 @@ function LeaderboardCard({
         </Link>
 
         {/* Runner-ups Section */}
-        <div className="bg-white/95 flex-grow min-h-[240px]">
+        <div className="bg-white/95 dark:bg-slate-800/95 flex-grow min-h-[240px]">
           {runnerUps.map((player, index) => (
             <Link
               key={player.player_id}
               href={`/player/${player.player_id}`}
-              className="flex items-center gap-3 px-6 py-3 hover:bg-white hover:shadow-sm hover:translate-x-1 transition-all duration-200 border-b border-gray-100 last:border-b-0 group"
+              className="flex items-center gap-3 px-6 py-3 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:translate-x-1 transition-all duration-200 border-b border-gray-100 dark:border-slate-700 last:border-b-0 group"
             >
-              <span className="text-gray-500 font-medium w-4">{index + 2}</span>
+              <span className="text-gray-500 dark:text-slate-400 font-medium w-4">{index + 2}</span>
               <img
                 src={player.team_logo ?? getTeamLogo(player.team_id) ?? undefined}
                 alt={player.team_name}
@@ -171,17 +171,17 @@ function LeaderboardCard({
                 }}
               />
               <div className="flex-1 min-w-0">
-                <span className="text-gray-900 font-semibold group-hover:text-[#1E4D8C] transition-colors">
+                <span className="text-gray-900 dark:text-slate-100 font-semibold group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
                   {player.first_name} {player.last_name}
                 </span>
-                <div className="text-gray-600 text-sm font-medium">{player.team_name}</div>
+                <div className="text-gray-600 dark:text-slate-400 text-sm font-medium">{player.team_name}</div>
               </div>
               <div className="text-right">
-                <span className="text-gray-900 font-bold text-lg block">
+                <span className="text-gray-900 dark:text-slate-100 font-bold text-lg block">
                   {player[statKey] ?? 0}
                 </span>
                 {secondaryStatKey && (
-                  <span className="text-gray-500 text-xs">
+                  <span className="text-gray-500 dark:text-slate-400 text-xs">
                     {secondaryStatLabel}: {getSecondaryStatValue(player) ?? '-'}
                   </span>
                 )}
@@ -293,12 +293,12 @@ export function PlayerLeaderboard() {
     <div className="overflow-visible">
       {/* Header with link */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-[#1E4D8C]">Лидеры сезона</h2>
+        <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400">{t('playerLeaderboard.title')}</h2>
         <Link
           href="/stats"
-          className="text-gray-500 font-medium text-sm hover:text-[#1E4D8C] flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center transition-colors group"
         >
-          Вся статистика
+          {t('playerLeaderboard.viewAllStats')}
           <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -322,7 +322,7 @@ export function PlayerLeaderboard() {
             players={assisters}
             statKey="assists"
             secondaryStatKey="key_passes"
-            secondaryStatLabel="Ключ. пасов"
+            secondaryStatLabel={t('playerLeaderboard.keyPasses')}
             bgColor="bg-[#1E4D8C]"
             bottomColor="bg-[#153d6d]"
             textColor="text-white"
@@ -334,7 +334,7 @@ export function PlayerLeaderboard() {
             players={cleanSheets}
             statKey="dry_match"
             secondaryStatKey="save_shot"
-            secondaryStatLabel="Сейвов"
+            secondaryStatLabel={t('playerLeaderboard.saves')}
             bgColor="bg-[#0D847A]"
             bottomColor="bg-[#0a6b63]"
             textColor="text-white"

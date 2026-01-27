@@ -51,7 +51,7 @@ export function TopBar({ liveMatch, className = '' }: TopBarProps) {
 
         {/* Language Switcher */}
         <div className="flex items-center">
-          <LanguageSwitcher />
+          <LanguageSwitcher variant="dark" />
         </div>
       </div>
     </div>

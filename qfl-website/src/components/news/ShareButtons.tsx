@@ -20,7 +20,7 @@ interface ShareButtonsProps {
 }
 
 export function ShareButtons({ url, title, description, className = '' }: ShareButtonsProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
   const [copied, setCopied] = useState(false);
 
   const handleCopyLink = async () => {
@@ -70,7 +70,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <span className="text-sm font-medium text-gray-600 dark:text-slate-400">
-        {t('news.share', 'Поделиться')}:
+        {t('share')}:
       </span>
 
       <div className="flex items-center gap-2">
@@ -81,7 +81,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
             className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
             whileHover={{ scale: 1.05, backgroundColor: 'rgba(229, 231, 235, 1)' }}
             whileTap={{ scale: 0.95 }}
-            aria-label={t('news.share', 'Поделиться')}
+            aria-label={t('share')}
           >
             <Share2 className="w-5 h-5" />
           </motion.button>
@@ -97,7 +97,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
             className={`p-2 rounded-lg text-white ${button.color.split(' ')[0]}`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            aria-label={`${t('news.share', 'Поделиться')} ${button.name}`}
+            aria-label={`${t('share')} ${button.name}`}
           >
             {button.icon}
           </motion.a>
@@ -109,7 +109,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
           className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 relative"
           whileHover={{ scale: 1.05, backgroundColor: 'rgba(229, 231, 235, 1)' }}
           whileTap={{ scale: 0.95 }}
-          aria-label={t('news.copyLink', 'Скопировать ссылку')}
+          aria-label={t('copyLink')}
         >
           <AnimatePresence mode="wait">
             {copied ? (
@@ -146,7 +146,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
             exit={{ opacity: 0, x: 10 }}
             transition={{ duration: 0.2 }}
           >
-            {t('news.linkCopied', 'Ссылка скопирована!')}
+            {t('linkCopied')}
           </motion.span>
         )}
       </AnimatePresence>

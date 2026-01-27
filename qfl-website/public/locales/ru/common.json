@@ -60,6 +60,25 @@
     "tour": "Тур {{number}}"
   },
   "news": "Новости",
+  "seasonStats": {
+    "matchesPlayed": "СЫГРАННЫЕ МАТЧИ",
+    "wins": "ПОБЕДЫ",
+    "draws": "НИЧЬИ",
+    "totalAttendance": "ОБЩАЯ ПОСЕЩАЕМОСТЬ",
+    "goals": "ГОЛЫ",
+    "goalsPerMatch": "ГОЛЫ (СРЕДНЕЕ ЗА МАТЧ)",
+    "penalties": "ПЕНАЛЬТИ",
+    "penaltiesScored": "ПЕНАЛЬТИ РЕАЛИЗОВАННЫЕ",
+    "foulsPerMatch": "ФОЛЫ (СРЕДНЕЕ ЗА МАТЧ)",
+    "yellowCards": "ЖЕЛТЫЕ КАРТОЧКИ",
+    "doubleYellowCards": "ДВОЙНЫЕ ЖЕЛТЫЕ КАРТОЧКИ",
+    "redCards": "КРАСНЫЕ КАРТОЧКИ",
+    "title": "Статистика {{season}}",
+    "titleDefault": "Статистика сезона",
+    "moreData": "Больше данных",
+    "loadError": "Ошибка загрузки статистики",
+    "disclaimer": "* Приведенная выше статистика считается официальной через 24 часа после окончания последнего матча игрового тура."
+  },
   "team": {
     "founded": "Основан",
     "coach": "Главный тренер",
@@ -81,5 +100,20 @@
       "MID": "Полузащитники",
       "FWD": "Нападающие"
     }
+  },
+  "tableLegend": {
+    "champion": "Чемпион",
+    "europeanCups": "Еврокубки",
+    "relegation": "Вылет"
+  },
+  "playerLeaderboard": {
+    "title": "Лидеры сезона",
+    "viewAllStats": "Вся статистика",
+    "keyPasses": "Ключ. пасов",
+    "saves": "Сейвов"
+  },
+  "newsSection": {
+    "title": "Новости",
+    "viewAll": "Все новости"
   }
 }

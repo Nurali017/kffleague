@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 
-export type TabId = 'events' | 'lineups' | 'statistics' | 'overview';
+export type TabId = 'lineups' | 'statistics' | 'overview' | 'h2h';
 
 interface Tab {
   id: TabId;
@@ -21,7 +21,7 @@ export function MatchTabs({ activeTab, onTabChange }: MatchTabsProps) {
     { id: 'overview', labelKey: 'tabs.overview' },
     { id: 'lineups', labelKey: 'tabs.lineups' },
     { id: 'statistics', labelKey: 'tabs.statistics' },
-    { id: 'events', labelKey: 'tabs.events' },
+    { id: 'h2h', labelKey: 'tabs.h2h' },
   ];
 
   return (

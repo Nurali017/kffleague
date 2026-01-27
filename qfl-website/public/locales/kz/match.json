@@ -42,15 +42,43 @@
     "events": "Оқиғалар",
     "protocol": "Хаттама",
     "statistics": "Статистика",
+    "h2h": "H2H Тарих",
     "media": "Медиа"
   },
   "h2h": {
     "title": "Кездесулер тарихы",
-    "totalMatches": "барлығы ойнаған матчтар",
-    "wins": "жеңіс",
-    "draws": "тең",
-    "losses": "жеңіліс",
-    "noMatches": "Алдыңғы кездесулер туралы деректер жоқ"
+    "totalMatches": "матч барлығы",
+    "wins": "Жеңіс",
+    "draws": "Тең",
+    "losses": "Жеңіліс",
+    "noData": "Алдыңғы кездесулер туралы деректер жоқ",
+    "noMatches": "Алдыңғы кездесулер туралы деректер жоқ",
+    "currentForm": "Қазіргі форма",
+    "last5Matches": "Соңғы 5 матч",
+    "seasonStats": "Маусым көрсеткіштері",
+    "goalsPerGame": "Матчқа голдар",
+    "concededPerGame": "Жіберілген",
+    "cleanSheets": "Құрғақ матчтар",
+    "winRate": "Жеңіс (%)",
+    "previousMeetings": "Кездесулер тарихы",
+    "showAll": "Барлығын көрсету",
+    "showLess": "Жинау",
+    "loading": "Жүктелуде...",
+    "error": "Деректерді жүктеу қатесі",
+    "goalsScored": "гол",
+    "tablePosition": "орын",
+    "points": "Ұпай",
+    "seasonWins": "Жеңіс",
+    "goalDiff": "Айырма",
+    "tour": "Тур",
+    "form": {
+      "win": "Ж",
+      "draw": "Т",
+      "loss": "Ж",
+      "winFull": "Жеңіс",
+      "drawFull": "Тең",
+      "lossFull": "Жеңіліс"
+    }
   },
   "media": {
     "title": "Медиа",
@@ -136,6 +164,12 @@
     "upcoming": "Алдағы",
     "live": "Тікелей эфирде",
     "finished": "Аяқталған"
+  },
+  "statisticsTab": {
+    "title": "Статистика",
+    "notAvailable": "Матч статистикасы әлі қолжетімсіз",
+    "possessionPercent": "Допты ұстау (%)",
+    "shotsMissed": "Дәлсіз соққылар"
   },
   "buyTicket": "Билет сатып алу",
   "totalMatches": "Табылған матчтар: {{count}}",

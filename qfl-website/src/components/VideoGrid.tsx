@@ -29,12 +29,11 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-[#1E4D8C]">
+          <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400">
             {title}
           </h2>
           <motion.button
-            className="text-gray-500 font-medium text-sm hover:text-[#1E4D8C] flex items-center group"
-            whileHover={{ color: '#1E4D8C' }}
+            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center group"
           >
             {t('buttons.allVideos')}
             <motion.svg
@@ -90,13 +89,11 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
                 )}
               </div>
 
-              <motion.h3
-                className="font-bold text-[#1E4D8C] leading-snug mb-2 line-clamp-2"
-                whileHover={{ color: '#E5B73B' }}
-                transition={{ duration: 0.3 }}
+              <h3
+                className="font-bold text-[#1E4D8C] dark:text-blue-400 hover:text-[#E5B73B] dark:hover:text-accent leading-snug mb-2 line-clamp-2 transition-colors duration-300"
               >
                 {video.title}
-              </motion.h3>
+              </h3>
             </motion.div>
           ))}
         </div>

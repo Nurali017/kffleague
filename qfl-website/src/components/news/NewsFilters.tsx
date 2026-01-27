@@ -19,7 +19,7 @@ export function NewsFilters({
   categories,
   className = '',
 }: NewsFiltersProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
   const [searchInput, setSearchInput] = useState(filters.search || '');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -71,7 +71,7 @@ export function NewsFilters({
           className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-surface-soft dark:hover:bg-dark-surface-soft transition-colors"
         >
           <SlidersHorizontal className="w-4 h-4" />
-          {t('news.filter', 'Фильтр')}
+          {t('filter', 'Фильтр')}
           {hasActiveFilters && (
             <span className="ml-1 px-2 py-0.5 bg-[#E5B73B] text-white text-xs rounded-full">
               {[filters.search, filters.category, filters.sort].filter(Boolean).length}
@@ -95,7 +95,7 @@ export function NewsFilters({
                 type="text"
                 value={searchInput}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                placeholder={t('news.search', 'Поиск новостей...')}
+                placeholder={t('search', 'Поиск новостей...')}
                 className="w-full pl-10 pr-10 py-2 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 bg-white dark:bg-dark-surface text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500"
               />
               {searchInput && (
@@ -118,7 +118,7 @@ export function NewsFilters({
                 className="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 bg-white dark:bg-dark-surface text-gray-900 dark:text-slate-100 cursor-pointer"
               >
                 <option value="all">
-                  {t('news.allCategories', 'Все категории')}
+                  {t('allCategories', 'Все категории')}
                 </option>
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -139,16 +139,16 @@ export function NewsFilters({
                 className="w-full appearance-none px-4 py-2 pr-10 border border-gray-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 bg-white dark:bg-dark-surface text-gray-900 dark:text-slate-100 cursor-pointer"
               >
                 <option value="date_desc">
-                  {t('news.sortByDate', 'По дате')} ↓
+                  {t('sortByDate', 'По дате')} ↓
                 </option>
                 <option value="date_asc">
-                  {t('news.sortByDate', 'По дате')} ↑
+                  {t('sortByDate', 'По дате')} ↑
                 </option>
                 <option value="views_desc">
-                  {t('news.sortByViews', 'По просмотрам')}
+                  {t('sortByViews', 'По просмотрам')}
                 </option>
                 <option value="likes_desc">
-                  {t('news.sortByLikes', 'По лайкам')}
+                  {t('sortByLikes', 'По лайкам')}
                 </option>
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500 pointer-events-none" />
@@ -161,7 +161,7 @@ export function NewsFilters({
               <button
                 onClick={handleClearFilters}
                 className="w-full h-full flex items-center justify-center px-4 py-2 text-gray-600 dark:text-slate-400 hover:text-[#E5B73B] dark:hover:text-[#FBBF24] transition-colors"
-                title={t('news.clearFilters', 'Сбросить фильтры')}
+                title={t('clearFilters', 'Сбросить фильтры')}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -174,7 +174,7 @@ export function NewsFilters({
           <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">
             {filters.search && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E4D8C] dark:bg-blue-600 text-white text-sm rounded-full">
-                {t('news.search', 'Поиск')}: {filters.search}
+                {t('search', 'Поиск')}: {filters.search}
                 <button
                   onClick={() => handleSearchChange('')}
                   className="hover:bg-white/20 rounded-full p-0.5"

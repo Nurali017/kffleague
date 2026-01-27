@@ -56,7 +56,7 @@ export function HeroSection() {
 
   if (error || sliderNews.length === 0) {
     return (
-      <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1E4D8C] to-[#0D2847] flex items-center justify-center">
+      <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1E4D8C] to-[#0D2847] dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
         <p className="text-white/70">{t('noData.noNews')}</p>
       </div>
     );

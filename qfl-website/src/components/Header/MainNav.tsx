@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { NavDropdown } from './NavDropdown';
 import { SearchModal } from '../SearchModal';
 import { LanguageSwitcher } from '../LanguageSwitcher';
+import { ThemeToggle } from '../ThemeToggle';
 import { NavItem } from './types';
 
 interface MainNavProps {
@@ -24,10 +25,10 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <nav className={`text-[#1E4D8C] border-b border-gray-200 transition-all duration-300 ${
+    <nav className={`text-[#1E4D8C] dark:text-blue-400 border-b border-gray-200 dark:border-slate-700 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white shadow-sm'
-          : 'bg-white'
+          ? 'bg-white dark:bg-dark-surface shadow-sm'
+          : 'bg-white dark:bg-dark-surface'
       } ${className}`}>
       <div className={`max-w-[1400px] mx-auto px-6 flex items-center justify-between transition-all duration-300 ${
         isScrolled ? 'h-16' : 'h-20'
@@ -61,7 +62,7 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
                 key={item.key}
                 href={item.href || '#'}
                 className={`relative text-base font-bold transition-colors duration-200 ${
-                  isActive ? 'text-[#E5B73B]' : 'hover:text-primary-light'
+                  isActive ? 'text-[#E5B73B] dark:text-accent' : 'hover:text-primary-light dark:hover:text-accent'
                 }`}
               >
                 <span className="flex items-center gap-2" suppressHydrationWarning>
@@ -85,35 +86,40 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
 
         {/* Right Actions */}
         <div className="flex items-center gap-4">
-          {/* Search Input */}
+          {/* HIDDEN: Desktop Search Input - temporarily disabled
           <div className="hidden md:flex items-center">
             <div className="relative">
               <input
                 type="text"
                 placeholder={t('searchPlaceholder')}
-                className="w-40 lg:w-48 pl-3 pr-10 py-2 text-sm text-gray-600 placeholder-gray-400 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-[#1E4D8C] transition-colors"
+                className="w-40 lg:w-48 pl-3 pr-10 py-2 text-sm text-gray-600 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-400 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg focus:outline-none focus:border-[#1E4D8C] dark:focus:border-blue-400 transition-colors"
                 onFocus={() => setIsSearchOpen(true)}
                 readOnly
               />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-400" />
             </div>
           </div>
+          */}
 
-          {/* Mobile Search */}
+          {/* HIDDEN: Mobile Search - temporarily disabled
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="md:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
             aria-label={t('search')}
           >
             <Search className="w-5 h-5" />
           </button>
+          */}
 
           {/* Language Switcher */}
           <LanguageSwitcher />
 
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Mobile menu toggle */}
           <button
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
             onClick={onMobileMenuToggle}
             aria-label={t('openMenu')}
           >

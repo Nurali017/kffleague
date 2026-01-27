@@ -1,6 +1,6 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
-import { TeamDetail, TeamStats, TeamPlayersResponse, SquadPlayer } from '@/types';
+import { TeamDetail, TeamStats, TeamPlayersResponse, SquadPlayer, TeamCoach } from '@/types';
 import { Game } from '@/types/match';
 
 // Map player_type to position category
@@ -20,10 +20,35 @@ function mapPlayerTypeToPosition(
   return 'FWD'; // forward, striker, attacker
 }
 
+interface TeamsListResponse {
+  items: TeamDetail[];
+  total: number;
+}
+
 export const teamService = {
-  async getTeamById(teamId: number): Promise<TeamDetail | null> {
+  async getTeams(
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
+  ): Promise<TeamDetail[]> {
+    const response = await apiClient.get<TeamsListResponse>(ENDPOINTS.TEAMS, {
+      season_id: seasonId,
+      ...(language ? { lang: language } : {}),
+    });
+
+    if (!response.success) {
+      return [];
+    }
+
+    return response.data.items;
+  },
+
+  async getTeamById(
+    teamId: number,
+    language?: string
+  ): Promise<TeamDetail | null> {
     const response = await apiClient.get<TeamDetail>(
-      ENDPOINTS.TEAM_DETAIL(teamId)
+      ENDPOINTS.TEAM_DETAIL(teamId),
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {
@@ -35,11 +60,15 @@ export const teamService = {
 
   async getTeamStats(
     teamId: number,
-    seasonId: number = DEFAULT_SEASON_ID
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
   ): Promise<TeamStats | null> {
     const response = await apiClient.get<TeamStats>(
       ENDPOINTS.TEAM_STATS(teamId),
-      { season_id: seasonId }
+      {
+        season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
     );
 
     if (!response.success) {
@@ -51,11 +80,15 @@ export const teamService = {
 
   async getTeamPlayers(
     teamId: number,
-    seasonId: number = DEFAULT_SEASON_ID
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
   ): Promise<SquadPlayer[]> {
     const response = await apiClient.get<TeamPlayersResponse>(
       ENDPOINTS.TEAM_PLAYERS(teamId),
-      { season_id: seasonId }
+      {
+        season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
     );
 
     if (!response.success) {
@@ -70,25 +103,49 @@ export const teamService = {
       jersey_number: player.number,
       position: mapPlayerTypeToPosition(player.player_type),
       photo_url: player.photo_url,
-      nationality: player.country_name,
-      country_code: player.country_code,
+      nationality: player.country?.name,
+      country_code: player.country?.code,
       age: player.age,
     }));
   },
 
   async getTeamGames(
     teamId: number,
-    seasonId: number = DEFAULT_SEASON_ID
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
   ): Promise<Game[]> {
-    const response = await apiClient.get<Game[]>(
+    const response = await apiClient.get<{ items: Game[]; total: number }>(
       ENDPOINTS.TEAM_GAMES(teamId),
-      { season_id: seasonId }
+      {
+        season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
     );
 
     if (!response.success) {
       throw new Error(response.error?.message || 'Failed to fetch games');
     }
 
-    return response.data;
+    return response.data.items;
+  },
+
+  async getTeamCoaches(
+    teamId: number,
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
+  ): Promise<TeamCoach[]> {
+    const response = await apiClient.get<{ items: TeamCoach[]; total: number }>(
+      ENDPOINTS.TEAM_COACHES(teamId),
+      {
+        season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
+    );
+
+    if (!response.success) {
+      return [];
+    }
+
+    return response.data.items;
   },
 };

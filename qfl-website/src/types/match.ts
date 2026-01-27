@@ -30,6 +30,7 @@ export interface Game {
   is_live: boolean;
   status: "upcoming" | "live" | "finished";
   ticket_url: string | null;
+  video_url: string | null;
 }
 
 export interface MatchEvent {
@@ -106,6 +107,13 @@ export interface LineupPlayer {
   is_captain?: boolean;
 }
 
+export interface PlayerCountry {
+  id: number;
+  code: string;      // ISO код (KZ, RU, etc.)
+  name: string;
+  flag_url?: string;
+}
+
 export interface LineupPlayerExtended {
   player_id: string;
   first_name: string;
@@ -114,6 +122,7 @@ export interface LineupPlayerExtended {
   position: 'GK' | 'DEF' | 'MID' | 'FWD';
   is_captain: boolean;
   photo_url?: string;
+  country?: PlayerCountry;
 
   // Координаты для визуализации (опционально, можно вычислять)
   x?: number; // 0-100

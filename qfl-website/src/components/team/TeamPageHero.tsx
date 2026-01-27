@@ -1,16 +1,25 @@
+'use client';
+
 import { useTranslation } from 'react-i18next';
-import { Instagram, Globe } from 'lucide-react';
+import { Globe, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { useTournament } from '@/contexts/TournamentContext';
+import { TeamDetail } from '@/types/team';
 
 interface TeamPageHeroProps {
-    team: any;
+    team: TeamDetail;
 }
 
 export function TeamPageHero({ team }: TeamPageHeroProps) {
-    const { t } = useTranslation();
+    const { i18n } = useTranslation();
+    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+    const { currentTournament } = useTournament();
+
+    const tournamentName =
+        (currentTournament.name as Record<string, string>)[lang] || currentTournament.name.short;
 
     return (
-        <div className="relative w-full bg-gradient-to-r from-[#0055D4] to-[#0099FF] pt-24 pb-12 overflow-hidden">
+        <div className="relative w-full bg-gradient-to-r from-primary to-primary/80 pt-24 pb-12 overflow-hidden">
             {/* Background Elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-12 transform translate-x-1/2" />
 
@@ -25,29 +34,42 @@ export function TeamPageHero({ team }: TeamPageHeroProps) {
                 {/* Info */}
                 <div className="flex-1 text-center md:text-left text-white pt-2">
                     <span className="text-xs font-bold uppercase tracking-widest opacity-80 mb-2 block">
-                        Freedom QJ League
+                        {tournamentName}
                     </span>
                     <h1 className="text-4xl md:text-6xl font-black mb-1">
                         {team.name}
                     </h1>
-                    <p className="text-xl opacity-90 font-medium mb-6">
-                        {team.stadium?.city || 'Kazakhstan'}
-                    </p>
+                    {team.city && (
+                        <p className="text-xl opacity-90 font-medium mb-4">
+                            {team.city}
+                        </p>
+                    )}
 
-                    {/* Socials / Links */}
-                    <div className="flex items-center justify-center md:justify-start gap-6">
-                        {team.socials?.website && (
+                    {/* Stadium + Website */}
+                    <div className="flex items-center justify-center md:justify-start gap-8 mb-2">
+                        {team.stadium && (
                             <div className="flex flex-col">
-                                <span className="text-[10px] uppercase opacity-60 font-bold">Club Website</span>
-                                <Link href={`https://${team.socials.website}`} className="font-bold hover:underline flex items-center gap-1">
-                                    {team.socials.website} <Globe className="w-3 h-3" />
-                                </Link>
+                                <span className="text-[10px] uppercase opacity-60 font-bold">
+                                    {lang === 'kz' ? 'Стадион' : 'Стадион'}
+                                </span>
+                                <span className="font-bold flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" /> {team.stadium.name}
+                                </span>
                             </div>
                         )}
-                        {team.socials?.instagram && (
-                            <Link href={team.socials.instagram} className="hover:opacity-80 transition-opacity">
-                                <Instagram className="w-6 h-6" />
-                            </Link>
+                        {team.website && (
+                            <div className="flex flex-col">
+                                <span className="text-[10px] uppercase opacity-60 font-bold">
+                                    {lang === 'kz' ? 'Клуб сайты' : 'Сайт клуба'}
+                                </span>
+                                <Link
+                                    href={team.website.startsWith('http') ? team.website : `https://${team.website}`}
+                                    target="_blank"
+                                    className="font-bold hover:underline flex items-center gap-1"
+                                >
+                                    {team.website.replace(/^https?:\/\//, '')} <Globe className="w-3 h-3" />
+                                </Link>
+                            </div>
                         )}
                     </div>
                 </div>

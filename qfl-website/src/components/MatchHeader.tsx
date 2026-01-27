@@ -1,21 +1,21 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { Calendar, MapPin, Users, User } from 'lucide-react';
-import { MatchDetail, EnhancedMatchEvent } from '@/types';
+import { Calendar, Building, Users, Clock } from 'lucide-react';
+import { MatchDetail, EnhancedMatchEvent, PlayerCountry } from '@/types';
 import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
-import { formatMatchDate } from '@/lib/utils/dateFormat';
+import { formatMatchDayDate } from '@/lib/utils/dateFormat';
 import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
-import { Breadcrumbs } from '@/components/match/Breadcrumbs';
-import { LeagueBadge } from '@/components/match/LeagueBadge';
+import { WhistleIcon } from '@/components/icons/WhistleIcon';
 
 interface MatchHeaderProps {
   match: MatchDetail;
   events?: EnhancedMatchEvent[];
   eventsLoading?: boolean;
+  playerCountryMap?: Record<string, PlayerCountry>;
 }
 
-export function MatchHeader({ match, events = [], eventsLoading = false }: MatchHeaderProps) {
+export function MatchHeader({ match, events = [], eventsLoading = false, playerCountryMap = {} }: MatchHeaderProps) {
   const { t, i18n } = useTranslation('match');
 
   const homeLogoUrl = match.home_team.logo_url || getTeamLogo(match.home_team.id);
@@ -39,29 +39,57 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
 
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
 
-        {/* Level 1: Context (Top Row) */}
-        <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
-          <Breadcrumbs
-            items={[
-              { label: 'Премьер-Лига', href: '/league' },
-              { label: `Тур ${match.tour}` }
-            ]}
-          />
-        </div>
-
-        {/* Level 2: Details */}
-        <div className="mb-8 md:mb-12 flex flex-wrap items-center justify-center gap-4 text-sm text-white/60">
+        {/* Match Information Bar */}
+        <div className="mb-8 md:mb-12 flex flex-wrap items-center justify-center gap-3 md:gap-4 text-sm text-white/80">
+          {/* Date */}
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            <span>{formatMatchDate(match.date, i18n.language)}</span>
+            <Calendar className="w-4 h-4 text-white/60" />
+            <span>{formatMatchDayDate(match.date, i18n.language)}</span>
           </div>
 
+          {/* Kick Off Time */}
+          {match.time && (
+            <>
+              <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-white/60" />
+                <span>Kick Off: {match.time}</span>
+              </div>
+            </>
+          )}
+
+          {/* Stadium */}
           {match.stadium && (
             <>
               <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>{match.stadium.name}</span>
+                <Building className="w-4 h-4 text-white/60" />
+                <span>
+                  {match.stadium.name}
+                  {match.stadium.city ? `, ${match.stadium.city}` : ''}
+                </span>
+              </div>
+            </>
+          )}
+
+          {/* Attendance */}
+          {match.visitors && (
+            <>
+              <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-white/60" />
+                <span>Attendance: {match.visitors.toLocaleString(i18n.language === 'en' ? 'en-US' : i18n.language === 'kz' ? 'kk-KZ' : 'ru-RU')}</span>
+              </div>
+            </>
+          )}
+
+          {/* Referee */}
+          {match.referee && (
+            <>
+              <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+              <div className="flex items-center gap-2">
+                <WhistleIcon className="w-4 h-4 text-white/60" />
+                <span>Ref: {match.referee}</span>
               </div>
             </>
           )}
@@ -74,13 +102,13 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
           <div className="flex flex-col items-center text-center group">
             <div className="relative mb-4">
               <div
-                className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-white flex items-center justify-center shadow-2xl relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
               >
                 {homeLogoUrl ? (
                   <img
                     src={homeLogoUrl}
                     alt={match.home_team.name}
-                    className="w-14 h-14 md:w-20 md:h-20 object-contain"
+                    className="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
                   />
                 ) : (
                   <span className="text-2xl font-bold" style={{ color: homeColor }}>
@@ -88,8 +116,6 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
                   </span>
                 )}
               </div>
-              {/* Glow effect behind logo */}
-              <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl scale-110 -z-10" />
             </div>
 
             <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-none mb-1">
@@ -137,13 +163,13 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
           <div className="flex flex-col items-center text-center group">
             <div className="relative mb-4">
               <div
-                className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-white flex items-center justify-center shadow-2xl relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
               >
                 {awayLogoUrl ? (
                   <img
                     src={awayLogoUrl}
                     alt={match.away_team.name}
-                    className="w-14 h-14 md:w-20 md:h-20 object-contain"
+                    className="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
                   />
                 ) : (
                   <span className="text-2xl font-bold" style={{ color: awayColor }}>
@@ -151,8 +177,6 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
                   </span>
                 )}
               </div>
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-full bg-yellow-500/20 blur-xl scale-110 -z-10" />
             </div>
 
             <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-none mb-1">
@@ -171,6 +195,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false }: Match
           awayTeam={match.away_team}
           currentMinute={match.minute || (match.status === 'finished' ? 90 : 0)}
           loading={eventsLoading}
+          playerCountryMap={playerCountryMap}
         />
       </div>
     </div>

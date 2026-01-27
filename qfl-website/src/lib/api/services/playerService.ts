@@ -1,18 +1,25 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
-import { PlayerDetail, PlayerMatchPerformance } from '@/types/player';
+import {
+  PlayerDetail,
+  PlayerDetailAPIResponse,
+  PlayerMatchPerformance,
+  PlayerSeasonStatsResponse,
+  PlayerTeammatesResponse,
+  PlayerTournamentHistoryResponse,
+} from '@/types/player';
 
 export const playerService = {
   async getPlayerById(
     playerId: string,
     seasonId: number = DEFAULT_SEASON_ID,
     language?: string
-  ): Promise<PlayerDetail | null> {
-    const response = await apiClient.get<PlayerDetail>(
+  ): Promise<PlayerDetailAPIResponse | null> {
+    const response = await apiClient.get<PlayerDetailAPIResponse>(
       ENDPOINTS.PLAYER_DETAIL(playerId),
       {
         season_id: seasonId,
-        ...(language ? { language } : {}),
+        ...(language ? { lang: language } : {}),
       }
     );
 
@@ -28,6 +35,7 @@ export const playerService = {
     options?: {
       seasonId?: number;
       limit?: number;
+      language?: string;
     }
   ): Promise<PlayerMatchPerformance[]> {
     const response = await apiClient.get<{ items: PlayerMatchPerformance[] }>(
@@ -35,6 +43,7 @@ export const playerService = {
       {
         season_id: options?.seasonId || DEFAULT_SEASON_ID,
         limit: options?.limit || 10,
+        ...(options?.language ? { lang: options.language } : {}),
       }
     );
 
@@ -43,5 +52,71 @@ export const playerService = {
     }
 
     return response.data.items;
+  },
+
+  async getPlayerStats(
+    playerId: string,
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
+  ): Promise<PlayerSeasonStatsResponse | null> {
+    const response = await apiClient.get<PlayerSeasonStatsResponse>(
+      ENDPOINTS.PLAYER_STATS(playerId),
+      {
+        season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
+    );
+
+    if (!response.success) {
+      // Return null if no stats found (404)
+      if (response.error?.status === 404) {
+        return null;
+      }
+      throw new Error(response.error?.message || 'Failed to fetch player stats');
+    }
+
+    return response.data;
+  },
+
+  async getPlayerTeammates(
+    playerId: string,
+    options?: {
+      seasonId?: number;
+      limit?: number;
+      language?: string;
+    }
+  ): Promise<PlayerTeammatesResponse> {
+    const response = await apiClient.get<PlayerTeammatesResponse>(
+      ENDPOINTS.PLAYER_TEAMMATES(playerId),
+      {
+        season_id: options?.seasonId || DEFAULT_SEASON_ID,
+        limit: options?.limit || 10,
+        ...(options?.language ? { lang: options.language } : {}),
+      }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error?.message || 'Failed to fetch player teammates');
+    }
+
+    return response.data;
+  },
+
+  async getPlayerTournaments(
+    playerId: string,
+    language?: string
+  ): Promise<PlayerTournamentHistoryResponse> {
+    const response = await apiClient.get<PlayerTournamentHistoryResponse>(
+      ENDPOINTS.PLAYER_TOURNAMENTS(playerId),
+      {
+        ...(language ? { lang: language } : {}),
+      }
+    );
+
+    if (!response.success) {
+      throw new Error(response.error?.message || 'Failed to fetch player tournaments');
+    }
+
+    return response.data;
   },
 };

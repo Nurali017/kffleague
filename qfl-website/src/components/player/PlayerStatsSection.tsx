@@ -1,16 +1,22 @@
 import React from 'react';
-import { PlayerStat } from '@/types/playerStats';
+import { PlayerPageStats } from '@/types/player';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useTournament } from '@/contexts/TournamentContext';
 
 interface PlayerStatsSectionProps {
-    stats?: PlayerStat | null;
+    stats?: PlayerPageStats | null;
 }
 
 export function PlayerStatsSection({ stats }: PlayerStatsSectionProps) {
-    const gamesPlayed = stats?.games_played ?? 10;
-    const minutesPlayed = stats?.minutes_played ?? 207;
-    const started = stats?.started ?? 2;
-    const subbedIn = stats?.subbed_in ?? 8;
+    const { i18n } = useTranslation();
+    const lang = (i18n.language === 'ru' ? 'ru' : 'kz') as 'ru' | 'kz';
+    const { currentTournament, availableTournaments, setTournament } = useTournament();
+
+    const gamesPlayed = stats?.games_played ?? 0;
+    const minutesPlayed = stats?.minutes_played ?? 0;
+    const started = stats?.started ?? 0;
+    const subbedIn = stats?.subbed_in ?? 0;
 
     const statItems = [
         { label: 'Матчқа қатысты', value: gamesPlayed },
@@ -29,9 +35,16 @@ export function PlayerStatsSection({ stats }: PlayerStatsSectionProps) {
                         <h2 className="text-2xl font-black text-[#1E4D8C]">Статистика</h2>
 
                         <div className="relative group">
-                            <select className="appearance-none bg-blue-50 text-[#1E4D8C] text-sm font-bold px-4 py-2.5 pr-10 rounded-lg outline-none cursor-pointer hover:bg-blue-100 transition-colors border border-transparent focus:border-[#1E4D8C]/20">
-                                <option>Freedom QJ League \ 2025</option>
-                                <option>Freedom QJ League \ 2024</option>
+                            <select
+                                value={currentTournament.id}
+                                onChange={(e) => setTournament(e.target.value)}
+                                className="appearance-none bg-blue-50 text-[#1E4D8C] text-sm font-bold px-4 py-2.5 pr-10 rounded-lg outline-none cursor-pointer hover:bg-blue-100 transition-colors border border-transparent focus:border-[#1E4D8C]/20"
+                            >
+                                {availableTournaments.map((t) => (
+                                    <option key={t.id} value={t.id}>
+                                        {t.name[lang]}
+                                    </option>
+                                ))}
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1E4D8C] pointer-events-none group-hover:translate-y-[-2px] transition-transform" />
                         </div>

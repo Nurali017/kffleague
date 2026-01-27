@@ -50,7 +50,7 @@ export function StatisticsHero({ stats, goalsByPeriod }: StatisticsHeroProps) {
                                 <div className="text-sm font-medium text-white/60 uppercase tracking-wider mt-1">Goals per match</div>
                             </div>
                             <div className="border-l-4 border-[#22C55E] pl-4">
-                                <div className="text-4xl font-bold">{stats.minutesPerGoal}'</div>
+                                <div className="text-4xl font-bold">{stats.minutesPerGoal}&apos;</div>
                                 <div className="text-sm font-medium text-white/60 uppercase tracking-wider mt-1">Minutes per goal</div>
                             </div>
                         </div>

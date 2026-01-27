@@ -8,8 +8,8 @@ export function MiniLeagueTable() {
     return (
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col h-full">
             <div className="flex items-center justify-between mb-4">
-                <span className="bg-[#001538] text-white text-xs font-bold px-3 py-1 rounded-full uppercase">2024</span>
-                <span className="text-xs font-bold text-gray-500">Freedom QJ League u17 (A)</span>
+                <span className="bg-primary-dark text-white text-xs font-bold px-3 py-1 rounded-full uppercase">2025</span>
+                <span className="text-xs font-bold text-gray-500">Премьер-Лига</span>
             </div>
 
             <div className="flex-1 overflow-x-auto no-scrollbar">
@@ -110,7 +110,7 @@ export function TopScorerCard() {
             </div>
 
             <div className="absolute bottom-0 right-0 w-[60%] h-[90%] flex items-end justify-end">
-                <div className="w-full h-full bg-gradient-to-t from-[#1E4D8C]/20 to-transparent rounded-tl-[100px]" />
+                <div className="w-full h-full bg-gradient-to-t from-primary/20 to-transparent rounded-tl-[100px]" />
                 {/* <img src={scorer.photo_url} className="h-full object-contain object-bottom" /> */}
             </div>
 

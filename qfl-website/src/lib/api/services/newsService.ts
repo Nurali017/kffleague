@@ -8,7 +8,7 @@ export const newsService = {
     limit: number = 5
   ): Promise<SliderNews[]> {
     const response = await apiClient.get<SliderNews[]>(ENDPOINTS.NEWS_SLIDER, {
-      language,
+      lang: language,
       limit,
     });
 
@@ -24,7 +24,7 @@ export const newsService = {
     limit: number = 10
   ): Promise<NewsArticle[]> {
     const response = await apiClient.get<NewsArticle[]>(ENDPOINTS.NEWS_LATEST, {
-      language,
+      lang: language,
       limit,
     });
 
@@ -40,7 +40,7 @@ export const newsService = {
     language: string = DEFAULT_LANGUAGE
   ): Promise<NewsArticle | null> {
     const response = await apiClient.get<NewsArticle>(ENDPOINTS.NEWS_BY_ID(id), {
-      language,
+      lang: language,
     });
 
     if (!response.success) {
@@ -57,7 +57,7 @@ export const newsService = {
     limit: number = 12
   ): Promise<NewsPagination> {
     const params: Record<string, any> = {
-      language,
+      lang: language,
       page,
       limit,
     };
@@ -80,7 +80,7 @@ export const newsService = {
 
   async getCategories(language: string = DEFAULT_LANGUAGE): Promise<string[]> {
     const response = await apiClient.get<string[]>(ENDPOINTS.NEWS_CATEGORIES, {
-      language,
+      lang: language,
     });
 
     if (!response.success) {
@@ -128,7 +128,7 @@ export const newsService = {
     language: string = DEFAULT_LANGUAGE
   ): Promise<NewsNavigation> {
     const response = await apiClient.get<NewsNavigation>(ENDPOINTS.NEWS_NAVIGATION(id), {
-      language,
+      lang: language,
     });
 
     if (!response.success) {

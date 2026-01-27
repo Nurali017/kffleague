@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -12,29 +12,37 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Get initial theme from DOM (set by inline script in layout.tsx)
+function getInitialTheme(): Theme {
+  if (typeof window !== 'undefined') {
+    // Check if dark class is already applied by inline script
+    const isDark = document.documentElement.classList.contains('dark');
+    return isDark ? 'dark' : 'light';
+  }
+  return 'light';
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  // Initialize with theme from DOM (already set by inline script)
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
 
-    // Get theme from localStorage or system preference
-    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    // Sync state with actual DOM state (set by inline script)
+    const isDark = document.documentElement.classList.contains('dark');
+    const currentTheme = isDark ? 'dark' : 'light';
+    setThemeState(currentTheme);
 
-    if (storedTheme) {
-      setThemeState(storedTheme);
-      applyTheme(storedTheme);
-    } else {
-      // Detect system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const systemTheme: Theme = prefersDark ? 'dark' : 'light';
-      setThemeState(systemTheme);
-      applyTheme(systemTheme);
+    // Also sync with localStorage if not set
+    const storedTheme = localStorage.getItem('theme');
+    if (!storedTheme) {
+      localStorage.setItem('theme', currentTheme);
     }
   }, []);
 
-  const applyTheme = (newTheme: Theme) => {
+  const applyTheme = useCallback((newTheme: Theme) => {
     const root = document.documentElement;
 
     if (newTheme === 'dark') {
@@ -42,26 +50,33 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       root.classList.remove('dark');
     }
-  };
+  }, []);
 
-  const setTheme = (newTheme: Theme) => {
+  const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);
-  };
+  }, [applyTheme]);
 
-  const toggleTheme = () => {
-    const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-  };
+  const toggleTheme = useCallback(() => {
+    setThemeState((currentTheme) => {
+      const newTheme: Theme = currentTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      applyTheme(newTheme);
+      return newTheme;
+    });
+  }, [applyTheme]);
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return <>{children}</>;
-  }
+  const contextValue = useMemo(() => ({
+    theme,
+    toggleTheme,
+    setTheme,
+  }), [theme, toggleTheme, setTheme]);
 
+  // Always render children - theme is already applied by inline script
+  // This prevents hydration mismatch
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

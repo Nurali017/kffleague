@@ -51,7 +51,7 @@ export function NewsGrid({
   showStats = false,
   className = '',
 }: NewsGridProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
 
   if (loading) {
     return (
@@ -77,7 +77,7 @@ export function NewsGrid({
     return (
       <div className={`text-center py-16 ${className}`}>
         <p className="text-gray-500 dark:text-slate-400 text-lg">
-          {t('news.noResults', 'Новостей не найдено')}
+          {t('noResults')}
         </p>
       </div>
     );

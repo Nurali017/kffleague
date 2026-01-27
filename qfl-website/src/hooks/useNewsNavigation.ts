@@ -1,11 +1,7 @@
 import useSWR from 'swr';
+import { useTranslation } from 'react-i18next';
 import { newsService } from '@/lib/api/services';
-import { DEFAULT_LANGUAGE } from '@/api/endpoints';
 import { NewsNavigation } from '@/types';
-
-interface UseNewsNavigationOptions {
-  language?: string;
-}
 
 interface UseNewsNavigationResult {
   navigation: NewsNavigation;
@@ -14,15 +10,12 @@ interface UseNewsNavigationResult {
   refetch: () => void;
 }
 
-export function useNewsNavigation(
-  newsId: number | null,
-  options: UseNewsNavigationOptions = {}
-): UseNewsNavigationResult {
-  const { language = DEFAULT_LANGUAGE } = options;
+export function useNewsNavigation(newsId: number | null): UseNewsNavigationResult {
+  const { i18n } = useTranslation();
 
   const { data, error, isLoading, mutate } = useSWR<NewsNavigation>(
-    newsId ? ['newsNavigation', newsId, language] : null,
-    () => (newsId ? newsService.getNavigation(newsId, language) : Promise.resolve({})),
+    newsId ? ['newsNavigation', newsId, i18n.language] : null,
+    () => (newsId ? newsService.getNavigation(newsId, i18n.language) : Promise.resolve({})),
     {
       revalidateOnFocus: false,
       dedupingInterval: 60000, // 1 minute - navigation doesn't change often

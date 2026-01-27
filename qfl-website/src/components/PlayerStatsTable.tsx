@@ -79,7 +79,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
                 <td className="py-3 px-3 text-gray-400 font-medium">{index + 1}.</td>
                 <td className="py-3 px-3">
                   <Link
-                    href={`/players/${player.player_id}`}
+                    href={`/player/${player.player_id}`}
                     className="flex items-center space-x-3 hover:text-[#E5B73B] transition-colors"
                   >
                     <img

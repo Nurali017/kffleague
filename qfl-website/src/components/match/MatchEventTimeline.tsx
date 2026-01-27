@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { EnhancedMatchEvent, GameTeam } from '@/types';
-import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon } from './MatchEventIcons';
+import { EnhancedMatchEvent, GameTeam, PlayerCountry } from '@/types';
+import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon, JerseyIcon } from './MatchEventIcons';
+import { getTeamLogo, getTeamColor, getTeamInitials } from '@/lib/utils/teamLogos';
 
 interface MatchEventTimelineProps {
   events: EnhancedMatchEvent[];
@@ -10,6 +11,7 @@ interface MatchEventTimelineProps {
   awayTeam: GameTeam;
   currentMinute?: number;
   loading?: boolean;
+  playerCountryMap?: Record<string, PlayerCountry>;
 }
 
 export function MatchEventTimeline({
@@ -18,6 +20,7 @@ export function MatchEventTimeline({
   awayTeam,
   currentMinute = 90,
   loading,
+  playerCountryMap = {},
 }: MatchEventTimelineProps) {
   const [hoveredEvent, setHoveredEvent] = useState<number | null>(null);
 
@@ -35,111 +38,207 @@ export function MatchEventTimeline({
   );
 
   return (
-    <div className="w-full mt-10 mb-8 select-none px-4 md:px-12 relative">
+    <div className="w-full mt-10 mb-8 select-none px-4 md:px-20 relative">
 
-      {/* Team Names Header */}
-      <div className="flex justify-between items-center mb-10 px-2">
-        <h3 className="text-white/90 font-bold uppercase tracking-widest text-lg md:text-xl drop-shadow-md">
-          {homeTeam.name}
-        </h3>
-        {/* Optional: Center Timer or Status can go here if distinct from header */}
-        <div className="text-green-500 font-bold text-lg animate-pulse hidden md:block">
-          {currentMinute}'
+      <div className="flex items-center gap-2 md:gap-4 h-28 md:h-36">
+
+        {/* KO Marker - Left (Static Flex Item) */}
+        <div className="relative z-10 shrink-0">
+          <TimelineEndpoint
+            homeTeam={homeTeam}
+            awayTeam={awayTeam}
+            label="KO"
+            position="static"
+          />
         </div>
-        <h3 className="text-white/90 font-bold uppercase tracking-widest text-lg md:text-xl drop-shadow-md text-right">
-          {awayTeam.name}
-        </h3>
-      </div>
 
-      <div className="relative h-24 md:h-32 flex items-center">
+        {/* Timeline Track & Events Area */}
+        <div className="flex-1 relative h-full flex items-center">
+          {/* Timeline Axis Track */}
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 bg-white/10 rounded-full w-full z-0 backdrop-blur-sm shadow-inner" />
 
-        {/* Timeline Axis Track */}
-        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 bg-white/10 rounded-full w-full z-0 backdrop-blur-sm shadow-inner" />
+          {/* Events */}
+          {timelineEvents.map((event) => {
+            // Scale
+            const maxTime = Math.max(95, currentMinute);
+            const position = Math.min((event.minute / maxTime) * 100, 100);
 
-        {/* Fill based on current minute (Optional, if we want progress bar style) */}
-        {/* <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1.5 bg-white/30 rounded-full z-0" style={{ width: `${(Math.min(currentMinute,90)/90)*100}%` }} /> */}
+            const isHome = event.team_id === homeTeam.id; // Home Top
+            const isHovered = hoveredEvent === event.id;
 
-        {/* Events */}
-        {timelineEvents.map((event) => {
-          // Scale
-          const maxTime = Math.max(95, currentMinute);
-          const position = Math.min((event.minute / maxTime) * 100, 100);
+            // Vertical Direction
+            const verticalClass = isHome ? 'bottom-[50%] pb-4' : 'top-[50%] pt-4';
+            const connectorClass = isHome ? 'bottom-0 h-4' : 'top-0 h-4';
+            const labelSort = isHome ? 'flex-col-reverse' : 'flex-col';
 
-          const isHome = event.team_id === homeTeam.id; // Home Top
-          const isHovered = hoveredEvent === event.id;
+            return (
+              <div
+                key={event.id}
+                className={`absolute flex flex-col items-center group cursor-pointer ${isHovered ? 'z-40' : 'z-10'} ${verticalClass}`}
+                style={{ left: `${position}%` }}
+                onMouseEnter={() => setHoveredEvent(event.id)}
+                onMouseLeave={() => setHoveredEvent(null)}
+              >
+                {/* Connector Line */}
+                <div className={`absolute left-1/2 -translate-x-[0.5px] w-[1px] bg-white/30 group-hover:bg-white/60 transition-colors ${connectorClass}`} />
 
-          // Vertical Direction
-          const verticalClass = isHome ? 'bottom-[50%] pb-4' : 'top-[50%] pt-4';
-          const connectorClass = isHome ? 'bottom-0 h-4' : 'top-0 h-4';
-          const labelSort = isHome ? 'flex-col-reverse' : 'flex-col';
+                {/* Event Wrapper */}
+                <div className={`relative flex items-center ${labelSort} gap-1 transition-transform duration-300 ${isHovered ? 'scale-110 z-20' : 'z-10'}`}>
 
-          return (
-            <div
-              key={event.id}
-              className={`absolute flex flex-col items-center group cursor-pointer z-10 ${verticalClass}`}
-              style={{ left: `${position}%` }}
-              onMouseEnter={() => setHoveredEvent(event.id)}
-              onMouseLeave={() => setHoveredEvent(null)}
-            >
-              {/* Connector Line */}
-              <div className={`absolute left-1/2 -translate-x-[0.5px] w-[1px] bg-white/30 group-hover:bg-white/60 transition-colors ${connectorClass}`} />
+                  {/* Minute Label */}
+                  <span className="text-[10px] font-bold text-white/70 font-mono tracking-tighter">
+                    {event.minute}&apos;
+                  </span>
 
-              {/* Event Wrapper */}
-              <div className={`relative flex items-center ${labelSort} gap-1 transition-transform duration-300 ${isHovered ? 'scale-110 z-20' : 'z-10'}`}>
+                  {/* Icon Container */}
+                  <EventMarker type={event.event_type} isHovered={isHovered} />
 
-                {/* Minute Label */}
-                <span className="text-[10px] font-bold text-white/70 font-mono tracking-tighter">
-                  {event.minute}'
-                </span>
-
-                {/* Icon Container */}
-                <EventMarker type={event.event_type} isHovered={isHovered} />
-
-              </div>
-
-              {/* Tooltip */}
-              {isHovered && (
-                <div className={`absolute left-1/2 -translate-x-1/2 w-48 bg-gray-900 border border-white/10 rounded-lg p-3 shadow-2xl z-50 text-center animate-in fade-in zoom-in-95 duration-150 ${isHome ? 'bottom-full mb-2' : 'top-full mt-2'}`}>
-                  <div className="text-xs font-bold text-gray-400 uppercase mb-1">{getEventLabel(event.event_type)}</div>
-                  <div className="text-sm font-bold text-white leading-tight">
-                    {event.player_name}
-                  </div>
-                  {event.event_type === 'substitution' && event.player2_name && (
-                    <div className="text-xs text-gray-400 mt-1">
-                      <span className="text-green-500">In:</span> {event.player_name}<br />
-                      <span className="text-red-500">Out:</span> {event.player2_name}
-                    </div>
-                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                {/* Tooltip - always opens upward */}
+                {isHovered && (
+                  <div className="absolute left-1/2 -translate-x-1/2 min-w-[200px] bg-gray-900/95 border border-white/10 rounded-lg p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 bottom-full mb-2">
+                    {/* Header with minute and event type */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-white font-bold">{event.minute}&apos;</span>
+                      <EventMarker type={event.event_type} isHovered={false} />
+                      <span className="text-gray-400 uppercase text-xs">{getEventLabel(event.event_type)}</span>
+                    </div>
+
+                    {event.event_type === 'substitution' && event.player2_name ? (
+                      /* Substitution - show two players */
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500 text-xs font-bold">ON</span>
+                          <span className="text-green-500">▲</span>
+                          <JerseyIcon number={event.player2_number || 0} color={getTeamColor(event.team_id)} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
+                          {event.player2_id && playerCountryMap[event.player2_id]?.flag_url && (
+                            <img
+                              src={playerCountryMap[event.player2_id].flag_url}
+                              alt={playerCountryMap[event.player2_id].code}
+                              className="w-4 h-3 object-cover rounded-[1px]"
+                            />
+                          )}
+                          <span className="text-white text-sm font-medium whitespace-nowrap">{event.player2_name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500 text-xs font-bold">OFF</span>
+                          <span className="text-red-500">▼</span>
+                          <JerseyIcon number={event.player_number || 0} color={getTeamColor(event.team_id)} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
+                          {event.player_id && playerCountryMap[event.player_id]?.flag_url && (
+                            <img
+                              src={playerCountryMap[event.player_id].flag_url}
+                              alt={playerCountryMap[event.player_id].code}
+                              className="w-4 h-3 object-cover rounded-[1px]"
+                            />
+                          )}
+                          <span className="text-white text-sm whitespace-nowrap">{event.player_name}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Other events - single player */
+                      <div className="flex items-center gap-3">
+                        <JerseyIcon number={event.player_number || 0} color={getTeamColor(event.team_id)} className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0" />
+                        {event.player_id && playerCountryMap[event.player_id]?.flag_url && (
+                          <img
+                            src={playerCountryMap[event.player_id].flag_url}
+                            alt={playerCountryMap[event.player_id].code}
+                            className="w-4 h-3 object-cover rounded-[1px]"
+                          />
+                        )}
+                        <span className="text-white font-bold whitespace-nowrap">{event.player_name}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
+interface TeamLogoMarkerProps {
+  team: GameTeam;
+  position: 'top' | 'bottom';
+}
+
+function TeamLogoMarker({ team, position }: TeamLogoMarkerProps) {
+  const [imageError, setImageError] = useState(false);
+
+  // Get logo URL with fallback chain
+  const logoUrl = team.logo_url || getTeamLogo(team.id);
+  const teamColor = getTeamColor(team.id);
+  const teamInitials = getTeamInitials(team.name);
+
+  // If no logo URL or image error, show colored circle with initials
+  if (!logoUrl || imageError) {
+    return (
+      <div
+        className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold shadow-md"
+        style={{ backgroundColor: teamColor }}
+      >
+        {teamInitials}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+      <img
+        src={logoUrl}
+        alt={`${team.name} logo`}
+        className="w-8 h-8 md:w-10 md:h-10 object-contain"
+        onError={() => setImageError(true)}
+      />
+    </div>
+  );
+}
+
+interface TimelineEndpointProps {
+  homeTeam: GameTeam;
+  awayTeam: GameTeam;
+  label: string;
+  position: 'left' | 'right' | 'static';
+}
+
+function TimelineEndpoint({ homeTeam, awayTeam, label, position }: TimelineEndpointProps) {
+  const positionClass = position === 'static' ? '' : (position === 'left' ? 'absolute left-0 top-1/2 -translate-y-1/2' : 'absolute right-0 top-1/2 -translate-y-1/2');
+
+  return (
+    <div className={`${positionClass} z-10 flex flex-col items-center gap-1`}>
+      {/* Home Team Logo (Top) */}
+      <TeamLogoMarker team={homeTeam} position="top" />
+
+      {/* Label */}
+      <div className="text-[10px] md:text-xs font-bold text-white/70 uppercase tracking-wider">
+        {label}
+      </div>
+
+      {/* Away Team Logo (Bottom) */}
+      <TeamLogoMarker team={awayTeam} position="bottom" />
+    </div>
+  );
+}
+
 function EventMarker({ type, isHovered }: { type: string; isHovered: boolean }) {
-  // Styling based on image:
-  // Goal: Green Circle
-  // Yellow Card: Yellow Rect (or Icon)
-  // Sub: Blue Circle
-
-  const baseClass = "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center shadow-lg border border-white/10 transition-all";
-
   switch (type) {
     case 'goal':
+      return (
+        <div className={`transition-transform ${isHovered ? 'scale-110' : ''}`}>
+          <GoalIcon className="w-5 h-5 md:w-6 md:h-6" color="white" />
+        </div>
+      );
     case 'penalty':
       return (
-        <div className={`${baseClass} bg-[#22C55E] ${isHovered ? 'ring-2 ring-white' : ''}`}>
-          <GoalIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
+        <div className={`transition-transform ${isHovered ? 'scale-110' : ''}`}>
+          <GoalIcon className="w-5 h-5 md:w-6 md:h-6" color="#F97316" />
         </div>
       );
     case 'yellow_card':
       return (
-        // Just the card rectangle itself, floating? Or in a circle? 
-        // Image shows just the yellow rect for card.
         <div className={`transition-transform ${isHovered ? 'scale-110' : ''}`}>
           <YellowCardIcon className="w-4 h-5 md:w-5 md:h-6 shadow-md" />
         </div>
@@ -152,8 +251,9 @@ function EventMarker({ type, isHovered }: { type: string; isHovered: boolean }) 
       );
     case 'substitution':
       return (
-        <div className={`${baseClass} bg-[#3B82F6] ${isHovered ? 'ring-2 ring-white' : ''}`}>
-          <SubstitutionIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
+        <div className={`flex flex-col items-center gap-0.5 transition-transform ${isHovered ? 'scale-110' : ''}`}>
+          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[8px] border-l-transparent border-r-transparent border-b-green-500" />
+          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-t-[8px] border-l-transparent border-r-transparent border-t-red-500" />
         </div>
       );
     default:

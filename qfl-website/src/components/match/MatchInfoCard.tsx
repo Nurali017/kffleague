@@ -11,7 +11,7 @@ interface MatchInfoCardProps {
 }
 
 export function MatchInfoCard({ match }: MatchInfoCardProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('match');
 
   const localeMap = {
     ru: ru,
@@ -21,20 +21,29 @@ export function MatchInfoCard({ match }: MatchInfoCardProps) {
 
   const currentLocale = localeMap[i18n.language as keyof typeof localeMap] || ru;
 
-  const formattedTime = match.time
-    ? format(new Date(match.time), 'PPp', { locale: currentLocale })
-    : 'TBD';
+  const formattedTime = (() => {
+    if (!match.date) return 'TBD';
+
+    // If we have both date and time, combine them
+    if (match.time) {
+      const dateTimeString = `${match.date}T${match.time}`;
+      return format(new Date(dateTimeString), 'PPp', { locale: currentLocale });
+    }
+
+    // If only date, show date only
+    return format(new Date(match.date), 'PPP', { locale: currentLocale });
+  })();
 
   const infoItems = [
     {
       icon: Flag,
-      label: i18n.language === 'kz' ? 'Төреші' : i18n.language === 'en' ? 'Referee' : 'Судья',
+      label: t('matchInfo.referee'),
       value: match.referee || '-',
       show: true,
     },
     {
       icon: MapPin,
-      label: i18n.language === 'kz' ? 'Стадион' : i18n.language === 'en' ? 'Stadium' : 'Стадион',
+      label: t('matchInfo.stadium'),
       value: match.stadium
         ? `${match.stadium.name}${match.stadium.city ? `, ${match.stadium.city}` : ''}`
         : '-',
@@ -42,13 +51,13 @@ export function MatchInfoCard({ match }: MatchInfoCardProps) {
     },
     {
       icon: Calendar,
-      label: i18n.language === 'kz' ? 'Уақыт' : i18n.language === 'en' ? 'Time' : 'Время',
+      label: t('matchInfo.time'),
       value: formattedTime,
       show: true,
     },
     {
       icon: Users,
-      label: i18n.language === 'kz' ? 'Көрермендер' : i18n.language === 'en' ? 'Attendance' : 'Посещаемость',
+      label: t('matchInfo.attendance'),
       value: match.visitors ? match.visitors.toLocaleString() : '-',
       show: match.visitors !== undefined && match.visitors !== null,
     },
@@ -61,7 +70,7 @@ export function MatchInfoCard({ match }: MatchInfoCardProps) {
   return (
     <div className="bg-white dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-        {i18n.language === 'kz' ? 'Матч туралы' : i18n.language === 'en' ? 'Match Information' : 'Информация о матче'}
+        {t('matchInfo.title')}
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

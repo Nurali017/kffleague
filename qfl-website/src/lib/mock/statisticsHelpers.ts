@@ -19,57 +19,59 @@ export function getColumnsForSubTab(subTab: StatSubTab, mode: 'clubs' | 'players
         switch (subTab) {
             case 'key_stats':
                 return [
-                    { key: 'matches_played', label: 'MP', sortable: true },
-                    { key: 'wins', label: 'W', sortable: true },
-                    { key: 'draws', label: 'D', sortable: true },
-                    { key: 'losses', label: 'L', sortable: true },
-                    { key: 'goals', label: 'GF', sortable: true },
-                    { key: 'goals_conceded', label: 'GA', sortable: true },
-                    { key: 'goal_difference', label: 'GD', sortable: true },
-                    { key: 'points', label: 'Pts', sortable: true },
+                    { key: 'games_played', label: 'И', sortable: true },
+                    { key: 'wins', label: 'В', sortable: true },
+                    { key: 'draws', label: 'Н', sortable: true },
+                    { key: 'losses', label: 'П', sortable: true },
+                    { key: 'goals_scored', label: 'ЗГ', sortable: true },
+                    { key: 'goals_conceded', label: 'ПГ', sortable: true },
+                    { key: 'goal_difference', label: 'РГ', sortable: true },
+                    { key: 'points', label: 'О', sortable: true },
                 ];
             case 'goals':
                 return [
-                    { key: 'goals', label: 'Goals', sortable: true },
-                    { key: 'goals_per_match', label: 'Avg Goals', format: 'decimal', sortable: true },
-                    { key: 'goals_conceded', label: 'Conceded', sortable: true },
-                    { key: 'goals_conceded_per_match', label: 'Avg Conceded', format: 'decimal', sortable: true },
-                    { key: 'goal_difference', label: 'Diff', sortable: true },
+                    { key: 'goals_scored', label: 'Голы', sortable: true },
+                    { key: 'goals_per_match', label: 'Голы/М', format: 'decimal', sortable: true },
+                    { key: 'goals_conceded', label: 'Пропущено', sortable: true },
+                    { key: 'goals_conceded_per_match', label: 'Проп/М', format: 'decimal', sortable: true },
+                    { key: 'goal_difference', label: 'Разница', sortable: true },
+                    { key: 'xg', label: 'xG', format: 'decimal', sortable: true },
                 ];
             case 'attempts':
                 return [
-                    { key: 'shots', label: 'Shots', sortable: true },
-                    { key: 'shots_on_target', label: 'On Target', sortable: true },
-                    { key: 'shot_accuracy', label: 'Accuracy', format: 'percentage', sortable: true },
-                    { key: 'shots_per_match', label: 'Shots/Match', format: 'decimal', sortable: true },
+                    { key: 'shots', label: 'Удары', sortable: true },
+                    { key: 'shots_on_goal', label: 'В створ', sortable: true },
+                    { key: 'shot_accuracy', label: 'Точность', format: 'percentage', sortable: true },
+                    { key: 'shots_per_match', label: 'Удары/М', format: 'decimal', sortable: true },
                 ];
             case 'distribution':
                 return [
-                    { key: 'passes', label: 'Passes', sortable: true },
-                    { key: 'pass_accuracy', label: 'Accuracy', format: 'percentage', sortable: true },
-                    { key: 'key_passes', label: 'Key Passes', sortable: true },
-                    { key: 'crosses', label: 'Crosses', sortable: true },
+                    { key: 'passes', label: 'Передачи', sortable: true },
+                    { key: 'pass_accuracy', label: 'Точность', format: 'percentage', sortable: true },
+                    { key: 'key_passes', label: 'Ключевые', sortable: true },
+                    { key: 'crosses', label: 'Кроссы', sortable: true },
                 ];
             case 'attacking':
                 return [
-                    { key: 'attacks', label: 'Attacks', sortable: true },
-                    { key: 'dangerous_attacks', label: 'Dang. Attacks', sortable: true },
-                    { key: 'possession', label: 'Possession', format: 'percentage', sortable: true },
-                    { key: 'dribbles_successful', label: 'Dribbles', sortable: true },
+                    { key: 'possession', label: 'Владение', format: 'percentage', sortable: true },
+                    { key: 'dribbles', label: 'Дриблинг', sortable: true },
+                    { key: 'dribble_success', label: 'Дрибл %', format: 'percentage', sortable: true },
+                    { key: 'corners', label: 'Угловые', sortable: true },
                 ];
             case 'defending':
                 return [
-                    { key: 'tackles', label: 'Tackles', sortable: true },
-                    { key: 'interceptions', label: 'Interceptions', sortable: true },
-                    { key: 'blocks', label: 'Blocks', sortable: true },
-                    { key: 'clearances', label: 'Clearances', sortable: true },
+                    { key: 'tackles', label: 'Отборы', sortable: true },
+                    { key: 'interceptions', label: 'Перехваты', sortable: true },
+                    { key: 'recoveries', label: 'Возвраты', sortable: true },
+                    { key: 'offsides', label: 'Офсайды', sortable: true },
                 ];
             case 'disciplinary':
                 return [
-                    { key: 'fouls', label: 'Fouls', sortable: true },
-                    { key: 'yellow_cards', label: 'Yellow', sortable: true },
-                    { key: 'red_cards', label: 'Red', sortable: true },
-                    { key: 'fouls_per_match', label: 'Fouls/M', format: 'decimal', sortable: true },
+                    { key: 'fouls', label: 'Фолы', sortable: true },
+                    { key: 'yellow_cards', label: 'ЖК', sortable: true },
+                    { key: 'second_yellow_cards', label: '2ЖК', sortable: true },
+                    { key: 'red_cards', label: 'КК', sortable: true },
+                    { key: 'fouls_per_match', label: 'Фолы/М', format: 'decimal', sortable: true },
                 ];
             default:
                 return [];

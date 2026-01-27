@@ -12,7 +12,7 @@ const sponsors = [
 
 export function SponsorsSection() {
   return (
-    <section className="bg-white py-8 md:py-12">
+    <section className="bg-white dark:bg-dark-surface py-8 md:py-12">
       <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-20">
           {sponsors.map((sponsor) => (

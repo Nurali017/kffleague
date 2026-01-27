@@ -22,11 +22,15 @@ interface GamesResponse {
 export const matchService = {
   async getGamesByTour(
     seasonId: number = DEFAULT_SEASON_ID,
-    tour: number = DEFAULT_TOUR
+    tour: number = DEFAULT_TOUR,
+    language?: string
   ): Promise<Game[]> {
     const response = await apiClient.get<GamesResponse>(
       ENDPOINTS.SEASON_GAMES(seasonId),
-      { tour }
+      {
+        tour,
+        ...(language ? { lang: language } : {}),
+      }
     );
 
     if (!response.success) {

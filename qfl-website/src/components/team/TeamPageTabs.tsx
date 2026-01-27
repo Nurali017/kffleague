@@ -15,8 +15,8 @@ export function TeamPageTabs({ activeTab, onChange }: TeamPageTabsProps) {
         { id: 'overview', label: t('team.tabs.description', 'Сипаттама') },
         { id: 'matches', label: t('team.tabs.calendar', 'Күнтізбе') },
         { id: 'squad', label: t('team.tabs.squad', 'Құрам') },
+        { id: 'stats', label: t('team.tabs.stats', 'Статистика') },
         { id: 'staff', label: t('team.tabs.staff', 'Қызметкерлер') },
-        { id: 'transfers', label: t('team.tabs.transfers', 'Өтінімнен шығарылғандар') },
     ];
 
     return (
@@ -33,7 +33,7 @@ export function TeamPageTabs({ activeTab, onChange }: TeamPageTabsProps) {
                                 className={cn(
                                     "relative py-4 text-sm font-bold transition-all whitespace-nowrap outline-none select-none",
                                     isActive
-                                        ? "text-[#1E4D8C] border-b-4 border-[#1E4D8C]"
+                                        ? "text-primary border-b-4 border-primary"
                                         : "text-gray-400 hover:text-gray-600 border-b-4 border-transparent"
                                 )}
                             >

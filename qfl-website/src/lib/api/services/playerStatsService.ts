@@ -6,6 +6,7 @@ interface GetPlayerStatsParams {
   seasonId?: number;
   sortBy?: PlayerStatsSortBy;
   limit?: number;
+  language?: string;
 }
 
 export const playerStatsService = {
@@ -13,10 +14,15 @@ export const playerStatsService = {
     seasonId = DEFAULT_SEASON_ID,
     sortBy = 'goals',
     limit = 20,
+    language,
   }: GetPlayerStatsParams = {}): Promise<PlayerStatsResponse> {
     const response = await apiClient.get<PlayerStatsResponse>(
       ENDPOINTS.SEASON_PLAYER_STATS(seasonId),
-      { sort_by: sortBy, limit }
+      {
+        sort_by: sortBy,
+        limit,
+        ...(language ? { lang: language } : {}),
+      }
     );
 
     if (!response.success) {

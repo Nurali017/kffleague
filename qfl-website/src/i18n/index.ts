@@ -15,7 +15,7 @@ i18n
   .init({
     fallbackLng: 'ru',
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'footer', 'errors', 'table', 'league'],
+    ns: ['common', 'navigation', 'footer', 'errors', 'table', 'league', 'news', 'match', 'team'],
     supportedLngs: SUPPORTED_LANGUAGES,
 
     interpolation: {

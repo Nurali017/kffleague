@@ -1,10 +1,6 @@
 import useSWR from 'swr';
+import { useTranslation } from 'react-i18next';
 import { newsService } from '@/lib/api/services';
-import { DEFAULT_LANGUAGE } from '@/api/endpoints';
-
-interface UseNewsCategoriesOptions {
-  language?: string;
-}
 
 interface UseNewsCategoriesResult {
   categories: string[];
@@ -13,14 +9,12 @@ interface UseNewsCategoriesResult {
   refetch: () => void;
 }
 
-export function useNewsCategories(
-  options: UseNewsCategoriesOptions = {}
-): UseNewsCategoriesResult {
-  const { language = DEFAULT_LANGUAGE } = options;
+export function useNewsCategories(): UseNewsCategoriesResult {
+  const { i18n } = useTranslation();
 
   const { data, error, isLoading, mutate } = useSWR(
-    ['newsCategories', language],
-    () => newsService.getCategories(language),
+    ['newsCategories', i18n.language],
+    () => newsService.getCategories(i18n.language),
     {
       revalidateOnFocus: false,
       dedupingInterval: 300000, // 5 minutes - categories don't change often

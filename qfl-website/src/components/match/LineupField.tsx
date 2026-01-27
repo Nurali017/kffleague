@@ -39,12 +39,19 @@ function PlayerRow({ player }: { player: LineupPlayerExtended }) {
   const fullName = `${player.first_name} ${player.last_name}`;
   return (
     <Link
-      href={`/players/${player.player_id}`}
+      href={`/player/${player.player_id}`}
       className={`flex items-center gap-3 px-4 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors`}
     >
       <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-700">
         {player.number}
       </div>
+      {player.country?.flag_url && (
+        <img
+          src={player.country.flag_url}
+          alt={player.country.code}
+          className="w-4 h-3 object-cover rounded-[1px] shadow-sm flex-shrink-0"
+        />
+      )}
       <div className="text-xs font-semibold text-gray-800 truncate">
         {fullName}
       </div>
@@ -86,7 +93,7 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
       {/* Desktop List: Home - Hidden on Mobile */}
       <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
         <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
-          <img src={getTeamLogo(homeTeam.id)} className="w-8 h-8 object-contain" />
+          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 object-contain" alt={homeTeam.name} />
           <span className="font-bold text-gray-900">{homeTeam.name}</span>
         </div>
         {lineups.home_team.starters.map(p => <PlayerRow key={p.player_id} player={p} />)}
@@ -109,7 +116,7 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
       {/* Desktop List: Away - Hidden on Mobile */}
       <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
         <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
-          <img src={getTeamLogo(awayTeam.id)} className="w-8 h-8 object-contain" />
+          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 object-contain" alt={awayTeam.name} />
           <span className="font-bold text-gray-900">{awayTeam.name}</span>
         </div>
         {lineups.away_team.starters.map(p => <PlayerRow key={p.player_id} player={p} />)}
@@ -147,18 +154,16 @@ function FieldVisualization({
   const homePositions = getFormationPositions(homeFormation, false);
   const awayPositions = getFormationPositions(awayFormation, true);
 
-  // Home (Bottom logic in utils) -> Map to TOP HALF (0-50%)
+  // Home -> GK(y=5)=8%, нападающие(y=80)=46% (имя на своей половине)
   const mapToHomeHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: pos.y * 0.42 + 5 // GK at y=5 is top
+    y: pos.y * 0.51 + 5.45
   });
 
-  // Away (Top logic in utils) -> Map to BOTTOM HALF (50-100%)
-  // awayPositions are already 'inverted' (GK=95).
-  // We need GK at Bottom (95).
+  // Away (inverted) -> нападающие(y=20)=52%, GK(y=95)=92%
   const mapToAwayHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: 52 + (pos.y * 0.42) // Compress to fit
+    y: pos.y * 0.53 + 41.3
   });
 
   return (
@@ -167,9 +172,7 @@ function FieldVisualization({
       {/* Header Overlay (Home Team) - TOP */}
       <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent z-20">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-white p-1 shadow">
-            <img src={getTeamLogo(homeTeam.id)} className="w-full h-full object-contain" />
-          </div>
+          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-10 h-10 object-contain" alt={homeTeam.name} />
           <div className="flex flex-col">
             <span className="text-white font-bold text-lg leading-none">{homeTeam.name}</span>
             <span className="text-white/60 text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
@@ -213,9 +216,7 @@ function FieldVisualization({
             <span className="text-white font-bold text-lg leading-none">{awayTeam.name}</span>
             <span className="text-white/60 text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-white p-1 shadow">
-            <img src={getTeamLogo(awayTeam.id)} className="w-full h-full object-contain" />
-          </div>
+          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-10 h-10 object-contain" alt={awayTeam.name} />
         </div>
       </div>
 
@@ -276,12 +277,21 @@ function PlayerMarker({ player, position, teamColor }: PlayerMarkerProps) {
       <JerseyIcon color={teamColor} number={player.number} />
 
       {/* Name Label */}
-      <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center gap-1">
+        {player.country?.flag_url && (
+          <img
+            src={player.country.flag_url}
+            alt={player.country.code}
+            className="w-3 h-[9px] object-cover rounded-[1px] shadow-sm"
+          />
+        )}
         <span className="text-[10px] md:text-[11px] font-medium text-white text-center leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[90px] truncate tracking-wide">
           {player.last_name}
         </span>
         {player.is_captain && (
-          <span className="text-[8px] font-black text-yellow-400 uppercase tracking-widest mt-0.5">Capt</span>
+          <span className="flex items-center justify-center w-4 h-4 bg-yellow-400 rounded-full text-[8px] font-black text-black leading-none shadow-md" title="Captain">
+            C
+          </span>
         )}
       </div>
     </div>

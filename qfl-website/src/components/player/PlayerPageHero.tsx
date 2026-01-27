@@ -11,12 +11,10 @@ interface PlayerPageHeroProps {
 }
 
 export function PlayerPageHero({ player, team }: PlayerPageHeroProps) {
-    // Mock data for missing fields if necessary
-    const isHomegrown = true; // TODO: Add to PlayerDetail type or fetch
     const country = player.nationality || 'Kazakhstan';
 
     // Calculate age if DOB is available
-    const getAge = (dob?: string) => {
+    const getAge = (dob?: string | null) => {
         if (!dob) return '';
         const birthDate = new Date(dob);
         const ageDifMs = Date.now() - birthDate.getTime();
@@ -56,29 +54,32 @@ export function PlayerPageHero({ player, team }: PlayerPageHeroProps) {
                                 {player.first_name} {player.last_name}
                             </h1>
 
-                            <div className="flex items-center gap-2">
+                            {player.jersey_number != null && (
                                 <span className="flex items-center justify-center bg-white text-[#0055D4] font-black text-lg md:text-xl w-10 h-10 rounded-full shadow-lg">
-                                    {player.jersey_number || '-'}
+                                    {player.jersey_number}
                                 </span>
-
-                                {isHomegrown && (
-                                    <span className="flex items-center justify-center bg-[#E53935] text-white font-bold text-xs px-2 py-1 rounded shadow-sm uppercase tracking-wide">
-                                        HG
-                                    </span>
-                                )}
-                            </div>
+                            )}
                         </div>
 
                         {/* Club and League Info */}
                         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 inline-flex items-center gap-3 mb-4">
-                            {/* Team Logo Mock */}
-                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center p-1">
-                                {/* <img src={...} /> */}
-                                <span className="text-[#0055D4] font-bold text-[10px]">FC</span>
+                            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center p-1 overflow-hidden">
+                                {(team?.logo_url || player.team_logo) ? (
+                                    <Image
+                                        src={team?.logo_url || player.team_logo!}
+                                        alt={teamName}
+                                        width={28}
+                                        height={28}
+                                        className="object-contain"
+                                    />
+                                ) : (
+                                    <span className="text-[#0055D4] font-bold text-[10px]">
+                                        {teamName.substring(0, 2).toUpperCase()}
+                                    </span>
+                                )}
                             </div>
                             <div className="flex flex-col items-start leading-none">
                                 <span className="font-bold text-sm md:text-base">{teamName}</span>
-                                <span className="text-[10px] md:text-xs text-white/70">Freedom QJ League 2025</span>
                             </div>
                         </div>
 
@@ -88,7 +89,7 @@ export function PlayerPageHero({ player, team }: PlayerPageHeroProps) {
                         </div>
 
                         {/* Metadata Grid */}
-                        <div className="grid grid-cols-3 gap-6 md:gap-12 border-t border-white/10 pt-4 md:w-fit">
+                        <div className="flex flex-wrap gap-6 md:gap-12 border-t border-white/10 pt-4">
                             <div className="flex flex-col">
                                 <span className="text-[10px] uppercase tracking-wider text-white/60 font-bold">Туған күні</span>
                                 <span className="font-bold text-sm md:text-base">
@@ -96,12 +97,16 @@ export function PlayerPageHero({ player, team }: PlayerPageHeroProps) {
                                     {age && <span className="opacity-70 ml-1">· {age} жас</span>}
                                 </span>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] uppercase tracking-wider text-white/60 font-bold">Бой, салмақ</span>
-                                <span className="font-bold text-sm md:text-base">
-                                    {player.height} см, {player.weight} кг
-                                </span>
-                            </div>
+                            {(player.height || player.weight) && (
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] uppercase tracking-wider text-white/60 font-bold">Бой, салмақ</span>
+                                    <span className="font-bold text-sm md:text-base">
+                                        {player.height ? `${player.height} см` : '-'}
+                                        {', '}
+                                        {player.weight ? `${player.weight} кг` : '-'}
+                                    </span>
+                                </div>
+                            )}
                             <div className="flex flex-col">
                                 <span className="text-[10px] uppercase tracking-wider text-white/60 font-bold">Азаматтық</span>
                                 <span className="flex items-center gap-2 font-bold text-sm md:text-base">

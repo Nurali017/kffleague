@@ -6,6 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n';
 import { swrConfig } from '@/lib/swr/config';
 import { TournamentProvider } from '@/contexts/TournamentContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import {
   setLanguageCookie,
   getClientLanguageCookie,
@@ -13,9 +14,10 @@ import {
 
 interface ProvidersProps {
   children: ReactNode;
+  initialTournamentId?: string;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children, initialTournamentId }: ProvidersProps) {
   // Sync localStorage and cookie on mount
   useEffect(() => {
     const storedLang = localStorage.getItem('i18nextLng');
@@ -33,12 +35,16 @@ export function Providers({ children }: ProvidersProps) {
   }, []);
 
   return (
-    <SWRConfig value={swrConfig}>
-      <I18nextProvider i18n={i18n}>
-        <Suspense fallback={null}>
-          <TournamentProvider>{children}</TournamentProvider>
-        </Suspense>
-      </I18nextProvider>
-    </SWRConfig>
+    <ThemeProvider>
+      <SWRConfig value={swrConfig}>
+        <I18nextProvider i18n={i18n}>
+          <Suspense fallback={null}>
+            <TournamentProvider initialTournamentId={initialTournamentId}>
+              {children}
+            </TournamentProvider>
+          </Suspense>
+        </I18nextProvider>
+      </SWRConfig>
+    </ThemeProvider>
   );
 }

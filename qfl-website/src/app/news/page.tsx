@@ -12,7 +12,7 @@ import { useNewsPagination, useNewsCategories } from '@/hooks';
 import { getFiltersFromSearchParams, getPageFromSearchParams, syncFiltersToUrl } from '@/lib/utils/urlState';
 
 export default function NewsPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
   const searchParams = useSearchParams();
 
   // Initialize state from URL
@@ -73,7 +73,7 @@ export default function NewsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-[#1E4D8C] dark:text-blue-400">
-          {t('news.title', 'Новости')}
+          {t('title')}
         </h1>
       </div>
 

@@ -1,19 +1,19 @@
 import useSWR from 'swr';
+import { useTranslation } from 'react-i18next';
 import { newsService } from '@/lib/api/services';
-import { DEFAULT_LANGUAGE } from '@/api/endpoints';
 import { SliderNews, NewsArticle } from '@/types';
 
 interface UseSliderNewsOptions {
-  language?: string;
   limit?: number;
 }
 
 export function useSliderNews(options: UseSliderNewsOptions = {}) {
-  const { language = DEFAULT_LANGUAGE, limit = 5 } = options;
+  const { i18n } = useTranslation();
+  const { limit = 5 } = options;
 
   const { data, error, isLoading, mutate } = useSWR<SliderNews[]>(
-    ['sliderNews', language, limit],
-    () => newsService.getSlider(language, limit)
+    ['sliderNews', i18n.language, limit],
+    () => newsService.getSlider(i18n.language, limit)
   );
 
   return {
@@ -25,16 +25,16 @@ export function useSliderNews(options: UseSliderNewsOptions = {}) {
 }
 
 interface UseLatestNewsOptions {
-  language?: string;
   limit?: number;
 }
 
 export function useLatestNews(options: UseLatestNewsOptions = {}) {
-  const { language = DEFAULT_LANGUAGE, limit = 10 } = options;
+  const { i18n } = useTranslation();
+  const { limit = 10 } = options;
 
   const { data, error, isLoading, mutate } = useSWR<NewsArticle[]>(
-    ['latestNews', language, limit],
-    () => newsService.getLatest(language, limit)
+    ['latestNews', i18n.language, limit],
+    () => newsService.getLatest(i18n.language, limit)
   );
 
   return {
@@ -45,16 +45,12 @@ export function useLatestNews(options: UseLatestNewsOptions = {}) {
   };
 }
 
-interface UseNewsByIdOptions {
-  language?: string;
-}
-
-export function useNewsById(id: number | null, options: UseNewsByIdOptions = {}) {
-  const { language = DEFAULT_LANGUAGE } = options;
+export function useNewsById(id: number | null) {
+  const { i18n } = useTranslation();
 
   const { data, error, isLoading, mutate } = useSWR<NewsArticle | null>(
-    id ? ['news', id, language] : null,
-    () => (id ? newsService.getById(id, language) : null)
+    id ? ['news', id, i18n.language] : null,
+    () => (id ? newsService.getById(id, i18n.language) : null)
   );
 
   return {

@@ -18,7 +18,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-10 space-y-8">
+    <div className="max-w-[1400px] mx-auto px-4 py-10 space-y-8 dark:bg-dark-bg">
       {/* Row 1: Hero + HomeMatches */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         <div className="lg:col-span-9 h-[500px]">
@@ -32,12 +32,12 @@ export default function HomePage() {
       {/* Row 2: News + LeagueTable (aligned with MatchCenter) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         {/* News section */}
-        <section className="lg:col-span-9 bg-white border border-gray-100 rounded-xl shadow-sm p-6 flex flex-col">
+        <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[#1E4D8C] tracking-tight">Жаңалықтар</h2>
+            <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400 tracking-tight">Жаңалықтар</h2>
             <Link
               href="/news"
-              className="text-gray-500 font-medium text-sm hover:text-[#1E4D8C] flex items-center transition-colors group"
+              className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center transition-colors group"
             >
               Барлық жаңалықтар
               <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />

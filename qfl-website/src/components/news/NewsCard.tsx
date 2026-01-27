@@ -21,7 +21,7 @@ export function NewsCard({
   showStats = false,
   className = '',
 }: NewsCardProps) {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation('news');
 
   if (variant === 'featured') {
     return (
@@ -68,7 +68,7 @@ export function NewsCard({
                 <span className={`inline-block px-3 py-1 text-white text-xs font-bold rounded uppercase ${
                   news.article_type === 'NEWS' ? 'bg-blue-600' : 'bg-purple-600'
                 }`}>
-                  {news.article_type === 'NEWS' ? t('news.typeNews', 'Новости') : t('news.typeAnalytics', 'Аналитика')}
+                  {news.article_type === 'NEWS' ? t('typeNews') : t('typeAnalytics')}
                 </span>
               </div>
             )}
@@ -109,7 +109,7 @@ export function NewsCard({
                 <span className={`px-2 py-0.5 text-white text-xs font-bold rounded uppercase ${
                   news.article_type === 'NEWS' ? 'bg-blue-600' : 'bg-purple-600'
                 }`}>
-                  {news.article_type === 'NEWS' ? t('news.typeNews', 'Новости') : t('news.typeAnalytics', 'Аналитика')}
+                  {news.article_type === 'NEWS' ? t('typeNews') : t('typeAnalytics')}
                 </span>
               </div>
             )}
@@ -191,7 +191,7 @@ export function NewsCard({
               <span className={`px-3 py-1 text-white text-xs font-bold rounded uppercase ${
                 news.article_type === 'NEWS' ? 'bg-blue-600' : 'bg-purple-600'
               }`}>
-                {news.article_type === 'NEWS' ? t('news.typeNews', 'Новости') : t('news.typeAnalytics', 'Аналитика')}
+                {news.article_type === 'NEWS' ? t('typeNews') : t('typeAnalytics')}
               </span>
             </div>
           )}

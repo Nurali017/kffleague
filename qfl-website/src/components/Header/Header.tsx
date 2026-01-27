@@ -27,6 +27,7 @@ export function Header() {
   // Navigation items with translations
   const navItems: NavItem[] = [
     { key: 'table', label: t('items.table'), href: '/table' },
+    { key: 'teams', label: t('items.teams'), href: '/teams' },
     {
       key: 'stats',
       label: t('items.stats'),
@@ -34,7 +35,8 @@ export function Header() {
       children: [
         { key: 'teams', label: t('items.teams'), href: '/stats/teams' },
         { key: 'players', label: t('items.players'), href: '/stats/players' },
-        { key: 'referees', label: t('items.referees'), href: '/stats/referees' },
+        // HIDDEN: Referees temporarily disabled
+        // { key: 'referees', label: t('items.referees'), href: '/stats/referees' },
       ],
     },
     {

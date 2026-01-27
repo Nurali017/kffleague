@@ -19,7 +19,7 @@ export function NewsEngagement({
   onLike,
   className = '',
 }: NewsEngagementProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(initialLiked);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -67,7 +67,7 @@ export function NewsEngagement({
           }
           ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
-        aria-label={liked ? t('news.unlike', 'Убрать лайк') : t('news.like', 'Поставить лайк')}
+        aria-label={liked ? t('unlike') : t('like')}
       >
         <Heart
           className={`
@@ -77,7 +77,7 @@ export function NewsEngagement({
           `}
         />
         <span className="font-semibold">
-          {likes > 0 ? likes : t('news.likes', 'Нравится')}
+          {likes > 0 ? likes : t('likes')}
         </span>
       </button>
 

@@ -10,7 +10,7 @@ export function TeamNews() {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-black text-gray-900">Latest News</h2>
-                <Link href="#" className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-[#1E4D8C] transition-colors">
+                <Link href="#" className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
                     All news <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
@@ -36,7 +36,7 @@ export function TeamNews() {
                                 <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900 group-hover:text-[#1E4D8C] transition-colors mb-2 leading-snug">
+                                <h4 className="font-bold text-gray-900 group-hover:text-primary transition-colors mb-2 leading-snug">
                                     {news.title}
                                 </h4>
                                 <span className="text-xs text-gray-400 font-medium">{news.date}</span>

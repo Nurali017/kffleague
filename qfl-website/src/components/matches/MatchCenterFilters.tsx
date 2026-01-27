@@ -92,8 +92,8 @@ export function MatchCenterFilters({
             <span className="ml-1 px-2 py-0.5 bg-[#E5B73B] text-white text-xs rounded-full">
               {[
                 filters.tours?.length,
-                filters.months?.length,
-                filters.statuses?.length,
+                filters.month,
+                filters.status,
                 filters.team_ids?.length,
                 filters.hide_past,
               ].filter(Boolean).length}

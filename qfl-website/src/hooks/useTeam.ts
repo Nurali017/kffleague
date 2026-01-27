@@ -1,19 +1,35 @@
 import useSWR from 'swr';
-import { MOCKED_TEAMS, MOCKED_STATS, MOCKED_SQUAD, MOCKED_GAMES } from '@/lib/mock/teams';
+import { useTranslation } from 'react-i18next';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
-import { TeamDetail, TeamStats, SquadPlayer } from '@/types';
+import { TeamDetail, TeamStats, SquadPlayer, TeamCoach } from '@/types';
 import { Game } from '@/types/match';
+import { teamService } from '@/lib/api/services/teamService';
 
-// Mock sleeper to simulate network delay
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Main team detail hook
-export function useTeamDetail(teamId: number | null) {
-  const { data, error, isLoading, mutate } = useSWR<TeamDetail | null>(
-    teamId ? ['team', teamId] : null,
+// Teams list hook - fetches from real API
+export function useTeams(seasonId: number = DEFAULT_SEASON_ID) {
+  const { i18n } = useTranslation();
+  const { data, error, isLoading, mutate } = useSWR<TeamDetail[]>(
+    ['teams', seasonId, i18n.language],
     async () => {
-      await sleep(300); // Simulate latency
-      return MOCKED_TEAMS[teamId!] || MOCKED_TEAMS[1]; // Fallback to Astana if not found
+      return teamService.getTeams(seasonId, i18n.language);
+    }
+  );
+
+  return {
+    teams: data ?? [],
+    loading: isLoading,
+    error,
+    refetch: mutate,
+  };
+}
+
+// Main team detail hook - fetches from real API
+export function useTeamDetail(teamId: number | null) {
+  const { i18n } = useTranslation();
+  const { data, error, isLoading, mutate } = useSWR<TeamDetail | null>(
+    teamId ? ['team', teamId, i18n.language] : null,
+    async () => {
+      return teamService.getTeamById(teamId!, i18n.language);
     }
   );
 
@@ -25,16 +41,16 @@ export function useTeamDetail(teamId: number | null) {
   };
 }
 
-// Team stats hook
+// Team stats hook - fetches from real API
 export function useTeamStats(
   teamId: number | null,
   seasonId: number = DEFAULT_SEASON_ID
 ) {
+  const { i18n } = useTranslation();
   const { data, error, isLoading, mutate } = useSWR<TeamStats | null>(
-    teamId ? ['teamStats', teamId, seasonId] : null,
+    teamId ? ['teamStats', teamId, seasonId, i18n.language] : null,
     async () => {
-      await sleep(300);
-      return {} as TeamStats; // Mock empty stats
+      return teamService.getTeamStats(teamId!, seasonId, i18n.language);
     }
   );
 
@@ -46,16 +62,16 @@ export function useTeamStats(
   };
 }
 
-// Team players hook
+// Team players hook - fetches from real API
 export function useTeamPlayers(
   teamId: number | null,
   seasonId: number = DEFAULT_SEASON_ID
 ) {
+  const { i18n } = useTranslation();
   const { data, error, isLoading, mutate } = useSWR<SquadPlayer[]>(
-    teamId ? ['teamPlayers', teamId, seasonId] : null,
+    teamId ? ['teamPlayers', teamId, seasonId, i18n.language] : null,
     async () => {
-      await sleep(300);
-      return [];
+      return teamService.getTeamPlayers(teamId!, seasonId, i18n.language);
     }
   );
 
@@ -67,22 +83,43 @@ export function useTeamPlayers(
   };
 }
 
-// Team games hook
+// Team coaches hook
+export function useTeamCoaches(
+  teamId: number | null,
+  seasonId: number = DEFAULT_SEASON_ID
+) {
+  const { i18n } = useTranslation();
+  const { data, error, isLoading } = useSWR<TeamCoach[]>(
+    teamId ? ['teamCoaches', teamId, seasonId, i18n.language] : null,
+    async () => {
+      return teamService.getTeamCoaches(teamId!, seasonId, i18n.language);
+    }
+  );
+
+  return {
+    coaches: data ?? [],
+    loading: isLoading,
+    error,
+  };
+}
+
+// Team games hook - fetches from real API
 export function useTeamGames(
   teamId: number | null,
   seasonId: number = DEFAULT_SEASON_ID
 ) {
+  const { i18n } = useTranslation();
   const { data, error, isLoading, mutate } = useSWR<Game[]>(
-    teamId ? ['teamGames', teamId, seasonId] : null,
+    teamId ? ['teamGames', teamId, seasonId, i18n.language] : null,
     async () => {
-      await sleep(300);
-      return MOCKED_GAMES;
+      return teamService.getTeamGames(teamId!, seasonId, i18n.language);
     }
   );
 
   const games = Array.isArray(data) ? data : [];
   const now = new Date();
 
+  // Filter finished games (have scores)
   const recent = games
     .filter((game) => {
       if (game.home_score === undefined || game.away_score === undefined) return false;
@@ -91,6 +128,7 @@ export function useTeamGames(
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  // Filter upcoming games (no scores yet)
   const upcoming = games
     .filter((game) => {
       if (game.home_score !== undefined && game.away_score !== undefined) return false;
@@ -100,6 +138,7 @@ export function useTeamGames(
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return {
+    games,
     recentMatches: recent,
     upcomingMatches: upcoming,
     loading: isLoading,

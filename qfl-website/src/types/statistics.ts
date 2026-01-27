@@ -18,37 +18,65 @@ export interface SeasonHeroStats {
 export interface TeamStatistics {
     team_id: number;
     team_name: string;
-    team_logo: string;
-    matches_played: number;
-    wins: number;
-    draws: number;
-    losses: number;
-    goals: number;
-    goals_conceded: number;
-    goal_difference: number;
-    points: number;
-    goals_per_match: number;
-    goals_conceded_per_match: number;
-    shots: number;
-    shots_on_target: number;
-    shot_accuracy: number;
-    shots_per_match: number;
-    passes: number;
-    pass_accuracy: number;
-    key_passes: number;
-    crosses: number;
-    attacks: number;
-    dangerous_attacks: number;
-    possession: number;
-    dribbles_successful: number;
-    tackles: number;
-    interceptions: number;
-    blocks: number;
-    clearances: number;
-    fouls: number;
-    yellow_cards: number;
-    red_cards: number;
-    fouls_per_match: number;
+    team_logo?: string | null;
+    // Basic stats
+    games_played?: number | null;
+    matches_played?: number | null; // Alias for mock data
+    wins?: number | null;
+    draws?: number | null;
+    losses?: number | null;
+    goals_scored?: number | null;
+    goals?: number | null; // Alias for mock data
+    goals_conceded?: number | null;
+    goal_difference?: number | null;
+    points?: number | null;
+    // Goals per match
+    goals_per_match?: number | null;
+    goals_conceded_per_match?: number | null;
+    // Shots
+    shots?: number | null;
+    shots_on_goal?: number | null;
+    shots_on_target?: number | null; // Alias for mock data
+    shot_accuracy?: number | null;
+    shots_per_match?: number | null;
+    // Passes
+    passes?: number | null;
+    pass_accuracy?: number | null;
+    key_passes?: number | null;
+    crosses?: number | null;
+    // Possession & Attacking
+    possession?: number | null;
+    dribbles?: number | null;
+    dribbles_successful?: number | null; // Alias for mock data
+    dribble_success?: number | null;
+    attacks?: number | null; // Mock data field
+    dangerous_attacks?: number | null; // Mock data field
+    // Defense
+    tackles?: number | null;
+    interceptions?: number | null;
+    recoveries?: number | null;
+    clearances?: number | null; // Mock data field
+    blocked_shots?: number | null; // Mock data field
+    blocks?: number | null; // Mock data field
+    // Discipline
+    fouls?: number | null;
+    fouls_per_match?: number | null;
+    yellow_cards?: number | null;
+    second_yellow_cards?: number | null;
+    red_cards?: number | null;
+    // Set pieces
+    corners?: number | null;
+    offsides?: number | null;
+    // xG
+    xg?: number | null;
+    xg_per_match?: number | null;
+}
+
+export interface TeamStatsTableResponse {
+    season_id: number;
+    sort_by: string;
+    items: TeamStatistics[];
+    total: number;
 }
 
 // Extends the existing PlayerStat to include position for filtering
@@ -58,7 +86,6 @@ export interface ExtendedPlayerStat extends PlayerStat {
     distance_covered?: number;
     top_speed?: number;
     shots_per_match?: number;
-    xg?: number | null;
 }
 
 export type StatSubTab =

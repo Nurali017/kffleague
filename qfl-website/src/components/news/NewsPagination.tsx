@@ -16,7 +16,7 @@ export function NewsPagination({
   onPageChange,
   className = '',
 }: NewsPaginationProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('news');
 
   if (totalPages <= 1) return null;
 
@@ -52,7 +52,7 @@ export function NewsPagination({
 
   return (
     <nav
-      aria-label={t('news.pagination', 'Пагинация новостей')}
+      aria-label={t('pagination', 'Пагинация новостей')}
       className={`flex items-center justify-center gap-2 mt-8 ${className}`}
     >
       {/* Previous Button */}
@@ -60,10 +60,10 @@ export function NewsPagination({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        aria-label={t('news.previous', 'Предыдущая страница')}
+        aria-label={t('previous', 'Предыдущая страница')}
       >
         <ChevronLeft className="w-4 h-4" />
-        <span className="hidden sm:inline">{t('news.previous', 'Назад')}</span>
+        <span className="hidden sm:inline">{t('previous', 'Назад')}</span>
       </button>
 
       {/* Page Numbers */}
@@ -95,7 +95,7 @@ export function NewsPagination({
                     : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-surface-soft dark:hover:bg-dark-surface-soft hover:border-[#1E4D8C] dark:hover:border-blue-500'
                 }
               `}
-              aria-label={`${t('news.page', 'Страница')} ${pageNumber}`}
+              aria-label={`${t('page', 'Страница')} ${pageNumber}`}
               aria-current={isActive ? 'page' : undefined}
             >
               {pageNumber}
@@ -109,9 +109,9 @@ export function NewsPagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        aria-label={t('news.next', 'Следующая страница')}
+        aria-label={t('next', 'Следующая страница')}
       >
-        <span className="hidden sm:inline">{t('news.next', 'Вперед')}</span>
+        <span className="hidden sm:inline">{t('next', 'Вперед')}</span>
         <ChevronRight className="w-4 h-4" />
       </button>
 

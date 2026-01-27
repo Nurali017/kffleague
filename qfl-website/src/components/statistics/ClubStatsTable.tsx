@@ -87,7 +87,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                                 <td className="px-4 py-4 sticky left-16 bg-white group-hover:bg-gray-50 z-10 border-r border-gray-100">
                                     <div className="flex items-center gap-3">
                                         <img
-                                            src={team.team_logo}
+                                            src={team.team_logo ?? 'https://via.placeholder.com/32?text=FC'}
                                             alt={team.team_name}
                                             className="w-8 h-8 object-contain"
                                             onError={(e) => {
