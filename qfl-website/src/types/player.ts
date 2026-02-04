@@ -52,6 +52,7 @@ export interface PlayerDetailAPIResponse {
   age: number | null;
   top_role: string | null;
   teams: number[];
+  jersey_number: number | null;
 }
 
 export interface PlayerMatchPerformance {

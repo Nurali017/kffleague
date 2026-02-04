@@ -121,7 +121,7 @@ export function Footer() {
       <div className="relative z-10 border-t border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/60 text-sm">
+            <p className="text-white/60 text-sm" suppressHydrationWarning>
               {t('copyright', { year: currentYear })}
             </p>
 

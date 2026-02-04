@@ -50,7 +50,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${montserrat.className} min-h-screen bg-[#F5F5F5] dark:bg-dark-bg`}>
-        <Providers initialTournamentId={initialTournamentId}>
+        <Providers initialLang={lang} initialTournamentId={initialTournamentId}>
           <TournamentBar />
           <Header />
           <main>{children}</main>

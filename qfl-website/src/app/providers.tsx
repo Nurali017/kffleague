@@ -14,10 +14,24 @@ import {
 
 interface ProvidersProps {
   children: ReactNode;
+  initialLang?: string;
   initialTournamentId?: string;
 }
 
-export function Providers({ children, initialTournamentId }: ProvidersProps) {
+const clientLangSet = { current: false };
+
+export function Providers({ children, initialLang, initialTournamentId }: ProvidersProps) {
+  // Use server language for first render so SSR and client hydration match.
+  // On server: set every time (each request is fresh). On client: set only once.
+  if (initialLang) {
+    if (typeof window === 'undefined') {
+      i18n.language = initialLang;
+    } else if (!clientLangSet.current) {
+      i18n.language = initialLang;
+      clientLangSet.current = true;
+    }
+  }
+
   // Sync localStorage and cookie on mount
   useEffect(() => {
     const storedLang = localStorage.getItem('i18nextLng');

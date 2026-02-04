@@ -12,24 +12,12 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// Get initial theme from DOM (set by inline script in layout.tsx)
-function getInitialTheme(): Theme {
-  if (typeof window !== 'undefined') {
-    // Check if dark class is already applied by inline script
-    const isDark = document.documentElement.classList.contains('dark');
-    return isDark ? 'dark' : 'light';
-  }
-  return 'light';
-}
-
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Initialize with theme from DOM (already set by inline script)
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
-  const [mounted, setMounted] = useState(false);
+  // Always start with 'light' so server and client first render match (avoids hydration error).
+  // Real theme is applied by inline script in layout and synced here after mount.
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
-    setMounted(true);
-
     // Sync state with actual DOM state (set by inline script)
     const isDark = document.documentElement.classList.contains('dark');
     const currentTheme = isDark ? 'dark' : 'light';

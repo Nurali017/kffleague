@@ -6,7 +6,7 @@ export function transformPlayer(apiPlayer: PlayerDetailAPIResponse | null | unde
     player_id: apiPlayer.id,
     first_name: apiPlayer.first_name || '',
     last_name: apiPlayer.last_name || '',
-    jersey_number: undefined as number | undefined,
+    jersey_number: apiPlayer.jersey_number ?? undefined,
     team_id: apiPlayer.teams?.[0] || 0,
     team_name: '',
     position: apiPlayer.top_role || '',
