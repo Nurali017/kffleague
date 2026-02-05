@@ -1,0 +1,144 @@
+{
+  "subTabs": {
+    "keyStats": "Негізгі статистика",
+    "goals": "Голдар",
+    "attempts": "Соққылар",
+    "distribution": "Таралу",
+    "attacking": "Шабуыл",
+    "defending": "Қорғаныс",
+    "goalkeeping": "Қақпашылық",
+    "disciplinary": "Тәртіп"
+  },
+  "hero": {
+    "totalGoals": "Жалпы голдар",
+    "goalsPerMatch": "Матчқа гол",
+    "minutesPerGoal": "Голға минут",
+    "goalsByPeriodTitle": "Голдар қашан соғылды",
+    "goalsByPeriodComingSoon": "Жақында: график деректер қосылғаннан кейін қолжетімді болады.",
+    "goalsByPeriodNoData": "Гол уақыты бойынша деректер әзірге қолжетімсіз.",
+    "goalsByPeriodCoverage": "Қамту: {{coverage}}% ({{withEvents}}/{{total}})"
+  },
+  "mainTabs": {
+    "clubs": "Клуб статистикасы",
+    "players": "Ойыншылар статистикасы"
+  },
+  "filters": {
+    "phase": "Кезең",
+    "comingSoon": "жақында",
+    "allMatches": "Барлық матчтар",
+    "mainTournament": "Негізгі турнир",
+    "qualifying": "Іріктеу",
+    "club": "Клуб",
+    "allClubs": "Барлық клубтар",
+    "position": "Позиция",
+    "allPositions": "Барлығы",
+    "positions": {
+      "GK": "ҚШ",
+      "DEF": "ҚОР",
+      "MID": "ЖҚ",
+      "FWD": "ШАБ"
+    }
+  },
+  "table": {
+    "position": "Поз",
+    "club": "Клуб",
+    "player": "Ойыншы",
+    "pos": "Поз",
+    "searchClub": "Клубты іздеу…",
+    "clearSearch": "Іздеуді тазалау",
+    "noImage": "Фото жоқ",
+    "noPlayersFound": "Ойыншылар табылмады. Сүзгілерді өзгертіп көріңіз.",
+    "noClubsFound": "Клубтар табылмады."
+  },
+  "emptyState": {
+    "title": "Командалық статистика қолжетімсіз",
+    "description": "«{{tournament}}» турнирі үшін әзірге деректер жоқ.",
+    "reason": "Деректер әлі дайындалуда немесе синхрондалмаған.",
+    "openTable": "Кестені ашу",
+    "openPlayers": "Ойыншылар статистикасын ашу",
+    "openBracket": "Сетканы ашу",
+    "openTournament": "Турнирді ашу"
+  },
+  "loadError": "Команда статистикасын жүктеу қатесі",
+  "errors": {
+    "seasonStatsLoad": "Статистиканы жүктеу қатесі",
+    "playerStatsLoad": "Ойыншылар статистикасын жүктеу қатесі"
+  },
+  "playerColumns": {
+    "games_played": "Матчтар",
+    "goals": "Голдар",
+    "assists": "Нәтижелі пастар",
+    "minutes_played": "Минут",
+    "shots": "Соққылар",
+    "shots_on_goal": "Дәл",
+    "passes": "Пастар",
+    "pass_accuracy": "Дәлдік",
+    "key_passes": "Кілт пастар",
+    "dribble": "Дриблинг",
+    "dribble_success": "Сәтті дриблинг",
+    "xg": "xG",
+    "tackle": "Таклдар",
+    "interception": "Перехваттар",
+    "recovery": "Допты жинау",
+    "save_shot": "Сейвтер",
+    "dry_match": "Құрғақ матчтар",
+    "yellow_cards": "Сары",
+    "red_cards": "Қызыл"
+  },
+  "labels": {
+    "goals": "Голдар",
+    "assists": "Нәтижелі пастар",
+    "shots": "Соққылар",
+    "totalAttempts": "Жалпы соққылар",
+    "onTarget": "Дәл",
+    "offTarget": "Дәл емес",
+    "xg": "xG",
+
+    "matchesPlayed": "Ойналған матчтар",
+    "goalsConceded": "Жіберілген голдар",
+    "goalDifference": "Айырма",
+    "possession": "Допты ұстау (%)",
+    "passingAccuracy": "Пас дәлдігі (%)",
+    "passAccuracyShort": "Пас дәл.",
+    "passes": "Пастар",
+    "keyPasses": "Кілт пастар",
+    "ballsRecovered": "Допты қайтару",
+    "tacklesWon": "Таклдар",
+    "tackles": "Таклдар",
+    "cleanSheets": "Құрғақ матчтар",
+    "saves": "Сейвтер",
+    "distanceCovered": "Жүрілген қашықтық (км)",
+
+    "penaltiesScored": "Соғылған пенальти",
+    "corners": "Бұрыш соққылары",
+    "offsides": "Офсайдтар",
+    "dribbles": "Дриблинг",
+
+    "forwardPasses": "Алға пастар",
+    "longPasses": "Ұзын пастар",
+    "progressivePasses": "Прогрессив пастар",
+    "crosses": "Кросстар",
+    "passesToBox": "Айып алаңына пастар",
+    "passesToFinalThird": "Соңғы үшінші бөлікке пастар",
+
+    "recoveries": "Допты жинау",
+    "interceptions": "Перехваттар",
+    "duels": "Жекпе-жектер",
+    "aerialDuels": "Ауа дуэльдері",
+    "groundDuels": "Жер дуэльдері",
+    "opponentXg": "Қарсыластың xG",
+
+    "yellowCards": "Сары карточкалар",
+    "redCards": "Қызыл карточкалар",
+    "foulsCommitted": "Жасалған фолдар",
+    "foulsSuffered": "Өзіне жасалған фолдар",
+    "secondYellowCards": "Екінші сары карточкалар"
+  },
+  "helpers": {
+    "avgPerMatch": "Матчқа орташа",
+    "perMatch": "{{value}} матчқа",
+    "accuracyPct": "Дәлдік {{value}}%",
+    "successPct": "{{value}}% сәтті",
+    "wonPct": "{{value}}% жеңіс"
+  }
+}

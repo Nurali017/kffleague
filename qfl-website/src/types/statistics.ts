@@ -7,6 +7,19 @@ export interface GoalsByPeriodData {
     away: number;
 }
 
+export interface GoalsByPeriodMeta {
+    matches_played: number;
+    matches_with_goal_events: number;
+    coverage_pct: number;
+}
+
+export interface SeasonGoalsByPeriodResponse {
+    season_id: number;
+    period_size_minutes: number;
+    periods: GoalsByPeriodData[];
+    meta: GoalsByPeriodMeta;
+}
+
 export interface SeasonHeroStats {
     seasonName: string;
     totalGoals: number;
@@ -79,13 +92,11 @@ export interface TeamStatsTableResponse {
     total: number;
 }
 
-// Extends the existing PlayerStat to include position for filtering
 export interface ExtendedPlayerStat extends PlayerStat {
-    position: 'GK' | 'DEF' | 'MID' | 'FWD';
-    // Add any other fields missing from PlayerStat that we need for specific columns
-    distance_covered?: number;
-    top_speed?: number;
-    shots_per_match?: number;
+    // Optional extra fields for some sub-tabs
+    distance_covered?: number | null;
+    top_speed?: number | null;
+    shots_per_match?: number | null;
 }
 
 export type StatSubTab =

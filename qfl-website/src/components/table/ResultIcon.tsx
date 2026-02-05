@@ -25,7 +25,7 @@ export function ResultIcon({ result, size = 'md' }: ResultIconProps) {
 
   if (result === 'D') {
     return (
-      <div className={`${sizeClasses} rounded-full bg-gray-400 flex items-center justify-center`}>
+      <div className={`${sizeClasses} rounded-full bg-gray-400 dark:bg-dark-surface-soft flex items-center justify-center`}>
         <Minus className="text-white" size={iconSize} strokeWidth={3} />
       </div>
     );

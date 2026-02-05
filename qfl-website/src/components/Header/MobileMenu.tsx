@@ -32,7 +32,8 @@ interface MobileMenuProps {
 }
 
 export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMenuProps) {
-  const { t } = useTranslation('navigation');
+  const { t, i18n } = useTranslation('navigation');
+  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
@@ -79,7 +80,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
             className="p-2 rounded-full"
             whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            aria-label={t('closeMenu')}
+            aria-label={t('closeMenu', lang === 'kz' ? 'Мәзірді жабу' : 'Закрыть меню')}
           >
             <X className="w-6 h-6 text-white" />
           </motion.button>
@@ -182,12 +183,12 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                       {item.label}
                       {/* Live badge */}
                       {item.isLive && hasLiveMatch && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500 rounded text-[10px] font-bold">
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500 rounded text-[10px] font-bold uppercase">
                           <span className="relative flex h-1.5 w-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                           </span>
-                          LIVE
+                          {t('liveBadge', { defaultValue: lang === 'kz' ? 'Тікелей' : 'Онлайн' })}
                         </span>
                       )}
                     </Link>

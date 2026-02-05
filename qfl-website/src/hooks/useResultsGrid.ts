@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { leagueService } from '@/lib/api/services';
-import { DEFAULT_SEASON_ID } from '@/api/endpoints';
+import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { ResultsGridResponse } from '@/types';
 
 interface UseResultsGridOptions {
@@ -14,7 +14,11 @@ export function useResultsGrid(options: UseResultsGridOptions = {}) {
 
   const { data, error, isLoading, mutate } = useSWR<ResultsGridResponse>(
     ['resultsGrid', seasonId, i18n.language],
-    () => leagueService.getResultsGrid(seasonId, i18n.language)
+    () => leagueService.getResultsGrid(seasonId, i18n.language),
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+    }
   );
 
   return {

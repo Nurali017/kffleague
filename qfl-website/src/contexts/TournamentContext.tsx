@@ -30,6 +30,7 @@ const STORAGE_KEY = 'qfl_selected_tournament';
 interface TournamentContextValue {
   currentTournament: Tournament;
   currentSeason: Season;
+  effectiveSeasonId: number; // Always matches currentTournament.seasonId
   currentRound: number | null;
   availableTournaments: Tournament[];
   availableSeasons: Season[];
@@ -116,6 +117,7 @@ export function TournamentProvider({
         }
         updateUrl({
           tournament: id,
+          season: tournament.seasonId.toString(), // Sync season with tournament
           round: tournament.currentRound?.toString(),
         });
       }
@@ -164,10 +166,14 @@ export function TournamentProvider({
     }
   }, []);
 
+  // effectiveSeasonId always matches the currently selected tournament
+  const effectiveSeasonId = currentTournament.seasonId;
+
   const value = useMemo<TournamentContextValue>(
     () => ({
       currentTournament,
       currentSeason,
+      effectiveSeasonId,
       currentRound,
       availableTournaments: getActiveTournaments(),
       availableSeasons: SEASONS,
@@ -182,6 +188,7 @@ export function TournamentProvider({
     [
       currentTournament,
       currentSeason,
+      effectiveSeasonId,
       currentRound,
       setTournament,
       setSeason,

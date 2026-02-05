@@ -37,7 +37,7 @@ export default function ManagementPage() {
       <div className="mb-10 md:mb-12 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="w-1 h-8 bg-[#E5B73B] rounded-full" />
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1E4D8C] dark:text-blue-400">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
             {page?.title || t('management.title')}
           </h1>
         </div>

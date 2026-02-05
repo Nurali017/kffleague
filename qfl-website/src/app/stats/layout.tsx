@@ -2,34 +2,21 @@
 
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useSeasonStats } from '@/hooks';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
+import { useSeasonGoalsByPeriod, useSeasonStats } from '@/hooks';
 import { StatisticsHero } from '@/components/statistics/StatisticsHero';
 import { Skeleton } from '@/components/ui/Skeleton';
-
-// Mock data for goals by period - TODO: Add API endpoint for this
-const mockGoalsByPeriod = [
-    { period: "0-15'", goals: 45, home: 28, away: 17 },
-    { period: "16-30'", goals: 68, home: 36, away: 32 },
-    { period: "31-45'", goals: 85, home: 48, away: 37 },
-    { period: "46-60'", goals: 74, home: 40, away: 34 },
-    { period: "61-75'", goals: 92, home: 54, away: 38 },
-    { period: "76-90'", goals: 62, home: 35, away: 27 },
-];
+import { HeroBackground } from '@/components/ui/HeroBackground';
+import { useTournament } from '@/contexts/TournamentContext';
 
 function HeroSkeleton() {
     return (
-        <div className="bg-gradient-to-r from-[#11305C] to-[#0D2549] text-white py-12 md:py-16">
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20">
-                <Skeleton className="h-8 w-64 bg-white/20 mb-8" />
-                <div className="grid md:grid-cols-2 gap-12">
-                    <div>
-                        <Skeleton className="h-24 w-48 bg-white/20 mb-10" />
-                        <div className="grid grid-cols-2 gap-8">
-                            <Skeleton className="h-20 w-full bg-white/20" />
-                            <Skeleton className="h-20 w-full bg-white/20" />
-                        </div>
-                    </div>
+        <div className="relative overflow-hidden text-white py-8 md:py-10">
+            <HeroBackground />
+            <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20">
+                <div className="grid md:grid-cols-2 gap-8">
+                    <Skeleton className="h-32 w-full bg-white/20 rounded-2xl" />
                     <Skeleton className="h-48 w-full bg-white/20 rounded-2xl" />
                 </div>
             </div>
@@ -39,37 +26,43 @@ function HeroSkeleton() {
 
 function MainTabs() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const { t } = useTranslation('statistics');
     const isTeams = pathname === '/stats/teams' || pathname === '/stats';
     const isPlayers = pathname === '/stats/players';
 
+    const query = searchParams.toString();
+    const teamsHref = query ? `/stats/teams?${query}` : '/stats/teams';
+    const playersHref = query ? `/stats/players?${query}` : '/stats/players';
+
     return (
-        <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm">
+        <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-16 z-40 shadow-sm -mt-4 md:-mt-6">
             <div className="max-w-[1440px] mx-auto px-4 md:px-20">
                 <div className="flex gap-1">
                     <Link
-                        href="/stats/teams"
+                        href={teamsHref}
                         className={`px-8 py-5 text-lg font-bold transition-all relative ${
                             isTeams
-                                ? 'text-[#1E4D8C] dark:text-blue-400'
+                                ? 'text-[#1E4D8C] dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
                         }`}
                     >
-                        Статистика клубов
+                        {t('mainTabs.clubs', { defaultValue: 'Статистика клубов' })}
                         {isTeams && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-blue-400 rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-accent-cyan rounded-t-sm" />
                         )}
                     </Link>
                     <Link
-                        href="/stats/players"
+                        href={playersHref}
                         className={`px-8 py-5 text-lg font-bold transition-all relative ${
                             isPlayers
-                                ? 'text-[#1E4D8C] dark:text-blue-400'
+                                ? 'text-[#1E4D8C] dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
                         }`}
                     >
-                        Статистика игроков
+                        {t('mainTabs.players', { defaultValue: 'Статистика игроков' })}
                         {isPlayers && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-blue-400 rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-accent-cyan rounded-t-sm" />
                         )}
                     </Link>
                 </div>
@@ -83,11 +76,17 @@ interface StatsLayoutProps {
 }
 
 export default function StatsLayout({ children }: StatsLayoutProps) {
-    const { stats, loading, error } = useSeasonStats();
+    const { t, i18n } = useTranslation('statistics');
+    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+    const { effectiveSeasonId, currentTournament } = useTournament();
+    const { stats, loading, error } = useSeasonStats({ seasonId: effectiveSeasonId });
+    const { goalsByPeriod, meta: goalsByPeriodMeta } = useSeasonGoalsByPeriod({ seasonId: effectiveSeasonId });
 
     // Transform API response to hero stats format
+    const tournamentName =
+        currentTournament.name[lang] || currentTournament.name.short || currentTournament.name.ru;
     const heroStats = stats ? {
-        seasonName: stats.season_name || 'Премьер-Лига 2024/25',
+        seasonName: `${tournamentName} ${stats.season_name || ''}`.trim(),
         totalGoals: stats.total_goals,
         goalsPerMatch: stats.goals_per_match,
         minutesPerGoal: stats.goals_per_match > 0 ? Math.round(90 / stats.goals_per_match) : 0,
@@ -99,13 +98,18 @@ export default function StatsLayout({ children }: StatsLayoutProps) {
             {loading ? (
                 <HeroSkeleton />
             ) : error || !heroStats ? (
-                <div className="bg-gradient-to-r from-[#11305C] to-[#0D2549] text-white py-12 md:py-16">
-                    <div className="max-w-[1440px] mx-auto px-4 md:px-20">
-                        <p className="text-red-400">Ошибка загрузки статистики</p>
+                <div className="relative overflow-hidden text-white py-12 md:py-16">
+                    <HeroBackground />
+                    <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20">
+                        <p className="text-red-400">{t('errors.seasonStatsLoad', { defaultValue: 'Ошибка загрузки статистики' })}</p>
                     </div>
                 </div>
             ) : (
-                <StatisticsHero stats={heroStats} goalsByPeriod={mockGoalsByPeriod} />
+                <StatisticsHero
+                    stats={heroStats}
+                    goalsByPeriod={goalsByPeriod}
+                    goalsByPeriodMeta={goalsByPeriodMeta}
+                />
             )}
 
             <MainTabs />

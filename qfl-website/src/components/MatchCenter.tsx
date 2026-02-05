@@ -19,7 +19,7 @@ export function MatchCenter() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { currentSeason } = useTournament();
+  const { effectiveSeasonId } = useTournament();
 
   // Initialize filters from URL
   const [filters, setFilters] = useState<FiltersType>(() =>
@@ -34,7 +34,7 @@ export function MatchCenter() {
 
   // Fetch data with current filters
   const { groups, total, loading, error, refetch } = useMatchCenter({
-    season_id: filters.season_id || currentSeason.id,
+    season_id: filters.season_id || effectiveSeasonId,
     ...filters,
   });
 
@@ -65,7 +65,7 @@ export function MatchCenter() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
+      <div className="bg-white dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-border">
         <ErrorMessage message={tErrors('loadMatches')} onRetry={refetch} compact />
       </div>
     );
@@ -88,7 +88,7 @@ export function MatchCenter() {
 
       {/* Grouped matches */}
       {groups.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-slate-700">
+        <div className="text-center py-12 bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border">
           <p className="text-gray-500 dark:text-slate-400 text-lg">
             {Object.keys(filters).length > 0
               ? t('noMatchesFiltered')

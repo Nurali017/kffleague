@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Game } from '@/types/match';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
+import { EmptyState, SectionCard } from './TeamUiPrimitives';
 
 interface TeamMatchesProps {
   games: Game[];
@@ -15,19 +16,25 @@ interface TeamMatchesProps {
 
 function MatchCardSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 animate-pulse">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-200 rounded-full" />
-          <div className="w-24 h-4 bg-gray-200 rounded" />
-        </div>
-        <div className="w-16 h-6 bg-gray-200 rounded" />
-        <div className="flex items-center gap-3">
-          <div className="w-24 h-4 bg-gray-200 rounded" />
-          <div className="w-10 h-10 bg-gray-200 rounded-full" />
-        </div>
-      </div>
-    </div>
+    <SectionCard className="p-4 animate-pulse">
+      <div className="h-4 w-40 rounded bg-gray-200 dark:bg-white/10" />
+      <div className="mt-3 h-10 rounded bg-gray-200 dark:bg-white/10" />
+    </SectionCard>
+  );
+}
+
+function ResultBadge({ result }: { result: 'W' | 'D' | 'L' | null }) {
+  if (!result) return null;
+
+  const style =
+    result === 'W'
+      ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300'
+      : result === 'L'
+        ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300'
+        : 'bg-gray-100 text-slate-600 dark:bg-white/10 dark:text-white/80';
+
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${style}`}>{result}</span>
   );
 }
 
@@ -41,169 +48,112 @@ function MatchCard({ game, teamId }: MatchCardProps) {
   const isHome = game.home_team.id === teamId;
   const isFinished = game.home_score !== null && game.away_score !== null;
 
-  // Determine result for the team
   let result: 'W' | 'D' | 'L' | null = null;
-  if (isFinished && game.home_score !== null && game.away_score !== null) {
+  if (isFinished) {
     const teamScore = isHome ? game.home_score : game.away_score;
     const opponentScore = isHome ? game.away_score : game.home_score;
-    if (teamScore > opponentScore) result = 'W';
-    else if (teamScore < opponentScore) result = 'L';
-    else result = 'D';
+    if (teamScore !== null && opponentScore !== null) {
+      if (teamScore > opponentScore) result = 'W';
+      else if (teamScore < opponentScore) result = 'L';
+      else result = 'D';
+    }
   }
 
-  const resultColors = {
-    W: 'bg-green-500',
-    D: 'bg-gray-400',
-    L: 'bg-red-500',
-  };
-
   return (
-    <Link
-      href={`/matches/${game.id}`}
-      className="group bg-white rounded-xl border border-gray-100 p-4 hover:shadow-lg hover:border-primary transition-all duration-300"
-    >
-      {/* Date and Tour */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <span>{formatMatchDate(game.date, i18n.language)}</span>
-          {game.time && (
-            <>
-              <span className="text-gray-300">|</span>
-              <span>{game.time}</span>
-            </>
-          )}
-        </div>
-        {game.tour && (
-          <span className="text-xs font-medium text-gray-400">
-            {t('matches_sections.tour', { number: game.tour })}
-          </span>
-        )}
-      </div>
-
-      {/* Teams */}
-      <div className="flex items-center justify-between gap-4">
-        {/* Home Team */}
-        <div className={`flex items-center gap-3 flex-1 ${isHome ? 'font-bold' : ''}`}>
-          <div className="w-10 h-10 relative flex-shrink-0">
-            {game.home_team.logo_url ? (
-              <Image
-                src={game.home_team.logo_url}
-                alt={game.home_team.name}
-                fill
-                className="object-contain"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 rounded-full" />
-            )}
+    <Link href={`/matches/${game.id}`} className="block">
+      <SectionCard className="p-4 md:p-5 hover:border-gray-300 dark:hover:border-white/25 transition-colors">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm text-slate-500 dark:text-white/60">
+            {formatMatchDate(game.date, i18n.language)}
+            {game.time ? ` · ${game.time.slice(0, 5)}` : ''}
           </div>
-          <span className="text-gray-900 truncate">{game.home_team.name}</span>
-        </div>
-
-        {/* Score */}
-        <div className="flex items-center gap-2 px-4">
-          {isFinished ? (
-            <div className="flex items-center gap-1">
-              {result && (
-                <span className={`w-2 h-2 rounded-full ${resultColors[result]}`} />
-              )}
-              <span className="text-xl font-black text-gray-900 min-w-[60px] text-center">
-                {game.home_score} - {game.away_score}
+          <div className="flex items-center gap-2">
+            {game.tour ? (
+              <span className="text-xs text-slate-500 dark:text-white/60">
+                {t('matches_sections.tour', { number: game.tour })}
               </span>
-            </div>
-          ) : (
-            <span className="text-sm font-medium text-primary bg-blue-50 px-3 py-1 rounded-full">
-              {game.time || 'TBD'}
-            </span>
-          )}
-        </div>
-
-        {/* Away Team */}
-        <div className={`flex items-center gap-3 flex-1 justify-end ${!isHome ? 'font-bold' : ''}`}>
-          <span className="text-gray-900 truncate text-right">{game.away_team.name}</span>
-          <div className="w-10 h-10 relative flex-shrink-0">
-            {game.away_team.logo_url ? (
-              <Image
-                src={game.away_team.logo_url}
-                alt={game.away_team.name}
-                fill
-                className="object-contain"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 rounded-full" />
-            )}
+            ) : null}
+            <ResultBadge result={result} />
           </div>
         </div>
-      </div>
 
-      {/* Stadium */}
-      {game.stadium && (
-        <div className="mt-3 pt-3 border-t border-gray-50 text-xs text-gray-400">
-          {game.stadium.name}, {game.stadium.city}
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <div className={`flex items-center gap-2.5 min-w-0 flex-1 ${isHome ? 'font-black' : 'font-semibold'}`}>
+            <div className="relative w-9 h-9 shrink-0">
+              {game.home_team.logo_url ? (
+                <Image src={game.home_team.logo_url} alt={game.home_team.name} fill className="object-contain" />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200 dark:bg-white/15" />
+              )}
+            </div>
+            <span className="truncate text-slate-900 dark:text-white">{game.home_team.name}</span>
+          </div>
+
+          <div className="rounded-full bg-gray-100 dark:bg-white/10 px-3 py-1 text-sm font-black text-slate-900 dark:text-white shrink-0">
+            {isFinished ? `${game.home_score}:${game.away_score}` : (game.time?.slice(0, 5) || t('tbd', 'Уточняется'))}
+          </div>
+
+          <div className={`flex items-center justify-end gap-2.5 min-w-0 flex-1 ${!isHome ? 'font-black' : 'font-semibold'}`}>
+            <span className="truncate text-slate-900 dark:text-white text-right">{game.away_team.name}</span>
+            <div className="relative w-9 h-9 shrink-0">
+              {game.away_team.logo_url ? (
+                <Image src={game.away_team.logo_url} alt={game.away_team.name} fill className="object-contain" />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200 dark:bg-white/15" />
+              )}
+            </div>
+          </div>
         </div>
-      )}
+
+        {game.stadium?.name ? (
+          <div className="mt-3 text-xs text-slate-500 dark:text-white/60">
+            {game.stadium.name}{game.stadium.city ? `, ${game.stadium.city}` : ''}
+          </div>
+        ) : null}
+      </SectionCard>
     </Link>
   );
 }
 
 export function TeamMatches({ games, teamId, loading }: TeamMatchesProps) {
-  const { t, i18n } = useTranslation('team');
-  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+  const { t } = useTranslation('team');
 
-  // Split games into finished and upcoming
   const { finishedGames, upcomingGames } = useMemo(() => {
     const finished: Game[] = [];
     const upcoming: Game[] = [];
+    for (const game of games) {
+      if (game.home_score !== null && game.away_score !== null) finished.push(game);
+      else upcoming.push(game);
+    }
 
-    games.forEach((game) => {
-      if (game.home_score !== null && game.away_score !== null) {
-        finished.push(game);
-      } else {
-        upcoming.push(game);
-      }
-    });
-
-    // Sort finished by date descending (most recent first)
-    finished.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    // Sort upcoming by date ascending (soonest first)
-    upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
+    finished.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+    upcoming.sort((a, b) => +new Date(a.date) - +new Date(b.date));
     return { finishedGames: finished, upcomingGames: upcoming };
   }, [games]);
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <MatchCardSkeleton key={i} />
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <MatchCardSkeleton key={idx} />
         ))}
       </div>
     );
   }
 
-  if (games.length === 0) {
+  if (!games.length) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-        <div className="text-gray-400 mb-2">
-          <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <p className="text-gray-500">
-          {t('empty.matches')}
-        </p>
-      </div>
+      <EmptyState description={t('empty.matches', 'Матчи не найдены')} />
     );
   }
 
   return (
     <div className="space-y-8">
-      {/* Upcoming Matches */}
-      {upcomingGames.length > 0 && (
+      {upcomingGames.length ? (
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            {t('matches_sections.upcoming')}
-            <span className="text-sm font-normal text-gray-400">({upcomingGames.length})</span>
+          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">
+            {t('matches_sections.upcoming', 'Предстоящие матчи')}
+            <span className="ml-2 text-sm font-medium text-slate-500 dark:text-white/60">({upcomingGames.length})</span>
           </h2>
           <div className="space-y-3">
             {upcomingGames.map((game) => (
@@ -211,14 +161,13 @@ export function TeamMatches({ games, teamId, loading }: TeamMatchesProps) {
             ))}
           </div>
         </section>
-      )}
+      ) : null}
 
-      {/* Finished Matches */}
-      {finishedGames.length > 0 && (
+      {finishedGames.length ? (
         <section>
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
-            {t('matches_sections.past')}
-            <span className="text-sm font-normal text-gray-400 ml-2">({finishedGames.length})</span>
+          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">
+            {t('matches_sections.past', 'Прошедшие матчи')}
+            <span className="ml-2 text-sm font-medium text-slate-500 dark:text-white/60">({finishedGames.length})</span>
           </h2>
           <div className="space-y-3">
             {finishedGames.map((game) => (
@@ -226,7 +175,7 @@ export function TeamMatches({ games, teamId, loading }: TeamMatchesProps) {
             ))}
           </div>
         </section>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -46,7 +46,7 @@ export const matchService = {
   ): Promise<MatchDetail | null> {
     const response = await apiClient.get<MatchDetail>(
       ENDPOINTS.MATCH_DETAIL(matchId),
-      language ? { language } : undefined
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {
@@ -62,7 +62,7 @@ export const matchService = {
   ): Promise<MatchPlayerStatsResponse> {
     const response = await apiClient.get<MatchPlayerStatsResponse>(
       ENDPOINTS.MATCH_STATS(matchId),
-      language ? { language } : undefined
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {
@@ -78,7 +78,7 @@ export const matchService = {
   ): Promise<LineupResponse> {
     const response = await apiClient.get<any>(
       ENDPOINTS.MATCH_LINEUP(matchId),
-      language ? { language } : undefined
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {
@@ -95,7 +95,7 @@ export const matchService = {
   ): Promise<EventsResponse> {
     const response = await apiClient.get<any>(
       ENDPOINTS.MATCH_EVENTS(matchId),
-      language ? { language } : undefined
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {

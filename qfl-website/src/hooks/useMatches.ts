@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { matchService } from '@/lib/api/services';
-import { DEFAULT_SEASON_ID, DEFAULT_TOUR } from '@/api/endpoints';
+import { DEFAULT_SEASON_ID, DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { Game } from '@/types';
 
 interface UseMatchesOptions {

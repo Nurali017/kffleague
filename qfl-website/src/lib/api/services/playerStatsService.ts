@@ -1,11 +1,14 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
-import { PlayerStatsResponse, PlayerStatsSortBy } from '@/types';
+import { PlayerStatsResponse, PlayerStatsSortBy, PositionCode } from '@/types';
 
 interface GetPlayerStatsParams {
   seasonId?: number;
   sortBy?: PlayerStatsSortBy;
   limit?: number;
+  offset?: number;
+  teamId?: number;
+  positionCode?: PositionCode;
   language?: string;
 }
 
@@ -14,6 +17,9 @@ export const playerStatsService = {
     seasonId = DEFAULT_SEASON_ID,
     sortBy = 'goals',
     limit = 20,
+    offset = 0,
+    teamId,
+    positionCode,
     language,
   }: GetPlayerStatsParams = {}): Promise<PlayerStatsResponse> {
     const response = await apiClient.get<PlayerStatsResponse>(
@@ -21,6 +27,9 @@ export const playerStatsService = {
       {
         sort_by: sortBy,
         limit,
+        offset,
+        ...(typeof teamId === 'number' ? { team_id: teamId } : {}),
+        ...(positionCode ? { position_code: positionCode } : {}),
         ...(language ? { lang: language } : {}),
       }
     );

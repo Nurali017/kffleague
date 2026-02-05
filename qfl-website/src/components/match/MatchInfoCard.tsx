@@ -68,7 +68,7 @@ export function MatchInfoCard({ match }: MatchInfoCardProps) {
   if (visibleItems.length === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-dark-border">
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
         {t('matchInfo.title')}
       </h3>
@@ -78,7 +78,7 @@ export function MatchInfoCard({ match }: MatchInfoCardProps) {
           const Icon = item.icon;
           return (
             <div key={idx} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-100 dark:bg-dark-surface flex items-center justify-center">
                 <Icon className="w-5 h-5 text-gray-600 dark:text-slate-400" />
               </div>
               <div className="flex-1 min-w-0">

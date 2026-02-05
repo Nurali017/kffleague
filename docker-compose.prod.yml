@@ -1,0 +1,226 @@
+# QFL Production Docker Compose
+# Uses existing kaisar-nginx as reverse proxy (ports 80/443)
+# QFL backend/frontend join kaisar_kaisar-network so nginx can reach them
+
+services:
+  # =================== FRONTEND (Next.js) ===================
+  frontend:
+    build:
+      context: ./qfl-website
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: /api/v1
+        NEXT_PUBLIC_DEFAULT_SEASON_ID: ${DEFAULT_SEASON_ID:-61}
+        NEXT_PUBLIC_DEFAULT_TOUR: ${DEFAULT_TOUR:-26}
+        NEXT_PUBLIC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-ru}
+    container_name: qfl-frontend
+    environment:
+      - NODE_ENV=production
+      - API_BASE_URL=http://qfl-backend:8000/api/v1
+      - API_REWRITE_DESTINATION=http://qfl-backend:8000
+    networks:
+      - qfl-network
+      - kaisar-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # =================== BACKEND (FastAPI + Gunicorn) ===================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: qfl-backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://qfl-redis:6379/0
+      - MINIO_ENDPOINT=qfl-minio:9000
+      - MINIO_PUBLIC_ENDPOINT=${SITE_DOMAIN}/storage
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
+      - MINIO_SECURE=true
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
+      - ALLOWED_ORIGINS=https://${SITE_DOMAIN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - qfl-network
+      - kaisar-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # =================== DATABASE (PostgreSQL) ===================
+  db:
+    image: postgres:15-alpine
+    container_name: qfl-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - qfl-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # =================== REDIS ===================
+  redis:
+    image: redis:7-alpine
+    container_name: qfl-redis
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - qfl-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 192M
+
+  # =================== MINIO (Object Storage) ===================
+  minio:
+    image: minio/minio:latest
+    container_name: qfl-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    networks:
+      - qfl-network
+      - kaisar-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # =================== CELERY WORKER ===================
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: qfl-celery-worker
+    command: celery -A app.tasks worker -l info --concurrency=2
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://qfl-redis:6379/0
+      - MINIO_ENDPOINT=qfl-minio:9000
+      - MINIO_PUBLIC_ENDPOINT=${SITE_DOMAIN}/storage
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
+      - MINIO_SECURE=true
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - qfl-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+
+  # =================== CELERY BEAT (Scheduler) ===================
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: qfl-celery-beat
+    command: celery -A app.tasks beat -l info --pidfile=/tmp/celerybeat.pid
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://qfl-redis:6379/0
+      - MINIO_ENDPOINT=qfl-minio:9000
+      - MINIO_PUBLIC_ENDPOINT=${SITE_DOMAIN}/storage
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
+      - MINIO_SECURE=true
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - qfl-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  qfl-network:
+    driver: bridge
+  kaisar-network:
+    external: true
+    name: kaisar_kaisar-network

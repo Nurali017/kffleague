@@ -35,3 +35,6 @@ next-env.d.ts
 
 # Old Vite files
 /dist
+
+# UX audit artifacts
+/ux-screenshots/

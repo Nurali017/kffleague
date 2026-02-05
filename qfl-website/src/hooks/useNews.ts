@@ -5,15 +5,16 @@ import { SliderNews, NewsArticle } from '@/types';
 
 interface UseSliderNewsOptions {
   limit?: number;
+  tournamentId?: string;
 }
 
 export function useSliderNews(options: UseSliderNewsOptions = {}) {
   const { i18n } = useTranslation();
-  const { limit = 5 } = options;
+  const { limit = 5, tournamentId } = options;
 
   const { data, error, isLoading, mutate } = useSWR<SliderNews[]>(
-    ['sliderNews', i18n.language, limit],
-    () => newsService.getSlider(i18n.language, limit)
+    ['sliderNews', i18n.language, limit, tournamentId],
+    () => newsService.getSlider(i18n.language, limit, tournamentId)
   );
 
   return {
@@ -26,15 +27,16 @@ export function useSliderNews(options: UseSliderNewsOptions = {}) {
 
 interface UseLatestNewsOptions {
   limit?: number;
+  tournamentId?: string;
 }
 
 export function useLatestNews(options: UseLatestNewsOptions = {}) {
   const { i18n } = useTranslation();
-  const { limit = 10 } = options;
+  const { limit = 10, tournamentId } = options;
 
   const { data, error, isLoading, mutate } = useSWR<NewsArticle[]>(
-    ['latestNews', i18n.language, limit],
-    () => newsService.getLatest(i18n.language, limit)
+    ['latestNews', i18n.language, limit, tournamentId],
+    () => newsService.getLatest(i18n.language, limit, tournamentId)
   );
 
   return {

@@ -13,7 +13,7 @@ export interface NewsArticle {
   excerpt?: string;
   content?: string;
   image_url?: string;
-  category?: string;
+  tournament_id?: string;  // Tournament ID: pl, 1l, cup, 2l, el
   article_type?: ArticleType | null;
   publish_date: string;
   is_slider?: boolean;
@@ -33,12 +33,12 @@ export interface NewsPagination {
   items: NewsArticle[];
   total: number;
   page: number;
-  limit: number;
-  total_pages: number;
+  per_page: number;  // Backend returns per_page, not limit
+  pages: number;     // Backend returns pages, not total_pages
 }
 
 export interface NewsFilters {
-  category?: string;
+  tournament_id?: string;  // Tournament ID: pl, 1l, cup, 2l, el
   article_type?: 'news' | 'analytics';
   search?: string;
   sort?: 'date_desc' | 'date_asc' | 'views_desc' | 'likes_desc';

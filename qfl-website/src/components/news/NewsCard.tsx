@@ -96,7 +96,7 @@ export function NewsCard({
         className={`group block ${className}`}
       >
         <motion.div
-          className="flex gap-4 p-4 bg-white dark:bg-dark-surface rounded-xl h-full border border-gray-100 dark:border-slate-700"
+          className="flex gap-4 p-4 bg-white dark:bg-dark-surface rounded-xl h-full border border-gray-100 dark:border-dark-border"
           whileHover={{
             backgroundColor: 'rgb(249 250 251)',
             boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -114,7 +114,7 @@ export function NewsCard({
               </div>
             )}
             <motion.h3
-              className="font-semibold text-[#1E4D8C] dark:text-blue-400 leading-snug line-clamp-2 mb-2"
+              className="font-semibold text-[#1E4D8C] dark:text-accent-cyan leading-snug line-clamp-2 mb-2"
               whileHover={{ color: '#E5B73B' }}
               transition={{ duration: 0.3 }}
             >
@@ -165,7 +165,7 @@ export function NewsCard({
       <motion.div
         initial="rest"
         whileHover="hover"
-        className="bg-white dark:bg-dark-surface rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 h-full flex flex-col"
+        className="bg-white dark:bg-dark-surface rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-dark-border h-full flex flex-col"
         variants={{
           rest: {
             y: 0,
@@ -198,7 +198,7 @@ export function NewsCard({
         </div>
         <div className="p-4 flex-1 flex flex-col">
           <motion.h3
-            className="text-lg font-bold text-[#1E4D8C] dark:text-blue-400 leading-tight mb-2 line-clamp-2"
+            className="text-lg font-bold text-[#1E4D8C] dark:text-accent-cyan leading-tight mb-2 line-clamp-2"
             whileHover={{ color: '#E5B73B' }}
             transition={{ duration: 0.3 }}
           >

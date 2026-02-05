@@ -4,9 +4,40 @@
     "overview": "Обзор",
     "matches": "Матчи",
     "squad": "Состав",
+    "stats": "Статистика",
     "staff": "Персонал",
     "transfers": "Трансферы"
   },
+  "sections": {
+    "overview": "Обзор",
+    "keyStats": "Ключевая статистика",
+    "playerStats": "Статистика игроков",
+    "recentMatch": "Последний матч",
+    "teamForm": "Форма команды",
+    "fixtures": "Предстоящие матчи"
+  },
+  "buttons": {
+    "matchCentre": "Матч-центр",
+    "viewAllFixtures": "Все матчи",
+    "seeAllStats": "Вся статистика",
+    "viewFullTable": "Полная таблица"
+  },
+  "leaderboard": {
+    "total": "Всего"
+  },
+  "miniStats": {
+    "passes": "Пасы",
+    "appearances": "Матчи",
+    "saves": "Сейвы",
+    "cleanSheets": "Сухие матчи",
+    "redCards": "Красные карточки"
+  },
+  "form": {
+    "homeShort": "Д",
+    "awayShort": "Г"
+  },
+  "tbd": "Уточняется",
+  "no_stats": "Статистика недоступна",
   "about": "О команде",
   "season_stats": "Статистика сезона",
   "stats": {
@@ -30,7 +61,9 @@
   },
   "empty": {
     "squad": "Нет данных о составе",
-    "matches": "Матчи не найдены"
+    "matches": "Матчи не найдены",
+    "noUpcomingMatches": "Нет предстоящих матчей",
+    "noRecentMatches": "Нет сыгранных матчей"
   },
   "coming_soon": "Скоро будет доступно",
   "staff_title": "Тренерский штаб",

@@ -18,7 +18,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
   const tours = Array.from({ length: totalTours }, (_, i) => i + 1);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden">
       {/* Scrollable container */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-max">
@@ -43,7 +43,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
           </thead>
 
           {/* Body */}
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-gray-50 dark:divide-dark-border">
             {teams.map((team) => {
               const logoUrl = team.team_logo || getTeamLogo(team.team_id);
               const teamColor = getTeamColor(team.team_id);
@@ -51,17 +51,17 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
               return (
                 <tr
                   key={team.team_id}
-                  className="hover:bg-[#1E4D8C]/5 transition-colors"
+                  className="hover:bg-[#1E4D8C]/5 dark:hover:bg-blue-500/10 transition-colors"
                 >
                   {/* Position - sticky */}
-                  <td className="sticky left-0 z-10 bg-white py-2.5 px-3 text-center">
-                    <span className="text-sm font-bold text-gray-700">
+                  <td className="sticky left-0 z-10 bg-white dark:bg-dark-surface py-2.5 px-3 text-center">
+                    <span className="text-sm font-bold text-gray-700 dark:text-slate-200">
                       {team.position}
                     </span>
                   </td>
 
                   {/* Team - sticky */}
-                  <td className="sticky left-10 z-10 bg-white py-2.5 px-4">
+                  <td className="sticky left-10 z-10 bg-white dark:bg-dark-surface py-2.5 px-4">
                     <Link
                       href={`/team/${team.team_id}`}
                       className="flex items-center gap-2.5 group"
@@ -83,7 +83,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
                       >
                         {team.team_name[0]}
                       </div>
-                      <span className="text-sm font-medium text-gray-900 group-hover:text-[#1E4D8C] transition-colors whitespace-nowrap">
+                      <span className="text-sm font-medium text-gray-900 dark:text-slate-100 group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
                         {team.team_name}
                       </span>
                     </Link>
@@ -105,7 +105,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-3 border-t border-gray-100 bg-gray-50 flex flex-wrap items-center gap-4 text-xs text-gray-500">
+      <div className="px-4 py-3 border-t border-gray-100 dark:border-dark-border bg-gray-50 dark:bg-dark-surface flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
           <ResultIcon result="W" size="sm" />
           <span>{t('legend.win')}</span>

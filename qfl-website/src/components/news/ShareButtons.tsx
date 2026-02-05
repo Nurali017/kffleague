@@ -78,7 +78,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
         {canUseNativeShare() && (
           <motion.button
             onClick={handleNativeShare}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
+            className="p-2 rounded-lg bg-gray-100 dark:bg-dark-surface-soft text-gray-700 dark:text-slate-300"
             whileHover={{ scale: 1.05, backgroundColor: 'rgba(229, 231, 235, 1)' }}
             whileTap={{ scale: 0.95 }}
             aria-label={t('share')}
@@ -106,7 +106,7 @@ export function ShareButtons({ url, title, description, className = '' }: ShareB
         {/* Copy Link Button */}
         <motion.button
           onClick={handleCopyLink}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 relative"
+          className="p-2 rounded-lg bg-gray-100 dark:bg-dark-surface-soft text-gray-700 dark:text-slate-300 relative"
           whileHover={{ scale: 1.05, backgroundColor: 'rgba(229, 231, 235, 1)' }}
           whileTap={{ scale: 0.95 }}
           aria-label={t('copyLink')}

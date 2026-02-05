@@ -4,9 +4,40 @@
     "overview": "Шолу",
     "matches": "Матчтар",
     "squad": "Құрам",
+    "stats": "Статистика",
     "staff": "Қызметкерлер",
     "transfers": "Трансферлер"
   },
+  "sections": {
+    "overview": "Шолу",
+    "keyStats": "Негізгі статистика",
+    "playerStats": "Ойыншылар статистикасы",
+    "recentMatch": "Соңғы матч",
+    "teamForm": "Команда формасы",
+    "fixtures": "Алдағы матчтар"
+  },
+  "buttons": {
+    "matchCentre": "Матч орталығы",
+    "viewAllFixtures": "Барлық матчтар",
+    "seeAllStats": "Барлық статистика",
+    "viewFullTable": "Толық кесте"
+  },
+  "leaderboard": {
+    "total": "Барлығы"
+  },
+  "miniStats": {
+    "passes": "Пастар",
+    "appearances": "Ойындар",
+    "saves": "Сейвтер",
+    "cleanSheets": "Құрғақ матчтар",
+    "redCards": "Қызыл қағаздар"
+  },
+  "form": {
+    "homeShort": "Ү",
+    "awayShort": "Қ"
+  },
+  "tbd": "Белгісіз",
+  "no_stats": "Статистика қолжетімсіз",
   "about": "Команда туралы",
   "season_stats": "Маусым статистикасы",
   "stats": {
@@ -30,7 +61,9 @@
   },
   "empty": {
     "squad": "Құрам туралы мәлімет жоқ",
-    "matches": "Матчтар табылмады"
+    "matches": "Матчтар табылмады",
+    "noUpcomingMatches": "Алдағы матчтар жоқ",
+    "noRecentMatches": "Ойналған матчтар жоқ"
   },
   "coming_soon": "Жақында қосылады",
   "staff_title": "Жаттықтырушылар",

@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
-import { TeamDetail, TeamStats, SquadPlayer, TeamCoach } from '@/types';
+import { TeamCoach, TeamDetail, TeamOverviewResponse, TeamStats, SquadPlayer } from '@/types';
 import { Game } from '@/types/match';
 import { teamService } from '@/lib/api/services/teamService';
 
@@ -35,6 +35,27 @@ export function useTeamDetail(teamId: number | null) {
 
   return {
     team: data ?? null,
+    loading: isLoading,
+    error,
+    refetch: mutate,
+  };
+}
+
+// Team overview hook - aggregated endpoint for team page overview
+export function useTeamOverview(
+  teamId: number | null,
+  seasonId: number = DEFAULT_SEASON_ID
+) {
+  const { i18n } = useTranslation();
+  const { data, error, isLoading, mutate } = useSWR<TeamOverviewResponse | null>(
+    teamId ? ['teamOverview', teamId, seasonId, i18n.language] : null,
+    async () => {
+      return teamService.getTeamOverview(teamId!, seasonId, i18n.language);
+    }
+  );
+
+  return {
+    overview: data ?? null,
     loading: isLoading,
     error,
     refetch: mutate,

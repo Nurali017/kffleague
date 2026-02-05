@@ -25,12 +25,12 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
 
     if (loading) {
         return (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)] p-6">
                 <div className="animate-pulse space-y-4">
-                    <div className="h-6 bg-gray-100 rounded w-48" />
+                    <div className="h-6 bg-gray-200 dark:bg-white/10 rounded w-48" />
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="h-32 bg-gray-50 rounded-xl" />
+                            <div key={i} className="h-32 bg-gray-100 dark:bg-white/5 rounded-xl" />
                         ))}
                     </div>
                 </div>
@@ -41,8 +41,8 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
     if (!coaches.length) return null;
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 className="text-lg font-black text-gray-900 uppercase mb-6">
+        <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)] p-6">
+            <h3 className="text-sm font-black text-slate-900 dark:text-white mb-5">
                 {lang === 'kz' ? 'Жаттықтырушылар штабы' : 'Тренерский штаб'}
             </h3>
 
@@ -50,27 +50,27 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
                 {coaches.map((coach) => (
                     <div
                         key={coach.id}
-                        className="flex flex-col items-center text-center p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className="flex flex-col items-center text-center p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/25 transition-colors"
                     >
                         {coach.photo_url ? (
                             <img
                                 src={coach.photo_url}
                                 alt={`${coach.first_name} ${coach.last_name}`}
-                                className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-white shadow"
+                                className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-gray-300 dark:border-white/20 shadow"
                             />
                         ) : (
-                            <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-3 border-2 border-white shadow">
-                                <User className="w-8 h-8 text-gray-400" />
+                            <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center mb-3 border-2 border-gray-300 dark:border-white/20 shadow">
+                                <User className="w-8 h-8 text-slate-400 dark:text-white/40" />
                             </div>
                         )}
-                        <span className="font-bold text-sm text-gray-900">
+                        <span className="font-bold text-sm text-slate-900 dark:text-white">
                             {coach.first_name} {coach.last_name}
                         </span>
-                        <span className="text-[10px] font-bold text-primary uppercase mt-1">
+                        <span className="text-[10px] font-bold text-[#1E4D8C] dark:text-cyan-300 uppercase mt-1">
                             {ROLE_LABELS[coach.role]?.[lang] || coach.role}
                         </span>
                         {coach.country && (
-                            <span className="text-[10px] text-gray-400 mt-0.5">
+                            <span className="text-[10px] text-slate-400 dark:text-white/50 mt-0.5">
                                 {coach.country.name}
                             </span>
                         )}

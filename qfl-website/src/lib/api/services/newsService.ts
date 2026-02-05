@@ -5,12 +5,16 @@ import { NewsArticle, SliderNews, NewsPagination, NewsFilters, NewsNavigation, N
 export const newsService = {
   async getSlider(
     language: string = DEFAULT_LANGUAGE,
-    limit: number = 5
+    limit: number = 5,
+    tournamentId?: string
   ): Promise<SliderNews[]> {
-    const response = await apiClient.get<SliderNews[]>(ENDPOINTS.NEWS_SLIDER, {
+    const params: Record<string, any> = {
       lang: language,
       limit,
-    });
+    };
+    if (tournamentId) params.tournament_id = tournamentId;
+
+    const response = await apiClient.get<SliderNews[]>(ENDPOINTS.NEWS_SLIDER, params);
 
     if (!response.success) {
       throw new Error(response.error?.message || 'Failed to fetch slider news');
@@ -21,12 +25,16 @@ export const newsService = {
 
   async getLatest(
     language: string = DEFAULT_LANGUAGE,
-    limit: number = 10
+    limit: number = 10,
+    tournamentId?: string
   ): Promise<NewsArticle[]> {
-    const response = await apiClient.get<NewsArticle[]>(ENDPOINTS.NEWS_LATEST, {
+    const params: Record<string, any> = {
       lang: language,
       limit,
-    });
+    };
+    if (tournamentId) params.tournament_id = tournamentId;
+
+    const response = await apiClient.get<NewsArticle[]>(ENDPOINTS.NEWS_LATEST, params);
 
     if (!response.success) {
       throw new Error(response.error?.message || 'Failed to fetch latest news');
@@ -59,10 +67,10 @@ export const newsService = {
     const params: Record<string, any> = {
       lang: language,
       page,
-      limit,
+      per_page: limit,  // Backend expects per_page, not limit
     };
 
-    if (filters.category) params.category = filters.category;
+    if (filters.tournament_id) params.tournament_id = filters.tournament_id;
     if (filters.article_type) params.article_type = filters.article_type;
     if (filters.search) params.search = filters.search;
     if (filters.sort) params.sort = filters.sort;
@@ -73,18 +81,6 @@ export const newsService = {
 
     if (!response.success) {
       throw new Error(response.error?.message || 'Failed to fetch paginated news');
-    }
-
-    return response.data;
-  },
-
-  async getCategories(language: string = DEFAULT_LANGUAGE): Promise<string[]> {
-    const response = await apiClient.get<string[]>(ENDPOINTS.NEWS_CATEGORIES, {
-      lang: language,
-    });
-
-    if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch categories');
     }
 
     return response.data;

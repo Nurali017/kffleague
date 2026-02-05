@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { leagueService } from '@/lib/api/services';
-import { DEFAULT_SEASON_ID } from '@/api/endpoints';
+import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { TeamStanding, TableFilters, LeagueTableResponse } from '@/types';
 
 interface UseLeagueTableOptions {
@@ -28,7 +28,11 @@ export function useLeagueTable(options: UseLeagueTableOptions = {}) {
 
   const { data, error, isLoading, mutate } = useSWR<LeagueTableResponse>(
     ['leagueTable', seasonId, tourFrom, tourTo, homeAway, i18n.language],
-    () => leagueService.getTable(seasonId, filters, i18n.language)
+    () => leagueService.getTable(seasonId, filters, i18n.language),
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+    }
   );
 
   const standings = data?.table ?? [];

@@ -72,6 +72,9 @@ export interface TeamDetail extends Team {
   founded_year?: number;
   city?: string;
   website?: string;
+  primary_color?: string;
+  secondary_color?: string;
+  accent_color?: string;
   colors?: {
     primary: string;
     secondary: string;
@@ -215,4 +218,136 @@ export interface TeamStats {
   // Other
   clean_sheets?: number;
   extra_stats?: Record<string, any>;
+}
+
+export interface TeamOverviewSeason {
+  id: number;
+  name: string;
+  tournament_id: number | null;
+}
+
+export interface TeamOverviewTeam {
+  id: number;
+  name: string;
+  city: string | null;
+  logo_url: string | null;
+  website: string | null;
+  stadium: TeamOverviewStadium | null;
+  primary_color: string | null;
+  secondary_color: string | null;
+  accent_color: string | null;
+}
+
+export interface TeamOverviewSummary {
+  games_played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goals_scored: number;
+  goals_conceded: number;
+  goal_difference: number;
+  points: number;
+}
+
+export interface TeamOverviewMatchTeam {
+  id: number;
+  name: string;
+  logo_url?: string | null;
+}
+
+export interface TeamOverviewStadium {
+  name: string | null;
+  city: string | null;
+}
+
+export interface TeamOverviewMatch {
+  id: string;
+  date: string;
+  time: string | null;
+  tour: number | null;
+  status: 'upcoming' | 'finished' | 'live';
+  home_score: number | null;
+  away_score: number | null;
+  has_stats: boolean;
+  has_lineup: boolean;
+  home_team: TeamOverviewMatchTeam;
+  away_team: TeamOverviewMatchTeam;
+  stadium: TeamOverviewStadium | null;
+}
+
+export interface TeamOverviewFormEntry {
+  game_id: string;
+  is_home: boolean;
+  opponent_name: string;
+  opponent_logo?: string | null;
+  team_score: number;
+  opponent_score: number;
+  result: 'W' | 'D' | 'L';
+}
+
+export interface TeamOverviewStandingEntry {
+  position: number;
+  team_id: number;
+  team_name: string;
+  team_logo?: string | null;
+  games_played: number;
+  points: number;
+  goal_difference: number;
+  goals_scored: number;
+  goals_conceded: number;
+}
+
+export interface TeamOverviewLeaderPlayer {
+  player_id: string;
+  first_name: string | null;
+  last_name: string | null;
+  photo_url: string | null;
+  team_id: number | null;
+  team_name: string | null;
+  team_logo: string | null;
+  position: string | null;
+  games_played: number;
+  goals: number;
+  assists: number;
+  passes: number;
+  save_shot: number;
+  dry_match: number;
+  red_cards: number;
+}
+
+export interface TeamOverviewMiniLeaders {
+  passes: TeamOverviewLeaderPlayer | null;
+  appearances: TeamOverviewLeaderPlayer | null;
+  saves: TeamOverviewLeaderPlayer | null;
+  clean_sheets: TeamOverviewLeaderPlayer | null;
+  red_cards: TeamOverviewLeaderPlayer | null;
+}
+
+export interface TeamOverviewLeaders {
+  top_scorer: TeamOverviewLeaderPlayer | null;
+  top_assister: TeamOverviewLeaderPlayer | null;
+  goals_table: TeamOverviewLeaderPlayer[];
+  assists_table: TeamOverviewLeaderPlayer[];
+  mini_leaders: TeamOverviewMiniLeaders;
+}
+
+export interface TeamOverviewCoachPreview {
+  id: number;
+  first_name: string;
+  last_name: string;
+  photo_url: string | null;
+  role: string;
+  country_name: string | null;
+}
+
+export interface TeamOverviewResponse {
+  team: TeamOverviewTeam;
+  season: TeamOverviewSeason | null;
+  summary: TeamOverviewSummary;
+  form_last5: TeamOverviewFormEntry[];
+  recent_match: TeamOverviewMatch | null;
+  upcoming_matches: TeamOverviewMatch[];
+  standings_window: TeamOverviewStandingEntry[];
+  leaders: TeamOverviewLeaders;
+  staff_preview: TeamOverviewCoachPreview[];
 }

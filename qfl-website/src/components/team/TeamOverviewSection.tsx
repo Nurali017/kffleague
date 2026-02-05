@@ -1,228 +1,287 @@
 'use client';
 
-import { Game } from '@/types/match';
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { TeamLeagueTable } from './TeamLeagueTable';
-import { TeamCoachingStaff } from './TeamCoachingStaff';
+import { useTranslation } from 'react-i18next';
+import {
+  TeamOverviewCoachPreview,
+  TeamOverviewFormEntry,
+  TeamOverviewLeaders,
+  TeamOverviewMatch,
+  TeamOverviewStandingEntry,
+} from '@/types/team';
+import { formatMatchDate } from '@/lib/utils/dateFormat';
+import { EmptyState, SectionCard, SectionHeader } from './TeamUiPrimitives';
+import { TeamPlayerStats } from './TeamPlayerStats';
 
 interface TeamOverviewSectionProps {
-    recentMatches: Game[];
-    upcomingMatches: Game[];
-    teamId: number;
+  recentMatch: TeamOverviewMatch | null;
+  formLast5: TeamOverviewFormEntry[];
+  upcomingMatches: TeamOverviewMatch[];
+  standingsWindow: TeamOverviewStandingEntry[];
+  leaders: TeamOverviewLeaders;
+  staffPreview: TeamOverviewCoachPreview[];
 }
 
-// Most Recent Result card
-function MostRecentResult({ match }: { match: Game | null }) {
-    const { i18n } = useTranslation();
-    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+function MatchScore({ home, away }: { home: number | null; away: number | null }) {
+  return (
+    <div className="inline-flex items-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-3 py-1 font-black text-base">
+      <span>{home ?? '-'}</span>
+      <span className="text-[#1E4D8C]/60 dark:text-cyan-300/75">:</span>
+      <span>{away ?? '-'}</span>
+    </div>
+  );
+}
 
-    if (!match) {
-        return (
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center justify-center">
-                <p className="text-gray-400 text-sm">{lang === 'kz' ? 'Матч жоқ' : 'Нет матчей'}</p>
-            </div>
-        );
-    }
+function LastMatchCard({ match }: { match: TeamOverviewMatch | null }) {
+  const { t, i18n } = useTranslation('team');
 
-    const dateStr = new Date(match.date).toLocaleDateString(lang === 'kz' ? 'kk-KZ' : 'ru-RU', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-    });
-
+  if (!match) {
     return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col">
-            <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-wider text-center mb-4">
-                MOST RECENT RESULT
-            </h3>
-
-            <div className="flex items-center justify-between flex-1 gap-2">
-                <div className="flex flex-col items-center gap-1.5 w-1/3 text-center">
-                    <img
-                        src={match.home_team.logo_url || '/placeholder-team.png'}
-                        alt={match.home_team.name}
-                        className="w-12 h-12 object-contain"
-                    />
-                    <span className="text-[10px] font-bold text-gray-600 leading-tight uppercase">
-                        {match.home_team.name}
-                    </span>
-                </div>
-
-                <div className="flex flex-col items-center w-1/3">
-                    <span className="text-[10px] text-gray-400 mb-1.5">{dateStr}</span>
-                    <div className="flex items-center gap-1">
-                        <span className="bg-primary text-white text-lg font-black w-8 h-8 rounded-md flex items-center justify-center">
-                            {match.home_score ?? '-'}
-                        </span>
-                        <span className="bg-primary text-white text-lg font-black w-8 h-8 rounded-md flex items-center justify-center">
-                            {match.away_score ?? '-'}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-1.5 w-1/3 text-center">
-                    <img
-                        src={match.away_team.logo_url || '/placeholder-team.png'}
-                        alt={match.away_team.name}
-                        className="w-12 h-12 object-contain"
-                    />
-                    <span className="text-[10px] font-bold text-gray-600 leading-tight uppercase">
-                        {match.away_team.name}
-                    </span>
-                </div>
-            </div>
-
-            <div className="mt-3 text-center">
-                <Link
-                    href={`/matches/${match.id}`}
-                    className="inline-block border border-gray-200 rounded-full px-5 py-1.5 text-[10px] font-bold text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                    Match Centre
-                </Link>
-            </div>
-        </div>
+      <EmptyState
+        description={t('empty.noRecentMatches', 'Нет сыгранных матчей')}
+        className="h-full"
+      />
     );
+  }
+
+  return (
+    <SectionCard className="p-4 md:p-5">
+      <SectionHeader title={t('sections.recentMatch', 'Последний матч')} />
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          {match.home_team.logo_url ? (
+            <img src={match.home_team.logo_url} alt={match.home_team.name} className="w-10 h-10 object-contain" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+          )}
+          <span className="truncate text-sm font-bold text-slate-900 dark:text-white">{match.home_team.name}</span>
+        </div>
+
+        <MatchScore home={match.home_score} away={match.away_score} />
+
+        <div className="flex items-center justify-end gap-2.5 min-w-0 flex-1">
+          <span className="truncate text-sm font-bold text-slate-900 dark:text-white text-right">{match.away_team.name}</span>
+          {match.away_team.logo_url ? (
+            <img src={match.away_team.logo_url} alt={match.away_team.name} className="w-10 h-10 object-contain" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+          )}
+        </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-white/60">
+        <span>{formatMatchDate(match.date, i18n.language)}</span>
+        <Link href={`/matches/${match.id}`} className="font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
+          {t('buttons.matchCentre', 'Матч-центр')}
+        </Link>
+      </div>
+    </SectionCard>
+  );
 }
 
-// Team Form card — last 5 results
-function TeamForm({ matches, teamId }: { matches: Game[]; teamId: number }) {
-    const last5 = matches.slice(0, 5);
+function FormCard({ items }: { items: TeamOverviewFormEntry[] }) {
+  const { t } = useTranslation('team');
 
-    return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col">
-            <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-wider text-center mb-4">
-                TEAM FORM
-            </h3>
-
-            <div className="flex items-center justify-center gap-3 flex-1">
-                {last5.map((game) => {
-                    const isHome = game.home_team.id === teamId;
-                    const opponent = isHome ? game.away_team : game.home_team;
-                    const teamScore = isHome ? game.home_score : game.away_score;
-                    const opponentScore = isHome ? game.away_score : game.home_score;
-
-                    return (
-                        <div key={game.id} className="flex flex-col items-center gap-1.5">
-                            <img
-                                src={opponent.logo_url || '/placeholder-team.png'}
-                                alt={opponent.name}
-                                className="w-9 h-9 object-contain"
-                            />
-                            <div className="flex gap-px">
-                                <span className="bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-sm flex items-center justify-center">
-                                    {teamScore ?? '-'}
-                                </span>
-                                <span className="bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-sm flex items-center justify-center">
-                                    {opponentScore ?? '-'}
-                                </span>
-                            </div>
-                            <span className="text-[9px] text-gray-400 font-medium">
-                                {isHome ? 'H' : 'A'}
-                            </span>
-                        </div>
-                    );
-                })}
+  return (
+    <SectionCard className="p-4 md:p-5">
+      <SectionHeader title={t('sections.teamForm', 'Форма команды')} />
+      {items.length === 0 ? (
+        <p className="mt-4 text-sm text-slate-500 dark:text-white/60">{t('empty.noRecentMatches', 'Нет сыгранных матчей')}</p>
+      ) : (
+        <div className="mt-4 grid grid-cols-5 gap-2">
+          {items.map((item) => (
+            <div key={item.game_id} className="rounded-lg border border-gray-200 dark:border-white/10 p-2 text-center bg-gray-50 dark:bg-white/5">
+              {item.opponent_logo ? (
+                <img src={item.opponent_logo} alt={item.opponent_name} className="w-7 h-7 object-contain mx-auto" />
+              ) : (
+                <div className="w-7 h-7 mx-auto rounded-full bg-gray-300 dark:bg-white/20" />
+              )}
+              <div className="mt-1 text-[11px] font-bold text-slate-900 dark:text-white">
+                {item.team_score}:{item.opponent_score}
+              </div>
+              <div className="mt-0.5 text-[10px] font-semibold text-slate-500 dark:text-white/60">{item.result}</div>
             </div>
+          ))}
+        </div>
+      )}
+    </SectionCard>
+  );
+}
 
-            {last5.length === 0 && (
-                <p className="text-gray-400 text-xs text-center flex-1 flex items-center justify-center">
-                    No data
+function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
+  const { t } = useTranslation('table');
+
+  if (!rows.length) {
+    return (
+      <EmptyState
+        description={t('empty.noData', 'Таблица недоступна')}
+      />
+    );
+  }
+
+  return (
+    <SectionCard className="overflow-hidden">
+      <div className="p-4 md:p-5 border-b border-gray-200 dark:border-white/10">
+        <SectionHeader
+          title={t('title', 'Турнирная таблица')}
+          action={
+            <Link href="/table" className="text-xs font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
+              {t('actions.fullTable', 'Полная таблица')}
+            </Link>
+          }
+        />
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[420px] text-sm">
+          <thead>
+            <tr className="text-xs text-slate-500 dark:text-white/70 border-b border-gray-200 dark:border-white/10">
+              <th className="text-left py-2 px-4 font-semibold">#</th>
+              <th className="text-left py-2 font-semibold">{t('columns.team', 'Команда')}</th>
+              <th className="text-center py-2 font-semibold">И</th>
+              <th className="text-center py-2 font-semibold">РМ</th>
+              <th className="text-right py-2 px-4 font-semibold">О</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.team_id} className="border-b border-gray-100 dark:border-white/10 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
+                <td className="py-2.5 px-4 font-bold text-slate-400 dark:text-white/50">{row.position}</td>
+                <td className="py-2.5">
+                  <div className="flex items-center gap-2.5">
+                    {row.team_logo ? (
+                      <img src={row.team_logo} alt="" className="w-5 h-5 object-contain" />
+                    ) : null}
+                    <span className="font-semibold text-slate-900 dark:text-white">{row.team_name}</span>
+                  </div>
+                </td>
+                <td className="py-2.5 text-center text-slate-600 dark:text-white/80">{row.games_played}</td>
+                <td className="py-2.5 text-center text-slate-600 dark:text-white/80">
+                  {row.goal_difference > 0 ? `+${row.goal_difference}` : row.goal_difference}
+                </td>
+                <td className="py-2.5 px-4 text-right font-black text-slate-900 dark:text-white">{row.points}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </SectionCard>
+  );
+}
+
+function FixturesRail({ matches }: { matches: TeamOverviewMatch[] }) {
+  const { t } = useTranslation('team');
+
+  return (
+    <SectionCard className="p-4 md:p-5">
+      <SectionHeader title={t('sections.fixtures', 'Предстоящие матчи')} />
+      {matches.length === 0 ? (
+        <p className="mt-4 text-sm text-slate-500 dark:text-white/60">{t('empty.noUpcomingMatches', 'Нет предстоящих матчей')}</p>
+      ) : (
+        <div className="mt-4 space-y-3">
+          {matches.map((match) => (
+            <Link
+              key={match.id}
+              href={`/matches/${match.id}`}
+              className="block rounded-xl border border-gray-200 dark:border-white/10 p-3 hover:border-gray-300 dark:hover:border-white/25 transition-colors"
+            >
+              <div className="text-[11px] text-slate-500 dark:text-white/60">
+                {match.tour ? t('matches_sections.tour', { number: match.tour }) : '—'}
+              </div>
+              <div className="mt-1 flex items-center justify-between gap-2 text-sm font-semibold text-slate-900 dark:text-white">
+                <span className="truncate">{match.home_team.name}</span>
+                <span className="text-xs text-slate-400 dark:text-white/50">{match.time?.slice(0, 5) || 'TBD'}</span>
+                <span className="truncate text-right">{match.away_team.name}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 grid grid-cols-1 gap-2">
+        <Link
+          href="/matches"
+          className="inline-flex items-center justify-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-4 py-2 text-sm font-bold hover:bg-[#1E4D8C]/15 dark:hover:bg-cyan-300/30 transition-colors"
+        >
+          {t('buttons.viewAllFixtures', 'Все матчи')} <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+        <Link
+          href="/stats"
+          className="inline-flex items-center justify-center gap-1 rounded-full border border-gray-300 dark:border-white/20 bg-gray-100 dark:bg-white/10 px-4 py-2 text-sm font-bold text-slate-700 dark:text-white hover:bg-gray-200 dark:hover:bg-white/15 transition-colors"
+        >
+          {t('buttons.seeAllStats', 'Вся статистика')}
+        </Link>
+      </div>
+    </SectionCard>
+  );
+}
+
+function StaffPreview({ coaches }: { coaches: TeamOverviewCoachPreview[] }) {
+  const { i18n } = useTranslation();
+  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+
+  return (
+    <SectionCard className="p-4 md:p-5">
+      <SectionHeader
+        title={lang === 'kz' ? 'Жаттықтырушылар штабы' : 'Тренерский штаб'}
+        action={
+          <Link href="?tab=staff" className="text-xs font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
+            {lang === 'kz' ? 'Толығырақ' : 'Подробнее'}
+          </Link>
+        }
+      />
+      {coaches.length === 0 ? (
+        <p className="mt-3 text-sm text-slate-500 dark:text-white/60">
+          {lang === 'kz' ? 'Деректер жоқ' : 'Данные отсутствуют'}
+        </p>
+      ) : (
+        <div className="mt-3 space-y-3">
+          {coaches.map((coach) => (
+            <div key={coach.id} className="flex items-center gap-3">
+              {coach.photo_url ? (
+                <img src={coach.photo_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+              )}
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                  {coach.first_name} {coach.last_name}
                 </p>
-            )}
-        </div>
-    );
-}
-
-// Fixtures card — upcoming matches (right column, full height)
-function FixturesList({ matches, teamId }: { matches: Game[]; teamId: number }) {
-    const { i18n } = useTranslation();
-    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
-    const upcoming = matches.slice(0, 5);
-
-    return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col h-full">
-            <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-wider text-center mb-4">
-                FIXTURES
-            </h3>
-
-            <div className="flex-1 space-y-4">
-                {upcoming.map((game) => {
-                    const homeAbbr = game.home_team.name.slice(0, 3).toUpperCase();
-                    const awayAbbr = game.away_team.name.slice(0, 3).toUpperCase();
-                    const dateObj = new Date(game.date);
-                    const dateStr = dateObj.toLocaleDateString(lang === 'kz' ? 'kk-KZ' : 'ru-RU', {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                    });
-                    const timeStr = game.time || dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                    return (
-                        <div key={game.id}>
-                            {game.tour && (
-                                <div className="text-[10px] mb-1">
-                                    <span className="font-bold text-gray-900">GW {game.tour}</span>
-                                    <span className="text-gray-400"> - {dateStr}</span>
-                                </div>
-                            )}
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-gray-600 w-8 text-right">{homeAbbr}</span>
-                                <img src={game.home_team.logo_url || '/placeholder-team.png'} className="w-5 h-5 object-contain" alt="" />
-                                <span className="text-xs font-bold text-gray-900 flex-1 text-center">{timeStr}</span>
-                                <img src={game.away_team.logo_url || '/placeholder-team.png'} className="w-5 h-5 object-contain" alt="" />
-                                <span className="text-xs font-bold text-gray-600 w-8">{awayAbbr}</span>
-                                <Link href={`/matches/${game.id}`}>
-                                    <ArrowRight className="w-3.5 h-3.5 text-gray-400" />
-                                </Link>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {upcoming.length === 0 && (
-                <p className="text-gray-400 text-xs text-center flex-1 flex items-center justify-center">
-                    {lang === 'kz' ? 'Алдағы матчтар жоқ' : 'Нет предстоящих матчей'}
+                <p className="text-xs text-slate-500 dark:text-white/60 truncate">
+                  {coach.country_name || coach.role}
                 </p>
-            )}
-
-            <div className="mt-4 text-center border-t border-gray-100 pt-3">
-                <Link
-                    href="/matches"
-                    className="inline-flex items-center gap-1 border border-gray-200 rounded-full px-5 py-1.5 text-[10px] font-bold text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                    View All Fixtures <ArrowRight className="w-3 h-3" />
-                </Link>
+              </div>
             </div>
+          ))}
         </div>
-    );
+      )}
+    </SectionCard>
+  );
 }
 
-export function TeamOverviewSection({ recentMatches, upcomingMatches, teamId }: TeamOverviewSectionProps) {
-    const lastMatch = recentMatches.length > 0 ? recentMatches[0] : null;
-
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
-            {/* Left column */}
-            <div className="space-y-6">
-                {/* Top row: Recent Result + Team Form */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <MostRecentResult match={lastMatch} />
-                    <TeamForm matches={recentMatches} teamId={teamId} />
-                </div>
-
-                {/* League Table */}
-                <TeamLeagueTable teamId={teamId} />
-
-                {/* Coaching Staff */}
-                <TeamCoachingStaff teamId={teamId} />
-            </div>
-
-            {/* Right column: Fixtures (full height) */}
-            <FixturesList matches={upcomingMatches} teamId={teamId} />
+export function TeamOverviewSection({
+  recentMatch,
+  formLast5,
+  upcomingMatches,
+  standingsWindow,
+  leaders,
+  staffPreview,
+}: TeamOverviewSectionProps) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <LastMatchCard match={recentMatch} />
+          <FormCard items={formLast5} />
         </div>
-    );
+
+        <StandingsCard rows={standingsWindow} />
+        <TeamPlayerStats leaders={leaders} />
+      </div>
+
+      <div className="space-y-4">
+        <FixturesRail matches={upcomingMatches} />
+        <StaffPreview coaches={staffPreview} />
+      </div>
+    </div>
+  );
 }

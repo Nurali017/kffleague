@@ -1,6 +1,13 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
-import { TeamDetail, TeamStats, TeamPlayersResponse, SquadPlayer, TeamCoach } from '@/types';
+import {
+  SquadPlayer,
+  TeamCoach,
+  TeamDetail,
+  TeamOverviewResponse,
+  TeamPlayersResponse,
+  TeamStats,
+} from '@/types';
 import { Game } from '@/types/match';
 
 // Map player_type to position category
@@ -67,6 +74,30 @@ export const teamService = {
       ENDPOINTS.TEAM_STATS(teamId),
       {
         season_id: seasonId,
+        ...(language ? { lang: language } : {}),
+      }
+    );
+
+    if (!response.success) {
+      return null;
+    }
+
+    return response.data;
+  },
+
+  async getTeamOverview(
+    teamId: number,
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string,
+    fixturesLimit: number = 5,
+    leadersLimit: number = 8
+  ): Promise<TeamOverviewResponse | null> {
+    const response = await apiClient.get<TeamOverviewResponse>(
+      ENDPOINTS.TEAM_OVERVIEW(teamId),
+      {
+        season_id: seasonId,
+        fixtures_limit: fixturesLimit,
+        leaders_limit: leadersLimit,
         ...(language ? { lang: language } : {}),
       }
     );

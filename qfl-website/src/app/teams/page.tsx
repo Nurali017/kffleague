@@ -4,14 +4,16 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTeams } from '@/hooks';
+import { useTournament } from '@/contexts/TournamentContext';
+import { HeroBackground } from '@/components/ui/HeroBackground';
 
 function TeamCardSkeleton() {
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-6 animate-pulse">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-6 animate-pulse">
       <div className="flex flex-col items-center">
-        <div className="w-24 h-24 bg-gray-200 dark:bg-slate-700 rounded-full mb-4" />
-        <div className="w-32 h-5 bg-gray-200 dark:bg-slate-700 rounded mb-2" />
-        <div className="w-20 h-4 bg-gray-200 dark:bg-slate-700 rounded" />
+        <div className="w-24 h-24 bg-gray-200 dark:bg-dark-surface-soft rounded-full mb-4" />
+        <div className="w-32 h-5 bg-gray-200 dark:bg-dark-surface-soft rounded mb-2" />
+        <div className="w-20 h-4 bg-gray-200 dark:bg-dark-surface-soft rounded" />
       </div>
     </div>
   );
@@ -29,12 +31,12 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
   return (
     <Link
       href={`/team/${id}`}
-      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-6 hover:shadow-lg hover:border-[#1E4D8C] dark:hover:border-blue-400 transition-all duration-300"
+      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-6 hover:shadow-lg hover:border-[#1E4D8C] dark:hover:border-accent-cyan transition-all duration-300"
     >
       <div className="flex flex-col items-center">
         {/* Team Logo */}
         <div
-          className="relative w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 dark:bg-slate-800 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+          className="relative w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 dark:bg-dark-surface flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
           style={colors ? {
             boxShadow: `0 0 0 3px ${colors.primary}40`
           } : undefined}
@@ -48,7 +50,7 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
               className="object-contain"
             />
           ) : (
-            <div className="w-16 h-16 bg-gray-200 dark:bg-slate-700 rounded-full" />
+            <div className="w-16 h-16 bg-gray-200 dark:bg-dark-surface-soft rounded-full" />
           )}
         </div>
 
@@ -68,11 +70,11 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
         {colors && (
           <div className="flex gap-1 mt-3">
             <div
-              className="w-4 h-4 rounded-full border border-gray-200 dark:border-slate-600"
+              className="w-4 h-4 rounded-full border border-gray-200 dark:border-dark-border-soft"
               style={{ backgroundColor: colors.primary }}
             />
             <div
-              className="w-4 h-4 rounded-full border border-gray-200 dark:border-slate-600"
+              className="w-4 h-4 rounded-full border border-gray-200 dark:border-dark-border-soft"
               style={{ backgroundColor: colors.secondary }}
             />
           </div>
@@ -84,18 +86,16 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
 
 export default function TeamsPage() {
   const { t } = useTranslation('navigation');
-  const { teams, loading, error } = useTeams();
+  const { effectiveSeasonId } = useTournament();
+  const { teams, loading, error } = useTeams(effectiveSeasonId);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
       {/* Hero Header */}
       <div className="relative">
-        {/* Blue gradient background */}
-        <div className="absolute inset-x-0 top-0 h-[300px] bg-gradient-to-r from-[#1E4D8C] to-[#3B82F6]" />
-        {/* Geometric pattern */}
-        <div
-          className="absolute inset-x-0 top-0 h-[300px] bg-cover bg-center bg-no-repeat opacity-30"
-          style={{ backgroundImage: 'url(/footer-bg.webp)' }}
+        <HeroBackground
+          className="absolute inset-x-0 top-0 h-[300px]"
+          patternClassName="absolute inset-x-0 top-0 h-[300px]"
         />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-4">
@@ -120,11 +120,11 @@ export default function TeamsPage() {
             ))}
           </div>
         ) : error ? (
-          <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-8 text-center">
+          <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8 text-center">
             <p className="text-red-500">Failed to load teams</p>
           </div>
         ) : teams.length === 0 ? (
-          <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-8 text-center">
+          <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8 text-center">
             <p className="text-gray-500 dark:text-slate-400">No teams found</p>
           </div>
         ) : (

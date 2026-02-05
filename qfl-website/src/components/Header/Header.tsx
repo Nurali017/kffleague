@@ -20,57 +20,95 @@ const mockLiveMatch: LiveMatchData | null = null; // Set to null when no live ma
 // };
 
 export function Header() {
-  const { t } = useTranslation('navigation');
+  const { t, i18n } = useTranslation('navigation');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const lang = i18n.language?.substring(0, 2) === 'kz' ? 'kz' : 'ru';
 
   // Navigation items with translations
   const navItems: NavItem[] = [
-    { key: 'table', label: t('items.table'), href: '/table' },
-    { key: 'teams', label: t('items.teams'), href: '/teams' },
+    {
+      key: 'table',
+      label: t('items.table', { defaultValue: lang === 'kz' ? 'Кесте' : 'Таблица' }),
+      href: '/table',
+    },
+    {
+      key: 'teams',
+      label: t('items.teams', { defaultValue: lang === 'kz' ? 'Командалар' : 'Команды' }),
+      href: '/teams',
+    },
     {
       key: 'stats',
-      label: t('items.stats'),
+      label: t('items.stats', { defaultValue: lang === 'kz' ? 'Статистика' : 'Статистика' }),
       href: '/stats',
       children: [
-        { key: 'teams', label: t('items.teams'), href: '/stats/teams' },
-        { key: 'players', label: t('items.players'), href: '/stats/players' },
+        {
+          key: 'teams',
+          label: t('items.teams', { defaultValue: lang === 'kz' ? 'Командалар' : 'Команды' }),
+          href: '/stats/teams',
+        },
+        {
+          key: 'players',
+          label: t('items.players', { defaultValue: lang === 'kz' ? 'Ойыншылар' : 'Игроки' }),
+          href: '/stats/players',
+        },
         // HIDDEN: Referees temporarily disabled
         // { key: 'referees', label: t('items.referees'), href: '/stats/referees' },
       ],
     },
     {
       key: 'news',
-      label: t('items.news'),
+      label: t('items.news', { defaultValue: lang === 'kz' ? 'Жаңалықтар' : 'Новости' }),
       href: '/news',
       children: [
-        { key: 'newsType', label: t('items.newsType'), href: '/news?article_type=news' },
-        { key: 'analytics', label: t('items.analytics'), href: '/news?article_type=analytics' },
+        {
+          key: 'newsType',
+          label: t('items.newsType', { defaultValue: lang === 'kz' ? 'Жаңалықтар' : 'Новости' }),
+          href: '/news?article_type=news',
+        },
+        {
+          key: 'analytics',
+          label: t('items.analytics', { defaultValue: lang === 'kz' ? 'Спорттық мақала' : 'Спортивная статья' }),
+          href: '/news?article_type=analytics',
+        },
       ],
     },
     {
       key: 'matches',
-      label: t('items.matches'),
+      label: t('items.matches', { defaultValue: lang === 'kz' ? 'Матчтар' : 'Матчи' }),
       href: '/matches',
       isLive: true,
     },
-    {
-      key: 'media',
-      label: t('items.media'),
-      href: '/media',
-      children: [
-        { key: 'video', label: t('items.video'), href: '/video' },
-        { key: 'photo', label: t('items.photo'), href: '/photo' },
-      ],
-    },
+    // HIDDEN: Media temporarily disabled
+    // {
+    //   key: 'media',
+    //   label: t('items.media'),
+    //   href: '/media',
+    //   children: [
+    //     { key: 'video', label: t('items.video'), href: '/video' },
+    //     { key: 'photo', label: t('items.photo'), href: '/photo' },
+    //   ],
+    // },
     {
       key: 'league',
-      label: t('items.league'),
+      label: t('items.league', { defaultValue: lang === 'kz' ? 'Лига' : 'Лига' }),
       href: '/league',
       children: [
-        { key: 'management', label: t('items.management'), href: '/league/management' },
-        { key: 'documents', label: t('items.documents'), href: '/league/documents' },
-        { key: 'contacts', label: t('items.contacts'), href: '/contacts' },
+        {
+          key: 'management',
+          label: t('items.management', { defaultValue: lang === 'kz' ? 'Басшылық' : 'Руководство' }),
+          href: '/league/management',
+        },
+        {
+          key: 'documents',
+          label: t('items.documents', { defaultValue: lang === 'kz' ? 'Құжаттар' : 'Документы' }),
+          href: '/league/documents',
+        },
+        {
+          key: 'contacts',
+          label: t('items.contacts', { defaultValue: lang === 'kz' ? 'Байланыс' : 'Контакты' }),
+          href: '/contacts',
+        },
       ],
     },
   ];

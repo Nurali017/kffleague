@@ -10,17 +10,17 @@ import { getTeamLogo } from '@/lib/utils/teamLogos';
 
 export function HomeMatches() {
   const { t, i18n } = useTranslation('match');
-  const { currentSeason, currentRound } = useTournament();
+  const { effectiveSeasonId, currentRound } = useTournament();
   const { matches, loading, error } = useMatches({
-    seasonId: currentSeason.id,
+    seasonId: effectiveSeasonId,
     tour: currentRound ?? 26
   });
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm p-6 h-full">
+      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-blue-400 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -28,7 +28,7 @@ export function HomeMatches() {
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-20 bg-gray-100 dark:bg-slate-800 rounded-lg" />
+              <div className="h-20 bg-gray-100 dark:bg-dark-surface rounded-lg" />
             </div>
           ))}
         </div>
@@ -38,9 +38,9 @@ export function HomeMatches() {
 
   if (error || !matches) {
     return (
-      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm p-6 h-full">
+      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-blue-400 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -61,15 +61,15 @@ export function HomeMatches() {
     : '';
 
   return (
-    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm p-6 h-full flex flex-col overflow-hidden">
+    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-blue-400 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           {t('title')}
         </h2>
         <Link
           href="/matches"
-          className="text-gray-500 font-medium text-sm hover:text-[#1E4D8C] flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
           Барлығы
           <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />
@@ -93,7 +93,7 @@ export function HomeMatches() {
             <Link
               key={game.id}
               href={`/matches/${game.id}`}
-              className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg p-2.5 transition-colors"
+              className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-2.5 transition-colors"
             >
               {/* Teams */}
               <div className="flex items-center justify-between gap-3">

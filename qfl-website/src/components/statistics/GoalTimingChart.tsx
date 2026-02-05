@@ -1,16 +1,34 @@
 'use client';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { GoalsByPeriodData } from '@/types/statistics';
+import { GoalsByPeriodData, GoalsByPeriodMeta } from '@/types/statistics';
+import { useTranslation } from 'react-i18next';
 
 interface GoalTimingChartProps {
     data: GoalsByPeriodData[];
+    meta?: GoalsByPeriodMeta;
 }
 
-export function GoalTimingChart({ data }: GoalTimingChartProps) {
+export function GoalTimingChart({ data, meta }: GoalTimingChartProps) {
+    const { t } = useTranslation('statistics');
+
     return (
         <div className="h-[200px] w-full items-center justify-center text-xs">
-            <div className="text-white/80 mb-2 font-medium">When the goals were scored</div>
+            <div className="mb-2 flex items-center justify-between gap-3">
+                <div className="text-white/80 font-medium">
+                    {t('hero.goalsByPeriodTitle', { defaultValue: 'When the goals were scored' })}
+                </div>
+                {meta && (
+                    <div className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/80">
+                        {t('hero.goalsByPeriodCoverage', {
+                            defaultValue: 'Coverage: {{coverage}}% ({{withEvents}}/{{total}})',
+                            coverage: Math.round(meta.coverage_pct),
+                            withEvents: meta.matches_with_goal_events,
+                            total: meta.matches_played,
+                        })}
+                    </div>
+                )}
+            </div>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                     data={data}

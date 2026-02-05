@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+dist
+coverage
+.env*
+!.env.example
+.vscode
+.claude
+.cursor
+vitest.config.ts
+ux-screenshots

@@ -1,116 +1,201 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { PlayerPageStats } from '@/types/player';
+import { cn } from '@/lib/utils/cn';
+import { PlayerPageVariant } from './playerPageVariants';
 
 interface PlayerDetailStatsProps {
-    stats?: PlayerPageStats | null;
+  stats?: PlayerPageStats | null;
+  variant?: PlayerPageVariant;
 }
 
-const StatItem = ({ label, value }: { label: string; value: number | string }) => (
-    <div className="flex flex-col items-center justify-center p-3 transition-colors hover:bg-gray-50 rounded-lg">
-        <span className="text-3xl md:text-3xl font-black text-[#1E293B] mb-1">{value}</span>
-        <span className="text-[10px] text-gray-500 text-center font-bold leading-tight max-w-[120px] uppercase">
-            {label}
+interface StatTileProps {
+  label: string;
+  value: number | string;
+  highlight?: boolean;
+  variant: PlayerPageVariant;
+}
+
+interface CircularChartProps {
+  value: number;
+  label: string;
+  variant: PlayerPageVariant;
+}
+
+function StatTile({ label, value, highlight = false, variant }: StatTileProps) {
+  return (
+    <article
+      className={cn(
+        'rounded-xl border px-3 py-3 transition-colors md:px-4',
+        variant === 'studio'
+          ? 'border-white/15 bg-white/10'
+          : variant === 'data'
+            ? 'border-slate-200 bg-slate-50 dark:border-dark-border dark:bg-dark-surface/80'
+            : 'border-slate-200 bg-white dark:border-dark-border dark:bg-dark-surface-soft',
+        highlight && variant !== 'studio' ? 'ring-2 ring-primary/20 dark:ring-accent-cyan/20' : ''
+      )}
+    >
+      <p
+        className={cn(
+          'text-xl font-black md:text-2xl',
+          variant === 'studio'
+            ? 'text-white'
+            : highlight
+              ? 'text-primary dark:text-accent-cyan'
+              : 'text-slate-900 dark:text-white'
+        )}
+      >
+        {value}
+      </p>
+      <p
+        className={cn(
+          'mt-1 text-[10px] font-bold uppercase tracking-wide md:text-[11px]',
+          variant === 'studio' ? 'text-white/70' : 'text-slate-500 dark:text-slate-400'
+        )}
+      >
+        {label}
+      </p>
+    </article>
+  );
+}
+
+function CircularChart({ value, label, variant }: CircularChartProps) {
+  const radius = 44;
+  const stroke = 8;
+  const circumference = 2 * Math.PI * radius;
+  const clamped = Math.max(0, Math.min(100, value));
+  const strokeDashoffset = circumference - (clamped / 100) * circumference;
+
+  return (
+    <div className="relative flex h-[140px] w-[140px] flex-col items-center justify-center md:h-[170px] md:w-[170px]">
+      <svg className="h-full w-full -rotate-90">
+        <circle
+          className={cn(variant === 'studio' ? 'text-white/20' : 'text-slate-200 dark:text-slate-700')}
+          strokeWidth={stroke}
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx="50%"
+          cy="50%"
+        />
+        <circle
+          className={cn(
+            'transition-all duration-700',
+            variant === 'studio' ? 'text-cyan-300' : 'text-primary dark:text-accent-cyan'
+          )}
+          strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx="50%"
+          cy="50%"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span
+          className={cn(
+            'text-2xl font-black md:text-3xl',
+            variant === 'studio' ? 'text-white' : 'text-slate-900 dark:text-white'
+          )}
+        >
+          {clamped}%
         </span>
+      </div>
+      <span
+        className={cn(
+          'absolute -bottom-6 text-center text-[10px] font-bold uppercase tracking-wide md:-bottom-7 md:text-xs',
+          variant === 'studio' ? 'text-white/70' : 'text-slate-500 dark:text-slate-400'
+        )}
+      >
+        {label}
+      </span>
     </div>
-);
+  );
+}
 
-const CircularChart = ({ value, label, color = "text-[#1E4D8C]" }: { value: number; label: string; color?: string }) => {
-    const radius = 58;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (value / 100) * circumference;
+export function PlayerDetailStats({ stats, variant = 'clarity' }: PlayerDetailStatsProps) {
+  const { t } = useTranslation('player');
 
-    return (
-        <div className="flex flex-col items-center justify-center relative w-[160px] h-[160px] md:w-[200px] md:h-[200px]">
-            {/* Background Circle */}
-            <svg className="w-full h-full transform -rotate-90 drop-shadow-sm">
-                <circle
-                    className="text-gray-100"
-                    strokeWidth="12"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r={radius}
-                    cx="50%"
-                    cy="50%"
-                />
-                {/* Progress Circle */}
-                <circle
-                    className={`${color} transition-all duration-1000 ease-out`}
-                    strokeWidth="12"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r={radius}
-                    cx="50%"
-                    cy="50%"
-                />
-            </svg>
-            {/* Center Text */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl md:text-6xl font-black text-[#1E293B]">{value}%</span>
-            </div>
-            <div className="absolute -bottom-8 w-full text-center">
-                <span className="text-sm font-bold text-[#1E293B] uppercase tracking-wide">{label}</span>
-            </div>
+  if (!stats) return null;
+
+  const duels = stats.duels ?? 0;
+  const duelsWon = stats.duels_won ?? 0;
+  const duelsWonPercentage = duels > 0 ? Math.round((duelsWon / duels) * 100) : 0;
+  const passAccuracy = stats.pass_accuracy ?? 0;
+
+  const statTiles = [
+    { label: t('stats.goals', 'Голы'), value: stats.goals ?? 0, highlight: true },
+    { label: t('stats.assists', 'Ассисты'), value: stats.assists ?? 0, highlight: true },
+    { label: t('shotsOnTarget', 'Удары'), value: stats.shots ?? 0 },
+    { label: t('shotsOnTargetAccurate', 'В створ'), value: stats.shots_on_goal ?? 0 },
+    { label: t('totalPasses', 'Передачи'), value: stats.passes ?? 0 },
+    { label: t('keyPassesLabel', 'Ключевые передачи'), value: stats.key_passes ?? 0 },
+    { label: t('successfulDuels', 'Выигранные единоборства'), value: duelsWonPercentage },
+    { label: t('duelsLabel', 'Единоборства'), value: duels },
+    { label: t('duelsWonLabel', 'Выиграно'), value: duelsWon },
+    { label: t('stats.yellowCards', 'Желтые карточки'), value: stats.yellow_cards ?? 0 },
+    { label: t('stats.redCards', 'Красные карточки'), value: stats.red_cards ?? 0 },
+    { label: t('ballRecoveries', 'Перехваты'), value: stats.interception ?? 0 },
+  ];
+
+  return (
+    <section
+      aria-labelledby="detail-stats-heading"
+      className={cn(
+        'rounded-2xl border p-4 md:p-6',
+        variant === 'studio'
+          ? 'border-white/10 bg-[#0a162a] text-white shadow-[0_20px_40px_rgba(3,10,25,0.5)]'
+          : variant === 'data'
+            ? 'border-slate-200 bg-white dark:border-dark-border dark:bg-dark-surface'
+            : 'border-slate-200 bg-white shadow-sm dark:border-dark-border dark:bg-dark-surface'
+      )}
+    >
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
+        <h2
+          id="detail-stats-heading"
+          className={cn(
+            'text-lg font-black md:text-xl',
+            variant === 'studio' ? 'text-white' : 'text-slate-900 dark:text-white'
+          )}
+        >
+          {t('detailedStats', 'Детальная статистика')}
+        </h2>
+        <span
+          className={cn(
+            'rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide',
+            variant === 'studio'
+              ? 'bg-white/10 text-white/75'
+              : 'bg-slate-100 text-slate-500 dark:bg-dark-surface dark:text-slate-400'
+          )}
+        >
+          {t('seasonStats', 'Season')}
+        </span>
+      </div>
+
+      <div className="grid gap-8 xl:grid-cols-[200px_1fr_200px] xl:items-center">
+        <div className="mx-auto mb-2 xl:mb-0">
+          <CircularChart value={passAccuracy} label={t('passAccuracyLabel', 'Точность передач')} variant={variant} />
         </div>
-    );
-};
 
-export function PlayerDetailStats({ stats }: PlayerDetailStatsProps) {
-    if (!stats) return null;
-
-    const passAccuracy = stats.pass_accuracy ?? 0;
-    const duels = stats.duels ?? 0;
-    const duelsWon = stats.duels_won ?? 0;
-    const duelsWonPercentage = duels > 0 ? Math.round((duelsWon / duels) * 100) : 0;
-
-    return (
-        <div className="w-full bg-white rounded-2xl p-8 md:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
-            <div className="flex flex-col xl:flex-row items-center justify-center gap-12 xl:gap-20">
-
-                {/* Left Circle - Pass Accuracy */}
-                <div className="flex-shrink-0 mb-8 xl:mb-0 transform hover:scale-105 transition-transform duration-300">
-                    <CircularChart
-                        value={passAccuracy}
-                        label="Пастар дәлдігі"
-                        color="text-[#0055D4]"
-                    />
-                </div>
-
-                {/* Center Grid - Stats */}
-                <div className="flex-1 w-full max-w-4xl">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-y-10 gap-x-4">
-                        <StatItem value={stats.passes ?? 0} label="Пастардың барлығы" />
-                        <StatItem value={stats.goals ?? 0} label="Голдар" />
-                        <StatItem value={stats.assists ?? 0} label="Нәтижелі пастар" />
-                        <StatItem value={duelsWonPercentage} label="Сәтті жекпе-жектер" />
-
-                        <StatItem value={stats.shots ?? 0} label="Қақпаға соққылар" />
-                        <StatItem value={stats.shots_on_goal ?? 0} label="Қақпаға дөп бағытталған" />
-                        <StatItem value={stats.interception ?? 0} label="Допты тартып алу" />
-                        <StatItem value={stats.dribble ?? 0} label="Допты алып өту" />
-
-                        <StatItem value={stats.key_passes ?? 0} label="Дәл пастар" />
-                        <StatItem value={stats.yellow_cards ?? 0} label="Сары қағаздар" />
-                        <StatItem value={stats.red_cards ?? 0} label="Қызыл қағаздар" />
-                        <StatItem value={stats.duels ?? 0} label="Жекпе-жектер" />
-
-                        <StatItem value={stats.passes ?? 0} label="Дөп пастар" />
-                        <StatItem value={stats.duels_won ?? 0} label="Жеңген жекпе-жектер" />
-                    </div>
-                </div>
-
-                {/* Right Circle - Duels Won */}
-                <div className="flex-shrink-0 mt-8 xl:mt-0 transform hover:scale-105 transition-transform duration-300">
-                    <CircularChart
-                        value={duelsWonPercentage}
-                        label="Сәтті жекпе-жектер"
-                        color="text-[#55C5E6]"
-                    />
-                </div>
-
-            </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {statTiles.map((item) => (
+            <StatTile
+              key={item.label}
+              label={item.label}
+              value={item.value}
+              highlight={item.highlight}
+              variant={variant}
+            />
+          ))}
         </div>
-    );
+
+        <div className="mx-auto mt-2 xl:mt-0">
+          <CircularChart value={duelsWonPercentage} label={t('successfulDuels', 'Выигранные дуэли')} variant={variant} />
+        </div>
+      </div>
+    </section>
+  );
 }

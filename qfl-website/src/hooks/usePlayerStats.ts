@@ -1,23 +1,41 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { playerStatsService } from '@/lib/api/services';
-import { DEFAULT_SEASON_ID } from '@/api/endpoints';
-import { PlayerStat, PlayerStatsSortBy } from '@/types';
+import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
+import { PlayerStat, PlayerStatsSortBy, PositionCode } from '@/types';
 
 interface UsePlayerStatsOptions {
   seasonId?: number;
   sortBy?: PlayerStatsSortBy;
   limit?: number;
+  offset?: number;
+  teamId?: number;
+  positionCode?: PositionCode;
 }
 
 export function usePlayerStats(options: UsePlayerStatsOptions = {}) {
   const { i18n } = useTranslation();
-  const { seasonId = DEFAULT_SEASON_ID, sortBy = 'goals', limit = 5 } = options;
+  const {
+    seasonId = DEFAULT_SEASON_ID,
+    sortBy = 'goals',
+    limit = 5,
+    offset = 0,
+    teamId,
+    positionCode,
+  } = options;
 
   const { data, error, isLoading, mutate } = useSWR(
-    ['playerStats', seasonId, sortBy, limit, i18n.language],
+    ['playerStats', seasonId, sortBy, limit, offset, teamId ?? null, positionCode ?? null, i18n.language],
     async () => {
-      const response = await playerStatsService.getPlayerStats({ seasonId, sortBy, limit, language: i18n.language });
+      const response = await playerStatsService.getPlayerStats({
+        seasonId,
+        sortBy,
+        limit,
+        offset,
+        teamId,
+        positionCode,
+        language: i18n.language,
+      });
       return response.items;
     }
   );

@@ -59,7 +59,7 @@ export function NewsPagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label={t('previous', 'Предыдущая страница')}
       >
         <ChevronLeft className="w-4 h-4" />
@@ -91,8 +91,8 @@ export function NewsPagination({
                 min-w-[40px] px-3 py-2 rounded-lg border transition-all duration-200
                 ${
                   isActive
-                    ? 'bg-[#1E4D8C] dark:bg-blue-600 text-white border-[#1E4D8C] dark:border-blue-600 font-semibold'
-                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:bg-surface-soft dark:hover:bg-dark-surface-soft hover:border-[#1E4D8C] dark:hover:border-blue-500'
+                    ? 'bg-[#1E4D8C] dark:bg-cyan-700 text-white border-[#1E4D8C] dark:border-cyan-700 font-semibold'
+                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 border-gray-200 dark:border-dark-border hover:bg-surface-soft dark:hover:bg-dark-surface-soft hover:border-[#1E4D8C] dark:hover:border-blue-500'
                 }
               `}
               aria-label={`${t('page', 'Страница')} ${pageNumber}`}
@@ -108,7 +108,7 @@ export function NewsPagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label={t('next', 'Следующая страница')}
       >
         <span className="hidden sm:inline">{t('next', 'Вперед')}</span>

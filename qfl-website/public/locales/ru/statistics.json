@@ -1,0 +1,144 @@
+{
+  "subTabs": {
+    "keyStats": "Ключевая статистика",
+    "goals": "Голы",
+    "attempts": "Удары",
+    "distribution": "Распределение",
+    "attacking": "Атака",
+    "defending": "Защита",
+    "goalkeeping": "Вратарская",
+    "disciplinary": "Дисциплина"
+  },
+  "hero": {
+    "totalGoals": "Всего голов",
+    "goalsPerMatch": "Голов за матч",
+    "minutesPerGoal": "Минут на гол",
+    "goalsByPeriodTitle": "Когда забивались голы",
+    "goalsByPeriodComingSoon": "Скоро: график появится после подключения данных.",
+    "goalsByPeriodNoData": "Данные по таймингу голов пока недоступны.",
+    "goalsByPeriodCoverage": "Покрытие: {{coverage}}% ({{withEvents}}/{{total}})"
+  },
+  "mainTabs": {
+    "clubs": "Статистика клубов",
+    "players": "Статистика игроков"
+  },
+  "filters": {
+    "phase": "Этап",
+    "comingSoon": "скоро",
+    "allMatches": "Все матчи",
+    "mainTournament": "Основной турнир",
+    "qualifying": "Квалификация",
+    "club": "Клуб",
+    "allClubs": "Все клубы",
+    "position": "Позиция",
+    "allPositions": "Все",
+    "positions": {
+      "GK": "ВР",
+      "DEF": "ЗАЩ",
+      "MID": "ПЗ",
+      "FWD": "НАП"
+    }
+  },
+  "table": {
+    "position": "Поз",
+    "club": "Клуб",
+    "player": "Игрок",
+    "pos": "Поз",
+    "searchClub": "Поиск клуба…",
+    "clearSearch": "Очистить поиск",
+    "noImage": "Нет фото",
+    "noPlayersFound": "Игроки не найдены. Попробуйте изменить фильтры.",
+    "noClubsFound": "Клубы не найдены."
+  },
+  "emptyState": {
+    "title": "Командная статистика недоступна",
+    "description": "Для турнира «{{tournament}}» пока нет данных.",
+    "reason": "Данные ещё готовятся или не синхронизированы.",
+    "openTable": "Открыть таблицу",
+    "openPlayers": "Открыть статистику игроков",
+    "openBracket": "Открыть сетку",
+    "openTournament": "Открыть турнир"
+  },
+  "loadError": "Ошибка загрузки статистики команд",
+  "errors": {
+    "seasonStatsLoad": "Ошибка загрузки статистики",
+    "playerStatsLoad": "Ошибка загрузки статистики игроков"
+  },
+  "playerColumns": {
+    "games_played": "Матчи",
+    "goals": "Голы",
+    "assists": "Передачи",
+    "minutes_played": "Минуты",
+    "shots": "Удары",
+    "shots_on_goal": "В створ",
+    "passes": "Пасы",
+    "pass_accuracy": "Точность",
+    "key_passes": "Ключевые",
+    "dribble": "Дриблинг",
+    "dribble_success": "Успешные обводки",
+    "xg": "xG",
+    "tackle": "Отборы",
+    "interception": "Перехваты",
+    "recovery": "Возвраты",
+    "save_shot": "Сейвы",
+    "dry_match": "Сухие",
+    "yellow_cards": "ЖК",
+    "red_cards": "КК"
+  },
+  "labels": {
+    "goals": "Голы",
+    "assists": "Передачи",
+    "shots": "Удары",
+    "totalAttempts": "Всего ударов",
+    "onTarget": "В створ",
+    "offTarget": "Мимо",
+    "xg": "xG",
+
+    "matchesPlayed": "Сыграно матчей",
+    "goalsConceded": "Пропущенные голы",
+    "goalDifference": "Разница",
+    "possession": "Владение (%)",
+    "passingAccuracy": "Точность паса (%)",
+    "passAccuracyShort": "Точн. паса",
+    "passes": "Пасы",
+    "keyPasses": "Ключевые передачи",
+    "ballsRecovered": "Возвраты мяча",
+    "tacklesWon": "Отборы",
+    "tackles": "Отборы",
+    "cleanSheets": "Сухие матчи",
+    "saves": "Сейвы",
+    "distanceCovered": "Дистанция (км)",
+
+    "penaltiesScored": "Забитые пенальти",
+    "corners": "Угловые",
+    "offsides": "Офсайды",
+    "dribbles": "Обводки",
+
+    "forwardPasses": "Пасы вперёд",
+    "longPasses": "Длинные пасы",
+    "progressivePasses": "Прогрессивные пасы",
+    "crosses": "Навесы",
+    "passesToBox": "Пасы в штрафную",
+    "passesToFinalThird": "Пасы в финальную треть",
+
+    "recoveries": "Подборы",
+    "interceptions": "Перехваты",
+    "duels": "Единоборства",
+    "aerialDuels": "Верховые единоборства",
+    "groundDuels": "Низовые единоборства",
+    "opponentXg": "xG соперника",
+
+    "yellowCards": "Жёлтые карточки",
+    "redCards": "Красные карточки",
+    "foulsCommitted": "Фолы совершены",
+    "foulsSuffered": "Фолы на себе",
+    "secondYellowCards": "Вторые жёлтые"
+  },
+  "helpers": {
+    "avgPerMatch": "В среднем за матч",
+    "perMatch": "{{value}} за матч",
+    "accuracyPct": "Точность {{value}}%",
+    "successPct": "{{value}}% успеха",
+    "wonPct": "{{value}}% выиграно"
+  }
+}

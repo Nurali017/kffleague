@@ -1,34 +1,64 @@
 'use client';
 
 import { useState } from 'react';
-import { usePlayerStats, useTeamStatsTable } from '@/hooks';
+import { usePlayerStats, useTeams } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 import { StatisticsSubTabs } from '@/components/statistics/StatisticsSubTabs';
 import { StatisticsFilters } from '@/components/statistics/StatisticsFilters';
 import { PlayerStatsTable } from '@/components/statistics/PlayerStatsTable';
 import { StatSubTab } from '@/types/statistics';
+import { useTournament } from '@/contexts/TournamentContext';
+import { PlayerStatsSortBy, PositionCode } from '@/types';
 
 export default function PlayersStatsPage() {
+    const { t } = useTranslation('statistics');
+    const { effectiveSeasonId } = useTournament();
     const [subTab, setSubTab] = useState<StatSubTab>('key_stats');
-    const [phase, setPhase] = useState('all');
     const [selectedClub, setSelectedClub] = useState('all');
     const [selectedPosition, setSelectedPosition] = useState('all');
 
+    const sortBy: PlayerStatsSortBy = (() => {
+        switch (subTab) {
+            case 'key_stats':
+            case 'goals':
+                return 'goals';
+            case 'attempts':
+                return 'shots';
+            case 'distribution':
+                return 'passes';
+            case 'attacking':
+                return 'dribble';
+            case 'defending':
+                return 'tackle';
+            case 'goalkeeping':
+                return 'save_shot';
+            case 'disciplinary':
+                return 'yellow_cards';
+            // Tabs not yet implemented in UI columns; use a safe default.
+            default:
+                return 'goals';
+        }
+    })();
+
+    const teamId =
+        selectedClub !== 'all' && Number.isFinite(Number(selectedClub))
+            ? Number(selectedClub)
+            : undefined;
+
+    const positionCode =
+        selectedPosition !== 'all' ? (selectedPosition as PositionCode) : undefined;
+
     // Get players with high limit for table view
-    const { players, loading, error } = usePlayerStats({ limit: 100 });
-
-    // Get teams for the filter dropdown
-    const { teams } = useTeamStatsTable();
-
-    // Filter players by club and position
-    const filteredPlayers = players.filter(player => {
-        if (selectedClub !== 'all' && player.team_id.toString() !== selectedClub) {
-            return false;
-        }
-        if (selectedPosition !== 'all' && player.top_role !== selectedPosition) {
-            return false;
-        }
-        return true;
+    const { players, loading, error } = usePlayerStats({
+        limit: 100,
+        seasonId: effectiveSeasonId,
+        sortBy,
+        teamId,
+        positionCode,
     });
+
+    // Get teams for the filter dropdown (should not depend on team-stats availability)
+    const { teams: teamsList } = useTeams(effectiveSeasonId);
 
     return (
         <>
@@ -39,26 +69,30 @@ export default function PlayersStatsPage() {
             />
             <StatisticsFilters
                 mode="players"
-                phase={phase}
-                onPhaseChange={setPhase}
                 selectedClub={selectedClub}
                 onClubChange={setSelectedClub}
                 selectedPosition={selectedPosition}
                 onPositionChange={setSelectedPosition}
-                teams={teams}
+                teams={teamsList.map((team) => ({
+                    team_id: team.id,
+                    team_name: team.name,
+                    team_logo: team.logo_url ?? null,
+                }))}
             />
 
             <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-8">
                 {error ? (
                     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
-                        <p className="text-red-600 dark:text-red-400">Ошибка загрузки статистики игроков</p>
+                        <p className="text-red-600 dark:text-red-400">
+                            {t('errors.playerStatsLoad', { defaultValue: 'Ошибка загрузки статистики игроков' })}
+                        </p>
                         <p className="text-sm text-red-500 dark:text-red-500 mt-2">{error.message}</p>
                     </div>
                 ) : (
                     <PlayerStatsTable
                         subTab={subTab}
-                        filters={{ phase, club: selectedClub, position: selectedPosition }}
-                        players={filteredPlayers as any}
+                        filters={{ club: selectedClub, position: selectedPosition }}
+                        players={players}
                         loading={loading}
                     />
                 )}

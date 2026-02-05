@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { playerStatsService } from '@/lib/api/services';
-import { DEFAULT_SEASON_ID } from '@/api/endpoints';
+import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { PlayerStat } from '@/types';
 
 interface UsePlayerLeaderboardOptions {

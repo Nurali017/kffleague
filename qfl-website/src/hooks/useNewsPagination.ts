@@ -31,7 +31,7 @@ export function useNewsPagination(
   return {
     news: data?.items ?? [],
     total: data?.total ?? 0,
-    totalPages: data?.total_pages ?? 0,
+    totalPages: data?.pages ?? 0,  // Backend returns 'pages', not 'total_pages'
     loading: isLoading,
     error,
     refetch: mutate,

@@ -1,262 +1,211 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
-import { usePlayerStats } from '@/hooks/usePlayerStats';
-import { PlayerStat } from '@/types/playerStats';
-import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { TeamOverviewLeaderPlayer, TeamOverviewLeaders } from '@/types/team';
+import { DataTableShell, SectionCard, SectionHeader } from './TeamUiPrimitives';
 
 interface TeamPlayerStatsProps {
-    teamId: number;
+  leaders: TeamOverviewLeaders;
 }
 
-// Featured player card (left side of goals/assists section)
-function FeaturedPlayerCard({
-    player,
-    statLabel,
-    statValue,
-    extraStats,
+function LeaderSpotlight({
+  title,
+  player,
+  valueLabel,
+  value,
 }: {
-    player: PlayerStat;
-    statLabel: string;
-    statValue: number | null;
-    extraStats: { label: string; value: string | number }[];
+  title: string;
+  player: TeamOverviewLeaderPlayer | null;
+  valueLabel: string;
+  value: number;
 }) {
-    return (
-        <div className="bg-gray-50 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden min-h-[320px]">
-            {/* Team logo watermark */}
-            <div className="absolute top-4 right-4 opacity-10">
-                <img src={player.team_logo} alt="" className="w-20 h-20" />
-            </div>
+  if (!player) return null;
 
-            <div className="relative z-10">
-                <span className="text-gray-400 text-xs font-medium block">
-                    {player.position || player.top_role || ''}
-                </span>
-                <span className="text-sm text-gray-500 block">{player.first_name}</span>
-                <h3 className="text-2xl font-black text-gray-900">{player.last_name}</h3>
-            </div>
-
-            <div className="relative z-10">
-                <div className="text-sm text-gray-500">{statLabel}</div>
-                <div className="text-4xl font-black text-gray-900">{statValue ?? 0}</div>
-            </div>
-
-            <div className="relative z-10 flex gap-4 mt-2">
-                {extraStats.map((stat) => (
-                    <div key={stat.label} className="text-center">
-                        <div className="text-lg font-black text-gray-900">{stat.value}</div>
-                        <div className="text-[10px] text-gray-400 uppercase">{stat.label}</div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Player photo placeholder */}
-            {player.photo_url && (
-                <div className="absolute bottom-0 right-0 w-[45%] h-[80%]">
-                    <img
-                        src={player.photo_url}
-                        alt={`${player.first_name} ${player.last_name}`}
-                        className="w-full h-full object-contain object-bottom"
-                    />
-                </div>
-            )}
+  return (
+    <SectionCard className="p-4 md:p-5 min-h-[220px]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[11px] uppercase tracking-wide font-semibold text-slate-500 dark:text-white/60">{title}</div>
+          <h4 className="mt-2 text-xl font-black text-slate-900 dark:text-white leading-tight">
+            {player.first_name} {player.last_name}
+          </h4>
+          {player.position ? (
+            <p className="mt-1 text-xs text-slate-500 dark:text-white/60">{player.position}</p>
+          ) : null}
         </div>
-    );
+        {player.team_logo ? (
+          <img src={player.team_logo} alt="" className="w-10 h-10 object-contain opacity-80" />
+        ) : null}
+      </div>
+
+      <div className="mt-6">
+        <div className="text-3xl font-black text-[#1E4D8C] dark:text-cyan-300">{value}</div>
+        <div className="text-xs text-slate-500 dark:text-white/60">{valueLabel}</div>
+      </div>
+    </SectionCard>
+  );
 }
 
-// Leaderboard table (right side)
 function LeaderboardTable({
-    players,
-    statKey,
+  players,
+  statKey,
+  title,
 }: {
-    players: PlayerStat[];
-    statKey: 'goals' | 'assists';
+  players: TeamOverviewLeaderPlayer[];
+  statKey: 'goals' | 'assists';
+  title: string;
 }) {
-    return (
-        <div className="bg-white rounded-2xl border border-gray-100">
-            <table className="w-full text-sm">
-                <thead>
-                    <tr className="text-xs text-gray-400 border-b border-gray-100">
-                        <th className="text-left py-3 px-4 font-medium">#</th>
-                        <th className="text-left py-3 font-medium">PLAYER</th>
-                        <th className="text-right py-3 px-4 font-medium">TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {players.slice(0, 8).map((player, idx) => (
-                        <tr key={player.player_id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                            <td className="py-3 px-4 text-gray-400 font-medium">{idx + 1}</td>
-                            <td className="py-3">
-                                <Link href={`/player/${player.player_id}`} className="flex items-center gap-3 group">
-                                    {player.photo_url ? (
-                                        <img src={player.photo_url} alt="" className="w-8 h-8 rounded-full object-cover" />
-                                    ) : (
-                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-400">
-                                            {player.first_name[0]}{player.last_name[0]}
-                                        </div>
-                                    )}
-                                    <div>
-                                        <div className="font-bold text-gray-900 group-hover:text-primary transition-colors">
-                                            {player.first_name} {player.last_name}
-                                        </div>
-                                        <div className="flex items-center gap-1 text-[10px] text-gray-400">
-                                            {player.team_logo && (
-                                                <img src={player.team_logo} alt="" className="w-3 h-3 object-contain" />
-                                            )}
-                                            {player.team_name}
-                                        </div>
-                                    </div>
-                                </Link>
-                            </td>
-                            <td className="py-3 px-4 text-right font-black text-gray-900">
-                                {statKey === 'goals' ? (player.goals ?? 0) : (player.assists ?? 0)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="p-4 text-center border-t border-gray-100">
-                <Link
-                    href="/stats/players"
-                    className="text-xs font-bold text-gray-900 uppercase hover:text-primary transition-colors flex items-center justify-center gap-1"
-                >
-                    VIEW FULL TABLE <ArrowRight className="w-3 h-3" />
+  const { t: tTeam } = useTranslation('team');
+  const { t: tCommon } = useTranslation('common');
+
+  return (
+    <DataTableShell>
+      <div className="p-4 border-b border-gray-200 dark:border-white/10">
+        <SectionHeader title={title} />
+      </div>
+      <table className="w-full min-w-[360px] text-sm">
+        <thead>
+          <tr className="text-xs text-slate-500 dark:text-white/70 border-b border-gray-200 dark:border-white/10">
+            <th className="text-left py-2 px-4 font-semibold">#</th>
+            <th className="text-left py-2 font-semibold">{tCommon('table.player', 'Игрок')}</th>
+            <th className="text-right py-2 px-4 font-semibold">{tTeam('leaderboard.total', 'Всего')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {players.slice(0, 8).map((player, index) => (
+            <tr key={player.player_id} className="border-b border-gray-100 dark:border-white/10 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
+              <td className="py-2.5 px-4 text-slate-400 dark:text-white/50">{index + 1}</td>
+              <td className="py-2.5">
+                <Link href={`/player/${player.player_id}`} className="flex items-center gap-2.5 group">
+                  {player.photo_url ? (
+                    <img src={player.photo_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-white/15 flex items-center justify-center text-[11px] font-bold text-slate-500 dark:text-white/60">
+                      {(player.first_name?.[0] || '') + (player.last_name?.[0] || '')}
+                    </div>
+                  )}
+                  <span className="font-bold text-slate-900 dark:text-white group-hover:text-[#1E4D8C] dark:group-hover:text-cyan-300 transition-colors">
+                    {player.first_name} {player.last_name}
+                  </span>
                 </Link>
-            </div>
-        </div>
-    );
+              </td>
+              <td className="py-2.5 px-4 text-right font-black text-slate-900 dark:text-white">
+                {statKey === 'goals' ? player.goals : player.assists}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </DataTableShell>
+  );
 }
 
-// Mini stat card (bottom row)
-function MiniStatCard({
-    label,
-    player,
-    value,
+function MiniLeaderCard({
+  label,
+  player,
+  value,
 }: {
-    label: string;
-    player: PlayerStat | null;
-    value: string | number;
+  label: string;
+  player: TeamOverviewLeaderPlayer | null;
+  value: number;
 }) {
-    if (!player) return null;
+  if (!player) return null;
 
-    return (
-        <div className="bg-white rounded-2xl border border-gray-100 p-4 flex flex-col">
-            <h4 className="text-xs font-black text-gray-900 uppercase mb-3">{label}</h4>
-            <div className="flex items-center gap-3 flex-1">
-                {player.photo_url ? (
-                    <img src={player.photo_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
-                ) : (
-                    <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                        {player.team_logo && (
-                            <img src={player.team_logo} alt="" className="w-6 h-6 object-contain" />
-                        )}
-                    </div>
-                )}
-                <div className="flex-1 min-w-0">
-                    <div className="text-[10px] text-gray-400">{player.first_name}</div>
-                    <div className="text-sm font-black text-gray-900 truncate">{player.last_name}</div>
-                </div>
-                <div className="text-right flex items-center gap-1">
-                    <span className="text-lg font-black text-gray-900">{value}</span>
-                    <ArrowRight className="w-3 h-3 text-gray-400" />
-                </div>
-            </div>
+  return (
+    <SectionCard className="p-3.5">
+      <p className="text-[10px] uppercase tracking-wide font-semibold text-slate-500 dark:text-white/60">{label}</p>
+      <div className="mt-2 flex items-center gap-2.5">
+        {player.photo_url ? (
+          <img src={player.photo_url} alt="" className="w-10 h-10 rounded-lg object-cover" />
+        ) : (
+          <div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-white/15" />
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-black text-slate-900 dark:text-white">
+            {player.first_name} {player.last_name}
+          </p>
+          <p className="text-xs text-slate-500 dark:text-white/60">{player.position || '—'}</p>
         </div>
-    );
+        <div className="text-lg font-black text-slate-900 dark:text-white">{value}</div>
+      </div>
+    </SectionCard>
+  );
 }
 
-export function TeamPlayerStats({ teamId }: TeamPlayerStatsProps) {
-    const { i18n } = useTranslation();
-    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+export function TeamPlayerStats({ leaders }: TeamPlayerStatsProps) {
+  const { t: tStats } = useTranslation('statistics');
+  const { t: tTeam } = useTranslation('team');
 
-    const { players: goalScorers, loading: goalsLoading } = usePlayerStats({ sortBy: 'goals', limit: 20 });
-    const { players: assistLeaders, loading: assistsLoading } = usePlayerStats({ sortBy: 'assists', limit: 20 });
-
-    // Filter by team
-    const teamGoalScorers = goalScorers.filter(p => p.team_id === teamId);
-    const teamAssistLeaders = assistLeaders.filter(p => p.team_id === teamId);
-
-    // For mini cards, derive from goal scorers data (sorted differently)
-    const allPlayers = goalScorers.filter(p => p.team_id === teamId);
-    const topPasser = [...allPlayers].sort((a, b) => b.passes - a.passes)[0] ?? null;
-    const topAppearances = [...allPlayers].sort((a, b) => b.games_played - a.games_played)[0] ?? null;
-    const topSaves = [...allPlayers].sort((a, b) => (b.save_shot ?? 0) - (a.save_shot ?? 0))[0] ?? null;
-    const topCleanSheets = [...allPlayers].sort((a, b) => (b.dry_match ?? 0) - (a.dry_match ?? 0))[0] ?? null;
-    const topRedCards = [...allPlayers].sort((a, b) => b.red_cards - a.red_cards)[0] ?? null;
-
-    if (goalsLoading || assistsLoading) {
-        return (
-            <div className="space-y-8">
-                <div className="animate-pulse h-8 bg-gray-100 rounded w-64" />
-                <div className="grid grid-cols-2 gap-6">
-                    <div className="animate-pulse h-[320px] bg-gray-50 rounded-2xl" />
-                    <div className="animate-pulse h-[320px] bg-gray-50 rounded-2xl" />
-                </div>
-            </div>
-        );
-    }
-
-    const topScorer = teamGoalScorers[0];
-    const topAssister = teamAssistLeaders[0];
-
-    return (
-        <div className="space-y-8">
-            <h2 className="text-2xl font-black text-gray-900 uppercase">
-                {lang === 'kz' ? 'ОЙЫНШЫЛАР СТАТИСТИКАСЫ' : 'СТАТИСТИКА ИГРОКОВ'}
-            </h2>
-
-            {/* Goals & Assists sections */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Goals */}
-                <div>
-                    <h3 className="text-lg font-black text-gray-900 uppercase mb-4">
-                        {lang === 'kz' ? 'ГОЛДАР' : 'ГОЛЫ'}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {topScorer && (
-                            <FeaturedPlayerCard
-                                player={topScorer}
-                                statLabel={lang === 'kz' ? 'Голдар' : 'Goals'}
-                                statValue={topScorer.goals}
-                                extraStats={[
-                                    { label: lang === 'kz' ? 'Соққылар' : 'Shots', value: topScorer.shots ?? 0 },
-                                ]}
-                            />
-                        )}
-                        <LeaderboardTable players={teamGoalScorers} statKey="goals" />
-                    </div>
-                </div>
-
-                {/* Assists */}
-                <div>
-                    <h3 className="text-lg font-black text-gray-900 uppercase mb-4">
-                        {lang === 'kz' ? 'ГОЛДЫҚ ПАСТАР' : 'АССИСТЫ'}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {topAssister && (
-                            <FeaturedPlayerCard
-                                player={topAssister}
-                                statLabel={lang === 'kz' ? 'Голдық пастар' : 'Assists'}
-                                statValue={topAssister.assists}
-                                extraStats={[
-                                    { label: lang === 'kz' ? 'Пас дәлдігі' : 'Pass Acc.', value: `${topAssister.pass_accuracy}%` },
-                                ]}
-                            />
-                        )}
-                        <LeaderboardTable players={teamAssistLeaders} statKey="assists" />
-                    </div>
-                </div>
-            </div>
-
-            {/* Mini stat cards row */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <MiniStatCard label={lang === 'kz' ? 'ПАСТАР' : 'PASSES'} player={topPasser} value={topPasser?.passes ?? 0} />
-                <MiniStatCard label={lang === 'kz' ? 'ОЙЫНДАР' : 'APPEARANCES'} player={topAppearances} value={topAppearances?.games_played ?? 0} />
-                <MiniStatCard label={lang === 'kz' ? 'СЕЙВТЕР' : 'SAVES'} player={topSaves} value={topSaves?.save_shot ?? 0} />
-                <MiniStatCard label={lang === 'kz' ? 'ҚҰРҒАҚ ОЙЫНДАР' : 'CLEAN SHEETS'} player={topCleanSheets} value={topCleanSheets?.dry_match ?? 0} />
-                <MiniStatCard label={lang === 'kz' ? 'ҚЫЗЫЛ КАРТА' : 'RED CARDS'} player={topRedCards} value={topRedCards?.red_cards ?? 0} />
-            </div>
+  return (
+    <div className="space-y-4 md:space-y-5">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <LeaderSpotlight
+            title={tStats('labels.goals', 'Голы')}
+            player={leaders.top_scorer}
+            valueLabel={tStats('labels.goals', 'Голы')}
+            value={leaders.top_scorer?.goals ?? 0}
+          />
+          <LeaderboardTable
+            players={leaders.goals_table}
+            statKey="goals"
+            title={tStats('labels.goals', 'Голы')}
+          />
         </div>
-    );
+
+        <div className="space-y-4">
+          <LeaderSpotlight
+            title={tStats('labels.assists', 'Передачи')}
+            player={leaders.top_assister}
+            valueLabel={tStats('labels.assists', 'Передачи')}
+            value={leaders.top_assister?.assists ?? 0}
+          />
+          <LeaderboardTable
+            players={leaders.assists_table}
+            statKey="assists"
+            title={tStats('labels.assists', 'Передачи')}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3">
+        <MiniLeaderCard
+          label={tTeam('miniStats.passes', 'Пасы')}
+          player={leaders.mini_leaders.passes}
+          value={leaders.mini_leaders.passes?.passes ?? 0}
+        />
+        <MiniLeaderCard
+          label={tTeam('miniStats.appearances', 'Матчи')}
+          player={leaders.mini_leaders.appearances}
+          value={leaders.mini_leaders.appearances?.games_played ?? 0}
+        />
+        <MiniLeaderCard
+          label={tTeam('miniStats.saves', 'Сейвы')}
+          player={leaders.mini_leaders.saves}
+          value={leaders.mini_leaders.saves?.save_shot ?? 0}
+        />
+        <MiniLeaderCard
+          label={tTeam('miniStats.cleanSheets', 'Сухие матчи')}
+          player={leaders.mini_leaders.clean_sheets}
+          value={leaders.mini_leaders.clean_sheets?.dry_match ?? 0}
+        />
+        <MiniLeaderCard
+          label={tTeam('miniStats.redCards', 'Красные карточки')}
+          player={leaders.mini_leaders.red_cards}
+          value={leaders.mini_leaders.red_cards?.red_cards ?? 0}
+        />
+      </div>
+
+      <div className="text-center">
+        <Link
+          href="/stats/players"
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200 transition-colors"
+        >
+          {tTeam('buttons.viewFullTable', 'Полная таблица')} <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+    </div>
+  );
 }

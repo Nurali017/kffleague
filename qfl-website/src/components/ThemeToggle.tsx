@@ -14,13 +14,12 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   return (
     <motion.button
       onClick={toggleTheme}
-      whileHover={{
-        backgroundColor: theme === 'light' ? 'rgb(229 231 235)' : 'rgb(51 65 85)',
-      }}
+      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       className={`
-        p-2 rounded-lg bg-surface-soft dark:bg-dark-surface-soft
-        text-gray-700 dark:text-slate-300
+        p-2.5 rounded-xl transition-all duration-200
+        border border-slate-200 bg-white hover:bg-slate-50 text-[#1E4D8C]
+        dark:border-dark-border-soft dark:bg-dark-surface-soft dark:hover:bg-dark-border-soft dark:text-accent-cyan
         ${className}
       `}
       aria-label={theme === 'light' ? 'Переключить на темную тему' : 'Переключить на светлую тему'}

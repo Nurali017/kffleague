@@ -5,6 +5,8 @@ import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { scaleHover, scaleHoverLarge } from '@/lib/motion';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useTournament } from '@/contexts/TournamentContext';
 import { useLeagueTable } from '@/hooks';
 import { LeagueTableSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
@@ -13,7 +15,29 @@ import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
 export function LeagueTable() {
   const { t } = useTranslation();
   const { t: tErrors } = useTranslation('errors');
-  const { standings, loading, error, refetch } = useLeagueTable({ limit: 14 });
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const { effectiveSeasonId, showTable, currentTournament } = useTournament();
+  const { standings, loading, error, refetch } = useLeagueTable({
+    seasonId: effectiveSeasonId,
+    limit: 14
+  });
+
+  // Show placeholder for non-table tournaments (e.g., Cup)
+  if (!showTable) {
+    return (
+      <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden h-full flex flex-col">
+        <div className="px-5 py-3 bg-[#1E4D8C]">
+          <h2 className="text-lg font-bold text-white">{currentTournament.name.ru}</h2>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-8 text-center">
+          <p className="text-gray-500 dark:text-slate-400">
+            {t('tableLegend.noBracket', { defaultValue: 'Бұл турнир үшін турнирлық кесте жоқ' })}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return <LeagueTableSkeleton />;
@@ -21,7 +45,7 @@ export function LeagueTable() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 p-4">
+      <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4">
         <ErrorMessage message={tErrors('loadTable')} onRetry={refetch} compact />
       </div>
     );
@@ -36,7 +60,7 @@ export function LeagueTable() {
   };
 
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden h-full flex flex-col">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden h-full flex flex-col">
       {/* Header */}
       <div className="px-5 py-3 bg-[#1E4D8C]">
         <div className="flex items-center justify-between">
@@ -58,7 +82,7 @@ export function LeagueTable() {
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[28px_1fr_36px_44px_40px] gap-1 px-5 py-2 bg-gray-100 dark:bg-slate-700 text-[11px] font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wide">
+      <div className="grid grid-cols-[28px_1fr_36px_44px_40px] gap-1 px-5 py-2 bg-gray-100 dark:bg-dark-surface-soft text-[11px] font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wide">
         <div className="text-center">#</div>
         <div>{t('table.club')}</div>
         <div className="text-center">{t('table.matches')}</div>
@@ -67,7 +91,7 @@ export function LeagueTable() {
       </div>
 
       {/* Table body */}
-      <div className="divide-y divide-gray-50 dark:divide-slate-700 flex-1 overflow-y-auto">
+      <div className="divide-y divide-gray-50 dark:divide-dark-border flex-1 overflow-y-auto">
         {standings.map((team) => {
           const logoUrl = team.team_logo || getTeamLogo(team.team_id);
           const teamColor = getTeamColor(team.team_id);
@@ -89,8 +113,8 @@ export function LeagueTable() {
                 },
                 hover: {
                   y: -2,
-                  backgroundColor: 'rgba(30, 77, 140, 0.05)',
-                  borderColor: 'rgb(30, 77, 140)',
+                  backgroundColor: isDark ? 'rgba(103, 232, 249, 0.05)' : 'rgba(30, 77, 140, 0.05)',
+                  borderColor: isDark ? 'rgb(103, 232, 249)' : 'rgb(30, 77, 140)',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                   transition: { duration: 0.2 },
                 },
@@ -150,7 +174,7 @@ export function LeagueTable() {
 
               {/* Stats */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400"
+                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -159,7 +183,7 @@ export function LeagueTable() {
                 {team.games_played}
               </motion.div>
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400"
+                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -170,7 +194,7 @@ export function LeagueTable() {
 
               {/* Points */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-blue-400 font-bold"
+                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan font-bold"
                 variants={{
                   rest: { scale: 1 },
                   hover: { scale: 1.1, transition: { type: 'spring', stiffness: 400, damping: 20 } },
@@ -184,7 +208,7 @@ export function LeagueTable() {
       </div>
 
       {/* Legend */}
-      <div className="px-5 py-2.5 border-t border-gray-100 dark:border-slate-700 flex items-center gap-4 text-[11px] text-gray-400 dark:text-slate-400">
+      <div className="px-5 py-2.5 border-t border-gray-100 dark:border-dark-border flex items-center gap-4 text-[11px] text-gray-400 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E5B73B]" />
           <span>{t('tableLegend.champion')}</span>

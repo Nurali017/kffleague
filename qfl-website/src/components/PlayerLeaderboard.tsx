@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { usePlayerLeaderboard } from '@/hooks/usePlayerLeaderboard';
+import { useTournament } from '@/contexts/TournamentContext';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
@@ -153,12 +154,12 @@ function LeaderboardCard({
         </Link>
 
         {/* Runner-ups Section */}
-        <div className="bg-white/95 dark:bg-slate-800/95 flex-grow min-h-[240px]">
+        <div className="bg-white/95 dark:bg-dark-surface/95 flex-grow min-h-[240px]">
           {runnerUps.map((player, index) => (
             <Link
               key={player.player_id}
               href={`/player/${player.player_id}`}
-              className="flex items-center gap-3 px-6 py-3 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm hover:translate-x-1 transition-all duration-200 border-b border-gray-100 dark:border-slate-700 last:border-b-0 group"
+              className="flex items-center gap-3 px-6 py-3 hover:bg-white dark:hover:bg-dark-surface-soft hover:shadow-sm hover:translate-x-1 transition-all duration-200 border-b border-gray-100 dark:border-dark-border last:border-b-0 group"
             >
               <span className="text-gray-500 dark:text-slate-400 font-medium w-4">{index + 2}</span>
               <img
@@ -266,7 +267,8 @@ function PlayerLeaderboardSkeleton() {
 export function PlayerLeaderboard() {
   const { t } = useTranslation();
   const { t: tErrors } = useTranslation('errors');
-  const { scorers, assisters, cleanSheets, loading, error, refetch } = usePlayerLeaderboard({ limit: 5 });
+  const { effectiveSeasonId } = useTournament();
+  const { scorers, assisters, cleanSheets, loading, error, refetch } = usePlayerLeaderboard({ limit: 5, seasonId: effectiveSeasonId });
 
   if (loading) {
     return <PlayerLeaderboardSkeleton />;
@@ -293,10 +295,10 @@ export function PlayerLeaderboard() {
     <div className="overflow-visible">
       {/* Header with link */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400">{t('playerLeaderboard.title')}</h2>
+        <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan">{t('playerLeaderboard.title')}</h2>
         <Link
           href="/stats"
-          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
           {t('playerLeaderboard.viewAllStats')}
           <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

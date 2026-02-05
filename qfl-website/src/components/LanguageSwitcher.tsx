@@ -20,33 +20,25 @@ export function LanguageSwitcher({ variant = 'light' }: LanguageSwitcherProps) {
     await changeLanguage(lng);
   };
 
-  const colors = variant === 'dark'
-    ? {
-        active: 'text-white font-bold',
-        inactive: 'text-white/50 hover:text-white/80',
-        separator: 'text-white/50'
-      }
-    : {
-        active: 'text-[#1E4D8C] font-bold',
-        inactive: 'text-[#1E4D8C]/40 hover:text-[#1E4D8C]/70',
-        separator: 'text-[#1E4D8C]/40'
-      };
-
   return (
-    <div className="flex items-center text-sm font-medium">
+    <div className="flex items-center text-sm font-semibold">
       {SUPPORTED_LANGUAGES.map((lng, index) => (
         <span key={lng} className="flex items-center">
           <button
             onClick={() => handleLanguageChange(lng)}
-            className={`px-1.5 py-1 uppercase transition-colors ${
-              currentLang === lng ? colors.active : colors.inactive
+            className={`px-1.5 py-1 uppercase transition-colors duration-200 ${
+              currentLang === lng
+                ? (variant === 'dark' ? 'text-white font-bold' : 'text-[#1E4D8C] dark:text-white font-bold')
+                : (variant === 'dark'
+                  ? 'text-slate-300 hover:text-white'
+                  : 'text-slate-400 dark:text-slate-500 hover:text-[#1E4D8C]/70 dark:hover:text-slate-300')
             }`}
             aria-label={`Switch to ${lng.toUpperCase()}`}
           >
             {lng}
           </button>
           {index < SUPPORTED_LANGUAGES.length - 1 && (
-            <span className={colors.separator}>|</span>
+            <span className={variant === 'dark' ? 'text-slate-400' : 'text-slate-300 dark:text-slate-600'}>|</span>
           )}
         </span>
       ))}

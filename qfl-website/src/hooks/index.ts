@@ -9,7 +9,6 @@ export { useMatchLineup } from './useMatchLineup';
 export { useMatchEvents } from './useMatchEvents';
 export { useSliderNews, useLatestNews, useNewsById } from './useNews';
 export { useNewsPagination } from './useNewsPagination';
-export { useNewsCategories } from './useNewsCategories';
 export { useNewsReactions } from './useNewsReactions';
 export { useNewsNavigation } from './useNewsNavigation';
 export { useDebounce } from './useDebounce';
@@ -23,6 +22,7 @@ export {
   usePlayerTournaments,
 } from './usePlayerDetail';
 export { useSeasonStats } from './useSeasonStats';
+export { useSeasonGoalsByPeriod } from './useSeasonGoalsByPeriod';
 export { useTeamStatsTable } from './useTeamStatsTable';
 export {
   useTeams,
@@ -30,6 +30,7 @@ export {
   useTeamStats,
   useTeamPlayers,
   useTeamGames,
+  useTeamOverview,
 } from './useTeam';
 export {
   useLeadershipPage,

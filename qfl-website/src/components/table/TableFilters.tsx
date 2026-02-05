@@ -27,20 +27,20 @@ export function TableFilters({
   const tourOptions = Array.from({ length: maxTour }, (_, i) => i + 1);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 mb-6">
+    <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-4 mb-6">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2 text-gray-500">
+        <div className="flex items-center gap-2 text-gray-500 dark:text-slate-400">
           <Filter className="w-4 h-4" />
           <span className="text-sm font-medium">{t('filters.title')}</span>
         </div>
 
         {/* Tour range */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-500">{t('filters.tour')}</label>
+          <label className="text-sm text-gray-500 dark:text-slate-400">{t('filters.tour')}</label>
           <select
             value={tourFrom}
             onChange={(e) => onTourFromChange(Number(e.target.value))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-[#1E4D8C] bg-white"
+            className="px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-[#1E4D8C] dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
           >
             {tourOptions.map((tour) => (
               <option key={tour} value={tour} disabled={tour > tourTo}>
@@ -48,11 +48,11 @@ export function TableFilters({
               </option>
             ))}
           </select>
-          <span className="text-gray-400">—</span>
+          <span className="text-gray-400 dark:text-slate-500">—</span>
           <select
             value={tourTo}
             onChange={(e) => onTourToChange(Number(e.target.value))}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-[#1E4D8C] bg-white"
+            className="px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-[#1E4D8C] dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
           >
             {tourOptions.map((tour) => (
               <option key={tour} value={tour} disabled={tour < tourFrom}>
@@ -64,13 +64,13 @@ export function TableFilters({
 
         {/* Home/Away toggle */}
         <div className="flex items-center">
-          <div className="inline-flex rounded-lg border border-gray-200 p-0.5 bg-gray-50">
+          <div className="inline-flex rounded-lg border border-gray-200 dark:border-dark-border-soft p-0.5 bg-gray-50 dark:bg-dark-surface">
             <button
               onClick={() => onHomeAwayChange(null)}
               className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === null
                   ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 hover:text-[#1E4D8C]'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.all')}
@@ -80,7 +80,7 @@ export function TableFilters({
               className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === 'home'
                   ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 hover:text-[#1E4D8C]'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.home')}
@@ -90,7 +90,7 @@ export function TableFilters({
               className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === 'away'
                   ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 hover:text-[#1E4D8C]'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.away')}

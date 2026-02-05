@@ -11,23 +11,24 @@ const TikTokIcon = () => (
 );
 
 export function Footer() {
-  const { t } = useTranslation('footer');
+  const { t, i18n } = useTranslation('footer');
   const { t: tCommon } = useTranslation('common');
+  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
   const currentYear = new Date().getFullYear();
 
   const tournaments = [
-    t('tournaments.premierLeague'),
-    t('tournaments.firstLeague'),
-    t('tournaments.cup'),
-    t('tournaments.superCup'),
-    t('tournaments.secondLeague'),
-    t('tournaments.womenLeague'),
+    t('tournaments.premierLeague', 'ПРЕМЬЕР-ЛИГА'),
+    t('tournaments.firstLeague', 'БІРІНШІ ЛИГА'),
+    t('tournaments.cup', 'OLIMPBET ҚАЗАҚСТАН КУБОГЫ'),
+    t('tournaments.superCup', 'СУПЕРКУБОК'),
+    t('tournaments.secondLeague', 'ЕКІНШІ ЛИГА'),
+    t('tournaments.womenLeague', 'ӘЙЕЛДЕР ЛИГАСЫ'),
   ];
 
   const info = [
-    t('info.news'),
-    t('info.documents'),
-    t('info.contacts'),
+    t('info.news', 'ЖАҢАЛЫҚТАР'),
+    t('info.documents', 'ҚҰЖАТТАР'),
+    t('info.contacts', 'БАЙЛАНЫСТАР'),
   ];
 
   return (
@@ -43,14 +44,14 @@ export function Footer() {
             <a href="/" className="block mb-4">
               <img
                 src="/logo.png"
-                alt={tCommon('league.name')}
+                alt={tCommon('league.name', 'Қазақстан Премьер-Лигасы')}
                 className="h-36 w-auto brightness-0 invert"
               />
             </a>
             <div className="text-white font-bold text-sm leading-tight">
-              <p>{tCommon('league.country')}</p>
-              <p>{tCommon('league.premierLeague')}</p>
-              <p className="text-[#E5B73B]">{tCommon('league.sponsor')}</p>
+              <p>{tCommon('league.country', 'ҚАЗАҚСТАН')}</p>
+              <p>{tCommon('league.premierLeague', 'ПРЕМЬЕР-ЛИГАСЫ')}</p>
+              <p className="text-[#E5B73B]">{tCommon('league.sponsor', 'ALATAU CITY BANK')}</p>
             </div>
             <a
               href="https://t.me/kffleague"
@@ -65,7 +66,7 @@ export function Footer() {
 
           <div className="lg:col-span-3">
             <h3 className="font-bold text-lg mb-4 text-[#E5B73B]">
-              {t('tournaments.title')}
+              {t('tournaments.title', 'ТУРНИРЛЕР')}
             </h3>
             <ul className="space-y-2">
               {tournaments.map((item) => (
@@ -83,7 +84,7 @@ export function Footer() {
 
           <div className="lg:col-span-2">
             <h3 className="font-bold text-lg mb-4 text-[#E5B73B]">
-              {t('info.title')}
+              {t('info.title', 'АҚПАРАТ')}
             </h3>
             <ul className="space-y-2">
               {info.map((item) => (
@@ -110,7 +111,10 @@ export function Footer() {
 
             <div className="text-right">
               <p className="text-white/60 text-xs mb-2">
-                {t('partners.techPartner')}
+                {t('partners.techPartner', lang === 'kz'
+                  ? 'Ресми технологиялық, деректер және инновациялық серіктес'
+                  : 'Official Tech, Data & Innovation Partner'
+                )}
               </p>
               <img src="/sota.svg" alt="SOTA" className="h-7 w-auto ml-auto" />
             </div>
@@ -122,7 +126,11 @@ export function Footer() {
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm" suppressHydrationWarning>
-              {t('copyright', { year: currentYear })}
+              {t('copyright', {
+                year: currentYear,
+                defaultValue:
+                  '© {{year}} Қазақстан Премьер-лигасы. Материалдарды пайдалану кезінде ресми сайтқа сілтеме қажет.',
+              })}
             </p>
 
             <div className="flex items-center gap-4">

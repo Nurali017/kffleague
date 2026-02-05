@@ -17,28 +17,28 @@ interface NewsGridProps {
 function NewsCardSkeleton({ variant = 'default' }: { variant?: 'default' | 'compact' }) {
   if (variant === 'compact') {
     return (
-      <div className="flex gap-4 p-4 bg-white dark:bg-dark-surface rounded-xl animate-pulse border border-gray-100 dark:border-slate-700">
+      <div className="flex gap-4 p-4 bg-white dark:bg-dark-surface rounded-xl animate-pulse border border-gray-100 dark:border-dark-border">
         <div className="flex-1 flex flex-col justify-center">
           <div className="space-y-2">
-            <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-16" />
-            <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-full" />
-            <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-4/5" />
+            <div className="h-3 bg-gray-200 dark:bg-dark-surface-soft rounded w-16" />
+            <div className="h-4 bg-gray-200 dark:bg-dark-surface-soft rounded w-full" />
+            <div className="h-4 bg-gray-200 dark:bg-dark-surface-soft rounded w-4/5" />
           </div>
-          <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-20 mt-2" />
+          <div className="h-3 bg-gray-200 dark:bg-dark-surface-soft rounded w-20 mt-2" />
         </div>
-        <div className="w-20 h-20 bg-gray-200 dark:bg-slate-700 rounded-lg shrink-0" />
+        <div className="w-20 h-20 bg-gray-200 dark:bg-dark-surface-soft rounded-lg shrink-0" />
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 animate-pulse">
-      <div className="h-48 bg-gray-200 dark:bg-slate-700" />
+    <div className="bg-white dark:bg-dark-surface rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-dark-border animate-pulse">
+      <div className="h-48 bg-gray-200 dark:bg-dark-surface-soft" />
       <div className="p-4 space-y-3">
-        <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded w-3/4" />
-        <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-full" />
-        <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded w-2/3" />
-        <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-24 mt-4" />
+        <div className="h-6 bg-gray-200 dark:bg-dark-surface-soft rounded w-3/4" />
+        <div className="h-4 bg-gray-200 dark:bg-dark-surface-soft rounded w-full" />
+        <div className="h-4 bg-gray-200 dark:bg-dark-surface-soft rounded w-2/3" />
+        <div className="h-3 bg-gray-200 dark:bg-dark-surface-soft rounded w-24 mt-4" />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export function LeadershipCard({ member }: LeadershipCardProps) {
     <motion.div
       initial="rest"
       whileHover="hover"
-      className="group h-full flex flex-col bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+      className="group h-full flex flex-col bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden"
       variants={{
         rest: {
           y: 0,
@@ -64,7 +64,7 @@ export function LeadershipCard({ member }: LeadershipCardProps) {
 
         {/* Position Badge */}
         <div>
-          <span className="inline-block px-3 py-1 text-xs font-semibold text-[#1E4D8C] bg-[#E5B73B]/20 rounded-full">
+          <span className="inline-block px-3 py-1 text-xs font-semibold text-[#1E4D8C] dark:text-accent bg-[#E5B73B]/20 dark:bg-[#E5B73B]/15 rounded-full">
             {member.position}
           </span>
         </div>

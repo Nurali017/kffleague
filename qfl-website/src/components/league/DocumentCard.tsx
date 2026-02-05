@@ -20,16 +20,14 @@ export function DocumentCard({ document }: DocumentCardProps) {
       <motion.div
         initial="rest"
         whileHover="hover"
-        className="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-5 flex items-center gap-5"
+        className="group bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-5 flex items-center gap-5 hover:border-[#1E4D8C]/20 dark:hover:border-accent-cyan/30 transition-colors"
         variants={{
           rest: {
             boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-            borderColor: 'rgb(243 244 246)',
             transition: { duration: 0.3 },
           },
           hover: {
             boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-            borderColor: 'rgba(30, 77, 140, 0.2)',
             transition: { duration: 0.3 },
           },
         }}
@@ -50,21 +48,17 @@ export function DocumentCard({ document }: DocumentCardProps) {
               <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-red-500">PDF</span>
             </div>
           ) : (
-            <FileText className="w-7 h-7 text-[#1E4D8C] dark:text-blue-400" />
+            <FileText className="w-7 h-7 text-[#1E4D8C] dark:text-accent-cyan" />
           )}
         </motion.div>
 
         {/* Document Info */}
         <div className="flex-1 min-w-0">
-          <motion.h3
-            className="font-semibold text-gray-900 dark:text-white line-clamp-2 leading-snug"
-            variants={{
-              rest: { color: 'rgb(17 24 39)' },
-              hover: { color: '#1E4D8C' },
-            }}
+          <h3
+            className="font-semibold text-gray-900 dark:text-white group-hover:text-[#1E4D8C] dark:group-hover:text-accent-cyan line-clamp-2 leading-snug transition-colors"
           >
             {document.title}
-          </motion.h3>
+          </h3>
         </div>
 
         {/* Download Button */}

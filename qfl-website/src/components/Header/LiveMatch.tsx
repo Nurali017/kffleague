@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { LiveMatchData } from './types';
 
 interface LiveMatchProps {
@@ -8,6 +9,9 @@ interface LiveMatchProps {
 }
 
 export function LiveMatch({ match }: LiveMatchProps) {
+  const { t, i18n } = useTranslation('navigation');
+  const lang = i18n.language?.substring(0, 2) === 'kz' ? 'kz' : 'ru';
+
   return (
     <Link
       href={`/matches/${match.id}`}
@@ -19,7 +23,9 @@ export function LiveMatch({ match }: LiveMatchProps) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
         </span>
-        <span className="text-xs font-bold text-red-400 uppercase">Live</span>
+        <span className="text-xs font-bold text-red-400 uppercase">
+          {t('liveBadge', { defaultValue: lang === 'kz' ? 'Тікелей' : 'Онлайн' })}
+        </span>
       </span>
 
       {/* Match info */}

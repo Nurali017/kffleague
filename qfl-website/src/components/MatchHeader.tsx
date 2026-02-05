@@ -7,6 +7,7 @@ import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
 import { formatMatchDayDate } from '@/lib/utils/dateFormat';
 import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
 import { WhistleIcon } from '@/components/icons/WhistleIcon';
+import { HeroBackground } from '@/components/ui/HeroBackground';
 
 interface MatchHeaderProps {
   match: MatchDetail;
@@ -28,14 +29,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
 
   return (
     <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
-      {/* Base gradient background - darker version */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#0a1929] via-[#1E4D8C] to-[#1a3a5c]" />
-
-      {/* Geometric pattern overlay */}
-      <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
-        style={{ backgroundImage: 'url(/footer-bg.webp)' }}
-      />
+      <HeroBackground />
 
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
 

@@ -7,7 +7,9 @@ export interface PlayerStat {
   team_name: string;
   team_logo: string;
   position?: string;
-  top_role?: string;
+  player_type?: string | null;
+  top_role?: string | null;
+  position_code?: 'GK' | 'DEF' | 'MID' | 'FWD' | null;
   games_played: number;
   games_starting?: number;
   minutes_played: number;
@@ -44,4 +46,29 @@ export interface PlayerStatsResponse {
   total: number;
 }
 
-export type PlayerStatsSortBy = 'goals' | 'assists' | 'dry_match';
+export type PositionCode = 'GK' | 'DEF' | 'MID' | 'FWD';
+
+export type PlayerStatsSortBy =
+  | 'goals'
+  | 'assists'
+  | 'xg'
+  | 'shots'
+  | 'shots_on_goal'
+  | 'passes'
+  | 'key_passes'
+  | 'pass_accuracy'
+  | 'duels'
+  | 'duels_won'
+  | 'aerial_duel'
+  | 'ground_duel'
+  | 'tackle'
+  | 'interception'
+  | 'recovery'
+  | 'dribble'
+  | 'dribble_success'
+  | 'minutes_played'
+  | 'games_played'
+  | 'yellow_cards'
+  | 'red_cards'
+  | 'save_shot'
+  | 'dry_match';

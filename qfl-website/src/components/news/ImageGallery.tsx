@@ -91,7 +91,7 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
                   relative h-20 rounded-lg overflow-hidden transition-all duration-200
                   ${
                     index === selectedIndex
-                      ? 'ring-2 ring-[#1E4D8C] dark:ring-blue-500 ring-offset-2 dark:ring-offset-dark-bg'
+                      ? 'ring-2 ring-[#1E4D8C] dark:ring-cyan-500 ring-offset-2 dark:ring-offset-dark-bg'
                       : 'opacity-70 hover:opacity-100'
                   }
                 `}

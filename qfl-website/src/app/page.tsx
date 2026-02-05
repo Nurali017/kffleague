@@ -32,12 +32,12 @@ export default function HomePage() {
       {/* Row 2: News + LeagueTable (aligned with MatchCenter) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         {/* News section */}
-        <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm p-6 flex flex-col">
+        <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-blue-400 tracking-tight">Жаңалықтар</h2>
+            <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
             <Link
               href="/news"
-              className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-blue-400 flex items-center transition-colors group"
+              className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
             >
               Барлық жаңалықтар
               <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />

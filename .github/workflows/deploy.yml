@@ -1,0 +1,73 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DEPLOY_PATH: /home/deploy/qfl
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 22
+          script_stop: true
+          timeout: 600s
+          script: |
+            set -euo pipefail
+            cd ${{ env.DEPLOY_PATH }}
+
+            echo "=== Pulling latest code ==="
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "=== Building ==="
+            docker compose -f docker-compose.prod.yml build --parallel
+
+            echo "=== Starting infrastructure ==="
+            docker compose -f docker-compose.prod.yml up -d db redis minio
+            sleep 5
+
+            echo "=== Migrations ==="
+            docker compose -f docker-compose.prod.yml run --rm backend alembic upgrade head
+
+            echo "=== Restarting backend ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps backend
+            sleep 10
+
+            for i in $(seq 1 30); do
+              if docker compose -f docker-compose.prod.yml exec -T backend curl -sf http://localhost:8000/health > /dev/null 2>&1; then
+                echo "Backend healthy"
+                break
+              fi
+              [ $i -eq 30 ] && echo "Backend health check failed" && exit 1
+              sleep 2
+            done
+
+            echo "=== Restarting frontend ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps frontend
+            sleep 15
+
+            echo "=== Restarting workers ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps celery_worker celery_beat
+
+            echo "=== Updating nginx ==="
+            cp nginx/conf.d/default.conf /opt/kaisar/nginx/conf.d/kff.conf
+            docker exec kaisar-nginx nginx -t && docker exec kaisar-nginx nginx -s reload
+
+            echo "=== Cleanup ==="
+            docker image prune -f
+
+            echo "=== Done ==="
+            docker compose -f docker-compose.prod.yml ps

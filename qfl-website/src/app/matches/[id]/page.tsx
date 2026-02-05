@@ -20,10 +20,10 @@ import { getTeamColor } from '@/lib/utils/teamLogos';
 function LoadingSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
-      <div className="h-64 bg-gray-200 rounded-2xl" />
-      <div className="h-24 bg-gray-200 rounded-xl" />
-      <div className="h-12 bg-gray-200 rounded-lg" />
-      <div className="h-96 bg-gray-200 rounded-xl" />
+      <div className="h-64 bg-gray-200 dark:bg-dark-border rounded-2xl" />
+      <div className="h-24 bg-gray-200 dark:bg-dark-border rounded-xl" />
+      <div className="h-12 bg-gray-200 dark:bg-dark-border rounded-lg" />
+      <div className="h-96 bg-gray-200 dark:bg-dark-border rounded-xl" />
     </div>
   );
 }
@@ -31,10 +31,10 @@ function LoadingSkeleton() {
 function ErrorState({ error }: { error?: string }) {
   return (
     <div className="text-center py-16">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
         Матч не найден
       </h1>
-      <p className="text-gray-500 mb-8">
+      <p className="text-gray-500 dark:text-slate-400 mb-8">
         {error || 'К сожалению, информация о матче недоступна'}
       </p>
     </div>
@@ -111,7 +111,7 @@ export default function MatchDetailPage() {
   }
 
   return (
-    <div className="bg-[#FAFBFC] min-h-screen">
+    <div className="bg-[#FAFBFC] dark:bg-dark-bg min-h-screen">
       {/* 1. Hero Section includes Timeline - full width */}
       <MatchHeader
         match={match}

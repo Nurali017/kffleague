@@ -26,7 +26,7 @@ function ProgressCircle({ value, color }: { value: number; color: string }) {
           cy={center}
           r={radius}
           fill="none"
-          stroke="#e5e7eb"
+          className="stroke-gray-200 dark:stroke-dark-border"
           strokeWidth={strokeWidth}
         />
         {/* Progress arc */}
@@ -43,7 +43,7 @@ function ProgressCircle({ value, color }: { value: number; color: string }) {
           className="transition-all duration-700 ease-out"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700">
+      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-gray-700 dark:text-slate-200">
         {value}
       </span>
     </div>
@@ -67,7 +67,7 @@ function PossessionRow({
       <ProgressCircle value={homeValue} color={homeColor} />
 
       <div className="flex-1">
-        <p className="text-center text-xs font-medium text-gray-500 tracking-wide">
+        <p className="text-center text-xs font-medium text-gray-500 dark:text-slate-400 tracking-wide">
           Possession (%)
         </p>
       </div>
@@ -98,12 +98,12 @@ function SimpleStatRow({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-gray-700 w-8">{homeValue}</span>
-        <span className="text-xs font-medium text-gray-500 tracking-wide">{label}</span>
-        <span className="text-sm font-bold text-gray-700 w-8 text-right">{awayValue}</span>
+        <span className="text-sm font-bold text-gray-700 dark:text-slate-200 w-8">{homeValue}</span>
+        <span className="text-xs font-medium text-gray-500 dark:text-slate-400 tracking-wide">{label}</span>
+        <span className="text-sm font-bold text-gray-700 dark:text-slate-200 w-8 text-right">{awayValue}</span>
       </div>
 
-      <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-100">
+      <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-100 dark:bg-dark-border">
         <div
           className="transition-all duration-700 ease-out rounded-l-full"
           style={{ width: `${homePercent}%`, backgroundColor: homeColor }}
@@ -121,8 +121,8 @@ export function MiniKeyStats({ stats, homeColor, awayColor }: MiniKeyStatsProps)
   if (!stats) return null;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-      <h3 className="text-sm font-bold text-gray-900 mb-6">Key stats</h3>
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-dark-border p-6 shadow-sm">
+      <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-6">Key stats</h3>
 
       <div className="space-y-6">
         {/* Possession with circles */}

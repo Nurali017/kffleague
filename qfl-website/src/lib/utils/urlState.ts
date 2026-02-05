@@ -3,7 +3,10 @@ import { NewsFilters, MatchCenterFilters } from '@/types';
 /**
  * Обновить URL search параметры без перезагрузки страницы
  */
-export function updateSearchParams(params: Record<string, string | number | undefined>): void {
+export function updateSearchParams(
+  params: Record<string, string | number | undefined>,
+  options?: { replace?: boolean }
+): void {
   if (typeof window === 'undefined') return;
 
   const url = new URL(window.location.href);
@@ -19,8 +22,16 @@ export function updateSearchParams(params: Record<string, string | number | unde
   });
 
   // Обновить URL без перезагрузки
-  const newUrl = `${url.pathname}?${searchParams.toString()}`;
-  window.history.pushState({}, '', searchParams.toString() ? newUrl : url.pathname);
+  const queryString = searchParams.toString();
+  const newUrl = queryString ? `${url.pathname}?${queryString}` : url.pathname;
+  const currentUrl = `${url.pathname}${url.search}`;
+  if (newUrl === currentUrl) return;
+
+  if (options?.replace) {
+    window.history.replaceState({}, '', newUrl);
+  } else {
+    window.history.pushState({}, '', newUrl);
+  }
 }
 
 /**
@@ -29,8 +40,8 @@ export function updateSearchParams(params: Record<string, string | number | unde
 export function getFiltersFromSearchParams(searchParams: URLSearchParams): NewsFilters {
   const filters: NewsFilters = {};
 
-  const category = searchParams.get('category');
-  if (category) filters.category = category;
+  const tournamentId = searchParams.get('tournament_id');
+  if (tournamentId) filters.tournament_id = tournamentId;
 
   const articleType = searchParams.get('article_type');
   if (articleType && ['news', 'analytics'].includes(articleType)) {
@@ -68,7 +79,7 @@ export function getPageFromSearchParams(searchParams: URLSearchParams): number {
  */
 export function syncFiltersToUrl(filters: NewsFilters, page: number): void {
   updateSearchParams({
-    category: filters.category,
+    tournament_id: filters.tournament_id,
     article_type: filters.article_type,
     search: filters.search,
     sort: filters.sort,

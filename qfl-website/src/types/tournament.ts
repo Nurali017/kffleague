@@ -2,7 +2,7 @@ export type TournamentType = 'league' | 'cup' | 'supercup';
 export type TournamentFormat = 'round_robin' | 'knockout' | 'group_knockout';
 
 export interface Tournament {
-  id: string;
+  id: string;  // Used for news filtering: pl, 1l, cup, 2l, el
   seasonId: number;
   type: TournamentType;
   format: TournamentFormat;

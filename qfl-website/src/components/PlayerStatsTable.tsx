@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { usePlayerStats } from '@/hooks';
 
+const AVATAR_PLACEHOLDER_SRC = '/images/placeholders/avatar.svg';
+
 interface Player {
   player_id: string;
   first_name: string;
@@ -85,10 +87,16 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
                     <img
                       src={
                         player.photo_url ||
-                        'https://via.placeholder.com/40x40?text=?'
+                        AVATAR_PLACEHOLDER_SRC
                       }
                       alt={`${player.first_name} ${player.last_name}`}
                       className="w-10 h-10 rounded-full object-cover bg-gray-200"
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        if (img.dataset.fallbackApplied) return;
+                        img.dataset.fallbackApplied = 'true';
+                        img.src = AVATAR_PLACEHOLDER_SRC;
+                      }}
                     />
                     <span className="font-medium text-[#1E4D8C]">
                       {player.last_name}

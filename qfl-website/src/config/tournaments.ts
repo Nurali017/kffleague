@@ -1,8 +1,11 @@
 import { Tournament, Season } from '@/types/tournament';
 
+// Season IDs from SOTA API database
+// Premier League: 61, First League: 85, Cup: 71, Women's League: 84
+// Second League: 80 (Southwest), 81 (Northeast), 157 (Final)
 export const TOURNAMENTS: Record<string, Tournament> = {
   pl: {
-    id: 'pl',
+    id: 'pl',  // Used for news filtering
     seasonId: 61,
     type: 'league',
     format: 'round_robin',
@@ -20,8 +23,8 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     totalRounds: 33,
   },
   '1l': {
-    id: '1l',
-    seasonId: 62,
+    id: '1l',  // Used for news filtering
+    seasonId: 85, // First League 2025
     type: 'league',
     format: 'round_robin',
     name: {
@@ -36,8 +39,8 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     hasBracket: false,
   },
   cup: {
-    id: 'cup',
-    seasonId: 63,
+    id: 'cup',  // Used for news filtering
+    seasonId: 71, // Cup 2025
     type: 'cup',
     format: 'knockout',
     name: {
@@ -52,8 +55,8 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     hasBracket: true,
   },
   '2l': {
-    id: '2l',
-    seasonId: 65,
+    id: '2l',  // Used for news filtering
+    seasonId: 80, // Second League Southwest 2025
     type: 'league',
     format: 'round_robin',
     name: {
@@ -68,8 +71,8 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     hasBracket: false,
   },
   el: {
-    id: 'el',
-    seasonId: 66,
+    id: 'el',  // Used for news filtering
+    seasonId: 84, // Women's League 2025
     type: 'league',
     format: 'round_robin',
     name: {

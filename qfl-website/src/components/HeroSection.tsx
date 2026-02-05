@@ -5,9 +5,10 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { useSliderNews } from '@/hooks';
+import { useLatestNews, useSliderNews } from '@/hooks';
 import { HeroSkeleton } from '@/components/ui/Skeleton';
 import { formatNewsDate } from '@/lib/utils/dateFormat';
+import { useTournament } from '@/contexts/TournamentContext';
 
 const SLIDE_DURATION = 6000;
 
@@ -16,26 +17,45 @@ const HERO_VARIANT: 'compact' | 'card' | 'minimal' | 'split' = 'compact';
 
 export function HeroSection() {
   const { t, i18n } = useTranslation();
-  const { sliderNews, loading, error } = useSliderNews({ limit: 5 });
+  const { t: tNews } = useTranslation('news');
+  const { currentTournament } = useTournament();
+  const { sliderNews, loading: sliderLoading, error: sliderError } = useSliderNews({
+    limit: 5,
+    tournamentId: currentTournament.id,
+  });
+  const { latestNews, loading: latestLoading, error: latestError } = useLatestNews({
+    limit: 5,
+    tournamentId: currentTournament.id,
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
 
+  const useFallback = !sliderLoading && sliderNews.length === 0;
+  const heroNews = useFallback ? latestNews : sliderNews;
+  const loading = sliderLoading || (useFallback && latestLoading);
+  const error = useFallback ? latestError : sliderError;
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    setProgress(0);
+  }, [i18n.language, currentTournament.id, useFallback, heroNews.length]);
+
   const goToNext = useCallback(() => {
     setDirection('next');
-    setCurrentIndex((prev) => (prev + 1) % sliderNews.length);
+    setCurrentIndex((prev) => (prev + 1) % heroNews.length);
     setProgress(0);
-  }, [sliderNews.length]);
+  }, [heroNews.length]);
 
   const goToPrevious = useCallback(() => {
     setDirection('prev');
-    setCurrentIndex((prev) => (prev === 0 ? sliderNews.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? heroNews.length - 1 : prev - 1));
     setProgress(0);
-  }, [sliderNews.length]);
+  }, [heroNews.length]);
 
   useEffect(() => {
-    if (sliderNews.length === 0 || isPaused) return;
+    if (heroNews.length === 0 || isPaused) return;
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -48,13 +68,13 @@ export function HeroSection() {
     }, 50);
 
     return () => clearInterval(progressInterval);
-  }, [sliderNews.length, isPaused, goToNext]);
+  }, [heroNews.length, isPaused, goToNext]);
 
   if (loading) {
     return <HeroSkeleton />;
   }
 
-  if (error || sliderNews.length === 0) {
+  if (error || heroNews.length === 0) {
     return (
       <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1E4D8C] to-[#0D2847] dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
         <p className="text-white/70">{t('noData.noNews')}</p>
@@ -62,11 +82,17 @@ export function HeroSection() {
     );
   }
 
-  const currentNews = sliderNews[currentIndex];
+  const currentNews = heroNews[currentIndex];
+  const newsBadgeLabel =
+    currentNews.article_type === 'ANALYTICS'
+      ? tNews('typeAnalytics')
+      : currentNews.article_type === 'NEWS'
+        ? tNews('typeNews')
+        : t('news');
 
   // Navigation component (reused across variants)
   const Navigation = () =>
-    sliderNews.length > 1 && (
+    heroNews.length > 1 && (
       <>
         <motion.button
           onClick={goToPrevious}
@@ -93,9 +119,9 @@ export function HeroSection() {
 
   // Progress indicators (reused across variants)
   const ProgressIndicators = ({ className = '' }: { className?: string }) =>
-    sliderNews.length > 1 && (
+    heroNews.length > 1 && (
       <div className={`flex items-center space-x-1.5 ${className}`}>
-        {sliderNews.map((_, index) => (
+        {heroNews.map((_, index) => (
           <motion.button
             key={index}
             onClick={() => {
@@ -143,8 +169,8 @@ export function HeroSection() {
           transition={{ duration: 0.7 }}
         >
           <motion.img
-            src={sliderNews[currentIndex].image_url || '/images/news-placeholder.svg'}
-            alt={sliderNews[currentIndex].title}
+            src={heroNews[currentIndex].image_url || '/images/news-placeholder.svg'}
+            alt={heroNews[currentIndex].title}
             loading="lazy"
             className="absolute inset-0 w-full h-full object-cover will-change-transform"
             animate={{
@@ -178,7 +204,7 @@ export function HeroSection() {
         <div className="absolute bottom-0 left-0 right-0 p-6 backdrop-blur-[2px]">
           <Link href={`/news/${currentNews.id}`} className="block max-w-2xl group/title">
             <span className="inline-block bg-[#E5B73B] text-white text-xs font-bold px-2 py-1 rounded mb-2">
-              {currentNews.category || t('news')}
+              {newsBadgeLabel}
             </span>
             <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight line-clamp-2 group-hover/title:text-[#E5B73B] transition-colors">
               {currentNews.title}
@@ -210,7 +236,7 @@ export function HeroSection() {
           <div className="backdrop-blur-md bg-white/95 rounded-xl p-5 shadow-xl">
             <div className="flex items-center space-x-2 mb-2">
               <span className="bg-[#1E4D8C] text-white text-xs font-bold px-2 py-1 rounded">
-                {currentNews.category || t('news')}
+                {newsBadgeLabel}
               </span>
               <span className="text-gray-500 text-xs">
                 {formatNewsDate(currentNews.publish_date, i18n.language)}
@@ -276,7 +302,7 @@ export function HeroSection() {
         {/* Категория в углу */}
         <div className="absolute top-4 left-4">
           <span className="bg-[#E5B73B] text-white text-xs font-bold px-2 py-1 rounded">
-            {currentNews.category || t('news')}
+            {newsBadgeLabel}
           </span>
         </div>
       </div>
@@ -296,7 +322,7 @@ export function HeroSection() {
         {/* Левая часть - контент */}
         <div className="w-full md:w-2/5 bg-[#1E4D8C] p-8 flex flex-col justify-center relative z-10">
           <span className="inline-block bg-[#E5B73B] text-white text-xs font-bold px-2 py-1 rounded w-fit mb-3">
-            {currentNews.category || t('news')}
+            {newsBadgeLabel}
           </span>
 
           <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-4 line-clamp-3">

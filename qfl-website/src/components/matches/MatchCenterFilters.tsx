@@ -13,16 +13,19 @@ interface MatchCenterFiltersProps {
   filters: FiltersType;
   onFilterChange: (filters: FiltersType) => void;
   className?: string;
+  variant?: 'default' | 'hero';
 }
 
 export function MatchCenterFilters({
   filters,
   onFilterChange,
   className = '',
+  variant = 'default',
 }: MatchCenterFiltersProps) {
   const { t } = useTranslation('match');
   const { currentSeason } = useTournament();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const isHero = variant === 'hero';
 
   // Load teams from league table
   const { data: tableData } = useSWR(
@@ -84,7 +87,11 @@ export function MatchCenterFilters({
       <div className="md:hidden mb-4">
         <button
           onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors"
+          className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors border ${
+            isHero
+              ? 'bg-white/90 dark:bg-white/10 border-white/20 dark:border-white/20 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/20'
+              : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft'
+          }`}
         >
           <SlidersHorizontal className="w-4 h-4" />
           {t('filters.showFilters')}
@@ -106,13 +113,19 @@ export function MatchCenterFilters({
       <div
         className={`${
           mobileFiltersOpen ? 'block' : 'hidden'
-        } md:block bg-white dark:bg-dark-surface p-4 rounded-lg border border-gray-200 dark:border-slate-700`}
+        } md:block p-4 rounded-lg border ${
+          isHero
+            ? 'bg-white/80 dark:bg-dark-bg/50 border-white/15 dark:border-white/10 backdrop-blur-md'
+            : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border'
+        }`}
       >
         {/* All Filters in One Row */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
           {/* Tour MultiSelect */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase">
+            <label className={`block text-xs font-medium mb-1.5 uppercase ${
+              isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
+            }`}>
               Тур (стадия)
             </label>
             <MultiSelect
@@ -120,12 +133,15 @@ export function MatchCenterFilters({
               selected={filters.tours || []}
               onChange={handleToursChange}
               placeholder={t('filters.allTours')}
+              variant={isHero ? 'hero' : 'default'}
             />
           </div>
 
           {/* Month Single Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase">
+            <label className={`block text-xs font-medium mb-1.5 uppercase ${
+              isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
+            }`}>
               Месяц
             </label>
             <select
@@ -134,7 +150,11 @@ export function MatchCenterFilters({
                 ...filters,
                 month: e.target.value ? Number(e.target.value) : undefined
               })}
-              className="w-full px-3 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]"
+              className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] ${
+                isHero
+                  ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
+                  : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
+              }`}
             >
               <option value="">{t('filters.allMonths')}</option>
               {months.map(m => (
@@ -145,7 +165,9 @@ export function MatchCenterFilters({
 
           {/* Clubs Multi-Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase">
+            <label className={`block text-xs font-medium mb-1.5 uppercase ${
+              isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
+            }`}>
               Клубы
             </label>
             <MultiSelect
@@ -153,12 +175,15 @@ export function MatchCenterFilters({
               selected={filters.team_ids || []}
               onChange={handleTeamsChange}
               placeholder={t('filters.allClubs')}
+              variant={isHero ? 'hero' : 'default'}
             />
           </div>
 
           {/* Status Single Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1.5 uppercase">
+            <label className={`block text-xs font-medium mb-1.5 uppercase ${
+              isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
+            }`}>
               Статус
             </label>
             <select
@@ -167,7 +192,11 @@ export function MatchCenterFilters({
                 ...filters,
                 status: (e.target.value || undefined) as 'upcoming' | 'finished' | 'live' | 'all' | undefined
               })}
-              className="w-full px-3 py-2 bg-white dark:bg-dark-surface border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4D8C]"
+              className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] ${
+                isHero
+                  ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
+                  : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
+              }`}
             >
               <option value="">{t('statuses.all')}</option>
               {statuses.map(s => (
@@ -187,7 +216,9 @@ export function MatchCenterFilters({
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] focus:ring-offset-2 ${
                   filters.hide_past
                     ? 'bg-[#1E4D8C]'
-                    : 'bg-gray-200 dark:bg-gray-700'
+                    : isHero
+                      ? 'bg-gray-200 dark:bg-white/20'
+                      : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -196,7 +227,9 @@ export function MatchCenterFilters({
                   }`}
                 />
               </button>
-              <span className="text-xs text-gray-700 dark:text-slate-300 leading-tight">
+              <span className={`text-xs leading-tight ${
+                isHero ? 'text-gray-700 dark:text-white/70' : 'text-gray-700 dark:text-slate-300'
+              }`}>
                 Скрыть<br/>прошедшие
               </span>
             </label>
@@ -207,7 +240,11 @@ export function MatchCenterFilters({
             <button
               onClick={handleClearFilters}
               disabled={!hasActiveFilters}
-              className="w-full px-4 py-2 text-sm bg-gray-100 dark:bg-dark-surface-soft hover:bg-gray-200 dark:hover:bg-slate-700 text-[#1E4D8C] dark:text-blue-400 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap ${
+                isHero
+                  ? 'bg-white/80 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 text-[#1E4D8C] dark:text-white'
+                  : 'bg-gray-100 dark:bg-dark-surface-soft hover:bg-gray-200 dark:hover:bg-dark-surface-soft text-[#1E4D8C] dark:text-accent-cyan'
+              }`}
             >
               Сбросить фильтры
             </button>
@@ -218,7 +255,9 @@ export function MatchCenterFilters({
         {hasActiveFilters && (
           <div className="mt-4 flex flex-wrap gap-2">
             {filters.tours && filters.tours.length > 0 && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E4D8C] text-white text-sm rounded-full">
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-[#1E4D8C]'
+              }`}>
                 {filters.tours.length === 1
                   ? `${t('tour')} ${filters.tours[0]}`
                   : `${filters.tours.length} ${t('tour').toLowerCase()}`}
@@ -231,7 +270,9 @@ export function MatchCenterFilters({
               </span>
             )}
             {filters.month && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E4D8C] text-white text-sm rounded-full">
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-[#1E4D8C]'
+              }`}>
                 {months.find(m => m.id === filters.month)?.name}
                 <button
                   onClick={() => onFilterChange({ ...filters, month: undefined })}
@@ -242,7 +283,9 @@ export function MatchCenterFilters({
               </span>
             )}
             {filters.status && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E4D8C] text-white text-sm rounded-full">
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-[#1E4D8C]'
+              }`}>
                 {statuses.find(s => s.id === filters.status)?.name}
                 <button
                   onClick={() => onFilterChange({ ...filters, status: undefined })}
@@ -253,7 +296,9 @@ export function MatchCenterFilters({
               </span>
             )}
             {filters.team_ids && filters.team_ids.length > 0 && (
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-[#1E4D8C] text-white text-sm rounded-full">
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-[#1E4D8C]'
+              }`}>
                 {t('filters.selectedCount', { count: filters.team_ids.length })}
                 <button
                   onClick={() => onFilterChange({ ...filters, team_ids: undefined })}

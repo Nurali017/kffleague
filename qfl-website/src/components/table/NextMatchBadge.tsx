@@ -9,7 +9,7 @@ interface NextMatchBadgeProps {
 }
 
 export function NextMatchBadge({ nextGame }: NextMatchBadgeProps) {
-  if (!nextGame) return <span className="text-gray-300">—</span>;
+  if (!nextGame) return <span className="text-gray-300 dark:text-slate-600">—</span>;
 
   const formattedDate = new Date(nextGame.date).toLocaleDateString('kk-KZ', {
     day: 'numeric',
@@ -23,9 +23,9 @@ export function NextMatchBadge({ nextGame }: NextMatchBadgeProps) {
       title={`${nextGame.is_home ? 'Үйде' : 'Қонақта'} vs ${nextGame.opponent_name} - ${formattedDate}`}
     >
       {nextGame.is_home ? (
-        <Home className="w-3.5 h-3.5 text-green-600" />
+        <Home className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
       ) : (
-        <Plane className="w-3.5 h-3.5 text-blue-600" />
+        <Plane className="w-3.5 h-3.5 text-blue-600 dark:text-accent-cyan" />
       )}
       {nextGame.opponent_logo ? (
         <img
@@ -34,7 +34,7 @@ export function NextMatchBadge({ nextGame }: NextMatchBadgeProps) {
           className="w-5 h-5 object-contain transition-transform group-hover:scale-110"
         />
       ) : (
-        <span className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[8px] font-bold text-gray-500">
+        <span className="w-5 h-5 rounded-full bg-gray-200 dark:bg-dark-surface-soft flex items-center justify-center text-[8px] font-bold text-gray-500 dark:text-slate-300">
           {nextGame.opponent_name[0]}
         </span>
       )}

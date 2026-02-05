@@ -27,8 +27,7 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
 
   return (
     <motion.div
-      className={`bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-slate-700 last:border-b-0 ${className}`}
-      whileHover={{ backgroundColor: 'rgb(249 250 251)' }}
+      className={`bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border last:border-b-0 hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors ${className}`}
       transition={{ duration: 0.2 }}
     >
       <Link href={`/matches/${match.id}`} className="block">
@@ -144,7 +143,7 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
                   e.preventDefault();
                   window.open(match.ticket_url!, '_blank');
                 }}
-                className="px-4 py-1.5 bg-transparent hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 text-sm font-medium rounded border border-gray-300 dark:border-slate-600 transition-colors whitespace-nowrap"
+                className="px-4 py-1.5 bg-transparent hover:bg-gray-100 dark:hover:bg-dark-surface-soft text-gray-700 dark:text-slate-300 text-sm font-medium rounded border border-gray-300 dark:border-dark-border-soft transition-colors whitespace-nowrap"
               >
                 Купить билет
               </button>
