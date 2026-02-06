@@ -5,7 +5,7 @@
 services:
   # =================== FRONTEND (Next.js) ===================
   frontend:
-    image: nurali017/qfl-frontend:latest
+    image: nsaghyndykuly/qfl-frontend:latest
     container_name: qfl-frontend
     environment:
       - NODE_ENV=production
@@ -28,7 +28,7 @@ services:
 
   # =================== BACKEND (FastAPI + Gunicorn) ===================
   backend:
-    image: nurali017/qfl-backend:latest
+    image: nsaghyndykuly/qfl-backend:latest
     container_name: qfl-backend
     environment:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
@@ -136,7 +136,7 @@ services:
 
   # =================== CELERY WORKER ===================
   celery_worker:
-    image: nurali017/qfl-backend:latest
+    image: nsaghyndykuly/qfl-backend:latest
     container_name: qfl-celery-worker
     command: celery -A app.tasks worker -l info --concurrency=2
     environment:
@@ -170,7 +170,7 @@ services:
 
   # =================== CELERY BEAT (Scheduler) ===================
   celery_beat:
-    image: nurali017/qfl-backend:latest
+    image: nsaghyndykuly/qfl-backend:latest
     container_name: qfl-celery-beat
     command: celery -A app.tasks beat -l info --pidfile=/tmp/celerybeat.pid
     environment:

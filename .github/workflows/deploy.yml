@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  BACKEND_IMAGE: nurali017/qfl-backend
-  FRONTEND_IMAGE: nurali017/qfl-frontend
+  BACKEND_IMAGE: nsaghyndykuly/qfl-backend
+  FRONTEND_IMAGE: nsaghyndykuly/qfl-frontend
 
 jobs:
   # ─── Build Docker images and push to Docker Hub ───
