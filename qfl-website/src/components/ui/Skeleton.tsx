@@ -68,7 +68,7 @@ export function LeagueTableSkeleton() {
 
 export function HeroSkeleton() {
   return (
-    <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+    <div className="relative w-full h-[340px] sm:h-[420px] lg:h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-slate-800 dark:to-slate-900">
       {/* Top right counter skeleton */}
       <div className="absolute top-6 right-8">
         <Skeleton className="h-8 w-20 rounded-full" />

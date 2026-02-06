@@ -191,7 +191,7 @@ export function HeroSection() {
   if (HERO_VARIANT === 'compact') {
     return (
       <div
-        className="relative w-full h-full rounded-2xl overflow-hidden group"
+        className="relative w-full h-full rounded-2xl overflow-hidden group bg-gradient-to-br from-[#1E4D8C] to-[#0D2847] dark:from-slate-800 dark:to-slate-950"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -200,13 +200,13 @@ export function HeroSection() {
         {/* Мягкий градиент внизу */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
 
-        {/* Компактный контент с blur */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 backdrop-blur-[2px]">
+        {/* Компактный контент (без backdrop-blur чтобы не выглядело как "loading") */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
           <Link href={`/news/${currentNews.id}`} className="block max-w-2xl group/title">
             <span className="inline-block bg-[#E5B73B] text-white text-xs font-bold px-2 py-1 rounded mb-2">
               {newsBadgeLabel}
             </span>
-            <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight line-clamp-2 group-hover/title:text-[#E5B73B] transition-colors">
+            <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight line-clamp-2 group-hover/title:text-[#E5B73B] transition-colors drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">
               {currentNews.title}
             </h1>
           </Link>
