@@ -6,13 +6,59 @@ on:
   workflow_dispatch:
 
 env:
-  DEPLOY_PATH: /home/deploy/qfl
+  BACKEND_IMAGE: nurali017/qfl-backend
+  FRONTEND_IMAGE: nurali017/qfl-frontend
 
 jobs:
+  # ─── Build Docker images and push to Docker Hub ───
+  build-and-push:
+    name: Build & Push Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & push backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache,mode=max
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./qfl-website
+          push: true
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=/api/v1
+            NEXT_PUBLIC_DEFAULT_SEASON_ID=61
+            NEXT_PUBLIC_DEFAULT_TOUR=26
+            NEXT_PUBLIC_DEFAULT_LANGUAGE=ru
+          cache-from: type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache,mode=max
+
+  # ─── Deploy to server (pull pre-built images) ───
   deploy:
     name: Deploy to Server
+    needs: build-and-push
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Deploy via SSH
@@ -23,29 +69,27 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script_stop: true
-          timeout: 600s
+          timeout: 300s
           script: |
             set -euo pipefail
-            cd ${{ env.DEPLOY_PATH }}
+            cd /home/deploy/qfl
 
             echo "=== Pulling latest code ==="
             git fetch origin main
             git reset --hard origin/main
 
-            echo "=== Building ==="
-            docker compose -f docker-compose.prod.yml build --parallel
+            echo "=== Pulling images from Docker Hub ==="
+            docker compose -f docker-compose.prod.yml pull backend frontend
 
             echo "=== Starting infrastructure ==="
             docker compose -f docker-compose.prod.yml up -d db redis minio
             sleep 5
 
-            echo "=== Migrations ==="
+            echo "=== Running migrations ==="
             docker compose -f docker-compose.prod.yml run --rm backend alembic upgrade head
 
             echo "=== Restarting backend ==="
             docker compose -f docker-compose.prod.yml up -d --no-deps backend
-            sleep 10
-
             for i in $(seq 1 30); do
               if docker compose -f docker-compose.prod.yml exec -T backend curl -sf http://localhost:8000/health > /dev/null 2>&1; then
                 echo "Backend healthy"
@@ -55,12 +99,8 @@ jobs:
               sleep 2
             done
 
-            echo "=== Restarting frontend ==="
-            docker compose -f docker-compose.prod.yml up -d --no-deps frontend
-            sleep 15
-
-            echo "=== Restarting workers ==="
-            docker compose -f docker-compose.prod.yml up -d --no-deps celery_worker celery_beat
+            echo "=== Restarting frontend & workers ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps frontend celery_worker celery_beat
 
             echo "=== Updating nginx ==="
             cp nginx/conf.d/default.conf /opt/kaisar/nginx/conf.d/kff.conf
