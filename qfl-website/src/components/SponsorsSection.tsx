@@ -19,7 +19,7 @@ export function SponsorsSection() {
             <a
               key={sponsor.name}
               href={sponsor.url}
-              className="transition-transform duration-300 hover:scale-105 dark:bg-white/10 dark:rounded-lg dark:px-4 dark:py-2"
+              className="transition-transform duration-300 hover:scale-105 px-4 py-2 rounded-lg dark:bg-white/10"
               title={sponsor.name}
             >
               <img
