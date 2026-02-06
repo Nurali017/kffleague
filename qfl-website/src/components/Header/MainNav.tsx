@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Search, Menu } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useTournament } from '@/contexts/TournamentContext';
+import { TournamentSwitcher } from '@/components/tournament';
 import { NavDropdown } from './NavDropdown';
 import { SearchModal } from '../SearchModal';
 import { LanguageSwitcher } from '../LanguageSwitcher';
@@ -33,11 +34,11 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
           ? 'bg-white dark:bg-dark-surface shadow-sm'
           : 'bg-white dark:bg-dark-surface'
       } ${className}`}>
-      <div className={`max-w-[1400px] mx-auto px-6 flex items-center justify-between transition-all duration-300 ${
-        isScrolled ? 'h-16' : 'h-20'
+      <div className={`max-w-[1400px] mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300 ${
+        isScrolled ? 'h-14 md:h-16' : 'h-16 md:h-20'
       }`}>
         {/* Logo + Navigation group */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 md:gap-8 min-w-0">
           {/* Logo with hover animation */}
           <Link
             href="/"
@@ -46,11 +47,14 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
             <img
               src={currentTournament.id === 'pl' ? '/kpl-logo.webp' : currentTournament.logo}
               alt={currentTournament.name[lang] || 'Қазақстан Премьер-Лигасы'}
-              className={`w-auto transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'} ${
+              className={`w-auto transition-all duration-300 ${isScrolled ? 'h-10 md:h-12' : 'h-12 md:h-16'} ${
                 currentTournament.id !== 'pl' ? 'brightness-0 sepia saturate-[10] hue-rotate-[190deg] dark:invert dark:sepia-0 dark:saturate-100 dark:hue-rotate-0' : ''
               }`}
             />
           </Link>
+
+          {/* Mobile-only Tournament Selector (bottom sheet) */}
+          <TournamentSwitcher />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
@@ -90,7 +94,7 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 shrink-0">
           {/* HIDDEN: Desktop Search Input - temporarily disabled
           <div className="hidden md:flex items-center">
             <div className="relative">
@@ -120,11 +124,11 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
           <LanguageSwitcher />
 
           {/* Theme Toggle */}
-          <ThemeToggle />
+          <ThemeToggle className="p-2 sm:p-2.5" />
 
           {/* Mobile menu toggle */}
           <button
-            className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-full transition-colors"
+            className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-full transition-colors"
             onClick={onMobileMenuToggle}
             aria-label={t('openMenu', lang === 'kz' ? 'Мәзірді ашу' : 'Открыть меню')}
           >

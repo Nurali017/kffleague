@@ -100,7 +100,7 @@ export function MatchCenter() {
           {groups.map((group) => (
             <div key={group.date} className="space-y-4">
               {/* Date header */}
-              <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 capitalize">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-slate-100 capitalize">
                 {group.date_label || formatMatchDate(group.date, i18n.language)}
               </h2>
 

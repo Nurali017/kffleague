@@ -4,15 +4,17 @@ import { TournamentIcons } from './TournamentIcons';
 
 export function TournamentBar() {
   return (
-    <div>
+    <div className="hidden lg:block">
       {/* Dark bar with tournament icons */}
       <div className="bg-[#0D1B2A]">
-        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-3 px-3 md:px-6">
           {/* Tournament icons on the left */}
-          <TournamentIcons />
+          <div className="min-w-0 flex-1 overflow-x-auto no-scrollbar">
+            <TournamentIcons />
+          </div>
 
           {/* Right side: KFF + Alatau City Bank */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden shrink-0 lg:flex items-center gap-4">
             {/* KFF link with logo */}
             <a
               href="https://kff.kz"

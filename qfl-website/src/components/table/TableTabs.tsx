@@ -18,12 +18,12 @@ export function TableTabs({ activeTab, onTabChange }: TableTabsProps) {
   ];
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
       {tabs.map((tab) => (
         <button
           key={tab.key}
           onClick={() => onTabChange(tab.key)}
-          className={`px-6 py-2.5 text-sm font-semibold rounded-full transition-all duration-200 ${
+          className={`shrink-0 px-4 md:px-6 py-2.5 text-sm font-semibold rounded-full transition-all duration-200 ${
             activeTab === tab.key
               ? 'bg-[#E5B73B] text-[#0F2D52]'
               : 'bg-white dark:bg-dark-surface text-[#1E4D8C] dark:text-accent-cyan hover:bg-white/90 dark:hover:bg-dark-surface-soft'

@@ -35,13 +35,13 @@ function MainTabs() {
     const teamsHref = query ? `/stats/teams?${query}` : '/stats/teams';
     const playersHref = query ? `/stats/players?${query}` : '/stats/players';
 
-    return (
-        <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-16 z-40 shadow-sm -mt-4 md:-mt-6">
+  return (
+        <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-14 md:top-16 z-40 shadow-sm -mt-3 md:-mt-6">
             <div className="max-w-[1440px] mx-auto px-4 md:px-20">
-                <div className="flex gap-1">
+                <div className="flex gap-1 overflow-x-auto no-scrollbar">
                     <Link
                         href={teamsHref}
-                        className={`px-8 py-5 text-lg font-bold transition-all relative ${
+                        className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
                             isTeams
                                 ? 'text-[#1E4D8C] dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
@@ -54,7 +54,7 @@ function MainTabs() {
                     </Link>
                     <Link
                         href={playersHref}
-                        className={`px-8 py-5 text-lg font-bold transition-all relative ${
+                        className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
                             isPlayers
                                 ? 'text-[#1E4D8C] dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'

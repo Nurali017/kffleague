@@ -47,7 +47,7 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
     if (!standings.length) return null;
 
     return (
-        <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)] p-6">
+        <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)] p-4 md:p-6">
             <div className="flex items-center gap-2 mb-6">
                 <Link href="/stats" className="text-xs font-bold text-slate-500 dark:text-white/60 uppercase tracking-wider hover:text-[#1E4D8C] dark:hover:text-cyan-300 transition-colors">
                     {(currentTournament.name as Record<string, string>)[lang] || currentTournament.name.short} — {currentSeason.year}
@@ -57,7 +57,7 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
 
             <div className="relative">
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[720px] text-sm">
+                    <table className="w-full min-w-[640px] text-sm">
                     <thead>
                         <tr className="text-xs text-slate-500 dark:text-white/70 font-medium border-b border-gray-200 dark:border-white/10">
                             <th className="text-left py-3 w-12 font-semibold text-slate-500 dark:text-white/60">
@@ -165,7 +165,7 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
                 </div>
 
                 {/* Scroll indicator gradient - visible on mobile */}
-                <div className="absolute right-0 top-0 bottom-0 w-6 md:w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent pointer-events-none md:hidden" />
+                <div className="absolute right-0 top-0 bottom-0 w-5 md:w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent pointer-events-none md:hidden" />
             </div>
         </div>
     );

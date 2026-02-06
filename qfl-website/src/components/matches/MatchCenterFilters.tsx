@@ -120,9 +120,9 @@ export function MatchCenterFilters({
         }`}
       >
         {/* All Filters in One Row */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end">
           {/* Tour MultiSelect */}
-          <div>
+          <div className="sm:col-span-1 lg:col-span-1">
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
@@ -138,7 +138,7 @@ export function MatchCenterFilters({
           </div>
 
           {/* Month Single Select */}
-          <div>
+          <div className="sm:col-span-1 lg:col-span-1">
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
@@ -164,7 +164,7 @@ export function MatchCenterFilters({
           </div>
 
           {/* Clubs Multi-Select */}
-          <div>
+          <div className="sm:col-span-2 lg:col-span-1">
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
@@ -180,7 +180,7 @@ export function MatchCenterFilters({
           </div>
 
           {/* Status Single Select */}
-          <div>
+          <div className="sm:col-span-1 lg:col-span-1">
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
@@ -206,7 +206,7 @@ export function MatchCenterFilters({
           </div>
 
           {/* Hide Past Toggle */}
-          <div className="flex items-end pb-2">
+          <div className="flex items-end pb-1 sm:pb-2">
             <label className="flex items-center gap-1.5 cursor-pointer">
               <button
                 type="button"
@@ -236,7 +236,7 @@ export function MatchCenterFilters({
           </div>
 
           {/* Reset Button */}
-          <div className="flex items-end">
+          <div className="flex items-end sm:col-span-2 lg:col-span-1">
             <button
               onClick={handleClearFilters}
               disabled={!hasActiveFilters}

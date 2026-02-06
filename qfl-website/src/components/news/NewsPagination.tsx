@@ -53,13 +53,13 @@ export function NewsPagination({
   return (
     <nav
       aria-label={t('pagination', 'Пагинация новостей')}
-      className={`flex items-center justify-center gap-2 mt-8 ${className}`}
+      className={`flex flex-wrap items-center justify-center gap-2 mt-8 ${className}`}
     >
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label={t('previous', 'Предыдущая страница')}
       >
         <ChevronLeft className="w-4 h-4" />
@@ -67,7 +67,7 @@ export function NewsPagination({
       </button>
 
       {/* Page Numbers */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 order-3 sm:order-none w-full sm:w-auto justify-center">
         {pageNumbers.map((page, index) => {
           if (page === '...') {
             return (
@@ -88,7 +88,7 @@ export function NewsPagination({
               key={pageNumber}
               onClick={() => onPageChange(pageNumber)}
               className={`
-                min-w-[40px] px-3 py-2 rounded-lg border transition-all duration-200
+                min-w-[34px] sm:min-w-[40px] px-2.5 sm:px-3 py-2 rounded-lg border transition-all duration-200
                 ${
                   isActive
                     ? 'bg-[#1E4D8C] dark:bg-cyan-700 text-white border-[#1E4D8C] dark:border-cyan-700 font-semibold'
@@ -108,7 +108,7 @@ export function NewsPagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 hover:bg-surface-soft dark:hover:bg-dark-surface-soft disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label={t('next', 'Следующая страница')}
       >
         <span className="hidden sm:inline">{t('next', 'Вперед')}</span>
@@ -116,7 +116,7 @@ export function NewsPagination({
       </button>
 
       {/* Page Info (Mobile) */}
-      <div className="sm:hidden ml-2 text-sm text-gray-600 dark:text-slate-400">
+      <div className="sm:hidden text-sm text-gray-600 dark:text-slate-400">
         {currentPage} / {totalPages}
       </div>
     </nav>

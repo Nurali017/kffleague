@@ -38,14 +38,14 @@ export function Footer() {
         style={{ backgroundImage: 'url(/footer-bg.webp)' }}
       />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 py-12">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 py-10 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-16">
           <div className="lg:col-span-3">
             <a href="/" className="block mb-4">
               <img
                 src="/logo.png"
                 alt={tCommon('league.name', 'Қазақстан Премьер-Лигасы')}
-                className="h-36 w-auto brightness-0 invert"
+                className="h-24 md:h-36 w-auto brightness-0 invert"
               />
             </a>
             <div className="text-white font-bold text-sm leading-tight">
@@ -101,22 +101,22 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-4 flex flex-col items-start lg:items-end">
-            <div className="flex items-center gap-6 mb-8">
-              <img src="/official/kff.svg" alt="KFF" className="h-14 w-auto" />
-              <span className="text-white font-black text-2xl tracking-tight">
+            <div className="flex items-center gap-4 md:gap-6 mb-8">
+              <img src="/official/kff.svg" alt="KFF" className="h-10 md:h-14 w-auto" />
+              <span className="text-white font-black text-xl md:text-2xl tracking-tight">
                 FIFA
               </span>
-              <img src="/official/uefa.svg" alt="UEFA" className="h-10 w-auto" />
+              <img src="/official/uefa.svg" alt="UEFA" className="h-8 md:h-10 w-auto" />
             </div>
 
-            <div className="text-right">
-              <p className="text-white/60 text-xs mb-2">
+            <div className="text-left lg:text-right">
+              <p className="text-white/60 text-xs mb-2 max-w-[300px]">
                 {t('partners.techPartner', lang === 'kz'
                   ? 'Ресми технологиялық, деректер және инновациялық серіктес'
                   : 'Official Tech, Data & Innovation Partner'
                 )}
               </p>
-              <img src="/sota.svg" alt="SOTA" className="h-7 w-auto ml-auto" />
+              <img src="/sota.svg" alt="SOTA" className="h-7 w-auto lg:ml-auto" />
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ export function Footer() {
       <div className="relative z-10 border-t border-white/10">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/60 text-sm" suppressHydrationWarning>
+            <p className="text-white/60 text-xs md:text-sm text-center md:text-left" suppressHydrationWarning>
               {t('copyright', {
                 year: currentYear,
                 defaultValue:

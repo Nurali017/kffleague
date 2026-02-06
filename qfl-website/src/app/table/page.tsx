@@ -138,14 +138,14 @@ export default function LeagueTablePage() {
       {/* Hero Header with geometric background - extends down */}
       <div className="relative">
         <HeroBackground
-          className="absolute inset-x-0 top-0 h-[400px]"
-          patternClassName="absolute inset-x-0 top-0 h-[400px]"
+          className="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
+          patternClassName="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
         />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-4">
           {/* Title - dynamic based on tournament type */}
-          <div className="pt-8 pb-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
+          <div className="pt-6 md:pt-8 pb-6">
+            <h1 className="text-2xl md:text-4xl font-bold text-white">
               {showBracket ? t('bracketTitle', { defaultValue: 'Кубок турнирі' }) : t('title')}
             </h1>
           </div>
@@ -153,10 +153,10 @@ export default function LeagueTablePage() {
           {/* Bracket View for Cup tournaments */}
           {showBracket && (
             <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden">
-              <div className="bg-[#1E4D8C] px-6 py-4">
-                <h2 className="text-lg font-bold text-white">{currentTournament.name.ru}</h2>
+              <div className="bg-[#1E4D8C] px-4 md:px-6 py-3 md:py-4">
+                <h2 className="text-base md:text-lg font-bold text-white">{currentTournament.name.ru}</h2>
               </div>
-              <div className="p-8 text-center">
+              <div className="p-5 md:p-8 text-center">
                 <p className="text-gray-500 dark:text-slate-400 mb-4">
                   {t('bracketComingSoon', { defaultValue: 'Кубок турнирінің кестесі жуықта қолжетімді болады' })}
                 </p>
@@ -171,7 +171,7 @@ export default function LeagueTablePage() {
           {showTable && (
             <>
               {/* Tabs */}
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <TableTabs activeTab={activeTab} onTabChange={handleTabChange} />
               </div>
 
@@ -240,7 +240,7 @@ export default function LeagueTablePage() {
           )}
 
           {/* Bottom padding */}
-          <div className="pb-8" />
+          <div className="pb-6 md:pb-8" />
         </div>
       </div>
     </div>

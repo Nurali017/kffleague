@@ -9,9 +9,9 @@ import { HeroBackground } from '@/components/ui/HeroBackground';
 
 function TeamCardSkeleton() {
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-6 animate-pulse">
+    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4 md:p-6 animate-pulse">
       <div className="flex flex-col items-center">
-        <div className="w-24 h-24 bg-gray-200 dark:bg-dark-surface-soft rounded-full mb-4" />
+        <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-200 dark:bg-dark-surface-soft rounded-full mb-4" />
         <div className="w-32 h-5 bg-gray-200 dark:bg-dark-surface-soft rounded mb-2" />
         <div className="w-20 h-4 bg-gray-200 dark:bg-dark-surface-soft rounded" />
       </div>
@@ -31,12 +31,12 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
   return (
     <Link
       href={`/team/${id}`}
-      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-6 hover:shadow-lg hover:border-[#1E4D8C] dark:hover:border-accent-cyan transition-all duration-300"
+      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4 md:p-6 hover:shadow-lg hover:border-[#1E4D8C] dark:hover:border-accent-cyan transition-all duration-300"
     >
       <div className="flex flex-col items-center">
         {/* Team Logo */}
         <div
-          className="relative w-24 h-24 mb-4 rounded-full overflow-hidden bg-gray-50 dark:bg-dark-surface flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+          className="relative w-20 h-20 md:w-24 md:h-24 mb-4 rounded-full overflow-hidden bg-gray-50 dark:bg-dark-surface flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
           style={colors ? {
             boxShadow: `0 0 0 3px ${colors.primary}40`
           } : undefined}
@@ -55,7 +55,7 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
         </div>
 
         {/* Team Name */}
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white text-center group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
+        <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white text-center group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
           {name}
         </h3>
 
@@ -94,14 +94,14 @@ export default function TeamsPage() {
       {/* Hero Header */}
       <div className="relative">
         <HeroBackground
-          className="absolute inset-x-0 top-0 h-[300px]"
-          patternClassName="absolute inset-x-0 top-0 h-[300px]"
+          className="absolute inset-x-0 top-0 h-[240px] md:h-[300px]"
+          patternClassName="absolute inset-x-0 top-0 h-[240px] md:h-[300px]"
         />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-4">
           {/* Title */}
-          <div className="pt-8 pb-24 md:pb-32">
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
+          <div className="pt-6 md:pt-8 pb-20 md:pb-32">
+            <h1 className="text-2xl md:text-4xl font-bold text-white">
               {t('items.teams')}
             </h1>
             <p className="text-white/70 mt-2">
@@ -112,9 +112,9 @@ export default function TeamsPage() {
       </div>
 
       {/* Teams Grid */}
-      <div className="max-w-[1400px] mx-auto px-4 -mt-16 relative z-20 pb-12">
+      <div className="max-w-[1400px] mx-auto px-4 -mt-12 md:-mt-16 relative z-20 pb-12">
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
             {Array.from({ length: 10 }).map((_, i) => (
               <TeamCardSkeleton key={i} />
             ))}
@@ -128,7 +128,7 @@ export default function TeamsPage() {
             <p className="text-gray-500 dark:text-slate-400">No teams found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
             {teams.map((team) => (
               <TeamCard
                 key={team.id}

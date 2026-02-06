@@ -170,15 +170,15 @@ function FieldVisualization({
     <div className="relative w-full aspect-[3/4] md:h-[800px] bg-[#050B14] rounded-xl overflow-hidden border border-gray-800 shadow-2xl">
 
       {/* Header Overlay (Home Team) - TOP */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent z-20">
+      <div className="absolute top-0 left-0 right-0 p-3 md:p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent z-20">
         <div className="flex items-center gap-3">
-          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-10 h-10 object-contain" alt={homeTeam.name} />
+          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={homeTeam.name} />
           <div className="flex flex-col">
-            <span className="text-white font-bold text-lg leading-none">{homeTeam.name}</span>
-            <span className="text-white/60 text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
+            <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{homeTeam.name}</span>
+            <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
           </div>
         </div>
-        <span className="font-mono text-white/40 text-xl font-bold">{homeFormation}</span>
+        <span className="font-mono text-white/40 text-base md:text-xl font-bold">{homeFormation}</span>
       </div>
 
       {/* Field Lines */}
@@ -209,14 +209,14 @@ function FieldVisualization({
       </div>
 
       {/* Footer Overlay (Away Team) - BOTTOM */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent z-20">
-        <span className="font-mono text-white/40 text-xl font-bold">{awayFormation}</span>
+      <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent z-20">
+        <span className="font-mono text-white/40 text-base md:text-xl font-bold">{awayFormation}</span>
         <div className="flex items-center gap-3 text-right">
           <div className="flex flex-col items-end">
-            <span className="text-white font-bold text-lg leading-none">{awayTeam.name}</span>
-            <span className="text-white/60 text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
+            <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{awayTeam.name}</span>
+            <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
           </div>
-          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-10 h-10 object-contain" alt={awayTeam.name} />
+          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={awayTeam.name} />
         </div>
       </div>
 

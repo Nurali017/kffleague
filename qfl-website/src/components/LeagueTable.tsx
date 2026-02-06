@@ -208,7 +208,7 @@ export function LeagueTable() {
       </div>
 
       {/* Legend */}
-      <div className="px-5 py-2.5 border-t border-gray-100 dark:border-dark-border flex items-center gap-4 text-[11px] text-gray-400 dark:text-slate-400">
+      <div className="px-5 py-2.5 border-t border-gray-100 dark:border-dark-border flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-gray-400 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E5B73B]" />
           <span>{t('tableLegend.champion')}</span>

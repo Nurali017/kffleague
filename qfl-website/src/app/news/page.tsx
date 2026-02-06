@@ -94,14 +94,14 @@ function NewsPageContent() {
       <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
         <div className="relative">
           <HeroBackground
-            className="absolute inset-x-0 top-0 h-[400px]"
-            patternClassName="absolute inset-x-0 top-0 h-[400px]"
+            className="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
+            patternClassName="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
           />
-          <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-8 pb-10">
+          <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-6 md:pt-8 pb-10">
             <div className="h-10 w-48 bg-white/20 rounded" />
           </div>
         </div>
-        <div className="max-w-[1400px] mx-auto px-4 -mt-6 pb-8">
+        <div className="max-w-[1400px] mx-auto px-4 -mt-4 md:-mt-6 pb-8">
           <div className="animate-pulse">
             <div className="h-12 bg-gray-200 dark:bg-dark-surface-soft rounded mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -119,17 +119,17 @@ function NewsPageContent() {
     <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
       <div className="relative">
         <HeroBackground
-          className="absolute inset-x-0 top-0 h-[400px]"
-          patternClassName="absolute inset-x-0 top-0 h-[400px]"
+          className="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
+          patternClassName="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
         />
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-8 pb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-6 md:pt-8 pb-10">
+          <h1 className="text-2xl md:text-4xl font-bold text-white">
             {t('title')}
           </h1>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 -mt-6 pb-8">
+      <div className="max-w-[1400px] mx-auto px-4 -mt-4 md:-mt-6 pb-8">
         {/* Tabs */}
         <NewsTabs
           activeTab={activeTab}
@@ -165,14 +165,14 @@ export default function NewsPage() {
       <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
         <div className="relative">
           <HeroBackground
-            className="absolute inset-x-0 top-0 h-[400px]"
-            patternClassName="absolute inset-x-0 top-0 h-[400px]"
+            className="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
+            patternClassName="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
           />
-          <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-8 pb-10">
+          <div className="relative z-10 max-w-[1400px] mx-auto px-4 pt-6 md:pt-8 pb-10">
             <div className="h-10 w-48 bg-white/20 rounded" />
           </div>
         </div>
-        <div className="max-w-[1400px] mx-auto px-4 -mt-6 pb-8">
+        <div className="max-w-[1400px] mx-auto px-4 -mt-4 md:-mt-6 pb-8">
           <div className="animate-pulse">
             <div className="h-12 bg-gray-200 dark:bg-dark-surface-soft rounded mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

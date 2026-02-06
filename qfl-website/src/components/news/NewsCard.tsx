@@ -32,7 +32,7 @@ export function NewsCard({
         <motion.div
           initial="rest"
           whileHover="hover"
-          className="relative overflow-hidden rounded-2xl h-full bg-gray-100 dark:bg-dark-surface min-h-[400px]"
+          className="relative overflow-hidden rounded-2xl h-full bg-gray-100 dark:bg-dark-surface min-h-[320px] md:min-h-[400px]"
           variants={{
             rest: {},
             hover: {

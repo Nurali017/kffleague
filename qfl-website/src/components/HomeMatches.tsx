@@ -18,9 +18,9 @@ export function HomeMatches() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full">
+      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -38,9 +38,9 @@ export function HomeMatches() {
 
   if (error || !matches) {
     return (
-      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full">
+      <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -61,9 +61,9 @@ export function HomeMatches() {
     : '';
 
   return (
-    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 h-full flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+    <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between mb-2 gap-2">
+        <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           {t('title')}
         </h2>
@@ -93,7 +93,7 @@ export function HomeMatches() {
             <Link
               key={game.id}
               href={`/matches/${game.id}`}
-              className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-2.5 transition-colors"
+              className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-2 md:p-2.5 transition-colors"
             >
               {/* Teams */}
               <div className="flex items-center justify-between gap-3">
@@ -107,17 +107,15 @@ export function HomeMatches() {
                       e.currentTarget.src = '/images/team-placeholder.png';
                     }}
                   />
-                  <span className={`font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap ${
-                    game.home_team.name.length > 7 ? 'text-xs' : 'text-sm'
-                  }`}>
+                  <span className="font-medium text-gray-900 dark:text-slate-100 truncate text-xs sm:text-sm">
                     {game.home_team.name}
                   </span>
                 </div>
 
                 {/* Score or Time */}
-                <div className="flex-shrink-0 text-center min-w-[60px]">
+                <div className="flex-shrink-0 text-center min-w-[52px] sm:min-w-[60px]">
                   {game.home_score !== null && game.away_score !== null ? (
-                    <div className="text-base font-bold text-gray-900 dark:text-slate-100">
+                    <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100">
                       {game.home_score} : {game.away_score}
                     </div>
                   ) : (
@@ -129,9 +127,7 @@ export function HomeMatches() {
 
                 {/* Away team */}
                 <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
-                  <span className={`font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap ${
-                    game.away_team.name.length > 7 ? 'text-xs' : 'text-sm'
-                  }`}>
+                  <span className="font-medium text-gray-900 dark:text-slate-100 truncate text-xs sm:text-sm text-right">
                     {game.away_team.name}
                   </span>
                   <img

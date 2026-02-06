@@ -24,7 +24,7 @@ export function PlayerMatchesTable({ matches }: PlayerMatchesTableProps) {
             {/* Desktop Table */}
             <div className="relative">
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[800px]">
+                    <table className="w-full min-w-[680px] md:min-w-[800px]">
                         <thead className="sticky top-0 z-10">
                             <tr className="bg-gray-100 dark:bg-dark-surface-soft text-slate-700 dark:text-white text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                 <th className="px-3 py-3 md:px-6 md:py-4 text-left w-12 md:w-16">{t('round', 'Тур')}</th>
@@ -76,7 +76,7 @@ export function PlayerMatchesTable({ matches }: PlayerMatchesTableProps) {
                     </table>
                 </div>
                 {/* Scroll indicator gradient - visible on mobile */}
-                <div className="absolute right-0 top-0 bottom-0 w-6 md:w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent pointer-events-none md:hidden" />
+                <div className="absolute right-0 top-0 bottom-0 w-5 md:w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent pointer-events-none md:hidden" />
             </div>
 
             {/* Pagination */}

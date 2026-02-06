@@ -34,14 +34,14 @@ export default function DocumentsPage() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-8 md:py-12">
       {/* Header */}
-      <div className="mb-10 md:mb-12">
+      <div className="mb-8 md:mb-12">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-1 h-8 bg-[#E5B73B] rounded-full" />
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
+          <h1 className="text-2xl md:text-4xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
             {page?.title || t('documents.title')}
           </h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-700">
+        <p className="text-gray-600 dark:text-gray-400 text-sm md:text-lg md:ml-4 md:pl-3 border-l-2 border-gray-200 dark:border-gray-700">
           {t('documents.description')}
         </p>
       </div>

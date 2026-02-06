@@ -25,7 +25,7 @@ interface TeamOverviewSectionProps {
 
 function MatchScore({ home, away }: { home: number | null; away: number | null }) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-3 py-1 font-black text-base">
+    <div className="inline-flex items-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-2.5 md:px-3 py-1 font-black text-sm md:text-base">
       <span>{home ?? '-'}</span>
       <span className="text-[#1E4D8C]/60 dark:text-cyan-300/75">:</span>
       <span>{away ?? '-'}</span>
@@ -51,21 +51,21 @@ function LastMatchCard({ match }: { match: TeamOverviewMatch | null }) {
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
           {match.home_team.logo_url ? (
-            <img src={match.home_team.logo_url} alt={match.home_team.name} className="w-10 h-10 object-contain" />
+            <img src={match.home_team.logo_url} alt={match.home_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
           )}
-          <span className="truncate text-sm font-bold text-slate-900 dark:text-white">{match.home_team.name}</span>
+          <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white">{match.home_team.name}</span>
         </div>
 
         <MatchScore home={match.home_score} away={match.away_score} />
 
         <div className="flex items-center justify-end gap-2.5 min-w-0 flex-1">
-          <span className="truncate text-sm font-bold text-slate-900 dark:text-white text-right">{match.away_team.name}</span>
+          <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white text-right">{match.away_team.name}</span>
           {match.away_team.logo_url ? (
-            <img src={match.away_team.logo_url} alt={match.away_team.name} className="w-10 h-10 object-contain" />
+            <img src={match.away_team.logo_url} alt={match.away_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
           )}
         </div>
       </div>
@@ -88,7 +88,7 @@ function FormCard({ items }: { items: TeamOverviewFormEntry[] }) {
       {items.length === 0 ? (
         <p className="mt-4 text-sm text-slate-500 dark:text-white/60">{t('empty.noRecentMatches', 'Нет сыгранных матчей')}</p>
       ) : (
-        <div className="mt-4 grid grid-cols-5 gap-2">
+        <div className="mt-4 grid grid-cols-3 sm:grid-cols-5 gap-2">
           {items.map((item) => (
             <div key={item.game_id} className="rounded-lg border border-gray-200 dark:border-white/10 p-2 text-center bg-gray-50 dark:bg-white/5">
               {item.opponent_logo ? (

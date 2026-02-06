@@ -34,7 +34,7 @@ export default function TeamsStatsPage() {
             />
             <StatisticsFilters mode="clubs" />
 
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-8">
+            <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
                 {error ? (
                     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
                         <p className="text-red-600 dark:text-red-400">{t('loadError')}</p>
@@ -56,7 +56,7 @@ export default function TeamsStatsPage() {
                                 defaultValue: 'Данные ещё готовятся или не синхронизированы.',
                             })}
                         </p>
-                        <div className="mt-6">
+                        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                             <Link
                                 href={tableHref}
                                 className="inline-flex items-center px-4 py-2 rounded-lg bg-[#1E4D8C] hover:bg-[#163A6B] text-white font-semibold transition-colors"
@@ -69,7 +69,7 @@ export default function TeamsStatsPage() {
                             </Link>
                             <Link
                                 href={playersHref}
-                                className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 dark:border-dark-border-soft bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-surface-soft text-gray-900 dark:text-slate-100 font-semibold transition-colors ml-3"
+                                className="inline-flex items-center px-4 py-2 rounded-lg border border-gray-200 dark:border-dark-border-soft bg-white dark:bg-dark-surface hover:bg-gray-50 dark:hover:bg-dark-surface-soft text-gray-900 dark:text-slate-100 font-semibold transition-colors"
                             >
                                 {t('emptyState.openPlayers', { defaultValue: 'Открыть статистику игроков' })}
                             </Link>

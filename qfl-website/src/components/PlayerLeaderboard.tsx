@@ -214,7 +214,7 @@ function PlayerLeaderboardSkeleton() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pt-12 md:pt-16">
           {[
             { bg: 'bg-[#E5B73B]', bottom: 'bg-[#d4a82d]' },
             { bg: 'bg-[#1E4D8C]', bottom: 'bg-[#153d6d]' },
@@ -306,7 +306,7 @@ export function PlayerLeaderboard() {
           </svg>
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 overflow-visible">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 overflow-visible">
           <LeaderboardCard
             headerText={t('playerStats.goalsHeader', 'Забитые голы')}
             bottomLabel={t('playerStats.topScorers', 'БОМБАРДИРЫ')}

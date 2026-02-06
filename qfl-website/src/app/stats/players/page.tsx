@@ -80,7 +80,7 @@ export default function PlayersStatsPage() {
                 }))}
             />
 
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-8">
+            <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
                 {error ? (
                     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
                         <p className="text-red-600 dark:text-red-400">

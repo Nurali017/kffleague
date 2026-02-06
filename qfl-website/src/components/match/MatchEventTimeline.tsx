@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { X } from 'lucide-react';
 import { EnhancedMatchEvent, GameTeam, PlayerCountry } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon, JerseyIcon } from './MatchEventIcons';
 import { getTeamLogo, getTeamColor, getTeamInitials } from '@/lib/utils/teamLogos';
+import { bottomSheetSlideUp, modalBackdrop } from '@/lib/motion';
 
 interface MatchEventTimelineProps {
   events: EnhancedMatchEvent[];
@@ -23,23 +26,185 @@ export function MatchEventTimeline({
   playerCountryMap = {},
 }: MatchEventTimelineProps) {
   const [hoveredEvent, setHoveredEvent] = useState<number | null>(null);
+  const [activeEventId, setActiveEventId] = useState<number | null>(null);
+
+  const timelineEvents = useMemo(() => {
+    return events
+      .filter((e) =>
+        ['goal', 'yellow_card', 'red_card', 'substitution', 'penalty'].includes(e.event_type) && e.minute <= 130
+      )
+      .slice()
+      .sort((a, b) => (a.minute - b.minute) || (a.team_id - b.team_id) || (a.id - b.id));
+  }, [events]);
+
+  const maxEventMinute = useMemo(() => {
+    if (timelineEvents.length === 0) return 0;
+    return timelineEvents.reduce((acc, e) => Math.max(acc, e.minute), 0);
+  }, [timelineEvents]);
+
+  const maxTime = Math.max(95, currentMinute, maxEventMinute);
+
+  // Close on escape + lock body scroll while the mobile sheet is open
+  useEffect(() => {
+    if (activeEventId === null) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveEventId(null);
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [activeEventId]);
+
+  const activeEvent = useMemo(() => {
+    if (activeEventId === null) return null;
+    return timelineEvents.find((e) => e.id === activeEventId) || null;
+  }, [activeEventId, timelineEvents]);
 
   if (loading) {
     return (
-      <div className="w-full mt-8 opacity-50 px-4 md:px-20">
+      <div className="w-full mt-6 md:mt-8 opacity-50 px-4 md:px-20">
         <div className="h-1 bg-white/20 w-full rounded" />
       </div>
     );
   }
 
-  // Filter relevant events
-  const timelineEvents = events.filter(e =>
-    ['goal', 'yellow_card', 'red_card', 'substitution', 'penalty'].includes(e.event_type) && e.minute <= 130
-  );
-
   return (
-    <div className="w-full mt-10 mb-8 select-none px-4 md:px-20 relative">
+    <div className="w-full mt-8 md:mt-10 mb-6 md:mb-8 select-none px-4 md:px-20 relative">
 
+      {/* Mobile Timeline (touch) */}
+      <div className="md:hidden" data-testid="match-timeline-mobile">
+        <MobileTimeline
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          events={timelineEvents}
+          maxTime={maxTime}
+          activeEventId={activeEventId}
+          onEventToggle={(id) => setActiveEventId((prev) => (prev === id ? null : id))}
+        />
+
+        <AnimatePresence>
+          {activeEvent && (
+            <>
+              <motion.div
+                className="fixed inset-0 bg-black/60 z-[60]"
+                variants={modalBackdrop}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                onClick={() => setActiveEventId(null)}
+                aria-hidden="true"
+                data-testid="timeline-event-backdrop"
+              />
+
+              <motion.div
+                className="
+                  fixed inset-x-0 bottom-0 z-[70]
+                  rounded-t-2xl border border-white/10 bg-gray-950/95 shadow-2xl
+                  max-h-[80vh] overflow-hidden
+                "
+                variants={bottomSheetSlideUp}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Детали события"
+              >
+                <div className="px-4 pt-3 pb-2 border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-white font-extrabold shrink-0">{activeEvent.minute}&apos;</span>
+                    <EventMarker type={activeEvent.event_type} isHovered={false} />
+                    <span className="text-gray-300 uppercase text-xs font-semibold truncate">
+                      {getEventLabel(activeEvent.event_type)}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveEventId(null)}
+                    className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+                    aria-label="Закрыть"
+                  >
+                    <X className="w-5 h-5 text-white/80" />
+                  </button>
+                </div>
+
+                <div className="px-4 py-4 overflow-y-auto">
+                  {activeEvent.event_type === 'substitution' && activeEvent.player2_name ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-green-400 text-xs font-extrabold">ON</span>
+                        <span className="text-green-400">▲</span>
+                        <JerseyIcon
+                          number={activeEvent.player2_number || 0}
+                          color={getTeamColor(activeEvent.team_id)}
+                          className="w-10 h-10 flex-shrink-0"
+                        />
+                        {activeEvent.player2_id && playerCountryMap[activeEvent.player2_id]?.flag_url && (
+                          <img
+                            src={playerCountryMap[activeEvent.player2_id].flag_url}
+                            alt={playerCountryMap[activeEvent.player2_id].code}
+                            className="w-5 h-4 object-cover rounded-[1px]"
+                          />
+                        )}
+                        <span className="text-white text-base font-bold whitespace-nowrap truncate">
+                          {activeEvent.player2_name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-400 text-xs font-extrabold">OFF</span>
+                        <span className="text-red-400">▼</span>
+                        <JerseyIcon
+                          number={activeEvent.player_number || 0}
+                          color={getTeamColor(activeEvent.team_id)}
+                          className="w-10 h-10 flex-shrink-0"
+                        />
+                        {activeEvent.player_id && playerCountryMap[activeEvent.player_id]?.flag_url && (
+                          <img
+                            src={playerCountryMap[activeEvent.player_id].flag_url}
+                            alt={playerCountryMap[activeEvent.player_id].code}
+                            className="w-5 h-4 object-cover rounded-[1px]"
+                          />
+                        )}
+                        <span className="text-white text-base font-bold whitespace-nowrap truncate">
+                          {activeEvent.player_name}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      <JerseyIcon
+                        number={activeEvent.player_number || 0}
+                        color={getTeamColor(activeEvent.team_id)}
+                        className="w-12 h-12 flex-shrink-0"
+                      />
+                      {activeEvent.player_id && playerCountryMap[activeEvent.player_id]?.flag_url && (
+                        <img
+                          src={playerCountryMap[activeEvent.player_id].flag_url}
+                          alt={playerCountryMap[activeEvent.player_id].code}
+                          className="w-5 h-4 object-cover rounded-[1px]"
+                        />
+                      )}
+                      <span className="text-white text-lg font-extrabold whitespace-nowrap truncate">
+                        {activeEvent.player_name}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Desktop Timeline (hover tooltip) */}
+      <div className="hidden md:block" data-testid="match-timeline-desktop">
       <div className="flex items-center gap-2 md:gap-4 h-28 md:h-36">
 
         {/* KO Marker - Left (Static Flex Item) */}
@@ -59,8 +224,6 @@ export function MatchEventTimeline({
 
           {/* Events */}
           {timelineEvents.map((event) => {
-            // Scale
-            const maxTime = Math.max(95, currentMinute);
             const position = Math.min((event.minute / maxTime) * 100, 100);
 
             const isHome = event.team_id === homeTeam.id; // Home Top
@@ -97,7 +260,7 @@ export function MatchEventTimeline({
 
                 {/* Tooltip - always opens upward */}
                 {isHovered && (
-                  <div className="absolute left-1/2 -translate-x-1/2 min-w-[200px] bg-gray-900/95 border border-white/10 rounded-lg p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 bottom-full mb-2">
+                  <div className="absolute left-1/2 -translate-x-1/2 min-w-[160px] max-w-[85vw] bg-gray-900/95 border border-white/10 rounded-lg p-3 md:p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 bottom-full mb-2">
                     {/* Header with minute and event type */}
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-white font-bold">{event.minute}&apos;</span>
@@ -151,6 +314,86 @@ export function MatchEventTimeline({
                     )}
                   </div>
                 )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      </div>
+    </div>
+  );
+}
+
+interface MobileTimelineProps {
+  homeTeam: GameTeam;
+  awayTeam: GameTeam;
+  events: EnhancedMatchEvent[];
+  maxTime: number;
+  activeEventId: number | null;
+  onEventToggle: (id: number) => void;
+}
+
+function MobileTimeline({ homeTeam, awayTeam, events, maxTime, activeEventId, onEventToggle }: MobileTimelineProps) {
+  const PX_PER_MIN = 8;
+  const TRACK_PAD_LEFT = 16;
+  const TRACK_PAD_RIGHT = 24;
+  const trackWidthPx = maxTime * PX_PER_MIN + TRACK_PAD_LEFT + TRACK_PAD_RIGHT;
+
+  // Anti-collision: group by team side + minute and offset the 2nd/3rd icon in the same minute
+  const groupCounts = new Map<string, number>();
+
+  return (
+    <div className="flex items-center gap-2 h-28">
+      <div className="relative z-10 shrink-0">
+        <TimelineEndpoint homeTeam={homeTeam} awayTeam={awayTeam} label="KO" position="static" />
+      </div>
+
+      <div className="flex-1 overflow-x-auto no-scrollbar h-full">
+        <div className="relative h-full min-w-max" style={{ width: trackWidthPx }}>
+          <div
+            className="absolute top-1/2 -translate-y-1/2 h-1.5 bg-white/10 rounded-full backdrop-blur-sm shadow-inner"
+            style={{ left: TRACK_PAD_LEFT, right: TRACK_PAD_RIGHT }}
+          />
+
+          {events.map((event) => {
+            const isHome = event.team_id === homeTeam.id;
+            const side = isHome ? 'home' : 'away';
+            const groupKey = `${side}:${event.minute}`;
+            const idx = groupCounts.get(groupKey) || 0;
+            groupCounts.set(groupKey, idx + 1);
+
+            const clusterOffset = idx * 12;
+            const leftPx = TRACK_PAD_LEFT + event.minute * PX_PER_MIN + clusterOffset;
+
+            const isActive = activeEventId === event.id;
+            const verticalClass = isHome ? 'bottom-[50%] pb-4' : 'top-[50%] pt-4';
+            const connectorClass = isHome ? 'bottom-0 h-4' : 'top-0 h-4';
+
+            return (
+              <div
+                key={event.id}
+                className={`absolute flex flex-col items-center ${isActive ? 'z-40' : 'z-10'} ${verticalClass}`}
+                style={{ left: leftPx, transform: 'translateX(-50%)' }}
+              >
+                <div className={`absolute left-1/2 -translate-x-[0.5px] w-[1px] bg-white/30 ${connectorClass}`} />
+
+                <button
+                  type="button"
+                  onClick={() => onEventToggle(event.id)}
+                  className={`
+                    flex flex-col items-center gap-1
+                    rounded-lg px-2 py-1.5
+                    transition-transform duration-200
+                    ${isActive ? 'scale-110 bg-white/10' : 'active:scale-95'}
+                  `}
+                  aria-label={`Открыть событие ${event.minute}'`}
+                  data-testid={`timeline-event-${event.id}`}
+                >
+                  <EventMarker type={event.event_type} isHovered={isActive} />
+                  <span className="text-[10px] font-bold text-white/70 font-mono tracking-tighter">
+                    {event.minute}&apos;
+                  </span>
+                </button>
               </div>
             );
           })}

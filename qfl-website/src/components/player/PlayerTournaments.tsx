@@ -98,7 +98,7 @@ export function PlayerTournaments({ tournaments, variant = 'clarity' }: PlayerTo
       </div>
 
       <div className="relative overflow-x-auto">
-        <table className="w-full min-w-[860px]">
+        <table className="w-full min-w-[720px] md:min-w-[860px]">
           <thead>
             <tr
               className={cn(

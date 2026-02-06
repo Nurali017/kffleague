@@ -177,6 +177,29 @@ export const modalContent = {
   },
 } as const;
 
+// Bottom sheet slide (from bottom)
+export const bottomSheetSlideUp = {
+  hidden: {
+    y: '100%',
+  },
+  visible: {
+    y: 0,
+    transition: {
+      type: 'spring',
+      damping: 30,
+      stiffness: 320,
+    },
+  },
+  exit: {
+    y: '100%',
+    transition: {
+      type: 'spring',
+      damping: 30,
+      stiffness: 320,
+    },
+  },
+} as const;
+
 // Mobile menu slide (from right)
 export const mobileMenuSlide = {
   hidden: {

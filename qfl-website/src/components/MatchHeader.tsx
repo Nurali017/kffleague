@@ -31,10 +31,10 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
     <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
       <HeroBackground />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-3 sm:px-4 md:px-20 py-5 md:py-8">
 
         {/* Match Information Bar */}
-        <div className="mb-8 md:mb-12 flex flex-wrap items-center justify-center gap-3 md:gap-4 text-sm text-white/80">
+        <div className="mb-6 md:mb-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:gap-4 text-xs md:text-sm text-white/80">
           {/* Date */}
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-white/60" />
@@ -90,19 +90,19 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
         </div>
 
         {/* Level 3: Main Score (Center) */}
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-12 max-w-4xl mx-auto">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4 md:gap-12 max-w-4xl mx-auto">
 
           {/* Home Team */}
-          <div className="flex flex-col items-center text-center group">
+          <div className="flex flex-col items-center text-center group min-w-0">
             <div className="relative mb-4">
               <div
-                className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
               >
                 {homeLogoUrl ? (
                   <img
                     src={homeLogoUrl}
                     alt={match.home_team.name}
-                    className="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
                   />
                 ) : (
                   <span className="text-2xl font-bold" style={{ color: homeColor }}>
@@ -112,41 +112,41 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
               </div>
             </div>
 
-            <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-none mb-1">
+            <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
               {match.home_team.name}
             </h2>
-            <p className="text-sm font-medium text-white/50">{t('home')}</p>
+            <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('home')}</p>
           </div>
 
           {/* Score / Status */}
-          <div className="flex flex-col items-center justify-center min-w-[120px] md:min-w-[180px]">
+          <div className="flex flex-col items-center justify-center min-w-[86px] sm:min-w-[120px] md:min-w-[180px]">
             {hasScore ? (
               <>
-                <div className="text-6xl md:text-[80px] font-black text-white leading-none tracking-tighter flex items-center gap-4 drop-shadow-2xl">
+                <div className="text-3xl sm:text-6xl md:text-[80px] font-black text-white leading-none tracking-tighter flex items-center gap-2 sm:gap-4 drop-shadow-2xl">
                   <span>{match.home_score}</span>
-                  <span className="text-white/20 text-4xl md:text-6xl align-top">-</span>
+                  <span className="text-white/20 text-2xl sm:text-4xl md:text-6xl align-top">-</span>
                   <span>{match.away_score}</span>
                 </div>
 
                 {isLive ? (
-                  <div className="mt-4 flex items-center gap-2 bg-green-500 px-3 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.5)]">
+                  <div className="mt-2 sm:mt-4 flex items-center gap-2 bg-green-500 px-2.5 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.5)]">
                     <span className="w-2 h-2 rounded-full bg-white animate-ping" />
                     <span className="text-xs font-bold text-white uppercase tracking-wider">
                       {match.minute ? `${match.minute}'` : 'LIVE'}
                     </span>
                   </div>
                 ) : (
-                  <div className="mt-4 px-3 py-1 rounded bg-white/10 text-white/70 text-xs font-medium uppercase tracking-wider backdrop-blur-sm">
+                  <div className="mt-2 sm:mt-4 px-2.5 py-1 rounded bg-white/10 text-white/70 text-[10px] sm:text-xs font-medium uppercase tracking-wider backdrop-blur-sm">
                     {match.status === 'finished' ? t('finished') : match.status}
                   </div>
                 )}
               </>
             ) : (
               <div className="flex flex-col items-center">
-                <div className="text-4xl md:text-6xl font-bold text-white mb-2">
+                <div className="text-3xl md:text-6xl font-bold text-white mb-2">
                   {match.time || '—'}
                 </div>
-                <div className="px-3 py-1 rounded bg-[#E5B73B] text-[#1E4D8C] text-xs font-bold uppercase tracking-wider">
+                <div className="px-2.5 py-1 rounded bg-[#E5B73B] text-[#1E4D8C] text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                   {t('upcoming')}
                 </div>
               </div>
@@ -154,16 +154,16 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
           </div>
 
           {/* Away Team */}
-          <div className="flex flex-col items-center text-center group">
+          <div className="flex flex-col items-center text-center group min-w-0">
             <div className="relative mb-4">
               <div
-                className="w-24 h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
               >
                 {awayLogoUrl ? (
                   <img
                     src={awayLogoUrl}
                     alt={match.away_team.name}
-                    className="w-24 h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
                   />
                 ) : (
                   <span className="text-2xl font-bold" style={{ color: awayColor }}>
@@ -173,10 +173,10 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
               </div>
             </div>
 
-            <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-none mb-1">
+            <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
               {match.away_team.name}
             </h2>
-            <p className="text-sm font-medium text-white/50">{t('away')}</p>
+            <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('away')}</p>
           </div>
         </div>
       </div>

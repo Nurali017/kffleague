@@ -22,7 +22,7 @@ export function TeamPageHero({ team, summary, seasonName, tournamentName }: Team
   const metaLabel = [tournamentName, seasonName].filter(Boolean).join(' · ');
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-10 md:pb-12 text-white">
+    <section className="relative overflow-hidden pt-16 md:pt-24 pb-8 md:pb-12 text-white">
       <HeroBackground />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.22),transparent_55%)]" />
       <div
@@ -46,7 +46,7 @@ export function TeamPageHero({ team, summary, seasonName, tournamentName }: Team
                 {metaLabel ? (
                   <div className="text-[11px] md:text-xs uppercase tracking-wider font-semibold text-white/60">{metaLabel}</div>
                 ) : null}
-                <h1 className="mt-1 text-3xl md:text-5xl font-black leading-tight">{team.name}</h1>
+                <h1 className="mt-1 text-2xl md:text-5xl font-black leading-tight">{team.name}</h1>
                 {team.city ? (
                   <p className="mt-1 text-base md:text-lg text-white/85">{team.city}</p>
                 ) : null}
@@ -66,7 +66,7 @@ export function TeamPageHero({ team, summary, seasonName, tournamentName }: Team
                       className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold ring-1 ring-white/20 hover:bg-white/15 transition-colors"
                     >
                       <Globe className="h-3.5 w-3.5" />
-                      <span className="max-w-[220px] truncate">{team.website.replace(/^https?:\/\//, '')}</span>
+                      <span className="max-w-[170px] md:max-w-[220px] truncate">{team.website.replace(/^https?:\/\//, '')}</span>
                     </Link>
                   ) : null}
                 </div>

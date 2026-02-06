@@ -19,7 +19,7 @@ function TournamentIcon({ tournament, isActive, onClick }: TournamentIconProps) 
     <button
       onClick={onClick}
       className={`
-        flex flex-col items-center gap-1 px-5 py-3 transition-all duration-200
+        flex shrink-0 flex-col items-center gap-1 px-3 py-2 md:px-5 md:py-3 transition-all duration-200
         hover:opacity-100 group border-b-[3px]
         ${isActive
           ? 'opacity-100 border-accent-soft'
@@ -59,7 +59,7 @@ export function TournamentIcons() {
     useTournament();
 
   return (
-    <div className="flex items-center justify-start gap-0">
+    <div className="flex min-w-max items-center justify-start gap-0">
       {availableTournaments.map((tournament) => (
         <TournamentIcon
           key={tournament.id}

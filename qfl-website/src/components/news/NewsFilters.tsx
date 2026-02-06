@@ -91,9 +91,9 @@ export function NewsFilters({
             : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border'
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
           {/* Search Input */}
-          <div className="md:col-span-8">
+          <div className="lg:col-span-8">
             <div className="relative">
               <Search
                 className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
@@ -127,7 +127,7 @@ export function NewsFilters({
           </div>
 
           {/* Sort Select */}
-          <div className="md:col-span-3">
+          <div className="lg:col-span-3">
             <div className="relative">
               <select
                 value={filters.sort || 'date_desc'}
@@ -161,10 +161,10 @@ export function NewsFilters({
 
           {/* Clear Filters Button */}
           {hasActiveFilters && (
-            <div className="md:col-span-1">
+            <div className="lg:col-span-1">
               <button
                 onClick={handleClearFilters}
-                className={`w-full h-full flex items-center justify-center px-4 py-2 transition-colors ${
+                className={`w-full h-full min-h-[40px] flex items-center justify-center px-4 py-2 transition-colors ${
                   isHero
                     ? 'text-gray-600 dark:text-white/70 hover:text-[#E5B73B] dark:hover:text-white'
                     : 'text-gray-600 dark:text-slate-400 hover:text-[#E5B73B] dark:hover:text-[#FBBF24]'

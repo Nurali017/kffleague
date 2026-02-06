@@ -94,7 +94,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
     return (
         <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
-                <table className="w-full min-w-[800px]">
+                <table className="w-full min-w-[720px] md:min-w-[800px]">
                     <thead className="bg-gray-50 dark:bg-dark-surface-soft border-b border-gray-200 dark:border-dark-border">
                         <tr>
                             <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider w-12 sticky left-0 bg-gray-50 dark:bg-dark-surface-soft z-10">

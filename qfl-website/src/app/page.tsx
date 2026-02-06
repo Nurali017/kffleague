@@ -18,23 +18,23 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 py-10 space-y-8 dark:bg-dark-bg">
+    <div className="max-w-[1400px] mx-auto px-4 py-6 md:py-10 space-y-6 md:space-y-8 dark:bg-dark-bg">
       {/* Row 1: Hero + HomeMatches */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        <div className="lg:col-span-9 h-[500px]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
+        <div className="lg:col-span-9 h-[340px] sm:h-[420px] lg:h-[500px]">
           <HeroSection />
         </div>
-        <div className="lg:col-span-3 h-[500px]">
+        <div className="lg:col-span-3 h-[360px] sm:h-[420px] lg:h-[500px]">
           <HomeMatches />
         </div>
       </div>
 
       {/* Row 2: News + LeagueTable (aligned with MatchCenter) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
         {/* News section */}
-        <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-6 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
+        <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 flex flex-col">
+          <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
             <Link
               href="/news"
               className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
@@ -43,7 +43,7 @@ export default function HomePage() {
               <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 flex-1 items-stretch">
             <div className="md:col-span-2 min-h-[350px]">
               <NewsFeatured />
             </div>
