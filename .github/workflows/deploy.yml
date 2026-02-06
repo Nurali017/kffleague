@@ -68,10 +68,9 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
-          script_stop: true
           timeout: 300s
           script: |
-            set -euo pipefail
+            set -e
             cd /home/deploy/qfl
 
             echo "=== Pulling latest code ==="
@@ -90,20 +89,32 @@ jobs:
 
             echo "=== Restarting backend ==="
             docker compose -f docker-compose.prod.yml up -d --no-deps backend
+
+            echo "=== Waiting for backend health ==="
+            set +e
+            HEALTHY=false
             for i in $(seq 1 30); do
-              if docker compose -f docker-compose.prod.yml exec -T backend curl -sf http://localhost:8000/health > /dev/null 2>&1; then
-                echo "Backend healthy"
+              docker compose -f docker-compose.prod.yml exec -T backend curl -sf http://localhost:8000/health > /dev/null 2>&1
+              if [ $? -eq 0 ]; then
+                echo "Backend healthy after ${i} checks"
+                HEALTHY=true
                 break
               fi
-              [ $i -eq 30 ] && echo "Backend health check failed" && exit 1
-              sleep 2
+              echo "Waiting... ($i/30)"
+              sleep 3
             done
+            set -e
+            if [ "$HEALTHY" = "false" ]; then
+              echo "Backend health check failed!"
+              docker compose -f docker-compose.prod.yml logs --tail=20 backend
+              exit 1
+            fi
 
             echo "=== Restarting frontend & workers ==="
             docker compose -f docker-compose.prod.yml up -d --no-deps frontend celery_worker celery_beat
 
             echo "=== Updating nginx ==="
-            cp nginx/conf.d/default.conf /opt/kaisar/nginx/conf.d/kff.conf
+            cat nginx/conf.d/default.conf > /opt/kaisar/nginx/conf.d/kff.conf
             docker exec kaisar-nginx nginx -t && docker exec kaisar-nginx nginx -s reload
 
             echo "=== Cleanup ==="
