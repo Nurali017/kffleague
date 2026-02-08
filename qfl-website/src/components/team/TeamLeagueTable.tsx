@@ -49,7 +49,7 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
     return (
         <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)] p-4 md:p-6">
             <div className="flex items-center gap-2 mb-6">
-                <Link href="/stats" className="text-xs font-bold text-slate-500 dark:text-white/60 uppercase tracking-wider hover:text-[#1E4D8C] dark:hover:text-cyan-300 transition-colors">
+                <Link href="/stats" className="text-xs font-bold text-slate-500 dark:text-white/60 uppercase tracking-wider hover:text-primary dark:hover:text-cyan-300 transition-colors">
                     {(currentTournament.name as Record<string, string>)[lang] || currentTournament.name.short} — {currentSeason.year}
                 </Link>
                 <ArrowRight className="w-4 h-4 text-slate-400 dark:text-white" />
@@ -116,11 +116,11 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
                                     className={cn(
                                         'border-b border-gray-100 dark:border-white/10 last:border-0 transition-colors',
                                         isCurrentTeam
-                                            ? 'bg-[#1E4D8C]/5 dark:bg-cyan-300/15'
+                                            ? 'bg-primary/5 dark:bg-cyan-300/15'
                                             : 'hover:bg-gray-50 dark:hover:bg-white/5'
                                     )}
                                 >
-                                    <td className={cn('py-4 font-bold', isCurrentTeam ? 'text-[#1E4D8C] dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
+                                    <td className={cn('py-4 font-bold', isCurrentTeam ? 'text-primary dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
                                         {team.position}
                                     </td>
                                     <td className="py-4">
@@ -128,33 +128,33 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
                                             {team.team_logo && (
                                                 <img src={team.team_logo} alt="" className="w-6 h-6 object-contain" />
                                             )}
-                                            <span className={cn('font-bold', isCurrentTeam ? 'text-[#1E4D8C] dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
+                                            <span className={cn('font-bold', isCurrentTeam ? 'text-primary dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
                                                 {team.team_name}
                                             </span>
                                         </div>
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.games_played}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.wins}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.draws}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.losses}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.goals_scored}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C]/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary/70 dark:text-cyan-300/80' : 'text-slate-500 dark:text-white/60')}>
                                         {team.goals_conceded}
                                     </td>
-                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-[#1E4D8C] dark:text-cyan-300' : 'text-slate-500 dark:text-white/60')}>
+                                    <td className={cn('text-center py-4', isCurrentTeam ? 'text-primary dark:text-cyan-300' : 'text-slate-500 dark:text-white/60')}>
                                         {team.goal_difference > 0 ? `+${team.goal_difference}` : team.goal_difference}
                                     </td>
-                                    <td className={cn('text-center py-4 font-black', isCurrentTeam ? 'text-[#1E4D8C] dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
+                                    <td className={cn('text-center py-4 font-black', isCurrentTeam ? 'text-primary dark:text-cyan-300' : 'text-slate-900 dark:text-white')}>
                                         {team.points}
                                     </td>
                                 </tr>

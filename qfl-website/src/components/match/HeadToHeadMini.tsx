@@ -52,7 +52,7 @@ export function HeadToHeadMini({
   if (error || !data) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-        <div className="bg-[#1E4D8C] py-4 px-6 flex items-center justify-center relative overflow-hidden">
+        <div className="bg-primary py-4 px-6 flex items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay" />
           <h3 className="text-xs font-black text-white uppercase tracking-[0.2em] relative z-10">
             HEAD TO HEAD
@@ -74,7 +74,7 @@ export function HeadToHeadMini({
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Header - V2 Style "Scoreboard" */}
-      <div className="bg-[#1E4D8C] py-4 px-6 flex items-center justify-center relative overflow-hidden">
+      <div className="bg-primary py-4 px-6 flex items-center justify-center relative overflow-hidden">
         {/* Abstract pattern overlay */}
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay" />
 

@@ -32,7 +32,7 @@ function LeaderboardCard({
   bgColor,
   bottomColor,
   textColor,
-  statNumberColor = 'text-[#1E4D8C]',
+  statNumberColor = 'text-primary',
 }: LeaderboardCardProps) {
   const { t } = useTranslation();
 
@@ -172,7 +172,7 @@ function LeaderboardCard({
                 }}
               />
               <div className="flex-1 min-w-0">
-                <span className="text-gray-900 dark:text-slate-100 font-semibold group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
+                <span className="text-gray-900 dark:text-slate-100 font-semibold group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">
                   {player.first_name} {player.last_name}
                 </span>
                 <div className="text-gray-600 dark:text-slate-400 text-sm font-medium">{player.team_name}</div>
@@ -210,14 +210,14 @@ function PlayerLeaderboardSkeleton() {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: 'url(/footer-bg.webp)' }}
       />
-      <div className="absolute inset-0 bg-[#1E4D8C]/80" />
+      <div className="absolute inset-0 bg-primary/80" />
 
       {/* Content */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pt-12 md:pt-16">
           {[
-            { bg: 'bg-[#E5B73B]', bottom: 'bg-[#d4a82d]' },
-            { bg: 'bg-[#1E4D8C]', bottom: 'bg-[#153d6d]' },
+            { bg: 'bg-accent', bottom: 'bg-[#d4a82d]' },
+            { bg: 'bg-primary', bottom: 'bg-[#153d6d]' },
             { bg: 'bg-[#0D847A]', bottom: 'bg-[#0a6b63]' },
           ].map((colors, i) => (
             <div key={i} className="relative pt-16">
@@ -281,7 +281,7 @@ export function PlayerLeaderboard() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: 'url(/footer-bg.webp)' }}
         />
-        <div className="absolute inset-0 bg-[#1E4D8C]/80" />
+        <div className="absolute inset-0 bg-primary/80" />
         <div className="relative z-10 max-w-[1400px] mx-auto px-4">
           <div className="bg-white/10 backdrop-blur rounded-2xl p-8">
             <ErrorMessage message={tErrors('loadStats')} onRetry={refetch} />
@@ -295,10 +295,10 @@ export function PlayerLeaderboard() {
     <div className="overflow-visible">
       {/* Header with link */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan">{t('playerLeaderboard.title')}</h2>
+        <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan">{t('playerLeaderboard.title')}</h2>
         <Link
           href="/stats"
-          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
           {t('playerLeaderboard.viewAllStats')}
           <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@ export function PlayerLeaderboard() {
             statKey="goals"
             secondaryStatKey="xg"
             secondaryStatLabel="xG"
-            bgColor="bg-[#E5B73B]"
+            bgColor="bg-accent"
             bottomColor="bg-[#d4a82d]"
             textColor="text-gray-800"
           />
@@ -325,10 +325,10 @@ export function PlayerLeaderboard() {
             statKey="assists"
             secondaryStatKey="key_passes"
             secondaryStatLabel={t('playerLeaderboard.keyPasses')}
-            bgColor="bg-[#1E4D8C]"
+            bgColor="bg-primary"
             bottomColor="bg-[#153d6d]"
             textColor="text-white"
-            statNumberColor="text-[#E5B73B]"
+            statNumberColor="text-accent"
           />
           <LeaderboardCard
             headerText={t('playerStats.cleanSheetsHeader', 'Сухие матчи')}
@@ -340,7 +340,7 @@ export function PlayerLeaderboard() {
             bgColor="bg-[#0D847A]"
             bottomColor="bg-[#0a6b63]"
             textColor="text-white"
-            statNumberColor="text-[#E5B73B]"
+            statNumberColor="text-accent"
           />
       </div>
     </div>

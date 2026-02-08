@@ -9,13 +9,13 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#1E4D8C',
-          light: '#2A5FA3',
-          dark: '#163A6B',
+          DEFAULT: 'rgb(var(--league-primary) / <alpha-value>)',
+          light: 'rgb(var(--league-primary-light) / <alpha-value>)',
+          dark: 'rgb(var(--league-primary-dark) / <alpha-value>)',
         },
         accent: {
-          DEFAULT: '#E5B73B',
-          soft: '#F0C95D',
+          DEFAULT: 'rgb(var(--league-accent) / <alpha-value>)',
+          soft: 'rgb(var(--league-accent-soft) / <alpha-value>)',
           muted: '#C9A23A',
           cyan: '#67E8F9',
           emerald: '#6EE7B7',

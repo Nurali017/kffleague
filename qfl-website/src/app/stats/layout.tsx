@@ -43,26 +43,26 @@ function MainTabs() {
                         href={teamsHref}
                         className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
                             isTeams
-                                ? 'text-[#1E4D8C] dark:text-accent-cyan'
+                                ? 'text-primary dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
                         }`}
                     >
                         {t('mainTabs.clubs', { defaultValue: 'Статистика клубов' })}
                         {isTeams && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-accent-cyan rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
                         )}
                     </Link>
                     <Link
                         href={playersHref}
                         className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
                             isPlayers
-                                ? 'text-[#1E4D8C] dark:text-accent-cyan'
+                                ? 'text-primary dark:text-accent-cyan'
                                 : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
                         }`}
                     >
                         {t('mainTabs.players', { defaultValue: 'Статистика игроков' })}
                         {isPlayers && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] dark:bg-accent-cyan rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
                         )}
                     </Link>
                 </div>

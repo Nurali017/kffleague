@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes hero-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.animate-hero-progress {
+  animation: hero-progress linear forwards;
+}
+
+/* League color theming — RGB channels for Tailwind opacity support */
+/* Defaults to Premier League */
+:root {
+  --league-primary: 30 77 140;
+  --league-primary-light: 42 95 163;
+  --league-primary-dark: 22 58 107;
+  --league-accent: 229 183 59;
+  --league-accent-soft: 240 201 93;
+}
+
 @layer base {
   html {
     @apply transition-colors duration-300;
@@ -36,11 +54,11 @@
   }
 
   .news-content h2 {
-    @apply text-xl md:text-2xl font-bold text-[#1E4D8C] dark:text-cyan-400 mt-8 mb-4;
+    @apply text-xl md:text-2xl font-bold text-primary dark:text-cyan-400 mt-8 mb-4;
   }
 
   .news-content h3 {
-    @apply text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-cyan-400 mt-6 mb-3;
+    @apply text-lg md:text-xl font-bold text-primary dark:text-cyan-400 mt-6 mb-3;
   }
 
   .news-content img {
@@ -48,7 +66,7 @@
   }
 
   .news-content a {
-    @apply text-[#1E4D8C] dark:text-cyan-400 underline hover:text-[#E5B73B] dark:hover:text-[#FBBF24] transition-colors;
+    @apply text-primary dark:text-cyan-400 underline hover:text-accent dark:hover:text-accent transition-colors;
   }
 
   .news-content strong,
@@ -74,7 +92,7 @@
   }
 
   .news-content blockquote {
-    @apply border-l-4 border-[#1E4D8C] dark:border-cyan-400 pl-4 my-4 italic text-gray-600 dark:text-slate-400;
+    @apply border-l-4 border-primary dark:border-cyan-400 pl-4 my-4 italic text-gray-600 dark:text-slate-400;
   }
 
   .news-content table {

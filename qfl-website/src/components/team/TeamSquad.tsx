@@ -24,16 +24,13 @@ const POSITION_LABELS: Record<PositionKey, { kz: string; ru: string }> = {
 
 function PlayerCardSkeleton() {
   return (
-    <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-white/10 p-4 sm:p-5 animate-pulse">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-gray-200 dark:bg-white/10 rounded-xl" />
-        <div className="w-16 h-16 bg-gray-200 dark:bg-white/10 rounded-full" />
-        <div className="flex-1 space-y-2">
-          <div className="w-28 h-3 bg-gray-200 dark:bg-white/10 rounded" />
-          <div className="w-40 h-4 bg-gray-200 dark:bg-white/10 rounded" />
-          <div className="w-32 h-3 bg-gray-200 dark:bg-white/10 rounded" />
-        </div>
+    <div className="flex items-center gap-3 px-3 py-3 animate-pulse">
+      <div className="w-11 h-11 bg-gray-200 dark:bg-white/10 rounded-full shrink-0" />
+      <div className="flex-1 space-y-1.5">
+        <div className="w-20 h-2.5 bg-gray-200 dark:bg-white/10 rounded" />
+        <div className="w-32 h-3.5 bg-gray-200 dark:bg-white/10 rounded" />
       </div>
+      <div className="w-6 h-4 bg-gray-200 dark:bg-white/10 rounded" />
     </div>
   );
 }
@@ -46,69 +43,53 @@ function PlayerCard({ player }: PlayerCardProps) {
   const { t } = useTranslation('player');
   const fullName = `${player.first_name} ${player.last_name}`;
   const metaParts = [
-    player.country_code,
     player.nationality,
     player.age ? `${player.age} ${t('years', 'лет')}` : null,
-  ].filter((value, index, self) => {
-    if (!value) return false;
-    return self.indexOf(value) === index;
-  });
-  const meta = metaParts.join(' • ');
+  ].filter(Boolean);
+  const meta = metaParts.join(' · ');
+
+  const initials = `${player.first_name?.[0] || ''}${player.last_name?.[0] || ''}`.toUpperCase();
 
   return (
     <Link
       href={`/player/${player.player_id}`}
-      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0a162a]"
+      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
       aria-label={fullName}
     >
-      <div className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-white/15 bg-gray-50 dark:bg-white/10 p-4 sm:p-5 transition-all duration-300 hover:border-gray-300 dark:hover:border-white/25 hover:-translate-y-0.5 hover:shadow-lg">
-        <div className="flex items-start gap-4">
-          {/* Jersey */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="h-12 w-12 rounded-xl flex items-center justify-center text-lg font-black bg-[#1E4D8C] text-white dark:bg-white dark:text-slate-900">
-              {player.jersey_number ?? '-'}
+      <div className="flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-white/5">
+        {/* Photo */}
+        <div className="relative w-11 h-11 rounded-full overflow-hidden bg-gray-200 dark:bg-white/10 shrink-0">
+          {player.photo_url ? (
+            <Image
+              src={player.photo_url}
+              alt={fullName}
+              fill
+              sizes="44px"
+              className="object-cover object-top"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-400 dark:text-white/40">
+              {initials}
             </div>
-            <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-gray-200 text-slate-600 dark:bg-white/10 dark:text-white/80">
-              {player.position}
-            </span>
-          </div>
-
-          {/* Player Photo */}
-          <div className="relative w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-full overflow-hidden bg-gray-200 dark:bg-white/10 flex-shrink-0 ring-2 ring-gray-300 dark:ring-white/20">
-            {player.photo_url ? (
-              <Image
-                src={player.photo_url}
-                alt={fullName}
-                fill
-                sizes="(max-width: 640px) 64px, 72px"
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-white/40 text-lg font-bold">
-                {player.first_name?.[0] || ''}
-                {player.last_name?.[0] || ''}
-              </div>
-            )}
-          </div>
-
-          {/* Player Info */}
-          <div className="flex-1 min-w-0">
-            <div className="leading-tight">
-              <div className="text-xs sm:text-sm text-slate-500 dark:text-white/60">
-                {player.first_name}
-              </div>
-              <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight truncate group-hover:text-[#1E4D8C] dark:group-hover:text-cyan-300 transition-colors">
-                {player.last_name}
-              </h3>
-            </div>
-
-            {meta && (
-              <div className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-white/60 truncate">
-                {meta}
-              </div>
-            )}
-          </div>
+          )}
         </div>
+
+        {/* Name + meta */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-slate-900 dark:text-white truncate leading-tight group-hover:text-primary dark:group-hover:text-cyan-300 transition-colors">
+            {player.first_name} <span className="font-black">{player.last_name}</span>
+          </p>
+          {meta && (
+            <p className="mt-0.5 text-[11px] text-slate-400 dark:text-white/50 truncate">{meta}</p>
+          )}
+        </div>
+
+        {/* Jersey number */}
+        {player.jersey_number != null && (
+          <span className="text-sm font-bold text-slate-300 dark:text-white/30 shrink-0">
+            {player.jersey_number}
+          </span>
+        )}
       </div>
     </Link>
   );
@@ -119,12 +100,12 @@ export function TeamSquad({ players, loading }: TeamSquadProps) {
   const lang = i18n.language === 'kz' ? 'kz' : 'ru';
 
   // Group players by position
-  const groupedPlayers = useMemo<Record<PositionKey, { players: SquadPlayer[]; avgAge: number | null; countries: number }>>(() => {
-    const groups: Record<PositionKey, { players: SquadPlayer[]; avgAge: number | null; countries: number }> = {
-      GK: { players: [], avgAge: null, countries: 0 },
-      DEF: { players: [], avgAge: null, countries: 0 },
-      MID: { players: [], avgAge: null, countries: 0 },
-      FWD: { players: [], avgAge: null, countries: 0 },
+  const groupedPlayers = useMemo<Record<PositionKey, { players: SquadPlayer[] }>>(() => {
+    const groups: Record<PositionKey, { players: SquadPlayer[] }> = {
+      GK: { players: [] },
+      DEF: { players: [] },
+      MID: { players: [] },
+      FWD: { players: [] },
     };
 
     players.forEach((player) => {
@@ -134,25 +115,8 @@ export function TeamSquad({ players, loading }: TeamSquadProps) {
       }
     });
 
-    // Sort by jersey number within each group and compute stats
     POSITION_ORDER.forEach((pos) => {
-      const group = groups[pos];
-      group.players.sort((a, b) => (a.jersey_number || 99) - (b.jersey_number || 99));
-
-      const ages = group.players
-        .map((player) => player.age)
-        .filter((age): age is number => typeof age === 'number');
-
-      group.avgAge = ages.length
-        ? Math.round((ages.reduce((sum, age) => sum + age, 0) / ages.length) * 10) / 10
-        : null;
-
-      const countries = new Set(
-        group.players
-          .map((player) => player.country_code || player.nationality)
-          .filter((value): value is string => Boolean(value && value.trim()))
-      );
-      group.countries = countries.size;
+      groups[pos].players.sort((a, b) => (a.jersey_number || 99) - (b.jersey_number || 99));
     });
 
     return groups;
@@ -197,39 +161,17 @@ export function TeamSquad({ players, loading }: TeamSquadProps) {
         if (group.players.length === 0) return null;
 
         return (
-          <section
-            key={position}
-            className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-surface p-4 sm:p-6 shadow-lg dark:shadow-[0_20px_40px_rgba(3,10,25,0.5)]"
-          >
+          <section key={position} className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-dark-surface shadow-sm dark:shadow-[0_12px_24px_rgba(3,10,25,0.35)]">
             {/* Position Header */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-1.5 h-6 rounded-full bg-[#1E4D8C] dark:bg-white/70" />
-                <div>
-                  <h2 className="text-base md:text-lg font-black text-slate-900 dark:text-white uppercase">
-                    {POSITION_LABELS[position][lang]}
-                  </h2>
-                  <div className="text-xs text-slate-500 dark:text-white/60">
-                    <span>
-                      {group.players.length} {lang === 'kz' ? 'ойыншы' : 'игроков'}
-                    </span>
-                    {group.avgAge !== null && (
-                      <span className="ml-3">
-                        {lang === 'kz' ? 'орташа жас' : 'ср. возраст'}: {group.avgAge} {lang === 'kz' ? 'жас' : 'лет'}
-                      </span>
-                    )}
-                    {group.countries > 0 && (
-                      <span className="ml-3">
-                        {lang === 'kz' ? 'ел' : 'страны'}: {group.countries}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
+            <div className="flex items-center gap-2.5 px-5 pt-5 pb-2">
+              <h2 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.06em]">
+                {POSITION_LABELS[position][lang]}
+              </h2>
+              <span className="text-xs text-slate-400 dark:text-white/40">{group.players.length}</span>
             </div>
 
             {/* Players Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-2 px-2 pb-3">
               {group.players.map((player) => (
                 <PlayerCard key={player.player_id} player={player} />
               ))}

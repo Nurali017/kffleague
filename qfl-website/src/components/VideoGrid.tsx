@@ -29,11 +29,11 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
+          <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan">
             {title}
           </h2>
           <motion.button
-            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center group"
+            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center group"
           >
             {t('buttons.allVideos')}
             <motion.svg
@@ -83,14 +83,14 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
                 </div>
 
                 {video.category && (
-                  <div className="absolute top-2 left-2 bg-[#E5B73B] text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                  <div className="absolute top-2 left-2 bg-accent text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
                     {video.category}
                   </div>
                 )}
               </div>
 
               <h3
-                className="font-bold text-[#1E4D8C] dark:text-accent-cyan hover:text-[#E5B73B] dark:hover:text-accent leading-snug mb-2 line-clamp-2 transition-colors duration-300"
+                className="font-bold text-primary dark:text-accent-cyan hover:text-accent dark:hover:text-accent leading-snug mb-2 line-clamp-2 transition-colors duration-300"
               >
                 {video.title}
               </h3>

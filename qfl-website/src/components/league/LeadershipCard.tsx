@@ -32,7 +32,7 @@ export function LeadershipCard({ member }: LeadershipCardProps) {
       }}
     >
       {/* Photo Container */}
-      <div className="relative aspect-[4/5] bg-gradient-to-br from-[#1E4D8C] to-[#163a6b] overflow-hidden flex-shrink-0">
+      <div className="relative aspect-[4/5] bg-gradient-to-br from-primary to-primary-dark overflow-hidden flex-shrink-0">
         {member.photo && !imageError ? (
           <>
             <motion.img
@@ -64,7 +64,7 @@ export function LeadershipCard({ member }: LeadershipCardProps) {
 
         {/* Position Badge */}
         <div>
-          <span className="inline-block px-3 py-1 text-xs font-semibold text-[#1E4D8C] dark:text-accent bg-[#E5B73B]/20 dark:bg-[#E5B73B]/15 rounded-full">
+          <span className="inline-block px-3 py-1 text-xs font-semibold text-primary dark:text-accent bg-accent/20 dark:bg-accent/15 rounded-full">
             {member.position}
           </span>
         </div>

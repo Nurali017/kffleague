@@ -217,6 +217,8 @@ export interface TeamStats {
   penalty_ratio?: number;
   // Other
   clean_sheets?: number;
+  save_shot?: number;
+  distance_covered?: number;
   extra_stats?: Record<string, any>;
 }
 

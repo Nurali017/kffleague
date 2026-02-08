@@ -116,7 +116,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                         col.sortable
                                             ? 'text-gray-500 dark:text-slate-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-surface-soft'
                                             : 'text-gray-500 dark:text-slate-400'
-                                    } ${sortBy === col.key ? 'text-[#1E4D8C] dark:text-accent-cyan bg-blue-50/50 dark:bg-cyan-500/10' : ''}`}
+                                    } ${sortBy === col.key ? 'text-primary dark:text-accent-cyan bg-blue-50/50 dark:bg-cyan-500/10' : ''}`}
                                     aria-sort={
                                         col.sortable
                                             ? sortBy === col.key

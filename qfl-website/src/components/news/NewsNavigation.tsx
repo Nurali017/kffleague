@@ -26,16 +26,16 @@ export function NewsNavigation({ navigation, className = '' }: NewsNavigationPro
         {previous ? (
           <Link
             href={`/news/${previous.id}`}
-            className="group flex items-start gap-3 p-4 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl hover:border-[#1E4D8C] dark:hover:border-blue-500 hover:shadow-md transition-all duration-200"
+            className="group flex items-start gap-3 p-4 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl hover:border-primary dark:hover:border-blue-500 hover:shadow-md transition-all duration-200"
           >
-            <div className="flex-shrink-0 p-2 bg-surface-soft dark:bg-dark-surface-soft rounded-lg group-hover:bg-[#1E4D8C] dark:group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <div className="flex-shrink-0 p-2 bg-surface-soft dark:bg-dark-surface-soft rounded-lg group-hover:bg-primary dark:group-hover:bg-blue-600 group-hover:text-white transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1">
                 {t('previousArticle')}
               </p>
-              <h4 className="text-sm font-semibold text-[#1E4D8C] dark:text-accent-cyan group-hover:text-[#E5B73B] dark:group-hover:text-[#FBBF24] transition-colors line-clamp-2">
+              <h4 className="text-sm font-semibold text-primary dark:text-accent-cyan group-hover:text-accent dark:group-hover:text-accent transition-colors line-clamp-2">
                 {previous.title}
               </h4>
             </div>
@@ -54,17 +54,17 @@ export function NewsNavigation({ navigation, className = '' }: NewsNavigationPro
         {next ? (
           <Link
             href={`/news/${next.id}`}
-            className="group flex items-start gap-3 p-4 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl hover:border-[#1E4D8C] dark:hover:border-blue-500 hover:shadow-md transition-all duration-200"
+            className="group flex items-start gap-3 p-4 bg-white dark:bg-dark-surface border border-gray-200 dark:border-dark-border rounded-xl hover:border-primary dark:hover:border-blue-500 hover:shadow-md transition-all duration-200"
           >
             <div className="flex-1 min-w-0 text-right">
               <p className="text-xs text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-1">
                 {t('nextArticle')}
               </p>
-              <h4 className="text-sm font-semibold text-[#1E4D8C] dark:text-accent-cyan group-hover:text-[#E5B73B] dark:group-hover:text-[#FBBF24] transition-colors line-clamp-2">
+              <h4 className="text-sm font-semibold text-primary dark:text-accent-cyan group-hover:text-accent dark:group-hover:text-accent transition-colors line-clamp-2">
                 {next.title}
               </h4>
             </div>
-            <div className="flex-shrink-0 p-2 bg-surface-soft dark:bg-dark-surface-soft rounded-lg group-hover:bg-[#1E4D8C] dark:group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <div className="flex-shrink-0 p-2 bg-surface-soft dark:bg-dark-surface-soft rounded-lg group-hover:bg-primary dark:group-hover:bg-blue-600 group-hover:text-white transition-colors">
               <ChevronRight className="w-5 h-5" />
             </div>
           </Link>

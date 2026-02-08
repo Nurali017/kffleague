@@ -41,7 +41,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`bg-[#1E4D8C] text-white w-full relative transition-all duration-300 ${isScrolled ? 'shadow-lg shadow-black/20' : ''
+      className={`bg-primary text-white w-full relative transition-all duration-300 ${isScrolled ? 'shadow-lg shadow-black/20' : ''
         }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 h-16 flex items-center justify-between">
@@ -63,7 +63,7 @@ export function Navigation() {
               <Link
                 key={item.key}
                 href={item.to}
-                className={`text-sm font-bold uppercase tracking-wide transition-colors duration-200 ${pathname === item.to ? 'text-[#E5B73B]' : 'hover:text-[#E5B73B]'
+                className={`text-sm font-bold uppercase tracking-wide transition-colors duration-200 ${pathname === item.to ? 'text-accent' : 'hover:text-accent'
                   }`}
               >
                 {item.label}
@@ -109,7 +109,7 @@ export function Navigation() {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden absolute top-16 left-0 right-0 bg-[#1E4D8C] border-t border-white/10 shadow-lg z-50 transition-all duration-300 ease-in-out ${isMenuOpen
+        className={`lg:hidden absolute top-16 left-0 right-0 bg-primary border-t border-white/10 shadow-lg z-50 transition-all duration-300 ease-in-out ${isMenuOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
@@ -123,8 +123,8 @@ export function Navigation() {
                   href={item.to}
                   onClick={closeMenu}
                   className={`px-4 py-3 text-sm font-bold uppercase tracking-wide rounded-lg transition-colors duration-200 ${pathname === item.to
-                      ? 'text-[#E5B73B] bg-white/10'
-                      : 'hover:text-[#E5B73B] hover:bg-white/5'
+                      ? 'text-accent bg-white/10'
+                      : 'hover:text-accent hover:bg-white/5'
                     }`}
                 >
                   {item.label}

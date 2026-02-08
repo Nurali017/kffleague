@@ -67,7 +67,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
 
           {/* Menu panel */}
           <motion.div
-            className="fixed inset-y-0 right-0 w-full max-w-sm bg-[#1E4D8C] z-50 lg:hidden"
+            className="fixed inset-y-0 right-0 w-full max-w-sm bg-primary z-50 lg:hidden"
             variants={mobileMenuSlide}
             initial="hidden"
             animate="visible"
@@ -114,7 +114,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                           onClick={handleLinkClick}
                           className={`flex-1 px-4 py-3 text-sm font-bold uppercase tracking-wide rounded-l-lg transition-colors ${
                             hasActiveChild
-                              ? 'text-[#E5B73B] bg-white/10'
+                              ? 'text-accent bg-white/10'
                               : 'text-white hover:bg-white/5'
                           }`}
                         >
@@ -126,7 +126,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                           onClick={() => toggleExpanded(item.key)}
                           className={`px-4 py-3 rounded-r-lg transition-colors ${
                             hasActiveChild
-                              ? 'text-[#E5B73B] bg-white/10'
+                              ? 'text-accent bg-white/10'
                               : 'text-white hover:bg-white/5'
                           }`}
                           aria-expanded={isExpanded}
@@ -158,7 +158,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                                 onClick={handleLinkClick}
                                 className={`block px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                                   pathname === child.href
-                                    ? 'text-[#E5B73B] bg-white/10'
+                                    ? 'text-accent bg-white/10'
                                     : 'text-white/80 hover:text-white hover:bg-white/5'
                                 }`}
                               >
@@ -176,7 +176,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                       onClick={handleLinkClick}
                       className={`flex items-center justify-between px-4 py-3 text-sm font-bold uppercase tracking-wide rounded-lg transition-colors ${
                         isActive
-                          ? 'text-[#E5B73B] bg-white/10'
+                          ? 'text-accent bg-white/10'
                           : 'text-white hover:bg-white/5'
                       }`}
                     >

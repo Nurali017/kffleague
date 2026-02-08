@@ -74,7 +74,7 @@ export function NewsFilters({
           <SlidersHorizontal className="w-4 h-4" />
           {t('filter', 'Фильтр')}
           {hasActiveFilters && (
-            <span className="ml-1 px-2 py-0.5 bg-[#E5B73B] text-white text-xs rounded-full">
+            <span className="ml-1 px-2 py-0.5 bg-accent text-white text-xs rounded-full">
               {[filters.search, filters.sort].filter(Boolean).length}
             </span>
           )}
@@ -105,7 +105,7 @@ export function NewsFilters({
                 value={searchInput}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder={t('search', 'Поиск новостей...')}
-                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 ${
+                className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 ${
                   isHero
                     ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50'
                     : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500'
@@ -132,7 +132,7 @@ export function NewsFilters({
               <select
                 value={filters.sort || 'date_desc'}
                 onChange={(e) => handleSortChange(e.target.value as NewsFiltersType['sort'])}
-                className={`w-full appearance-none px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 cursor-pointer ${
+                className={`w-full appearance-none px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 cursor-pointer ${
                   isHero
                     ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
                     : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
@@ -166,8 +166,8 @@ export function NewsFilters({
                 onClick={handleClearFilters}
                 className={`w-full h-full min-h-[40px] flex items-center justify-center px-4 py-2 transition-colors ${
                   isHero
-                    ? 'text-gray-600 dark:text-white/70 hover:text-[#E5B73B] dark:hover:text-white'
-                    : 'text-gray-600 dark:text-slate-400 hover:text-[#E5B73B] dark:hover:text-[#FBBF24]'
+                    ? 'text-gray-600 dark:text-white/70 hover:text-accent dark:hover:text-white'
+                    : 'text-gray-600 dark:text-slate-400 hover:text-accent dark:hover:text-accent'
                 }`}
                 title={t('clearFilters', 'Сбросить фильтры')}
               >
@@ -184,7 +184,7 @@ export function NewsFilters({
           }`}>
             {filters.search && (
               <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
-                isHero ? 'bg-white/20' : 'bg-[#1E4D8C] dark:bg-cyan-700'
+                isHero ? 'bg-white/20' : 'bg-primary dark:bg-cyan-700'
               }`}>
                 {t('search', 'Поиск')}: {filters.search}
                 <button

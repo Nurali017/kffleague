@@ -166,6 +166,17 @@ export function TournamentProvider({
     }
   }, []);
 
+  // Apply league color theme via CSS custom properties
+  useEffect(() => {
+    const root = document.documentElement;
+    const colors = currentTournament.colors;
+    root.style.setProperty('--league-primary', colors.primary);
+    root.style.setProperty('--league-primary-light', colors.primaryLight);
+    root.style.setProperty('--league-primary-dark', colors.primaryDark);
+    root.style.setProperty('--league-accent', colors.accent);
+    root.style.setProperty('--league-accent-soft', colors.accentSoft);
+  }, [currentTournament]);
+
   // effectiveSeasonId always matches the currently selected tournament
   const effectiveSeasonId = currentTournament.seasonId;
 

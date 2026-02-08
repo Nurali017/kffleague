@@ -68,7 +68,7 @@ export function SocialLinks({ social }: SocialLinksProps) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-      <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan mb-6">
+      <h2 className="text-xl font-bold text-primary dark:text-accent-cyan mb-6">
         {t('contacts.socialMedia')}
       </h2>
 

@@ -1,6 +1,14 @@
 export type TournamentType = 'league' | 'cup' | 'supercup';
 export type TournamentFormat = 'round_robin' | 'knockout' | 'group_knockout';
 
+export interface TournamentColors {
+  primary: string;
+  primaryLight: string;
+  primaryDark: string;
+  accent: string;
+  accentSoft: string;
+}
+
 export interface Tournament {
   id: string;  // Used for news filtering: pl, 1l, cup, 2l, el
   seasonId: number;
@@ -13,6 +21,7 @@ export interface Tournament {
   };
   sponsorName?: string;
   logo: string;
+  colors: TournamentColors;
   order: number;
   hasTable: boolean;
   hasBracket: boolean;

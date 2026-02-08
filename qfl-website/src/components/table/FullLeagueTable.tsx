@@ -16,8 +16,8 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
 
   // Get position indicator color
   const getPositionStyle = (position: number) => {
-    if (position === 1) return { dot: 'bg-[#E5B73B]', border: 'border-l-[#E5B73B]' };
-    if (position <= 4) return { dot: 'bg-[#1E4D8C]', border: 'border-l-[#1E4D8C]' };
+    if (position === 1) return { dot: 'bg-accent', border: 'border-l-accent' };
+    if (position <= 4) return { dot: 'bg-primary', border: 'border-l-primary' };
     if (position >= 13) return { dot: 'bg-red-500', border: 'border-l-red-500' };
     return { dot: null, border: 'border-l-transparent' };
   };
@@ -28,7 +28,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
       <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-[#1E4D8C] text-white text-xs font-medium">
+            <tr className="bg-primary text-white text-xs font-medium">
               <th className="py-3 px-4 text-center w-12">#</th>
               <th className="py-3 px-4 text-left">{t('columns.team')}</th>
               <th className="py-3 px-2 text-center w-10">{t('columns.played')}</th>
@@ -38,7 +38,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
               <th className="py-3 px-2 text-center w-10">{t('columns.goalsFor')}</th>
               <th className="py-3 px-2 text-center w-10">{t('columns.goalsAgainst')}</th>
               <th className="py-3 px-2 text-center w-12">{t('columns.goalDiff')}</th>
-              <th className="py-3 px-2 text-center w-12 bg-[#163A6B]">{t('columns.points')}</th>
+              <th className="py-3 px-2 text-center w-12 bg-primary-dark">{t('columns.points')}</th>
               <th className="py-3 px-2 text-center w-28">{t('columns.form')}</th>
               <th className="py-3 px-2 text-center w-16">{t('columns.nextMatch')}</th>
             </tr>
@@ -52,7 +52,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
               return (
                 <tr
                   key={team.team_id}
-                  className={`hover:bg-[#1E4D8C]/5 dark:hover:bg-blue-500/10 transition-colors border-l-4 ${positionStyle.border}`}
+                  className={`hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors border-l-4 ${positionStyle.border}`}
                 >
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-center gap-1.5">
@@ -84,7 +84,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
                       >
                         {team.team_name[0]}
                       </div>
-                      <span className="font-semibold text-gray-900 dark:text-slate-100 group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
+                      <span className="font-semibold text-gray-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">
                         {team.team_name}
                       </span>
                     </Link>
@@ -101,7 +101,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
                     </span>
                   </td>
                   <td className="py-3 px-2 text-center bg-gray-50 dark:bg-dark-surface-soft">
-                    <span className="text-lg font-bold text-[#1E4D8C] dark:text-accent-cyan">{team.points}</span>
+                    <span className="text-lg font-bold text-primary dark:text-accent-cyan">{team.points}</span>
                   </td>
                   <td className="py-3 px-2">
                     <div className="flex justify-center">
@@ -122,7 +122,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
 
       {/* Mobile Table */}
       <div className="lg:hidden">
-        <div className="bg-[#1E4D8C] text-white text-[10px] font-medium grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2">
+        <div className="bg-primary text-white text-[10px] font-medium grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2">
           <div className="text-center">#</div>
           <div>{t('columns.team')}</div>
           <div className="text-center">{t('columns.playedShort')}</div>
@@ -140,7 +140,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
               <Link
                 key={team.team_id}
                 href={`/team/${team.team_id}`}
-                className={`grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2.5 items-center hover:bg-[#1E4D8C]/5 dark:hover:bg-blue-500/10 border-l-4 ${positionStyle.border}`}
+                className={`grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2.5 items-center hover:bg-primary/5 dark:hover:bg-blue-500/10 border-l-4 ${positionStyle.border}`}
               >
                 <div className="flex items-center justify-center gap-1">
                   {positionStyle.dot && (
@@ -173,7 +173,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
                     {team.goal_difference > 0 ? `+${team.goal_difference}` : team.goal_difference}
                   </span>
                 </div>
-                <div className="text-center text-sm font-bold text-[#1E4D8C] dark:text-accent-cyan">{team.points}</div>
+                <div className="text-center text-sm font-bold text-primary dark:text-accent-cyan">{team.points}</div>
                 <div className="flex justify-center">
                   <FormIndicator form={team.form} />
                 </div>
@@ -186,11 +186,11 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
       {/* Legend */}
       <div className="px-4 py-3 border-t border-gray-100 dark:border-dark-border bg-gray-50 dark:bg-dark-surface flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#E5B73B]" />
+          <span className="w-2 h-2 rounded-full bg-accent" />
           <span>{t('legend.champion')}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#1E4D8C]" />
+          <span className="w-2 h-2 rounded-full bg-primary" />
           <span>{t('legend.euroCups')}</span>
         </div>
         <div className="flex items-center gap-1.5">

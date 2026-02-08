@@ -39,8 +39,8 @@ export default function ContactsPage() {
       {/* Header */}
       <div className="mb-8 md:mb-12">
         <div className="flex items-center gap-3">
-          <div className="w-1 h-8 bg-[#E5B73B] rounded-full" />
-          <h1 className="text-2xl md:text-4xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
+          <div className="w-1 h-8 bg-accent rounded-full" />
+          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-accent-cyan">
             {page?.title || t('contacts.title')}
           </h1>
         </div>

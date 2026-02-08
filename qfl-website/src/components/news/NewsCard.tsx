@@ -114,7 +114,7 @@ export function NewsCard({
               </div>
             )}
             <motion.h3
-              className="font-semibold text-[#1E4D8C] dark:text-accent-cyan leading-snug line-clamp-2 mb-2"
+              className="font-semibold text-primary dark:text-accent-cyan leading-snug line-clamp-2 mb-2"
               whileHover={{ color: '#E5B73B' }}
               transition={{ duration: 0.3 }}
             >
@@ -198,7 +198,7 @@ export function NewsCard({
         </div>
         <div className="p-4 flex-1 flex flex-col">
           <motion.h3
-            className="text-lg font-bold text-[#1E4D8C] dark:text-accent-cyan leading-tight mb-2 line-clamp-2"
+            className="text-lg font-bold text-primary dark:text-accent-cyan leading-tight mb-2 line-clamp-2"
             whileHover={{ color: '#E5B73B' }}
             transition={{ duration: 0.3 }}
           >

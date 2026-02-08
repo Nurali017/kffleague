@@ -20,7 +20,7 @@ export function DocumentCard({ document }: DocumentCardProps) {
       <motion.div
         initial="rest"
         whileHover="hover"
-        className="group bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-5 flex items-center gap-5 hover:border-[#1E4D8C]/20 dark:hover:border-accent-cyan/30 transition-colors"
+        className="group bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-5 flex items-center gap-5 hover:border-primary/20 dark:hover:border-accent-cyan/30 transition-colors"
         variants={{
           rest: {
             boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -35,7 +35,7 @@ export function DocumentCard({ document }: DocumentCardProps) {
         {/* File Type Icon */}
         <motion.div
           className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
-            isPdf ? 'bg-red-500/10' : 'bg-[#1E4D8C]/10'
+            isPdf ? 'bg-red-500/10' : 'bg-primary/10'
           }`}
           variants={{
             rest: { backgroundColor: isPdf ? 'rgba(239, 68, 68, 0.1)' : 'rgba(30, 77, 140, 0.1)' },
@@ -48,14 +48,14 @@ export function DocumentCard({ document }: DocumentCardProps) {
               <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-red-500">PDF</span>
             </div>
           ) : (
-            <FileText className="w-7 h-7 text-[#1E4D8C] dark:text-accent-cyan" />
+            <FileText className="w-7 h-7 text-primary dark:text-accent-cyan" />
           )}
         </motion.div>
 
         {/* Document Info */}
         <div className="flex-1 min-w-0">
           <h3
-            className="font-semibold text-gray-900 dark:text-white group-hover:text-[#1E4D8C] dark:group-hover:text-accent-cyan line-clamp-2 leading-snug transition-colors"
+            className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-accent-cyan line-clamp-2 leading-snug transition-colors"
           >
             {document.title}
           </h3>
@@ -68,7 +68,7 @@ export function DocumentCard({ document }: DocumentCardProps) {
           rel="noopener noreferrer"
           whileHover={{ backgroundColor: '#E5B73B', color: '#1E4D8C' }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#1E4D8C] text-white rounded-xl font-medium flex-shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl font-medium flex-shrink-0"
           transition={{ duration: 0.3 }}
         >
           <Download className="w-4 h-4" />

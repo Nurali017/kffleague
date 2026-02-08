@@ -39,7 +39,7 @@ export function ErrorMessage({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="flex items-center gap-2 px-4 py-2 bg-[#1E4D8C] text-white rounded-lg hover:bg-[#163a6b] transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           {tCommon('buttons.retry')}

@@ -31,7 +31,7 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
   return (
     <Link
       href={`/team/${id}`}
-      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4 md:p-6 hover:shadow-lg hover:border-[#1E4D8C] dark:hover:border-accent-cyan transition-all duration-300"
+      className="group bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-4 md:p-6 hover:shadow-lg hover:border-primary dark:hover:border-accent-cyan transition-all duration-300"
     >
       <div className="flex flex-col items-center">
         {/* Team Logo */}
@@ -55,7 +55,7 @@ function TeamCard({ id, name, logo_url, city, colors }: TeamCardProps) {
         </div>
 
         {/* Team Name */}
-        <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white text-center group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors">
+        <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white text-center group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">
           {name}
         </h3>
 

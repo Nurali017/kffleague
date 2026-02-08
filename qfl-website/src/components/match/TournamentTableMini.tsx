@@ -76,7 +76,7 @@ export function TournamentTableMini({ seasonId, homeTeamId, awayTeamId }: Tourna
         <h3 className="text-sm font-bold text-gray-900">Турнирная таблица</h3>
         <Link
           href="/table"
-          className="text-xs font-semibold text-[#1E4D8C] hover:text-[#163A6B] flex items-center gap-1 group"
+          className="text-xs font-semibold text-primary hover:text-primary-dark flex items-center gap-1 group"
         >
           Все
           <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
@@ -125,7 +125,7 @@ export function TournamentTableMini({ seasonId, homeTeamId, awayTeamId }: Tourna
                 {/* Team Color Dot for highlighted teams */}
                 {isHighlighted && !row.team_logo && (
                   <div
-                    className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isHome ? 'bg-[#1E4D8C]' : 'bg-[#E5B73B]'}`}
+                    className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isHome ? 'bg-primary' : 'bg-accent'}`}
                   />
                 )}
                 <span

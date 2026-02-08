@@ -41,7 +41,7 @@ export function StatisticsFilters({
                             <select
                                 value={selectedClub}
                                 onChange={(e) => onClubChange(e.target.value)}
-                                className="min-w-0 w-full md:w-auto px-3 py-2 border border-gray-300 dark:border-dark-border-soft rounded-lg text-sm bg-white dark:bg-dark-surface text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 focus:border-transparent"
+                                className="min-w-0 w-full md:w-auto px-3 py-2 border border-gray-300 dark:border-dark-border-soft rounded-lg text-sm bg-white dark:bg-dark-surface text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="all">{t('filters.allClubs')}</option>
                                 {teams.map(team => (
@@ -65,7 +65,7 @@ export function StatisticsFilters({
                                         key={pos}
                                         onClick={() => onPositionChange(pos)}
                                         className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded transition-colors uppercase ${selectedPosition === pos
-                                                ? 'bg-[#1E4D8C] dark:bg-cyan-600 text-white shadow-sm'
+                                                ? 'bg-primary dark:bg-cyan-600 text-white shadow-sm'
                                                 : 'text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-surface-soft'
                                             }`}
                                     >

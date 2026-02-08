@@ -65,7 +65,7 @@ function StatItem({ label, value, icon, isFirst, isLast }: StatItemProps) {
         {label}
       </div>
       <div className="flex items-center space-x-2">
-        <span className="text-2xl md:text-3xl font-black text-[#1E4D8C] dark:text-accent-cyan transition-transform duration-300 group-hover:scale-105">
+        <span className="text-2xl md:text-3xl font-black text-primary dark:text-accent-cyan transition-transform duration-300 group-hover:scale-105">
           {value}
         </span>
         {icon && <span className="ml-2 transition-transform duration-300 group-hover:scale-110">{icon}</span>}
@@ -154,12 +154,12 @@ export function SeasonStats() {
     <section className="py-4 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan">
+          <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan">
             {seasonTitle}
           </h2>
           <Link
             href="/stats"
-            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
+            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
           >
             {t('seasonStats.moreData')}
             <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

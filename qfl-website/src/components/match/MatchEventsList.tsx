@@ -121,7 +121,7 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
               <div className="flex-1 min-w-0">
                 <Link
                   href={`/player/${event.player_id}`}
-                  className="block hover:text-[#1E4D8C] transition-colors"
+                  className="block hover:text-primary transition-colors"
                 >
                   <div className="text-[13px] font-semibold text-gray-800">
                     {event.player_name}

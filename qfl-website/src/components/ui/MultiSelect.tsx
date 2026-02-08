@@ -62,7 +62,7 @@ export function MultiSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full px-3 py-2 pr-10 text-sm border rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 transition-colors ${
+        className={`w-full px-3 py-2 pr-10 text-sm border rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 transition-colors ${
           isHero
             ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15'
             : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border'
@@ -107,7 +107,7 @@ export function MultiSelect({
                 type="checkbox"
                 checked={selected.includes(option.id)}
                 onChange={() => toggleOption(option.id)}
-                className={`w-4 h-4 text-[#1E4D8C] rounded focus:ring-[#1E4D8C] dark:focus:ring-blue-500 ${
+                className={`w-4 h-4 text-primary rounded focus:ring-primary dark:focus:ring-blue-500 ${
                   isHero ? 'border-gray-300 dark:border-white/30' : 'border-gray-300 dark:border-dark-border-soft'
                 }`}
               />

@@ -32,7 +32,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-[#1E4D8C] text-white relative overflow-hidden">
+    <footer className="bg-primary text-white relative overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
         style={{ backgroundImage: 'url(/footer-bg.webp)' }}
@@ -51,7 +51,7 @@ export function Footer() {
             <div className="text-white font-bold text-sm leading-tight">
               <p>{tCommon('league.country', 'ҚАЗАҚСТАН')}</p>
               <p>{tCommon('league.premierLeague', 'ПРЕМЬЕР-ЛИГАСЫ')}</p>
-              <p className="text-[#E5B73B]">{tCommon('league.sponsor', 'ALATAU CITY BANK')}</p>
+              <p className="text-accent">{tCommon('league.sponsor', 'ALATAU CITY BANK')}</p>
             </div>
             <a
               href="https://t.me/kffleague"
@@ -65,7 +65,7 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-3">
-            <h3 className="font-bold text-lg mb-4 text-[#E5B73B]">
+            <h3 className="font-bold text-lg mb-4 text-accent">
               {t('tournaments.title', 'ТУРНИРЛЕР')}
             </h3>
             <ul className="space-y-2">
@@ -83,7 +83,7 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h3 className="font-bold text-lg mb-4 text-[#E5B73B]">
+            <h3 className="font-bold text-lg mb-4 text-accent">
               {t('info.title', 'АҚПАРАТ')}
             </h3>
             <ul className="space-y-2">

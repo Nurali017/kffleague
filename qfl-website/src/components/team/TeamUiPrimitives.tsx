@@ -49,7 +49,7 @@ type StatTone = 'neutral' | 'primary' | 'positive' | 'warning' | 'danger';
 
 const valueColor: Record<StatTone, string> = {
   neutral: 'text-slate-900 dark:text-white',
-  primary: 'text-[#1E4D8C] dark:text-cyan-300',
+  primary: 'text-primary dark:text-cyan-300',
   positive: 'text-emerald-600 dark:text-emerald-300',
   warning: 'text-amber-600 dark:text-amber-300',
   danger: 'text-rose-600 dark:text-rose-300',

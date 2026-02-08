@@ -50,13 +50,13 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b border-gray-100">
-        <h3 className="text-lg font-bold text-[#1E4D8C]">{title}</h3>
+        <h3 className="text-lg font-bold text-primary">{title}</h3>
       </div>
 
       {/* Table */}
       <table className="w-full">
         <thead>
-          <tr className="bg-[#1E4D8C] text-white text-xs">
+          <tr className="bg-primary text-white text-xs">
             <th className="py-2 px-3 text-left w-8">#</th>
             <th className="py-2 px-3 text-left">ИГРОК</th>
             <th className="py-2 px-3 text-right">{statLabel}</th>
@@ -82,7 +82,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
                 <td className="py-3 px-3">
                   <Link
                     href={`/player/${player.player_id}`}
-                    className="flex items-center space-x-3 hover:text-[#E5B73B] transition-colors"
+                    className="flex items-center space-x-3 hover:text-accent transition-colors"
                   >
                     <img
                       src={
@@ -98,12 +98,12 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
                         img.src = AVATAR_PLACEHOLDER_SRC;
                       }}
                     />
-                    <span className="font-medium text-[#1E4D8C]">
+                    <span className="font-medium text-primary">
                       {player.last_name}
                     </span>
                   </Link>
                 </td>
-                <td className="py-3 px-3 text-right font-bold text-[#1E4D8C]">
+                <td className="py-3 px-3 text-right font-bold text-primary">
                   {statKey === 'goals' ? player.goals : player.assists}
                 </td>
               </tr>
@@ -114,7 +114,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
 
       {/* Footer */}
       <div className="p-3 border-t border-gray-100">
-        <button className="text-[#1E4D8C] font-bold text-sm hover:text-[#E5B73B] flex items-center transition-colors">
+        <button className="text-primary font-bold text-sm hover:text-accent flex items-center transition-colors">
           Полный список
           <ChevronRight className="w-4 h-4 ml-1" />
         </button>

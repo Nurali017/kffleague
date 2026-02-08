@@ -102,7 +102,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('table.searchClub', { defaultValue: 'Поиск клуба…' })}
-            className="w-full pl-10 pr-9 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4D8C] dark:focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-9 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border-soft rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 focus:border-transparent"
           />
           {query.trim().length > 0 && (
             <button
@@ -138,7 +138,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                       : 'text-gray-500 dark:text-slate-400'
                   } ${
                     sortBy === col.key
-                      ? 'text-[#1E4D8C] dark:text-accent-cyan bg-blue-50/50 dark:bg-cyan-500/10'
+                      ? 'text-primary dark:text-accent-cyan bg-blue-50/50 dark:bg-cyan-500/10'
                       : ''
                   }`}
                   aria-sort={

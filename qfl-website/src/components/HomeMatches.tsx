@@ -20,7 +20,7 @@ export function HomeMatches() {
     return (
       <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-primary dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -40,7 +40,7 @@ export function HomeMatches() {
     return (
       <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-bold text-primary dark:text-accent-cyan flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             {t('title')}
           </h2>
@@ -63,13 +63,13 @@ export function HomeMatches() {
   return (
     <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-2 gap-2">
-        <h2 className="text-lg md:text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan flex items-center gap-2">
+        <h2 className="text-lg md:text-xl font-bold text-primary dark:text-accent-cyan flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           {t('title')}
         </h2>
         <Link
           href="/matches"
-          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
           Барлығы
           <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />

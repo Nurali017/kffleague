@@ -8,13 +8,13 @@ export default function NotFound() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-16 text-center">
-      <h1 className="text-6xl font-bold text-[#1E4D8C] mb-4">404</h1>
+      <h1 className="text-6xl font-bold text-primary mb-4">404</h1>
       <p className="text-xl text-gray-600 mb-8">
         {t('errors.pageNotFound', 'Страница не найдена')}
       </p>
       <Link
         href="/"
-        className="inline-block bg-[#1E4D8C] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#163a6b] transition-colors"
+        className="inline-block bg-primary text-white px-6 py-3 rounded-lg font-bold hover:bg-primary-dark transition-colors"
       >
         {t('buttons.backToHome', 'На главную')}
       </Link>

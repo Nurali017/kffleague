@@ -59,7 +59,7 @@ export function TeamPageTabs({ activeTab, onChange }: TeamPageTabsProps) {
                   className={cn(
                     'rounded-full px-3.5 md:px-4 py-2 text-xs md:text-sm font-bold whitespace-nowrap transition-colors',
                     isActive
-                      ? 'bg-[#1E4D8C]/10 text-[#1E4D8C] border border-[#1E4D8C]/20 dark:bg-white/15 dark:text-white dark:border-white/20 shadow-sm'
+                      ? 'bg-primary/10 text-primary border border-primary/20 dark:bg-white/15 dark:text-white dark:border-white/20 shadow-sm'
                       : 'text-slate-600 hover:bg-gray-100 hover:text-slate-900 dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white'
                   )}
                 >

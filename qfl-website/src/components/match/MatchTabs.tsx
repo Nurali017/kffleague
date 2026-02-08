@@ -38,7 +38,7 @@ export function MatchTabs({ activeTab, onTabChange }: MatchTabsProps) {
                 className={`
                   py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm font-bold transition-all duration-200 whitespace-nowrap border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-t-lg
                   ${isActive
-                    ? 'text-[#1E4D8C] dark:text-accent-cyan border-[#1E4D8C] dark:border-accent-cyan'
+                    ? 'text-primary dark:text-accent-cyan border-primary dark:border-accent-cyan'
                     : 'text-gray-500 dark:text-slate-400 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-500'
                   }
                 `}

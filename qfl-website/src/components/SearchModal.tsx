@@ -117,7 +117,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         />
                       )}
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#1E4D8C] line-clamp-2 mb-1">
+                        <h4 className="font-semibold text-primary line-clamp-2 mb-1">
                           {news.title}
                         </h4>
                         {news.excerpt && (
@@ -148,21 +148,21 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <Link
                 href="/news"
                 onClick={handleClose}
-                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-[#1E4D8C] hover:text-[#1E4D8C] transition-colors"
+                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-primary hover:text-primary transition-colors"
               >
                 Все новости
               </Link>
               <Link
                 href="/table"
                 onClick={handleClose}
-                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-[#1E4D8C] hover:text-[#1E4D8C] transition-colors"
+                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-primary hover:text-primary transition-colors"
               >
                 Таблица
               </Link>
               <Link
                 href="/matches"
                 onClick={handleClose}
-                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-[#1E4D8C] hover:text-[#1E4D8C] transition-colors"
+                className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-primary hover:text-primary transition-colors"
               >
                 Матчи
               </Link>

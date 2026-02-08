@@ -53,7 +53,7 @@ export function NavDropdown({ item, isActive }: NavDropdownProps) {
       <Link
         href={item.href || '#'}
         className={`flex items-center gap-1 text-base font-bold ${
-          isActive || hasActiveChild ? 'text-[#E5B73B]' : 'hover:text-[#E5B73B]'
+          isActive || hasActiveChild ? 'text-accent' : 'hover:text-accent'
         }`}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -90,8 +90,8 @@ export function NavDropdown({ item, isActive }: NavDropdownProps) {
                 href={child.href || '#'}
                 className={`block px-4 py-3 text-sm font-medium ${
                   pathname === child.href
-                    ? 'bg-[#1E4D8C] text-white'
-                    : 'text-gray-700 hover:bg-gray-50 hover:text-[#1E4D8C]'
+                    ? 'bg-primary text-white'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
                 }`}
                 onClick={() => setIsOpen(false)}
                 suppressHydrationWarning

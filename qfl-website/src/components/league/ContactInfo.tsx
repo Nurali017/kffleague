@@ -19,7 +19,7 @@ export function ContactInfo({ emails, phones, address, contentText, contactPerso
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
-      <h2 className="text-xl font-bold text-[#1E4D8C] dark:text-accent-cyan mb-6">
+      <h2 className="text-xl font-bold text-primary dark:text-accent-cyan mb-6">
         {t('contacts.contactUs')}
       </h2>
 
@@ -33,10 +33,10 @@ export function ContactInfo({ emails, phones, address, contentText, contactPerso
           <a
             key={email}
             href={`mailto:${email}`}
-            className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan transition-colors group"
+            className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent-cyan transition-colors group"
           >
-            <div className="w-10 h-10 rounded-full bg-[#1E4D8C]/10 dark:bg-accent-cyan/10 flex items-center justify-center group-hover:bg-[#1E4D8C]/20 transition-colors">
-              <Mail className="w-5 h-5 text-[#1E4D8C] dark:text-accent-cyan" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-accent-cyan/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <Mail className="w-5 h-5 text-primary dark:text-accent-cyan" />
             </div>
             <span>{email}</span>
           </a>
@@ -47,10 +47,10 @@ export function ContactInfo({ emails, phones, address, contentText, contactPerso
           <a
             key={phone}
             href={`tel:${phone.replace(/\s/g, '')}`}
-            className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan transition-colors group"
+            className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent-cyan transition-colors group"
           >
-            <div className="w-10 h-10 rounded-full bg-[#1E4D8C]/10 dark:bg-accent-cyan/10 flex items-center justify-center group-hover:bg-[#1E4D8C]/20 transition-colors">
-              <Phone className="w-5 h-5 text-[#1E4D8C] dark:text-accent-cyan" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-accent-cyan/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <Phone className="w-5 h-5 text-primary dark:text-accent-cyan" />
             </div>
             <span>{phone}</span>
           </a>
@@ -59,8 +59,8 @@ export function ContactInfo({ emails, phones, address, contentText, contactPerso
         {/* Address */}
         {address && (
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-            <div className="w-10 h-10 rounded-full bg-[#1E4D8C]/10 dark:bg-accent-cyan/10 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-[#1E4D8C] dark:text-accent-cyan" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-accent-cyan/10 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-primary dark:text-accent-cyan" />
             </div>
             <span>{address}</span>
           </div>
@@ -69,8 +69,8 @@ export function ContactInfo({ emails, phones, address, contentText, contactPerso
         {/* Contact Person */}
         {contactPerson && (
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-            <div className="w-10 h-10 rounded-full bg-[#1E4D8C]/10 dark:bg-accent-cyan/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-[#1E4D8C] dark:text-accent-cyan" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-accent-cyan/10 flex items-center justify-center">
+              <User className="w-5 h-5 text-primary dark:text-accent-cyan" />
             </div>
             <div className="flex flex-col">
               <span className="font-medium">{contactPerson.name}</span>

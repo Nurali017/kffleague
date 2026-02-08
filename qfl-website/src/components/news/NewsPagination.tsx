@@ -91,8 +91,8 @@ export function NewsPagination({
                 min-w-[34px] sm:min-w-[40px] px-2.5 sm:px-3 py-2 rounded-lg border transition-all duration-200
                 ${
                   isActive
-                    ? 'bg-[#1E4D8C] dark:bg-cyan-700 text-white border-[#1E4D8C] dark:border-cyan-700 font-semibold'
-                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 border-gray-200 dark:border-dark-border hover:bg-surface-soft dark:hover:bg-dark-surface-soft hover:border-[#1E4D8C] dark:hover:border-blue-500'
+                    ? 'bg-primary dark:bg-cyan-700 text-white border-primary dark:border-cyan-700 font-semibold'
+                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-slate-300 border-gray-200 dark:border-dark-border hover:bg-surface-soft dark:hover:bg-dark-surface-soft hover:border-primary dark:hover:border-blue-500'
                 }
               `}
               aria-label={`${t('page', 'Страница')} ${pageNumber}`}

@@ -24,11 +24,11 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
         <table className="w-full min-w-max">
           {/* Header */}
           <thead>
-            <tr className="bg-[#1E4D8C]">
-              <th className="sticky left-0 z-10 bg-[#1E4D8C] py-3 px-3 text-center text-xs font-medium text-white w-10">
+            <tr className="bg-primary">
+              <th className="sticky left-0 z-10 bg-primary py-3 px-3 text-center text-xs font-medium text-white w-10">
                 #
               </th>
-              <th className="sticky left-10 z-10 bg-[#1E4D8C] py-3 px-4 text-left text-xs font-medium text-white min-w-[160px]">
+              <th className="sticky left-10 z-10 bg-primary py-3 px-4 text-left text-xs font-medium text-white min-w-[160px]">
                 {t('columns.team')}
               </th>
               {tours.map((tour) => (
@@ -51,7 +51,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
               return (
                 <tr
                   key={team.team_id}
-                  className="hover:bg-[#1E4D8C]/5 dark:hover:bg-blue-500/10 transition-colors"
+                  className="hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors"
                 >
                   {/* Position - sticky */}
                   <td className="sticky left-0 z-10 bg-white dark:bg-dark-surface py-2.5 px-3 text-center">
@@ -83,7 +83,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
                       >
                         {team.team_name[0]}
                       </div>
-                      <span className="text-sm font-medium text-gray-900 dark:text-slate-100 group-hover:text-[#1E4D8C] dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
+                      <span className="text-sm font-medium text-gray-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
                         {team.team_name}
                       </span>
                     </Link>

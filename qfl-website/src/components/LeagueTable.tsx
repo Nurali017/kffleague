@@ -27,7 +27,7 @@ export function LeagueTable() {
   if (!showTable) {
     return (
       <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden h-full flex flex-col">
-        <div className="px-5 py-3 bg-[#1E4D8C]">
+        <div className="px-5 py-3 bg-primary">
           <h2 className="text-lg font-bold text-white">{currentTournament.name.ru}</h2>
         </div>
         <div className="flex-1 flex items-center justify-center p-8 text-center">
@@ -53,8 +53,8 @@ export function LeagueTable() {
 
   // Get position dot color (only for special positions)
   const getPositionDotColor = (position: number) => {
-    if (position === 1) return 'bg-[#E5B73B]'; // Чемпион
-    if (position <= 4) return 'bg-[#1E4D8C]'; // Еврокубки
+    if (position === 1) return 'bg-accent'; // Чемпион
+    if (position <= 4) return 'bg-primary'; // Еврокубки
     if (position === 14) return 'bg-red-500'; // Вылет
     return null; // No dot for regular positions
   };
@@ -62,7 +62,7 @@ export function LeagueTable() {
   return (
     <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden h-full flex flex-col">
       {/* Header */}
-      <div className="px-5 py-3 bg-[#1E4D8C]">
+      <div className="px-5 py-3 bg-primary">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-white">
             {t('sections.leagueTable')}
@@ -174,7 +174,7 @@ export function LeagueTable() {
 
               {/* Stats */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan"
+                className="text-center text-xs text-primary dark:text-accent-cyan"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -183,7 +183,7 @@ export function LeagueTable() {
                 {team.games_played}
               </motion.div>
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan"
+                className="text-center text-xs text-primary dark:text-accent-cyan"
                 variants={{
                   rest: { fontWeight: 400 },
                   hover: { fontWeight: 600 },
@@ -194,7 +194,7 @@ export function LeagueTable() {
 
               {/* Points */}
               <motion.div
-                className="text-center text-xs text-[#1E4D8C] dark:text-accent-cyan font-bold"
+                className="text-center text-xs text-primary dark:text-accent-cyan font-bold"
                 variants={{
                   rest: { scale: 1 },
                   hover: { scale: 1.1, transition: { type: 'spring', stiffness: 400, damping: 20 } },
@@ -210,11 +210,11 @@ export function LeagueTable() {
       {/* Legend */}
       <div className="px-5 py-2.5 border-t border-gray-100 dark:border-dark-border flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-gray-400 dark:text-slate-400">
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E5B73B]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-accent" />
           <span>{t('tableLegend.champion')}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#1E4D8C]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
           <span>{t('tableLegend.europeanCups')}</span>
         </div>
         <div className="flex items-center gap-1.5">

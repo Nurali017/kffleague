@@ -108,22 +108,11 @@ describe('TeamOverviewSection', () => {
           },
         ]}
         leaders={leadersMock}
-        staffPreview={[
-          {
-            id: 1,
-            first_name: 'Владимир',
-            last_name: 'Петров',
-            photo_url: null,
-            role: 'head_coach',
-            country_name: 'Казахстан',
-          },
-        ]}
       />
     );
 
     expect(screen.getAllByText('Кайрат').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Тобол').length).toBeGreaterThan(0);
-    expect(screen.getByText('Владимир Петров')).toBeInTheDocument();
   });
 
   it('shows empty states when no match/fixtures', () => {
@@ -134,7 +123,6 @@ describe('TeamOverviewSection', () => {
         upcomingMatches={[]}
         standingsWindow={[]}
         leaders={leadersMock}
-        staffPreview={[]}
       />
     );
 

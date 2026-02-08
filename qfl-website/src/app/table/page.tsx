@@ -22,7 +22,7 @@ import { updateSearchParams } from '@/lib/utils/urlState';
 function TableSkeleton() {
   return (
     <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden animate-pulse">
-      <div className="bg-[#1E4D8C] h-12" />
+      <div className="bg-primary h-12" />
       {Array.from({ length: 14 }).map((_, i) => (
         <div key={i} className="flex items-center gap-4 px-4 py-3 border-b border-gray-50 dark:border-dark-border">
           <div className="w-8 h-4 bg-gray-200 dark:bg-dark-surface-soft rounded" />
@@ -42,7 +42,7 @@ function TableSkeleton() {
 function ResultsGridSkeleton() {
   return (
     <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden animate-pulse">
-      <div className="bg-[#1E4D8C] h-12" />
+      <div className="bg-primary h-12" />
       {Array.from({ length: 14 }).map((_, i) => (
         <div key={i} className="flex items-center gap-2 px-4 py-3 border-b border-gray-50 dark:border-dark-border">
           <div className="w-8 h-4 bg-gray-200 dark:bg-dark-surface-soft rounded" />
@@ -153,7 +153,7 @@ export default function LeagueTablePage() {
           {/* Bracket View for Cup tournaments */}
           {showBracket && (
             <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden">
-              <div className="bg-[#1E4D8C] px-4 md:px-6 py-3 md:py-4">
+              <div className="bg-primary px-4 md:px-6 py-3 md:py-4">
                 <h2 className="text-base md:text-lg font-bold text-white">{currentTournament.name.ru}</h2>
               </div>
               <div className="p-5 md:p-8 text-center">

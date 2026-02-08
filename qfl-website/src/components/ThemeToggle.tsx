@@ -18,7 +18,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
       whileTap={{ scale: 0.95 }}
       className={`
         p-2.5 rounded-xl transition-all duration-200
-        border border-slate-200 bg-white hover:bg-slate-50 text-[#1E4D8C]
+        border border-slate-200 bg-white hover:bg-slate-50 text-primary
         dark:border-dark-border-soft dark:bg-dark-surface-soft dark:hover:bg-dark-border-soft dark:text-accent-cyan
         ${className}
       `}

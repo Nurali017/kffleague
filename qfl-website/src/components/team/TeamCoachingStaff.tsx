@@ -56,7 +56,7 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
                             <img
                                 src={coach.photo_url}
                                 alt={`${coach.first_name} ${coach.last_name}`}
-                                className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-gray-300 dark:border-white/20 shadow"
+                                className="w-20 h-20 rounded-full object-cover object-top mb-3 border-2 border-gray-300 dark:border-white/20 shadow"
                             />
                         ) : (
                             <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center mb-3 border-2 border-gray-300 dark:border-white/20 shadow">
@@ -66,7 +66,7 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
                         <span className="font-bold text-sm text-slate-900 dark:text-white">
                             {coach.first_name} {coach.last_name}
                         </span>
-                        <span className="text-[10px] font-bold text-[#1E4D8C] dark:text-cyan-300 uppercase mt-1">
+                        <span className="text-[10px] font-bold text-primary dark:text-cyan-300 uppercase mt-1">
                             {ROLE_LABELS[coach.role]?.[lang] || coach.role}
                         </span>
                         {coach.country && (

@@ -48,7 +48,7 @@ function FeaturedCard({ news, className, language = 'ru' }: { news: NewsItem; cl
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 via-60% to-black/10" />
 
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 md:p-8 transition-transform duration-500 group-hover:-translate-y-1">
-          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight mb-2 sm:mb-3 group-hover:text-[#E5B73B] transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight mb-2 sm:mb-3 group-hover:text-accent transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             {news.title}
           </h3>
           <span className="text-white/90 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] inline-block transition-all duration-500 group-hover:translate-x-1">{formatDate(news.publish_date, 'long', language)}</span>
@@ -160,10 +160,10 @@ export function NewsSection() {
     <div>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan tracking-tight">{t('newsSection.title')}</h2>
+        <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan tracking-tight">{t('newsSection.title')}</h2>
         <Link
           href="/news"
-          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
+          className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
           {t('newsSection.viewAll')}
           <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />

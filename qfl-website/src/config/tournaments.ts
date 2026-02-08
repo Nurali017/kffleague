@@ -1,4 +1,13 @@
-import { Tournament, Season } from '@/types/tournament';
+import { Tournament, TournamentColors, Season } from '@/types/tournament';
+
+// Color palettes as RGB channels for Tailwind opacity support
+export const TOURNAMENT_COLORS: Record<string, TournamentColors> = {
+  pl:  { primary: '30 77 140',  primaryLight: '42 95 163',  primaryDark: '22 58 107', accent: '229 183 59', accentSoft: '240 201 93'  },
+  '1l': { primary: '61 122 62', primaryLight: '78 155 79',  primaryDark: '46 94 47',  accent: '123 198 125', accentSoft: '163 217 164' },
+  cup: { primary: '74 26 43',   primaryLight: '107 45 66',  primaryDark: '53 18 31',  accent: '139 58 85',  accentSoft: '181 102 126' },
+  '2l': { primary: '168 106 43', primaryLight: '196 132 61', primaryDark: '127 79 32', accent: '212 168 92', accentSoft: '229 200 138' },
+  el:  { primary: '107 79 160', primaryLight: '133 102 184', primaryDark: '80 59 120', accent: '160 126 214', accentSoft: '196 168 232' },
+};
 
 // Season IDs from SOTA API database
 // Premier League: 61, First League: 85, Cup: 71, Women's League: 84
@@ -16,6 +25,13 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     },
     sponsorName: 'ПРЕМЬЕР-ЛИГА',
     logo: '/images/tournaments/pl.png',
+    colors: {
+      primary: '30 77 140',
+      primaryLight: '42 95 163',
+      primaryDark: '22 58 107',
+      accent: '229 183 59',
+      accentSoft: '240 201 93',
+    },
     order: 1,
     hasTable: true,
     hasBracket: false,
@@ -34,6 +50,13 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     },
     sponsorName: 'БІРІНШІ ЛИГА',
     logo: '/images/tournaments/1l.png',
+    colors: {
+      primary: '61 122 62',
+      primaryLight: '78 155 79',
+      primaryDark: '46 94 47',
+      accent: '123 198 125',
+      accentSoft: '163 217 164',
+    },
     order: 2,
     hasTable: true,
     hasBracket: false,
@@ -50,6 +73,13 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     },
     sponsorName: 'OLIMPBET ҚАЗАҚСТАН КУБОГЫ',
     logo: '/images/tournaments/cup.png',
+    colors: {
+      primary: '74 26 43',
+      primaryLight: '107 45 66',
+      primaryDark: '53 18 31',
+      accent: '139 58 85',
+      accentSoft: '181 102 126',
+    },
     order: 3,
     hasTable: false,
     hasBracket: true,
@@ -66,6 +96,13 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     },
     sponsorName: 'ЕКІНШІ ЛИГА',
     logo: '/images/tournaments/2l.png',
+    colors: {
+      primary: '168 106 43',
+      primaryLight: '196 132 61',
+      primaryDark: '127 79 32',
+      accent: '212 168 92',
+      accentSoft: '229 200 138',
+    },
     order: 4,
     hasTable: true,
     hasBracket: false,
@@ -82,6 +119,13 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     },
     sponsorName: 'ӘЙЕЛДЕР ЛИГАСЫ',
     logo: '/images/tournaments/el.png',
+    colors: {
+      primary: '107 79 160',
+      primaryLight: '133 102 184',
+      primaryDark: '80 59 120',
+      accent: '160 126 214',
+      accentSoft: '196 168 232',
+    },
     order: 5,
     hasTable: true,
     hasBracket: false,

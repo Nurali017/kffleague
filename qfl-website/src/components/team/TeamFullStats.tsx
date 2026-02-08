@@ -136,8 +136,8 @@ function StatsSection({ title, children, defaultOpen = true }: { title: string; 
                 onClick={() => setOpen(!open)}
                 className="w-full flex items-center justify-between group hover:bg-gray-50 dark:hover:bg-white/5 p-2 -m-2 rounded-lg transition-colors"
             >
-                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white group-hover:text-[#1E4D8C] dark:group-hover:text-cyan-300 transition-colors">{title}</h3>
-                <ChevronUp className={cn('w-5 h-5 text-slate-400 dark:text-white/50 transition-transform group-hover:text-[#1E4D8C] dark:group-hover:text-cyan-300', !open && 'rotate-180')} />
+                <h3 className="text-base md:text-lg font-black text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-cyan-300 transition-colors">{title}</h3>
+                <ChevronUp className={cn('w-5 h-5 text-slate-400 dark:text-white/50 transition-transform group-hover:text-primary dark:group-hover:text-cyan-300', !open && 'rotate-180')} />
             </button>
             {open && <div className="mt-4 md:mt-5">{children}</div>}
         </div>

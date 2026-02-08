@@ -29,13 +29,13 @@ export function NewsTabs({
     : 'border-b border-gray-200 dark:border-dark-border';
   const activeTabClass = isHero
     ? 'text-white'
-    : 'text-[#1E4D8C] dark:text-accent-cyan';
+    : 'text-primary dark:text-accent-cyan';
   const inactiveTabClass = isHero
     ? 'text-white/70 hover:text-white'
-    : 'text-gray-500 dark:text-slate-400 hover:text-[#1E4D8C] dark:hover:text-accent-cyan';
+    : 'text-gray-500 dark:text-slate-400 hover:text-primary dark:hover:text-accent-cyan';
   const indicatorClass = isHero
     ? 'bg-white/80'
-    : 'bg-[#1E4D8C] dark:bg-accent-cyan';
+    : 'bg-primary dark:bg-accent-cyan';
 
   return (
     <div className={`${containerClass} ${className}`}>

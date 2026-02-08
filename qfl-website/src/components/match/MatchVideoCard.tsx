@@ -57,7 +57,7 @@ export function MatchVideoCard({ videoUrl, thumbnailUrl }: MatchVideoCardProps) 
                 className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity duration-300"
               />
             ) : (
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 via-[#1E4D8C] to-black opacity-80" />
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 via-primary to-black opacity-80" />
             )}
 
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />

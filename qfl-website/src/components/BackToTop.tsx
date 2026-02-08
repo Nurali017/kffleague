@@ -32,7 +32,7 @@ export function BackToTop() {
       variants={buttonVisibility}
       whileHover={{ scale: 1.1, backgroundColor: '#E5B73B' }}
       whileTap={{ scale: 0.95 }}
-      className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-[#1E4D8C] text-white shadow-lg flex items-center justify-center ${
+      className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center ${
         !isVisible ? 'pointer-events-none' : ''
       }`}
     >

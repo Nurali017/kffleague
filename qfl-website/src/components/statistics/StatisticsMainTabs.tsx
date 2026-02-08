@@ -13,25 +13,25 @@ export function StatisticsMainTabs({ activeTab, onTabChange }: StatisticsMainTab
                     <button
                         onClick={() => onTabChange('clubs')}
                         className={`px-8 py-5 text-lg font-bold transition-all relative ${activeTab === 'clubs'
-                                ? 'text-[#1E4D8C]'
+                                ? 'text-primary'
                                 : 'text-gray-500 hover:text-gray-900'
                             }`}
                     >
                         Club stats
                         {activeTab === 'clubs' && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-sm" />
                         )}
                     </button>
                     <button
                         onClick={() => onTabChange('players')}
                         className={`px-8 py-5 text-lg font-bold transition-all relative ${activeTab === 'players'
-                                ? 'text-[#1E4D8C]'
+                                ? 'text-primary'
                                 : 'text-gray-500 hover:text-gray-900'
                             }`}
                     >
                         Player stats
                         {activeTab === 'players' && (
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-[#1E4D8C] rounded-t-sm" />
+                            <div className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-t-sm" />
                         )}
                     </button>
                 </div>

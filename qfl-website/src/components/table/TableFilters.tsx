@@ -40,7 +40,7 @@ export function TableFilters({
           <select
             value={tourFrom}
             onChange={(e) => onTourFromChange(Number(e.target.value))}
-            className="min-w-0 flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-[#1E4D8C] dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
+            className="min-w-0 flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-primary dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
           >
             {tourOptions.map((tour) => (
               <option key={tour} value={tour} disabled={tour > tourTo}>
@@ -52,7 +52,7 @@ export function TableFilters({
           <select
             value={tourTo}
             onChange={(e) => onTourToChange(Number(e.target.value))}
-            className="min-w-0 flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-[#1E4D8C] dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
+            className="min-w-0 flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 dark:border-dark-border-soft rounded-lg focus:outline-none focus:border-primary dark:focus:border-blue-400 bg-white dark:bg-dark-surface-soft dark:text-slate-100"
           >
             {tourOptions.map((tour) => (
               <option key={tour} value={tour} disabled={tour < tourFrom}>
@@ -69,8 +69,8 @@ export function TableFilters({
               onClick={() => onHomeAwayChange(null)}
               className={`flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === null
-                  ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
+                  ? 'bg-accent text-primary-dark shadow-sm'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.all')}
@@ -79,8 +79,8 @@ export function TableFilters({
               onClick={() => onHomeAwayChange('home')}
               className={`flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === 'home'
-                  ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
+                  ? 'bg-accent text-primary-dark shadow-sm'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.home')}
@@ -89,8 +89,8 @@ export function TableFilters({
               onClick={() => onHomeAwayChange('away')}
               className={`flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
                 homeAway === 'away'
-                  ? 'bg-[#E5B73B] text-[#0F2D52] shadow-sm'
-                  : 'text-gray-600 dark:text-slate-300 hover:text-[#1E4D8C] dark:hover:text-accent-cyan'
+                  ? 'bg-accent text-primary-dark shadow-sm'
+                  : 'text-gray-600 dark:text-slate-300 hover:text-primary dark:hover:text-accent-cyan'
               }`}
             >
               {t('filters.away')}

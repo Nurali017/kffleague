@@ -25,8 +25,8 @@ export function TableTabs({ activeTab, onTabChange }: TableTabsProps) {
           onClick={() => onTabChange(tab.key)}
           className={`shrink-0 px-4 md:px-6 py-2.5 text-sm font-semibold rounded-full transition-all duration-200 ${
             activeTab === tab.key
-              ? 'bg-[#E5B73B] text-[#0F2D52]'
-              : 'bg-white dark:bg-dark-surface text-[#1E4D8C] dark:text-accent-cyan hover:bg-white/90 dark:hover:bg-dark-surface-soft'
+              ? 'bg-accent text-primary-dark'
+              : 'bg-white dark:bg-dark-surface text-primary dark:text-accent-cyan hover:bg-white/90 dark:hover:bg-dark-surface-soft'
           }`}
         >
           {tab.label}

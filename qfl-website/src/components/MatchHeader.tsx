@@ -146,7 +146,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
                 <div className="text-3xl md:text-6xl font-bold text-white mb-2">
                   {match.time || '—'}
                 </div>
-                <div className="px-2.5 py-1 rounded bg-[#E5B73B] text-[#1E4D8C] text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                <div className="px-2.5 py-1 rounded bg-accent text-primary text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                   {t('upcoming')}
                 </div>
               </div>

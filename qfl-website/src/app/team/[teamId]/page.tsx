@@ -14,7 +14,7 @@ import {
   TeamPageTabs,
   TeamSquad,
 } from '@/components/team';
-import { useTeamGames, useTeamOverview, useTeamPlayers } from '@/hooks/useTeam';
+import { useTeamGames, useTeamOverview, useTeamPlayers, useTeamStats } from '@/hooks/useTeam';
 import { useTournament } from '@/contexts/TournamentContext';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
@@ -53,6 +53,7 @@ export default function TeamPage({ params }: TeamPageProps) {
   }, [pathname, router, searchParams]);
 
   const { overview, loading: overviewLoading, error: overviewError } = useTeamOverview(teamId, effectiveSeasonId);
+  const { stats: detailedStats } = useTeamStats(activeTab === 'overview' ? teamId : null, effectiveSeasonId);
   const { games, loading: gamesLoading } = useTeamGames(activeTab === 'matches' ? teamId : null, effectiveSeasonId);
   const { players, loading: playersLoading } = useTeamPlayers(activeTab === 'squad' ? teamId : null, effectiveSeasonId);
 
@@ -98,7 +99,7 @@ export default function TeamPage({ params }: TeamPageProps) {
             className="space-y-6"
           >
             <motion.div variants={fadeInUp}>
-              <TeamKeyStats stats={overview.summary} />
+              <TeamKeyStats stats={overview.summary} details={detailedStats} />
             </motion.div>
             <motion.div variants={fadeInUp}>
               <TeamOverviewSection
@@ -107,7 +108,6 @@ export default function TeamPage({ params }: TeamPageProps) {
                 upcomingMatches={overview.upcoming_matches}
                 standingsWindow={overview.standings_window}
                 leaders={overview.leaders}
-                staffPreview={overview.staff_preview}
               />
             </motion.div>
           </motion.div>
@@ -140,4 +140,3 @@ export default function TeamPage({ params }: TeamPageProps) {
     </main>
   );
 }
-

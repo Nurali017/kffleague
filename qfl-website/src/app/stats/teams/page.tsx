@@ -59,7 +59,7 @@ export default function TeamsStatsPage() {
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                             <Link
                                 href={tableHref}
-                                className="inline-flex items-center px-4 py-2 rounded-lg bg-[#1E4D8C] hover:bg-[#163A6B] text-white font-semibold transition-colors"
+                                className="inline-flex items-center px-4 py-2 rounded-lg bg-primary hover:bg-primary-dark text-white font-semibold transition-colors"
                             >
                                 {currentTournament.hasTable
                                     ? t('emptyState.openTable', { defaultValue: 'Открыть таблицу' })

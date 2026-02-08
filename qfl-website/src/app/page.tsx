@@ -34,10 +34,10 @@ export default function HomePage() {
         {/* News section */}
         <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 flex flex-col">
           <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
-            <h2 className="text-xl md:text-2xl font-bold text-[#1E4D8C] dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-primary dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
             <Link
               href="/news"
-              className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-[#1E4D8C] dark:hover:text-accent-cyan flex items-center transition-colors group"
+              className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
             >
               Барлық жаңалықтар
               <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />

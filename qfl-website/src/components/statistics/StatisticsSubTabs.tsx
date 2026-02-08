@@ -44,7 +44,7 @@ export function StatisticsSubTabs({ activeSubTab, onSubTabChange, hideGoalkeepin
                             onClick={() => onSubTabChange(id)}
                             className={`px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm font-bold whitespace-nowrap transition-all rounded-md ${
                                 activeSubTab === id
-                                    ? 'text-[#1E4D8C] dark:text-accent-cyan bg-blue-50 dark:bg-cyan-500/10'
+                                    ? 'text-primary dark:text-accent-cyan bg-blue-50 dark:bg-cyan-500/10'
                                     : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-dark-surface-soft'
                             }`}
                         >

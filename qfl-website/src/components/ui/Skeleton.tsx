@@ -41,7 +41,7 @@ export function MatchCenterSkeleton() {
 export function LeagueTableSkeleton() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden h-full flex flex-col">
-      <div className="px-5 py-3 bg-[#1E4D8C]">
+      <div className="px-5 py-3 bg-primary">
         <Skeleton className="h-5 w-32 bg-white/20" />
       </div>
       <div className="px-5 py-2 bg-gray-100">

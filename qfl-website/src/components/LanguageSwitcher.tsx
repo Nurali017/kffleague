@@ -28,10 +28,10 @@ export function LanguageSwitcher({ variant = 'light' }: LanguageSwitcherProps) {
             onClick={() => handleLanguageChange(lng)}
             className={`px-1.5 py-1 uppercase transition-colors duration-200 ${
               currentLang === lng
-                ? (variant === 'dark' ? 'text-white font-bold' : 'text-[#1E4D8C] dark:text-white font-bold')
+                ? (variant === 'dark' ? 'text-white font-bold' : 'text-primary dark:text-white font-bold')
                 : (variant === 'dark'
                   ? 'text-slate-300 hover:text-white'
-                  : 'text-slate-400 dark:text-slate-500 hover:text-[#1E4D8C]/70 dark:hover:text-slate-300')
+                  : 'text-slate-400 dark:text-slate-500 hover:text-primary/70 dark:hover:text-slate-300')
             }`}
             aria-label={`Switch to ${lng.toUpperCase()}`}
           >

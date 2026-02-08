@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
-  TeamOverviewCoachPreview,
   TeamOverviewFormEntry,
   TeamOverviewLeaders,
   TeamOverviewMatch,
@@ -20,14 +19,13 @@ interface TeamOverviewSectionProps {
   upcomingMatches: TeamOverviewMatch[];
   standingsWindow: TeamOverviewStandingEntry[];
   leaders: TeamOverviewLeaders;
-  staffPreview: TeamOverviewCoachPreview[];
 }
 
 function MatchScore({ home, away }: { home: number | null; away: number | null }) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-2.5 md:px-3 py-1 font-black text-sm md:text-base">
+    <div className="inline-flex items-center gap-1 rounded-full bg-primary/10 dark:bg-cyan-300/20 text-primary dark:text-cyan-300 border border-primary/20 dark:border-cyan-300/30 px-2.5 md:px-3 py-1 font-black text-sm md:text-base">
       <span>{home ?? '-'}</span>
-      <span className="text-[#1E4D8C]/60 dark:text-cyan-300/75">:</span>
+      <span className="text-primary/60 dark:text-cyan-300/75">:</span>
       <span>{away ?? '-'}</span>
     </div>
   );
@@ -71,7 +69,7 @@ function LastMatchCard({ match }: { match: TeamOverviewMatch | null }) {
       </div>
       <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-white/60">
         <span>{formatMatchDate(match.date, i18n.language)}</span>
-        <Link href={`/matches/${match.id}`} className="font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
+        <Link href={`/matches/${match.id}`} className="font-bold text-primary dark:text-cyan-300 hover:text-primary-dark dark:hover:text-cyan-200">
           {t('buttons.matchCentre', 'Матч-центр')}
         </Link>
       </div>
@@ -125,7 +123,7 @@ function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
         <SectionHeader
           title={t('title', 'Турнирная таблица')}
           action={
-            <Link href="/table" className="text-xs font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
+            <Link href="/table" className="text-xs font-bold text-primary dark:text-cyan-300 hover:text-primary-dark dark:hover:text-cyan-200">
               {t('actions.fullTable', 'Полная таблица')}
             </Link>
           }
@@ -197,63 +195,14 @@ function FixturesRail({ matches }: { matches: TeamOverviewMatch[] }) {
         </div>
       )}
 
-      <div className="mt-4 grid grid-cols-1 gap-2">
+      <div className="mt-4">
         <Link
           href="/matches"
-          className="inline-flex items-center justify-center gap-1 rounded-full bg-[#1E4D8C]/10 dark:bg-cyan-300/20 text-[#1E4D8C] dark:text-cyan-300 border border-[#1E4D8C]/20 dark:border-cyan-300/30 px-4 py-2 text-sm font-bold hover:bg-[#1E4D8C]/15 dark:hover:bg-cyan-300/30 transition-colors"
+          className="inline-flex w-full items-center justify-center gap-1 rounded-full bg-primary/10 dark:bg-cyan-300/20 text-primary dark:text-cyan-300 border border-primary/20 dark:border-cyan-300/30 px-4 py-2 text-sm font-bold hover:bg-primary/15 dark:hover:bg-cyan-300/30 transition-colors"
         >
           {t('buttons.viewAllFixtures', 'Все матчи')} <ArrowRight className="w-3.5 h-3.5" />
         </Link>
-        <Link
-          href="/stats"
-          className="inline-flex items-center justify-center gap-1 rounded-full border border-gray-300 dark:border-white/20 bg-gray-100 dark:bg-white/10 px-4 py-2 text-sm font-bold text-slate-700 dark:text-white hover:bg-gray-200 dark:hover:bg-white/15 transition-colors"
-        >
-          {t('buttons.seeAllStats', 'Вся статистика')}
-        </Link>
       </div>
-    </SectionCard>
-  );
-}
-
-function StaffPreview({ coaches }: { coaches: TeamOverviewCoachPreview[] }) {
-  const { i18n } = useTranslation();
-  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
-
-  return (
-    <SectionCard className="p-4 md:p-5">
-      <SectionHeader
-        title={lang === 'kz' ? 'Жаттықтырушылар штабы' : 'Тренерский штаб'}
-        action={
-          <Link href="?tab=staff" className="text-xs font-bold text-[#1E4D8C] dark:text-cyan-300 hover:text-[#163A6B] dark:hover:text-cyan-200">
-            {lang === 'kz' ? 'Толығырақ' : 'Подробнее'}
-          </Link>
-        }
-      />
-      {coaches.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500 dark:text-white/60">
-          {lang === 'kz' ? 'Деректер жоқ' : 'Данные отсутствуют'}
-        </p>
-      ) : (
-        <div className="mt-3 space-y-3">
-          {coaches.map((coach) => (
-            <div key={coach.id} className="flex items-center gap-3">
-              {coach.photo_url ? (
-                <img src={coach.photo_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/15" />
-              )}
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                  {coach.first_name} {coach.last_name}
-                </p>
-                <p className="text-xs text-slate-500 dark:text-white/60 truncate">
-                  {coach.country_name || coach.role}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </SectionCard>
   );
 }
@@ -264,7 +213,6 @@ export function TeamOverviewSection({
   upcomingMatches,
   standingsWindow,
   leaders,
-  staffPreview,
 }: TeamOverviewSectionProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
@@ -274,13 +222,12 @@ export function TeamOverviewSection({
           <FormCard items={formLast5} />
         </div>
 
-        <StandingsCard rows={standingsWindow} />
         <TeamPlayerStats leaders={leaders} />
       </div>
 
       <div className="space-y-4">
+        <StandingsCard rows={standingsWindow} />
         <FixturesRail matches={upcomingMatches} />
-        <StaffPreview coaches={staffPreview} />
       </div>
     </div>
   );
