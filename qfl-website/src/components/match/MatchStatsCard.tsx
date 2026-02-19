@@ -1,7 +1,7 @@
 'use client';
 
 import { GameTeam } from '@/types';
-import { getTeamColor } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
 interface MatchStat {
   label: string;
@@ -25,9 +25,8 @@ const defaultStats: MatchStat[] = [
 ];
 
 export function MatchStatsCard({ homeTeam, awayTeam, stats = defaultStats }: MatchStatsCardProps) {
-  // Use V2 scheme: Home = Blue, Away = Gold/Yellow
-  const homeColor = getTeamColor(homeTeam.id) || '#1E4D8C';
-  const awayColor = getTeamColor(awayTeam.id) || '#E5B73B';
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">

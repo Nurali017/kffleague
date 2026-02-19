@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Circle } from 'lucide-react';
 import { EnhancedMatchEvent, GameTeam } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon } from './MatchEventIcons';
-import { getTeamColor } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
 interface MatchEventsListProps {
   events: EnhancedMatchEvent[];
@@ -154,8 +154,8 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
                   className="w-2 h-2 rounded-full"
                   style={{
                     backgroundColor: event.team_id === homeTeam.id
-                      ? getTeamColor(homeTeam.id) || '#1E4D8C'
-                      : getTeamColor(awayTeam.id) || '#E5B73B'
+                      ? HOME_COLOR
+                      : AWAY_COLOR
                   }}
                 />
               </div>

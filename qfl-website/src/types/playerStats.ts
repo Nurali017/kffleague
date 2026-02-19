@@ -1,8 +1,16 @@
+export interface PlayerStatCountry {
+  id: number;
+  code: string;
+  name: string;
+  flag_url?: string | null;
+}
+
 export interface PlayerStat {
   player_id: string;
   first_name: string;
   last_name: string;
   photo_url: string | null;
+  country?: PlayerStatCountry | null;
   team_id: number;
   team_name: string;
   team_logo: string;
@@ -47,6 +55,8 @@ export interface PlayerStatsResponse {
 }
 
 export type PositionCode = 'GK' | 'DEF' | 'MID' | 'FWD';
+export type PlayerStatsNationality = 'kz' | 'foreign';
+export type PlayerStatsNationalityFilter = 'all' | PlayerStatsNationality;
 
 export type PlayerStatsSortBy =
   | 'goals'

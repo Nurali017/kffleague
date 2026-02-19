@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { useH2H } from '@/hooks';
 import { computeH2HMetrics } from '@/types/h2h';
-import { getTeamColor } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import {
   H2HDonutChart,
   H2HFormStreak,
@@ -32,8 +32,8 @@ export function H2HContentCards({
     seasonId,
   });
 
-  const homeColor = getTeamColor(homeTeam.id) || '#1E4D8C';
-  const awayColor = getTeamColor(awayTeam.id) || '#E5B73B';
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   // Loading state
   if (loading) {

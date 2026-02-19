@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { useH2H } from '@/hooks';
-import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { H2HMiniSkeleton } from './h2h';
 
 interface HeadToHeadMiniProps {
@@ -27,8 +27,8 @@ export function HeadToHeadMini({
 
   const homeLogoUrl = homeTeam.logo_url || getTeamLogo(homeTeam.id);
   const awayLogoUrl = awayTeam.logo_url || getTeamLogo(awayTeam.id);
-  const homeColor = getTeamColor(homeTeam.id) || '#1E4D8C';
-  const awayColor = getTeamColor(awayTeam.id) || '#E5B73B';
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   const getFormBadgeColor = (result: string) => {
     switch (result) {

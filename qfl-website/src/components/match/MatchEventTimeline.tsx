@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { EnhancedMatchEvent, GameTeam, PlayerCountry } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon, JerseyIcon } from './MatchEventIcons';
-import { getTeamLogo, getTeamColor, getTeamInitials } from '@/lib/utils/teamLogos';
+import { getTeamLogo, getTeamInitials, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { bottomSheetSlideUp, modalBackdrop } from '@/lib/motion';
 
 interface MatchEventTimelineProps {
@@ -143,7 +143,7 @@ export function MatchEventTimeline({
                         <span className="text-green-400">▲</span>
                         <JerseyIcon
                           number={activeEvent.player2_number || 0}
-                          color={getTeamColor(activeEvent.team_id)}
+                          color={activeEvent.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR}
                           className="w-10 h-10 flex-shrink-0"
                         />
                         {activeEvent.player2_id && playerCountryMap[activeEvent.player2_id]?.flag_url && (
@@ -162,7 +162,7 @@ export function MatchEventTimeline({
                         <span className="text-red-400">▼</span>
                         <JerseyIcon
                           number={activeEvent.player_number || 0}
-                          color={getTeamColor(activeEvent.team_id)}
+                          color={activeEvent.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR}
                           className="w-10 h-10 flex-shrink-0"
                         />
                         {activeEvent.player_id && playerCountryMap[activeEvent.player_id]?.flag_url && (
@@ -181,7 +181,7 @@ export function MatchEventTimeline({
                     <div className="flex items-center gap-3">
                       <JerseyIcon
                         number={activeEvent.player_number || 0}
-                        color={getTeamColor(activeEvent.team_id)}
+                        color={activeEvent.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR}
                         className="w-12 h-12 flex-shrink-0"
                       />
                       {activeEvent.player_id && playerCountryMap[activeEvent.player_id]?.flag_url && (
@@ -274,7 +274,7 @@ export function MatchEventTimeline({
                         <div className="flex items-center gap-2">
                           <span className="text-green-500 text-xs font-bold">ON</span>
                           <span className="text-green-500">▲</span>
-                          <JerseyIcon number={event.player2_number || 0} color={getTeamColor(event.team_id)} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
+                          <JerseyIcon number={event.player2_number || 0} color={event.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
                           {event.player2_id && playerCountryMap[event.player2_id]?.flag_url && (
                             <img
                               src={playerCountryMap[event.player2_id].flag_url}
@@ -287,7 +287,7 @@ export function MatchEventTimeline({
                         <div className="flex items-center gap-2">
                           <span className="text-red-500 text-xs font-bold">OFF</span>
                           <span className="text-red-500">▼</span>
-                          <JerseyIcon number={event.player_number || 0} color={getTeamColor(event.team_id)} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
+                          <JerseyIcon number={event.player_number || 0} color={event.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR} className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0" />
                           {event.player_id && playerCountryMap[event.player_id]?.flag_url && (
                             <img
                               src={playerCountryMap[event.player_id].flag_url}
@@ -301,7 +301,7 @@ export function MatchEventTimeline({
                     ) : (
                       /* Other events - single player */
                       <div className="flex items-center gap-3">
-                        <JerseyIcon number={event.player_number || 0} color={getTeamColor(event.team_id)} className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0" />
+                        <JerseyIcon number={event.player_number || 0} color={event.team_id === homeTeam.id ? HOME_COLOR : AWAY_COLOR} className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0" />
                         {event.player_id && playerCountryMap[event.player_id]?.flag_url && (
                           <img
                             src={playerCountryMap[event.player_id].flag_url}
@@ -405,23 +405,21 @@ function MobileTimeline({ homeTeam, awayTeam, events, maxTime, activeEventId, on
 
 interface TeamLogoMarkerProps {
   team: GameTeam;
+  color: string;
   position: 'top' | 'bottom';
 }
 
-function TeamLogoMarker({ team, position }: TeamLogoMarkerProps) {
+function TeamLogoMarker({ team, color, position }: TeamLogoMarkerProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Get logo URL with fallback chain
   const logoUrl = team.logo_url || getTeamLogo(team.id);
-  const teamColor = getTeamColor(team.id);
   const teamInitials = getTeamInitials(team.name);
 
-  // If no logo URL or image error, show colored circle with initials
   if (!logoUrl || imageError) {
     return (
       <div
         className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold shadow-md"
-        style={{ backgroundColor: teamColor }}
+        style={{ backgroundColor: color }}
       >
         {teamInitials}
       </div>
@@ -452,16 +450,11 @@ function TimelineEndpoint({ homeTeam, awayTeam, label, position }: TimelineEndpo
 
   return (
     <div className={`${positionClass} z-10 flex flex-col items-center gap-1`}>
-      {/* Home Team Logo (Top) */}
-      <TeamLogoMarker team={homeTeam} position="top" />
-
-      {/* Label */}
+      <TeamLogoMarker team={homeTeam} color={HOME_COLOR} position="top" />
       <div className="text-[10px] md:text-xs font-bold text-white/70 uppercase tracking-wider">
         {label}
       </div>
-
-      {/* Away Team Logo (Bottom) */}
-      <TeamLogoMarker team={awayTeam} position="bottom" />
+      <TeamLogoMarker team={awayTeam} color={AWAY_COLOR} position="bottom" />
     </div>
   );
 }

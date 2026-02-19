@@ -171,6 +171,10 @@
     "possessionPercent": "Допты ұстау (%)",
     "shotsMissed": "Дәлсіз соққылар"
   },
+  "protocolCard": {
+    "title": "Матч хаттамасы",
+    "open": "Хаттаманы ашу"
+  },
   "buyTicket": "Билет сатып алу",
   "totalMatches": "Табылған матчтар: {{count}}",
   "noMatchesFiltered": "Матчтар табылмады. Сүзгілерді өзгертіп көріңіз."

@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { Calendar, Building, Users, Clock } from 'lucide-react';
 import { MatchDetail, EnhancedMatchEvent, PlayerCountry } from '@/types';
-import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { formatMatchDayDate } from '@/lib/utils/dateFormat';
 import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
 import { WhistleIcon } from '@/components/icons/WhistleIcon';
@@ -21,8 +21,8 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
 
   const homeLogoUrl = match.home_team.logo_url || getTeamLogo(match.home_team.id);
   const awayLogoUrl = match.away_team.logo_url || getTeamLogo(match.away_team.id);
-  const homeColor = getTeamColor(match.home_team.id); // Typically blue for home
-  const awayColor = getTeamColor(match.away_team.id); // Typically gold/yellow for away
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   const hasScore = match.home_score !== undefined && match.away_score !== undefined;
   const isLive = match.is_live || match.status === 'live';

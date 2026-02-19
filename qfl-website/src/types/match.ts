@@ -31,6 +31,7 @@ export interface Game {
   status: "upcoming" | "live" | "finished";
   ticket_url: string | null;
   video_url: string | null;
+  protocol_url?: string | null;
 }
 
 export interface MatchEvent {

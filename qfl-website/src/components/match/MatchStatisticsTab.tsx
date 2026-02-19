@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { MatchDetail } from '@/types';
-import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
 interface MatchStatisticsTabProps {
     match: MatchDetail;
@@ -92,8 +92,8 @@ export function MatchStatisticsTab({ match }: MatchStatisticsTabProps) {
     const { t } = useTranslation('match');
     const { home_team, away_team, stats } = match;
 
-    const homeColor = getTeamColor(home_team.id) || '#1E4D8C';
-    const awayColor = getTeamColor(away_team.id) || '#4DD0E1';
+    const homeColor = HOME_COLOR;
+    const awayColor = AWAY_COLOR;
     const homeLogo = home_team.logo_url || getTeamLogo(home_team.id);
     const awayLogo = away_team.logo_url || getTeamLogo(away_team.id);
 

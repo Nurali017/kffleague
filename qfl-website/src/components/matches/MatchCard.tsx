@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Game } from '@/types';
-import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
 interface MatchCardProps {
   match: Game;
@@ -18,8 +18,8 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
 
   const homeLogoUrl = match.home_team.logo_url || getTeamLogo(match.home_team.id);
   const awayLogoUrl = match.away_team.logo_url || getTeamLogo(match.away_team.id);
-  const homeColor = getTeamColor(match.home_team.id);
-  const awayColor = getTeamColor(match.away_team.id);
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   const isFinished = match.status === 'finished' && match.home_score !== null && match.away_score !== null;
   const isLive = match.is_live || match.status === 'live';

@@ -15,7 +15,7 @@ import { TournamentTableMini } from '@/components/match/TournamentTableMini';
 import { MatchStatisticsTab } from '@/components/match/MatchStatisticsTab';
 import { MiniKeyStats } from '@/components/match/MiniKeyStats';
 import { H2HContentCards } from '@/components/match/H2HContentCards';
-import { getTeamColor } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
 function LoadingSkeleton() {
   return (
@@ -121,7 +121,11 @@ export default function MatchDetailPage() {
       />
 
       {/* 2. Tab Navigation - Sticky & Full Width Container */}
-      <MatchTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <MatchTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        protocolUrl={match.protocol_url}
+      />
 
       {/* 3. Tab Content - Constrained Container */}
       <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-8">
@@ -165,8 +169,8 @@ export default function MatchDetailPage() {
               {matchWithStats?.stats && (
                 <MiniKeyStats
                   stats={matchWithStats.stats}
-                  homeColor={getTeamColor(match.home_team.id) || '#1E4D8C'}
-                  awayColor={getTeamColor(match.away_team.id) || '#4DD0E1'}
+                  homeColor={HOME_COLOR}
+                  awayColor={AWAY_COLOR}
                 />
               )}
             </div>

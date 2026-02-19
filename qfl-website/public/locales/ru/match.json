@@ -171,6 +171,10 @@
     "possessionPercent": "Владение (%)",
     "shotsMissed": "Удары мимо"
   },
+  "protocolCard": {
+    "title": "Протокол матча",
+    "open": "Открыть протокол"
+  },
   "buyTicket": "Купить билет",
   "totalMatches": "Найдено матчей: {{count}}",
   "noMatchesFiltered": "Матчи не найдены. Попробуйте изменить фильтры."

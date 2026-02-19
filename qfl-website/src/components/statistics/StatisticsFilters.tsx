@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
+import { PlayerStatsNationalityFilter } from '@/types';
 import { TeamStatistics } from '@/types/statistics';
 
 interface StatisticsFiltersProps {
@@ -10,6 +11,8 @@ interface StatisticsFiltersProps {
     onClubChange?: (clubId: string) => void;
     selectedPosition?: string;
     onPositionChange?: (position: string) => void;
+    selectedNationality?: PlayerStatsNationalityFilter;
+    onNationalityChange?: (nationality: PlayerStatsNationalityFilter) => void;
     teams?: TeamStatistics[];
 }
 
@@ -19,6 +22,8 @@ export function StatisticsFilters({
     onClubChange,
     selectedPosition,
     onPositionChange,
+    selectedNationality,
+    onNationalityChange,
     teams = []
 }: StatisticsFiltersProps) {
     const { t } = useTranslation('statistics');
@@ -26,6 +31,12 @@ export function StatisticsFilters({
     const getPositionLabel = (pos: string) => {
         if (pos === 'all') return t('filters.allPositions');
         return t(`filters.positions.${pos}`);
+    };
+
+    const getNationalityLabel = (type: PlayerStatsNationalityFilter) => {
+        if (type === 'kz') return t('filters.kazakhstanPlayers');
+        if (type === 'foreign') return t('filters.foreignPlayers');
+        return t('filters.allNationalities');
     };
 
     return (
@@ -70,6 +81,29 @@ export function StatisticsFilters({
                                             }`}
                                     >
                                         {getPositionLabel(pos)}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {mode === 'players' && onNationalityChange && (
+                        <div className="flex items-center gap-2 w-full md:w-auto">
+                            <span className="text-sm font-medium text-gray-700 dark:text-slate-300 shrink-0">
+                                {t('filters.nationality')}:
+                            </span>
+                            <div className="flex gap-1 border border-gray-200 dark:border-dark-border rounded-lg overflow-x-auto p-1 bg-gray-50 dark:bg-dark-surface-soft no-scrollbar min-w-0 w-full md:w-auto">
+                                {(['all', 'kz', 'foreign'] as PlayerStatsNationalityFilter[]).map((type) => (
+                                    <button
+                                        key={type}
+                                        onClick={() => onNationalityChange(type)}
+                                        className={`shrink-0 px-3 py-1.5 text-xs font-bold rounded transition-colors ${
+                                            selectedNationality === type
+                                                ? 'bg-primary dark:bg-cyan-600 text-white shadow-sm'
+                                                : 'text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-dark-surface-soft'
+                                        }`}
+                                    >
+                                        {getNationalityLabel(type)}
                                     </button>
                                 ))}
                             </div>

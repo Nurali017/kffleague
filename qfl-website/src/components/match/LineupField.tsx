@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
 import { getFormationPositions } from '@/lib/utils/formations';
-import { getTeamColor, getTeamLogo } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
 // Jersey Icon Component (UEFA Style)
 function JerseyIcon({ color, number, isGoalkeeper = false }: { color: string; number: number; isGoalkeeper?: boolean }) {
@@ -83,9 +83,8 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
     );
   }
 
-  // Use team colors or fallbacks
-  const homeColor = getTeamColor(homeTeam.id) || '#0057b7'; // Default Blue
-  const awayColor = getTeamColor(awayTeam.id) || '#d62828'; // Default Red
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px_1fr] gap-0 lg:gap-6 items-start">

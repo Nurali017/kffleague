@@ -20,31 +20,18 @@ const TEAM_LOGOS: Record<number, string> = {
   46: 'https://upload.wikimedia.org/wikipedia/en/4/4e/FC_Shakhter_Karagandy_logo.png', // Shakhter
 };
 
-// Colors for fallback circles
-const TEAM_COLORS: Record<number, string> = {
-  13: '#FFCC00', // Kairat - yellow
-  91: '#00BFFF', // Astana - sky blue
-  90: '#006400', // Tobol - green
-  93: '#1E90FF', // Elimai - blue
-  51: '#FF0000', // Aktobe - red
-  92: '#FFD700', // Jenis - gold
-  81: '#228B22', // Ordabasy - green
-  318: '#4169E1', // Okzhetpes - blue
-  87: '#DC143C', // Kyzylzhar - crimson
-  293: '#808080', // Ulytau - gray
-  94: '#FFA500', // Kaysar - orange
-  45: '#0000CD', // Jetisu - blue
-  49: '#32CD32', // Atyrau - lime green
-  80: '#8B0000', // Turan - dark red
-  46: '#FF4500', // Shakhter - orange-red
-};
+// Neutral color constants — no per-team colors
+export const HOME_COLOR = '#1E4D8C';    // синий — хозяева
+export const AWAY_COLOR = '#E5B73B';    // золотой — гости
+export const NEUTRAL_COLOR = '#6B7280'; // серый — таблицы/лидерборды
 
 export function getTeamLogo(teamId: number): string | null {
   return TEAM_LOGOS[teamId] || null;
 }
 
-export function getTeamColor(teamId: number): string {
-  return TEAM_COLORS[teamId] || '#1E4D8C';
+// Returns a neutral fallback color for logo circles in tables/leaderboards
+export function getTeamColor(_teamId: number): string {
+  return NEUTRAL_COLOR;
 }
 
 export function getTeamInitials(teamName: string): string {

@@ -93,6 +93,7 @@ export const handlers = [
     const offset = Number(url.searchParams.get('offset') ?? '0');
     const teamIdRaw = url.searchParams.get('team_id');
     const positionCode = url.searchParams.get('position_code');
+    const nationality = url.searchParams.get('nationality');
 
     const allItems = [
       {
@@ -100,6 +101,12 @@ export const handlers = [
         first_name: 'Иван',
         last_name: 'Иванов',
         photo_url: null,
+        country: {
+          id: 1,
+          code: 'KZ',
+          name: 'Казахстан',
+          flag_url: null,
+        },
         team_id: 1,
         team_name: 'Астана',
         team_logo: '/images/placeholders/team.svg',
@@ -136,6 +143,12 @@ export const handlers = [
         first_name: 'Павел',
         last_name: 'Петров',
         photo_url: null,
+        country: {
+          id: 2,
+          code: 'RS',
+          name: 'Сербия',
+          flag_url: null,
+        },
         team_id: 1,
         team_name: 'Астана',
         team_logo: '/images/placeholders/team.svg',
@@ -172,6 +185,12 @@ export const handlers = [
         first_name: 'Азамат',
         last_name: 'Алиев',
         photo_url: null,
+        country: {
+          id: 1,
+          code: 'KZ',
+          name: 'Казахстан',
+          flag_url: null,
+        },
         team_id: 2,
         team_name: 'Кайрат',
         team_logo: '/images/placeholders/team.svg',
@@ -212,6 +231,14 @@ export const handlers = [
     }
     if (positionCode) {
       items = items.filter((p) => p.position_code === positionCode);
+    }
+    if (nationality === 'kz') {
+      items = items.filter((p) => p.country?.code?.toUpperCase() === 'KZ');
+    } else if (nationality === 'foreign') {
+      items = items.filter((p) => {
+        const code = p.country?.code?.toUpperCase();
+        return Boolean(code) && code !== 'KZ';
+      });
     }
 
     items = [...items].sort((a, b) => {

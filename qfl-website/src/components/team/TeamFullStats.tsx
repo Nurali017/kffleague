@@ -249,7 +249,7 @@ function DistributionSection({ s, gp }: { s: TeamStats; gp: number }) {
     const { t: tStats } = useTranslation('statistics');
 
     return (
-        <StatsSection title={tStats('subTabs.distribution', 'Распределение')}>
+        <StatsSection title={tStats('subTabs.distribution', 'Пас')}>
             <div className="flex flex-col lg:flex-row gap-8">
                 <StatDonut
                     value={s.pass_accuracy_avg != null ? Math.round(s.pass_accuracy_avg) : 0}

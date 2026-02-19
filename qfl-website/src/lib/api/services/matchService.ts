@@ -121,7 +121,7 @@ export const matchService = {
     if (filters.status) params.status = filters.status;
     if (filters.hide_past !== undefined) params.hide_past = filters.hide_past;
     if (filters.group_by_date !== undefined) params.group_by_date = filters.group_by_date;
-    if (filters.language) params.language = filters.language;
+    if (filters.language) params.lang = filters.language;
     if (filters.limit) params.limit = filters.limit;
     if (filters.offset) params.offset = filters.offset;
 

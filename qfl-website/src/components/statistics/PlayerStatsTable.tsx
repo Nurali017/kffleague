@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatValue, getColumnsForSubTab } from '@/lib/mock/statisticsHelpers';
 import { ExtendedPlayerStat, StatSubTab } from '@/types/statistics';
+import { PlayerStatsNationalityFilter } from '@/types';
 import { TableSkeleton } from './TableSkeleton';
 
 interface PlayerStatsTableProps {
     subTab: StatSubTab;
-    filters: { club: string; position: string };
+    filters: { club: string; position: string; nationality: PlayerStatsNationalityFilter };
     players: ExtendedPlayerStat[];
     loading?: boolean;
 }
@@ -43,6 +44,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
     const columns = useMemo(() => getColumnsForSubTab(subTab, 'players'), [subTab]);
     const [sortBy, setSortBy] = useState<string>(() => getDefaultSortBy(subTab, columns));
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [brokenPhotoIds, setBrokenPhotoIds] = useState<Set<string>>(new Set());
 
     // Ensure sort column exists in current subTab
     useEffect(() => {
@@ -60,6 +62,9 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
             if (filters.club !== 'all' && p.team_id.toString() !== filters.club) return false;
             const pos = p.position_code ?? null;
             if (filters.position !== 'all' && pos !== filters.position) return false;
+            const countryCode = p.country?.code?.toUpperCase() ?? null;
+            if (filters.nationality === 'kz' && countryCode !== 'KZ') return false;
+            if (filters.nationality === 'foreign' && (!countryCode || countryCode === 'KZ')) return false;
             return true;
         });
     }, [players, filters]);
@@ -87,6 +92,15 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
             setSortBy(key);
             setSortOrder('desc');
         }
+    };
+
+    const handlePhotoError = (playerId: string) => {
+        setBrokenPhotoIds((prev) => {
+            if (prev.has(playerId)) return prev;
+            const next = new Set(prev);
+            next.add(playerId);
+            return next;
+        });
     };
 
     if (loading) return <TableSkeleton rows={10} columns={columns.length + 3} />;
@@ -158,18 +172,37 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                 </td>
                                 <td className="px-4 py-2 sticky left-12 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-surface-soft overflow-hidden border border-gray-200 dark:border-dark-border-soft shrink-0">
-                                            {player.photo_url ? (
-                                                <img src={player.photo_url} alt={player.last_name} className="w-full h-full object-cover" />
+                                        <div className="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-surface-soft overflow-hidden border border-gray-200 dark:border-dark-border-soft shrink-0">
+                                            {player.photo_url && !brokenPhotoIds.has(player.player_id) ? (
+                                                <img
+                                                    src={player.photo_url}
+                                                    alt={player.last_name}
+                                                    className="w-full h-full object-cover object-top"
+                                                    onError={() => handlePhotoError(player.player_id)}
+                                                />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-slate-400">
                                                     <span className="text-xs">{t('table.noImage', { defaultValue: 'No Img' })}</span>
                                                 </div>
                                             )}
                                         </div>
-                                        <div>
-                                            <div className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight">{player.last_name}</div>
-                                            <div className="text-xs text-gray-500 dark:text-slate-400">{player.first_name}</div>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1.5 min-w-0">
+                                                <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate">
+                                                    {player.last_name}
+                                                </span>
+                                                {player.country?.flag_url ? (
+                                                    <img
+                                                        src={player.country.flag_url}
+                                                        alt={player.country?.code ? `${player.country.code.toUpperCase()} flag` : 'flag'}
+                                                        className="w-4 h-3 rounded-[1px] object-cover border border-gray-200 dark:border-dark-border-soft shrink-0"
+                                                        onError={(e) => {
+                                                            e.currentTarget.style.display = 'none';
+                                                        }}
+                                                    />
+                                                ) : null}
+                                            </div>
+                                            <div className="text-xs text-gray-500 dark:text-slate-400 truncate">{player.first_name}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -190,7 +223,10 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                     </div>
                                 </td>
                                 <td className="px-4 py-4 text-xs font-bold text-gray-500 dark:text-slate-400">
-                                    <span className="px-2 py-1 bg-gray-100 dark:bg-dark-surface-soft/60 rounded">
+                                    <span
+                                        className="inline-flex min-w-[44px] items-center justify-center px-2 py-1 bg-gray-100 dark:bg-dark-surface-soft/60 rounded"
+                                        title={player.top_role || undefined}
+                                    >
                                         {player.position_code ? t(`filters.positions.${player.position_code}`) : '—'}
                                     </span>
                                 </td>

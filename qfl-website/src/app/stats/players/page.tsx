@@ -8,7 +8,12 @@ import { StatisticsFilters } from '@/components/statistics/StatisticsFilters';
 import { PlayerStatsTable } from '@/components/statistics/PlayerStatsTable';
 import { StatSubTab } from '@/types/statistics';
 import { useTournament } from '@/contexts/TournamentContext';
-import { PlayerStatsSortBy, PositionCode } from '@/types';
+import {
+    PlayerStatsNationality,
+    PlayerStatsNationalityFilter,
+    PlayerStatsSortBy,
+    PositionCode,
+} from '@/types';
 
 export default function PlayersStatsPage() {
     const { t } = useTranslation('statistics');
@@ -16,6 +21,7 @@ export default function PlayersStatsPage() {
     const [subTab, setSubTab] = useState<StatSubTab>('key_stats');
     const [selectedClub, setSelectedClub] = useState('all');
     const [selectedPosition, setSelectedPosition] = useState('all');
+    const [selectedNationality, setSelectedNationality] = useState<PlayerStatsNationalityFilter>('all');
 
     const sortBy: PlayerStatsSortBy = (() => {
         switch (subTab) {
@@ -47,6 +53,10 @@ export default function PlayersStatsPage() {
 
     const positionCode =
         selectedPosition !== 'all' ? (selectedPosition as PositionCode) : undefined;
+    const nationality =
+        selectedNationality !== 'all'
+            ? (selectedNationality as PlayerStatsNationality)
+            : undefined;
 
     // Get players with high limit for table view
     const { players, loading, error } = usePlayerStats({
@@ -55,6 +65,7 @@ export default function PlayersStatsPage() {
         sortBy,
         teamId,
         positionCode,
+        nationality,
     });
 
     // Get teams for the filter dropdown (should not depend on team-stats availability)
@@ -73,6 +84,8 @@ export default function PlayersStatsPage() {
                 onClubChange={setSelectedClub}
                 selectedPosition={selectedPosition}
                 onPositionChange={setSelectedPosition}
+                selectedNationality={selectedNationality}
+                onNationalityChange={setSelectedNationality}
                 teams={teamsList.map((team) => ({
                     team_id: team.id,
                     team_name: team.name,
@@ -91,7 +104,11 @@ export default function PlayersStatsPage() {
                 ) : (
                     <PlayerStatsTable
                         subTab={subTab}
-                        filters={{ club: selectedClub, position: selectedPosition }}
+                        filters={{
+                            club: selectedClub,
+                            position: selectedPosition,
+                            nationality: selectedNationality,
+                        }}
                         players={players}
                         loading={loading}
                     />

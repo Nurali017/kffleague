@@ -2,7 +2,7 @@
 
 import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
 import { getFormationPositions } from '@/lib/utils/formations';
-import { getTeamColor, getTeamLogo } from '@/lib/utils/teamLogos';
+import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
 // Mini Jersey Icon Component
 function JerseyIconMini({ color, number }: { color: string; number: number }) {
@@ -54,8 +54,8 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
     );
   }
 
-  const homeColor = getTeamColor(homeTeam.id) || '#0057b7';
-  const awayColor = getTeamColor(awayTeam.id) || '#d62828';
+  const homeColor = HOME_COLOR;
+  const awayColor = AWAY_COLOR;
 
   const homePositions = getFormationPositions(lineups.home_team.formation || '4-4-2', false);
   const awayPositions = getFormationPositions(lineups.away_team.formation || '4-4-2', true);
