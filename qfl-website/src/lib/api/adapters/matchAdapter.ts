@@ -60,6 +60,13 @@ export interface BackendReferee {
 
 export interface BackendLineupResponse {
   game_id: number;
+  has_lineup?: boolean;
+  rendering?: {
+    mode?: 'field' | 'list' | 'hidden' | null;
+    source?: 'team_squad' | 'sota_api' | 'vsporte_api' | 'matches_players' | 'none' | null;
+    field_allowed_by_rules?: boolean | null;
+    field_data_valid?: boolean | null;
+  } | null;
   lineups: {
     home_team: BackendLineupTeam;
     away_team: BackendLineupTeam;
@@ -162,15 +169,39 @@ function transformTeamLineup(
 }
 
 export function adaptLineupResponse(backendResponse: BackendLineupResponse): LineupResponse {
+  const homeTeam = backendResponse.lineups.home_team;
+  const awayTeam = backendResponse.lineups.away_team;
+
+  const hasAnyLineupData =
+    (homeTeam.starters?.length || 0) +
+      (homeTeam.substitutes?.length || 0) +
+      (awayTeam.starters?.length || 0) +
+      (awayTeam.substitutes?.length || 0) >
+    0;
+
+  const mode =
+    backendResponse.rendering?.mode ||
+    (hasAnyLineupData ? 'field' : 'hidden');
+  const source =
+    backendResponse.rendering?.source ||
+    (hasAnyLineupData ? 'matches_players' : 'none');
+
   return {
     match_id: backendResponse.game_id,
+    has_lineup: backendResponse.has_lineup ?? hasAnyLineupData,
+    rendering: {
+      mode,
+      source,
+      field_allowed_by_rules: backendResponse.rendering?.field_allowed_by_rules ?? false,
+      field_data_valid: backendResponse.rendering?.field_data_valid ?? false,
+    },
     lineups: {
       home_team: transformTeamLineup(
-        backendResponse.lineups.home_team,
+        homeTeam,
         backendResponse.coaches?.home_team || []
       ),
       away_team: transformTeamLineup(
-        backendResponse.lineups.away_team,
+        awayTeam,
         backendResponse.coaches?.away_team || []
       ),
     },

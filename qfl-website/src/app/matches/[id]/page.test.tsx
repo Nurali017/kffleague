@@ -26,12 +26,13 @@ vi.mock('@/components/MatchHeader', () => ({
 }));
 
 vi.mock('@/components/match/MatchTabs', () => ({
-  MatchTabs: (props: { protocolUrl?: string | null }) => {
+  MatchTabs: (props: { protocolUrl?: string | null; showLineupsTab?: boolean }) => {
     matchTabsMock(props);
     return (
       <div
         data-testid="match-tabs"
         data-protocol-url={props.protocolUrl ?? ''}
+        data-show-lineups={props.showLineupsTab === false ? 'false' : 'true'}
       />
     );
   },
@@ -129,5 +130,65 @@ describe('MatchDetailPage protocol tabs integration', () => {
 
     expect(screen.getByTestId('match-tabs')).toHaveAttribute('data-protocol-url', '');
     expect(matchTabsMock).toHaveBeenCalled();
+  });
+
+  it('hides lineup tab and sidebar lineup block when rendering mode is hidden', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: { ...baseMatch, protocol_url: null },
+      loading: false,
+      error: null,
+    });
+    useMatchLineupMock.mockReturnValue({
+      lineup: {
+        match_id: 1,
+        has_lineup: false,
+        rendering: {
+          mode: 'hidden',
+          source: 'none',
+          field_allowed_by_rules: false,
+          field_data_valid: false,
+        },
+        lineups: {
+          home_team: { team_id: 1, team_name: 'Home', formation: '4-4-2', starters: [], substitutes: [] },
+          away_team: { team_id: 2, team_name: 'Away', formation: '4-4-2', starters: [], substitutes: [] },
+        },
+      },
+      loading: false,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(screen.getByTestId('match-tabs')).toHaveAttribute('data-show-lineups', 'false');
+    expect(screen.queryByTestId('lineup-field-mini')).not.toBeInTheDocument();
+  });
+
+  it('keeps lineup sidebar block when rendering mode is list', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: { ...baseMatch, protocol_url: null },
+      loading: false,
+      error: null,
+    });
+    useMatchLineupMock.mockReturnValue({
+      lineup: {
+        match_id: 1,
+        has_lineup: true,
+        rendering: {
+          mode: 'list',
+          source: 'matches_players',
+          field_allowed_by_rules: true,
+          field_data_valid: false,
+        },
+        lineups: {
+          home_team: { team_id: 1, team_name: 'Home', formation: '4-4-2', starters: [], substitutes: [] },
+          away_team: { team_id: 2, team_name: 'Away', formation: '4-4-2', starters: [], substitutes: [] },
+        },
+      },
+      loading: false,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(screen.getByTestId('match-tabs')).toHaveAttribute('data-show-lineups', 'true');
+    expect(screen.getByTestId('lineup-field-mini')).toBeInTheDocument();
   });
 });

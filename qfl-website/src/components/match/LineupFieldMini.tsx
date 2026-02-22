@@ -1,6 +1,6 @@
 'use client';
 
-import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
+import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
@@ -35,9 +35,27 @@ interface LineupFieldMiniProps {
   homeTeam: GameTeam;
   awayTeam: GameTeam;
   loading?: boolean;
+  renderingMode?: LineupRenderingMode;
 }
 
-export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: LineupFieldMiniProps) {
+function MiniPlayerName({ player }: { player: LineupPlayerExtended }) {
+  return (
+    <div className="flex items-center gap-2 py-1 text-xs">
+      <span className="inline-flex w-5 h-5 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-700">
+        {player.number}
+      </span>
+      <span className="truncate text-gray-800">{`${player.first_name} ${player.last_name}`}</span>
+    </div>
+  );
+}
+
+export function LineupFieldMini({
+  lineups,
+  homeTeam,
+  awayTeam,
+  loading,
+  renderingMode = 'field',
+}: LineupFieldMiniProps) {
   if (loading) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
@@ -47,6 +65,10 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
         <div className="animate-pulse aspect-[3/4] bg-gray-100" />
       </div>
     );
+  }
+
+  if (renderingMode === 'hidden') {
+    return null;
   }
 
   if (!lineups || !lineups.home_team || !lineups.away_team) {
@@ -66,6 +88,42 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
   const awayColor = resolveKitColor(lineups.away_team.kit_color, AWAY_COLOR);
   const homeStartersOrdered = orderStartersForPlacement(lineups.home_team.starters).slice(0, 11);
   const awayStartersOrdered = orderStartersForPlacement(lineups.away_team.starters).slice(0, 11);
+
+  if (renderingMode === 'list') {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <h3 className="text-sm font-bold text-gray-900">Составы</h3>
+        </div>
+        <div className="grid grid-cols-1 gap-4 p-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
+              <span className="text-xs font-bold text-gray-800">{homeTeam.name}</span>
+            </div>
+            <div className="space-y-1">
+              {homeStartersOrdered.map((player) => (
+                <MiniPlayerName key={player.player_id} player={player} />
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 pt-3">
+            <div className="flex items-center gap-2 mb-2">
+              <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
+              <span className="text-xs font-bold text-gray-800">{awayTeam.name}</span>
+            </div>
+            <div className="space-y-1">
+              {awayStartersOrdered.map((player) => (
+                <MiniPlayerName key={player.player_id} player={player} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const homePlacedPlayers = buildPlacedPlayers({
     starters: homeStartersOrdered,
     invertY: false,
@@ -77,15 +135,15 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
     mirrorX: true,
   });
 
-  // Map to field halves
+  // Map to field halves to match full-size lineup placement
   const mapToHomeHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: pos.y * 0.51 + 5.45
+    y: pos.y * 0.51 + 5.45,
   });
 
   const mapToAwayHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: pos.y * 0.53 + 41.3
+    y: pos.y * 0.53 + 41.3,
   });
 
   return (

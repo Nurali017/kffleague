@@ -13,14 +13,20 @@ interface MatchTabsProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
   protocolUrl?: string | null;
+  showLineupsTab?: boolean;
 }
 
-export function MatchTabs({ activeTab, onTabChange, protocolUrl }: MatchTabsProps) {
+export function MatchTabs({
+  activeTab,
+  onTabChange,
+  protocolUrl,
+  showLineupsTab = true,
+}: MatchTabsProps) {
   const { t } = useTranslation('match');
 
   const tabs: Tab[] = [
     { id: 'overview', labelKey: 'tabs.overview' },
-    { id: 'lineups', labelKey: 'tabs.lineups' },
+    ...(showLineupsTab ? [{ id: 'lineups', labelKey: 'tabs.lineups' } as Tab] : []),
     { id: 'statistics', labelKey: 'tabs.statistics' },
     { id: 'h2h', labelKey: 'tabs.h2h' },
   ];

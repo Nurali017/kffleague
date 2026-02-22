@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
+import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
@@ -67,20 +67,74 @@ function PlayerRow({ player }: { player: LineupPlayerExtended }) {
   );
 }
 
+function TeamLineupListCard({
+  team,
+  logoUrl,
+  starters,
+  substitutes,
+  startersTitle,
+  substitutesTitle,
+}: {
+  team: GameTeam;
+  logoUrl: string | null | undefined;
+  starters: LineupPlayerExtended[];
+  substitutes: LineupPlayerExtended[];
+  startersTitle: string;
+  substitutesTitle: string;
+}) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+      <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
+        <img src={logoUrl || getTeamLogo(team.id) || ''} className="w-8 h-8 object-contain" alt={team.name} />
+        <span className="font-bold text-gray-900">{team.name}</span>
+      </div>
+
+      <div className="px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-gray-500 bg-gray-50/60 border-b border-gray-100">
+        {startersTitle}
+      </div>
+      {starters.length > 0 ? (
+        starters.map((player) => <PlayerRow key={player.player_id} player={player} />)
+      ) : (
+        <div className="px-4 py-3 text-xs text-gray-400 border-b border-gray-100">-</div>
+      )}
+
+      <div className="px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-gray-500 bg-gray-50/60 border-b border-gray-100">
+        {substitutesTitle}
+      </div>
+      {substitutes.length > 0 ? (
+        substitutes.map((player) => <PlayerRow key={player.player_id} player={player} />)
+      ) : (
+        <div className="px-4 py-3 text-xs text-gray-400">-</div>
+      )}
+    </div>
+  );
+}
+
 interface LineupFieldProps {
   lineups?: MatchLineups;
   homeTeam: GameTeam;
   awayTeam: GameTeam;
   loading?: boolean;
+  renderingMode?: LineupRenderingMode;
 }
 
-export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFieldProps) {
+export function LineupField({
+  lineups,
+  homeTeam,
+  awayTeam,
+  loading,
+  renderingMode = 'field',
+}: LineupFieldProps) {
   const { t } = useTranslation('match');
 
   if (loading) {
     return (
       <div className="animate-pulse h-[800px] bg-gray-200 rounded-xl" />
     );
+  }
+
+  if (renderingMode === 'hidden') {
+    return null;
   }
 
   if (!lineups || !lineups.home_team || !lineups.away_team) {
@@ -95,6 +149,31 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
   const awayColor = resolveKitColor(lineups.away_team.kit_color, AWAY_COLOR);
   const homeStartersOrdered = orderStartersForPlacement(lineups.home_team.starters).slice(0, 11);
   const awayStartersOrdered = orderStartersForPlacement(lineups.away_team.starters).slice(0, 11);
+  const startersTitle = t('lineup.starting', { defaultValue: 'Основные' });
+  const substitutesTitle = t('lineup.substitutes', { defaultValue: 'Запасные' });
+
+  if (renderingMode === 'list') {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TeamLineupListCard
+          team={homeTeam}
+          logoUrl={homeTeam.logo_url}
+          starters={homeStartersOrdered}
+          substitutes={lineups.home_team.substitutes || []}
+          startersTitle={startersTitle}
+          substitutesTitle={substitutesTitle}
+        />
+        <TeamLineupListCard
+          team={awayTeam}
+          logoUrl={awayTeam.logo_url}
+          starters={awayStartersOrdered}
+          substitutes={lineups.away_team.substitutes || []}
+          startersTitle={startersTitle}
+          substitutesTitle={substitutesTitle}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px_1fr] gap-0 lg:gap-6 items-start">
@@ -138,8 +217,8 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
 interface FieldVisualizationProps {
   homeStarters: LineupPlayerExtended[];
   awayStarters: LineupPlayerExtended[];
-  homeFormation: string;
-  awayFormation: string;
+  homeFormation?: string;
+  awayFormation?: string;
   homeColor: string;
   awayColor: string;
   homeTeam: GameTeam;
@@ -171,16 +250,16 @@ function FieldVisualization({
     mirrorX: true,
   });
 
-  // Home -> GK(y=5)=8%, нападающие(y=80)=46% (имя на своей половине)
+  // Home -> GK(y=5)=8%, attackers(y=76)=~44%
   const mapToHomeHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: pos.y * 0.51 + 5.45
+    y: pos.y * 0.51 + 5.45,
   });
 
-  // Away (inverted) -> нападающие(y=20)=52%, GK(y=95)=92%
+  // Away (inverted) -> attackers near center, GK near bottom
   const mapToAwayHalf = (pos: { x: number; y: number }) => ({
     x: pos.x,
-    y: pos.y * 0.53 + 41.3
+    y: pos.y * 0.53 + 41.3,
   });
 
   return (

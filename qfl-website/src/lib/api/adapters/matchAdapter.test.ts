@@ -40,6 +40,8 @@ describe('matchAdapter', () => {
     });
 
     expect(adapted.match_id).toBe(1001);
+    expect(adapted.rendering?.mode).toBe('field');
+    expect(adapted.rendering?.source).toBe('matches_players');
     expect(adapted.lineups.home_team.starters[0].number).toBe(9);
     expect(adapted.lineups.home_team.starters[0].amplua).toBe('F');
     expect(adapted.lineups.home_team.starters[0].field_position).toBe('C');
@@ -104,6 +106,45 @@ describe('matchAdapter', () => {
       'MID',
       'FWD',
     ]);
+  });
+
+  it('keeps rendering metadata when backend provides it', () => {
+    const adapted = adaptLineupResponse({
+      game_id: 1004,
+      has_lineup: true,
+      rendering: {
+        mode: 'list',
+        source: 'team_squad',
+        field_allowed_by_rules: true,
+        field_data_valid: false,
+      },
+      lineups: {
+        home_team: {
+          team_id: 1,
+          team_name: 'Home',
+          formation: '4-4-2',
+          starters: [],
+          substitutes: [],
+        },
+        away_team: {
+          team_id: 2,
+          team_name: 'Away',
+          formation: '4-4-2',
+          starters: [],
+          substitutes: [],
+        },
+      },
+      referees: [],
+      coaches: {},
+    });
+
+    expect(adapted.has_lineup).toBe(true);
+    expect(adapted.rendering).toEqual({
+      mode: 'list',
+      source: 'team_squad',
+      field_allowed_by_rules: true,
+      field_data_valid: false,
+    });
   });
 
   it('maps live events to nullable player identifiers', () => {

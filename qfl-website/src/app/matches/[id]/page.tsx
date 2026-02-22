@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useMatchDetail, useMatchEvents, useMatchLineup, useMatchStats } from '@/hooks';
 import { transformTeamStats } from '@/lib/api/transformers/matchTransformers';
-import { PlayerCountry } from '@/types';
+import { LineupRenderingMode, PlayerCountry } from '@/types';
 import { MatchHeader } from '@/components/MatchHeader';
 import { MatchTabs, TabId } from '@/components/match/MatchTabs';
 import { MatchVideoCard } from '@/components/match/MatchVideoCard';
@@ -52,6 +52,27 @@ export default function MatchDetailPage() {
   const { events, loading: eventsLoading } = useMatchEvents(matchId, match?.is_live || false);
   const { lineup, loading: lineupLoading } = useMatchLineup(matchId, match?.is_live || false);
   const { stats, loading: statsLoading } = useMatchStats(matchId);
+
+  const lineupMode: LineupRenderingMode = useMemo(() => {
+    if (lineup?.rendering?.mode) {
+      return lineup.rendering.mode;
+    }
+    if (lineupLoading) {
+      return 'field';
+    }
+    if (lineup?.lineups) {
+      return 'field';
+    }
+    return 'hidden';
+  }, [lineup, lineupLoading]);
+
+  const showLineupsTab = lineupLoading || lineupMode !== 'hidden';
+
+  useEffect(() => {
+    if (!showLineupsTab && activeTab === 'lineups') {
+      setActiveTab('overview');
+    }
+  }, [activeTab, showLineupsTab]);
 
   // Трансформировать team_stats в формат home/away
   const transformedStats = useMemo(() => {
@@ -125,19 +146,21 @@ export default function MatchDetailPage() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         protocolUrl={match.protocol_url}
+        showLineupsTab={showLineupsTab}
       />
 
       {/* 3. Tab Content - Constrained Container */}
       <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-8">
 
         {/* Lineups tab - full width without sidebar */}
-        {activeTab === 'lineups' && (
+        {activeTab === 'lineups' && showLineupsTab && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <LineupField
               lineups={lineup?.lineups}
               homeTeam={match.home_team}
               awayTeam={match.away_team}
               loading={lineupLoading}
+              renderingMode={lineupMode}
             />
           </div>
         )}
@@ -177,12 +200,15 @@ export default function MatchDetailPage() {
 
             {/* Right Sidebar - 380px fixed width */}
             <div className="space-y-6">
-              <LineupFieldMini
-                lineups={lineup?.lineups}
-                homeTeam={match.home_team}
-                awayTeam={match.away_team}
-                loading={lineupLoading}
-              />
+              {showLineupsTab && (
+                <LineupFieldMini
+                  lineups={lineup?.lineups}
+                  homeTeam={match.home_team}
+                  awayTeam={match.away_team}
+                  loading={lineupLoading}
+                  renderingMode={lineupMode}
+                />
+              )}
               <TournamentTableMini
                 seasonId={match.season_id ?? undefined}
                 homeTeamId={match.home_team.id}

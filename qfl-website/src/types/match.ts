@@ -164,6 +164,21 @@ export interface MatchLineups {
   };
 }
 
+export type LineupRenderingMode = 'field' | 'list' | 'hidden';
+export type LineupRenderingSource =
+  | 'team_squad'
+  | 'sota_api'
+  | 'vsporte_api'
+  | 'matches_players'
+  | 'none';
+
+export interface LineupRendering {
+  mode: LineupRenderingMode;
+  source: LineupRenderingSource;
+  field_allowed_by_rules: boolean;
+  field_data_valid: boolean;
+}
+
 // Расширенный MatchDetail с новыми полями
 export interface MatchDetail extends Game {
   // Статус матча (уже есть в Game, переопределяем для расширения)
@@ -206,6 +221,8 @@ export interface MatchPlayerStatsResponse {
 
 export interface LineupResponse {
   match_id: number;
+  has_lineup?: boolean;
+  rendering?: LineupRendering;
   lineups: MatchLineups;
   referees?: RefereeInfo[];
   coaches?: {
