@@ -7,6 +7,7 @@ import { formatValue, getColumnsForSubTab } from '@/lib/mock/statisticsHelpers';
 import { ExtendedPlayerStat, StatSubTab } from '@/types/statistics';
 import { PlayerStatsNationalityFilter } from '@/types';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { TableSkeleton } from './TableSkeleton';
 
 interface PlayerStatsTableProps {
@@ -46,8 +47,6 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
     const columns = useMemo(() => getColumnsForSubTab(subTab, 'players'), [subTab]);
     const [sortBy, setSortBy] = useState<string>(() => getDefaultSortBy(subTab, columns));
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-    const [brokenPhotoIds, setBrokenPhotoIds] = useState<Set<number>>(new Set());
-
     // Ensure sort column exists in current subTab
     useEffect(() => {
         const columnKeys = new Set(columns.map((c) => c.key));
@@ -94,15 +93,6 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
             setSortBy(key);
             setSortOrder('desc');
         }
-    };
-
-    const handlePhotoError = (playerId: number) => {
-        setBrokenPhotoIds((prev) => {
-            if (prev.has(playerId)) return prev;
-            const next = new Set(prev);
-            next.add(playerId);
-            return next;
-        });
     };
 
     if (loading) return <TableSkeleton rows={10} columns={columns.length + 3} />;
@@ -177,20 +167,12 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                         const playerHref = getPlayerHref(player.player_id);
                                         const content = (
                                             <div className="flex items-center gap-3">
-                                                <div className="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-surface-soft overflow-hidden border border-gray-200 dark:border-dark-border-soft shrink-0">
-                                                    {player.photo_url && !brokenPhotoIds.has(player.player_id) ? (
-                                                        <img
-                                                            src={player.photo_url}
-                                                            alt={player.last_name}
-                                                            className="w-full h-full object-cover object-top"
-                                                            onError={() => handlePhotoError(player.player_id)}
-                                                        />
-                                                    ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-slate-400">
-                                                            <span className="text-xs">{t('table.noImage', { defaultValue: 'No Img' })}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                <PlayerAvatar
+                                                    photoUrl={player.photo_url}
+                                                    firstName={player.first_name}
+                                                    lastName={player.last_name}
+                                                    size="md"
+                                                />
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-1.5 min-w-0">
                                                         <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate">

@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { SquadPlayer } from '@/types';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
 interface TeamSquadProps {
   players: SquadPlayer[];
@@ -48,8 +48,6 @@ function PlayerCard({ player }: PlayerCardProps) {
   ].filter(Boolean);
   const meta = metaParts.join(' · ');
 
-  const initials = `${player.first_name?.[0] || ''}${player.last_name?.[0] || ''}`.toUpperCase();
-
   return (
     <Link
       href={`/player/${player.player_id}`}
@@ -58,21 +56,12 @@ function PlayerCard({ player }: PlayerCardProps) {
     >
       <div className="flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-white/5">
         {/* Photo */}
-        <div className="relative w-11 h-11 rounded-full overflow-hidden bg-gray-200 dark:bg-white/10 shrink-0">
-          {player.photo_url ? (
-            <Image
-              src={player.photo_url}
-              alt={fullName}
-              fill
-              sizes="44px"
-              className="object-cover object-top"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-400 dark:text-white/40">
-              {initials}
-            </div>
-          )}
-        </div>
+        <PlayerAvatar
+          photoUrl={player.photo_url}
+          firstName={player.first_name}
+          lastName={player.last_name}
+          size="lg"
+        />
 
         {/* Name + meta */}
         <div className="flex-1 min-w-0">

@@ -30,6 +30,24 @@ const STORAGE_KEY = 'qfl_selected_tournament';
 
 type TournamentFrontMap = Record<string, FrontMapEntry>;
 
+function shouldRedirectHomeOnTournamentSwitch(pathname: string): boolean {
+  const normalizedPath = pathname.split('?')[0].replace(/\/+$/, '');
+  if (!normalizedPath) {
+    return false;
+  }
+
+  return /^\/(?:[a-z]{2}\/)?(?:player|team|teams|matches)\/[^/]+$/i.test(normalizedPath);
+}
+
+function isTeamsListRoute(pathname: string): boolean {
+  const normalizedPath = pathname.split('?')[0].replace(/\/+$/, '');
+  if (!normalizedPath) {
+    return false;
+  }
+
+  return /^\/(?:[a-z]{2}\/)?teams$/i.test(normalizedPath);
+}
+
 function buildTournamentFromApi(
   id: string,
   entry: FrontMapEntry,
@@ -192,12 +210,14 @@ export function TournamentProvider({
 
   const setTournament = useCallback(
     (id: string) => {
+      if (id === tournamentId) {
+        return;
+      }
+
       const tournament = getTournamentById(id);
       if (!tournament) {
         return;
       }
-
-      setTournamentId(id);
 
       if (typeof window !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, id);
@@ -206,13 +226,29 @@ export function TournamentProvider({
 
       const nextSeasonId = getSeasonIdFromFrontMap(id, frontMap);
 
+      if (shouldRedirectHomeOnTournamentSwitch(pathname)) {
+        setTournamentId(id);
+        const params = new URLSearchParams();
+        params.set('tournament', id);
+        params.set('season', nextSeasonId.toString());
+        if (tournament.currentRound != null) {
+          params.set('round', tournament.currentRound.toString());
+        }
+        router.push(`/?${params.toString()}`, { scroll: false });
+        return;
+      }
+
+      if (!isTeamsListRoute(pathname)) {
+        setTournamentId(id);
+      }
+
       updateUrl({
         tournament: id,
         season: nextSeasonId.toString(),
         round: tournament.currentRound?.toString(),
       });
     },
-    [frontMap, updateUrl]
+    [frontMap, pathname, router, tournamentId, updateUrl]
   );
 
   const setSeason = useCallback(
@@ -272,12 +308,16 @@ export function TournamentProvider({
       return;
     }
 
+    if (shouldRedirectHomeOnTournamentSwitch(pathname)) {
+      return;
+    }
+
     const expectedSeasonId = getSeasonIdFromFrontMap(tournamentId, frontMap);
     const seasonFromQuery = Number(searchParams.get('season'));
     if (!Number.isFinite(seasonFromQuery) || seasonFromQuery !== expectedSeasonId) {
       updateUrl({ season: expectedSeasonId.toString() });
     }
-  }, [frontMap, searchParams, tournamentId, updateUrl]);
+  }, [frontMap, pathname, searchParams, tournamentId, updateUrl]);
 
   // Sync localStorage ↔ cookie
   useEffect(() => {

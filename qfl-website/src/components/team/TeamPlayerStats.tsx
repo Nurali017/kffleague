@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { TeamOverviewLeaderPlayer, TeamOverviewLeaders } from '@/types/team';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { SectionCard } from './TeamUiPrimitives';
 
 interface TeamPlayerStatsProps {
@@ -117,7 +118,6 @@ function LeaderPanel({
             {rest.map((player, index) => {
               const pFirst = player.first_name?.trim() || '';
               const pLast = player.last_name?.trim() || '';
-              const pInitials = `${pFirst[0] || ''}${pLast[0] || ''}`.toUpperCase();
               const pValue = statKey === 'goals' ? player.goals : player.assists;
 
               return (
@@ -130,17 +130,12 @@ function LeaderPanel({
                     {index + 2}
                   </span>
                   <div className="flex items-center gap-2.5 min-w-0">
-                    {player.photo_url ? (
-                      <img
-                        src={player.photo_url}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover shrink-0"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-white/15 flex items-center justify-center text-[10px] font-bold text-slate-500 dark:text-white/60 shrink-0">
-                        {pInitials}
-                      </div>
-                    )}
+                    <PlayerAvatar
+                      photoUrl={player.photo_url}
+                      firstName={pFirst}
+                      lastName={pLast}
+                      size="sm"
+                    />
                     <div className="min-w-0">
                       <span className="block text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-cyan-300 transition-colors">
                         {pFirst} {pLast}

@@ -4,8 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { usePlayerStats } from '@/hooks';
-
-const AVATAR_PLACEHOLDER_SRC = '/images/placeholders/avatar.svg';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
 interface Player {
   player_id: number;
@@ -84,19 +83,11 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
                     href={`/player/${player.player_id}`}
                     className="flex items-center space-x-3 hover:text-accent transition-colors"
                   >
-                    <img
-                      src={
-                        player.photo_url ||
-                        AVATAR_PLACEHOLDER_SRC
-                      }
-                      alt={`${player.first_name} ${player.last_name}`}
-                      className="w-10 h-10 rounded-full object-cover bg-gray-200"
-                      onError={(e) => {
-                        const img = e.currentTarget;
-                        if (img.dataset.fallbackApplied) return;
-                        img.dataset.fallbackApplied = 'true';
-                        img.src = AVATAR_PLACEHOLDER_SRC;
-                      }}
+                    <PlayerAvatar
+                      photoUrl={player.photo_url}
+                      firstName={player.first_name}
+                      lastName={player.last_name}
+                      size="md"
                     />
                     <span className="font-medium text-primary">
                       {player.last_name}

@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { useTeamCoaches } from '@/hooks/useTeam';
 import { useTournament } from '@/contexts/TournamentContext';
-import { User } from 'lucide-react';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
 interface TeamCoachingStaffProps {
     teamId: number;
@@ -52,17 +52,13 @@ export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
                         key={coach.id}
                         className="flex flex-col items-center text-center p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/25 transition-colors"
                     >
-                        {coach.photo_url ? (
-                            <img
-                                src={coach.photo_url}
-                                alt={`${coach.first_name} ${coach.last_name}`}
-                                className="w-20 h-20 rounded-full object-cover object-top mb-3 border-2 border-gray-300 dark:border-white/20 shadow"
-                            />
-                        ) : (
-                            <div className="w-20 h-20 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center mb-3 border-2 border-gray-300 dark:border-white/20 shadow">
-                                <User className="w-8 h-8 text-slate-400 dark:text-white/40" />
-                            </div>
-                        )}
+                        <PlayerAvatar
+                            photoUrl={coach.photo_url}
+                            firstName={coach.first_name}
+                            lastName={coach.last_name}
+                            size="xl"
+                            className="mb-3 border-2 border-gray-300 dark:border-white/20 shadow"
+                        />
                         <span className="font-bold text-sm text-slate-900 dark:text-white">
                             {coach.first_name} {coach.last_name}
                         </span>
