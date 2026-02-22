@@ -79,8 +79,13 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
 
               <div className="px-1 text-center shrink-0">
                 {isFinished ? (
-                  <div className="text-lg font-bold text-gray-900 dark:text-slate-100 whitespace-nowrap">
-                    {match.home_score} - {match.away_score}
+                  <div className="flex items-center justify-center gap-1">
+                    <div className="text-lg font-bold text-gray-900 dark:text-slate-100 whitespace-nowrap">
+                      {match.home_score} - {match.away_score}
+                    </div>
+                    {match.is_technical && (
+                      <span className="text-[10px] text-orange-500 font-medium">Т</span>
+                    )}
                   </div>
                 ) : isLive ? (
                   <div className="text-lg font-bold text-red-500 whitespace-nowrap">
@@ -190,8 +195,13 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
 
               <div className="px-2 lg:px-4 text-center shrink-0">
                 {isFinished ? (
-                  <div className="text-xl font-bold text-gray-900 dark:text-slate-100 whitespace-nowrap">
-                    {match.home_score} - {match.away_score}
+                  <div className="flex items-center justify-center gap-1">
+                    <div className="text-xl font-bold text-gray-900 dark:text-slate-100 whitespace-nowrap">
+                      {match.home_score} - {match.away_score}
+                    </div>
+                    {match.is_technical && (
+                      <span className="text-[10px] text-orange-500 font-medium">Т</span>
+                    )}
                   </div>
                 ) : isLive ? (
                   <div className="text-xl font-bold text-red-500 whitespace-nowrap">

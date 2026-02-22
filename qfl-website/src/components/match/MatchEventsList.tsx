@@ -11,9 +11,10 @@ interface MatchEventsListProps {
   homeTeam: GameTeam;
   awayTeam: GameTeam;
   loading?: boolean;
+  isTechnical?: boolean;
 }
 
-export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEventsListProps) {
+export function MatchEventsList({ events, homeTeam, awayTeam, loading, isTechnical }: MatchEventsListProps) {
   if (loading) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-pulse">
@@ -31,8 +32,12 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
   if (!events || events.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-4 py-8 text-center text-gray-500">
-          Нет событий для отображения
+        <div className="px-4 py-8 text-center">
+          {isTechnical ? (
+            <span className="text-orange-500 font-medium">Техническая победа</span>
+          ) : (
+            <span className="text-gray-500">Нет событий для отображения</span>
+          )}
         </div>
       </div>
     );

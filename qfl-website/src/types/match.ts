@@ -28,6 +28,7 @@ export interface Game {
   has_lineup: boolean;
   visitors: number | null;
   is_live: boolean;
+  is_technical?: boolean;
   status: "upcoming" | "live" | "finished";
   ticket_url: string | null;
   video_url: string | null;
@@ -233,6 +234,7 @@ export interface LineupResponse {
 
 export interface EventsResponse {
   game_id: number;
+  is_technical?: boolean;
   total: number;
   events: EnhancedMatchEvent[];
 }

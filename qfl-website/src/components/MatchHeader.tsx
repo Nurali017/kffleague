@@ -140,6 +140,11 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
                     {match.status === 'finished' ? t('finished') : match.status}
                   </div>
                 )}
+                {match.is_technical && (
+                  <div className="mt-1 sm:mt-2 text-xs sm:text-sm text-orange-400 font-medium">
+                    Техническая победа
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex flex-col items-center">
