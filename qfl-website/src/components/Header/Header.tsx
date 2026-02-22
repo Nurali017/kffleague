@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { MainNav } from './MainNav';
 import { MobileMenu } from './MobileMenu';
 import { NavItem, LiveMatchData } from './types';
+import { useTournament } from '@/contexts/TournamentContext';
 
 // Mock live match data - replace with actual API call
 const mockLiveMatch: LiveMatchData | null = null; // Set to null when no live match
@@ -23,7 +24,13 @@ export function Header() {
   const { t, i18n } = useTranslation('navigation');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { currentTournament, effectiveSeasonId, secondLeagueStage } = useTournament();
   const lang = i18n.language?.substring(0, 2) === 'kz' ? 'kz' : 'ru';
+  const teamsHref = `/teams?tournament=${currentTournament.id}&season=${effectiveSeasonId}${
+    currentTournament.id === '2l' && secondLeagueStage
+      ? `&stage=${secondLeagueStage}`
+      : ''
+  }`;
 
   // Navigation items with translations
   const navItems: NavItem[] = [
@@ -35,7 +42,7 @@ export function Header() {
     {
       key: 'teams',
       label: t('items.teams', { defaultValue: lang === 'kz' ? 'Командалар' : 'Команды' }),
-      href: '/teams',
+      href: teamsHref,
     },
     {
       key: 'stats',

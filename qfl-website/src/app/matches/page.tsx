@@ -2,6 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { MatchCenter } from '@/components/MatchCenter';
+import { SecondLeagueStageSwitcher } from '@/components/tournament';
 
 export default function MatchesPage() {
   const { t } = useTranslation('match');
@@ -15,6 +16,7 @@ export default function MatchesPage() {
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 pb-8">
+        <SecondLeagueStageSwitcher className="mb-4" />
         <MatchCenter />
       </div>
     </div>

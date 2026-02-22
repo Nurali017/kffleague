@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { teamStatsTableService } from '@/lib/api/services/teamStatsTableService';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { TeamStatsTableResponse } from '@/types/statistics';
+import { queryKeys } from '@/lib/api/queryKeys';
+import { prefetchKeys } from '@/lib/api/prefetchKeys';
+import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
 
 interface UseTeamStatsTableOptions {
     seasonId?: number;
@@ -19,10 +22,16 @@ export function useTeamStatsTable(options: UseTeamStatsTableOptions = {}) {
         limit = 50,
         offset = 0,
     } = options;
+    const prefetched = useRoutePrefetchValue<TeamStatsTableResponse>(
+        prefetchKeys.teamStatsTable(seasonId, sortBy, limit, offset, i18n.language)
+    );
 
     const { data, error, isLoading, mutate } = useSWR<TeamStatsTableResponse>(
-        ['teamStatsTable', seasonId, sortBy, limit, offset, i18n.language],
-        () => teamStatsTableService.getTeamStats({ seasonId, sortBy, limit, offset, language: i18n.language })
+        queryKeys.stats.teamTable(seasonId, sortBy, limit, offset, i18n.language),
+        () => teamStatsTableService.getTeamStats({ seasonId, sortBy, limit, offset, language: i18n.language }),
+        {
+            fallbackData: prefetched,
+        }
     );
 
     return {

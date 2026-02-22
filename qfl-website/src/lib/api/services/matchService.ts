@@ -14,10 +14,16 @@ import {
   transformLineupResponse,
   transformMatchEvents,
 } from '../transformers/matchTransformers';
+import { BackendLineupResponse, BackendLiveEventsResponse } from '../adapters/matchAdapter';
 
 interface GamesResponse {
   items: Game[];
 }
+
+type MatchCenterQuery = Record<
+  string,
+  string | number | boolean | Array<string | number>
+>;
 
 export const matchService = {
   async getGamesByTour(
@@ -41,7 +47,7 @@ export const matchService = {
   },
 
   async getMatchById(
-    matchId: string,
+    matchId: number,
     language?: string
   ): Promise<MatchDetail | null> {
     const response = await apiClient.get<MatchDetail>(
@@ -57,7 +63,7 @@ export const matchService = {
   },
 
   async getMatchStats(
-    matchId: string,
+    matchId: number,
     language?: string
   ): Promise<MatchPlayerStatsResponse> {
     const response = await apiClient.get<MatchPlayerStatsResponse>(
@@ -73,10 +79,10 @@ export const matchService = {
   },
 
   async getMatchLineup(
-    matchId: string,
+    matchId: number,
     language?: string
   ): Promise<LineupResponse> {
-    const response = await apiClient.get<any>(
+    const response = await apiClient.get<BackendLineupResponse>(
       ENDPOINTS.MATCH_LINEUP(matchId),
       language ? { lang: language } : undefined
     );
@@ -90,10 +96,10 @@ export const matchService = {
   },
 
   async getMatchEvents(
-    matchId: string,
+    matchId: number,
     language?: string
   ): Promise<EventsResponse> {
-    const response = await apiClient.get<any>(
+    const response = await apiClient.get<BackendLiveEventsResponse>(
       ENDPOINTS.MATCH_EVENTS(matchId),
       language ? { lang: language } : undefined
     );
@@ -109,7 +115,7 @@ export const matchService = {
   async getMatchCenter(
     filters: MatchCenterFilters = {}
   ): Promise<GroupedMatchesResponse | StandardMatchesResponse> {
-    const params: Record<string, any> = {};
+    const params: MatchCenterQuery = {};
 
     if (filters.season_id) params.season_id = filters.season_id;
     if (filters.tours?.length) params.tours = filters.tours;

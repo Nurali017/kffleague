@@ -4,17 +4,41 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { useTournament } from '@/contexts/TournamentContext';
-import { useMatches } from '@/hooks';
+import { useMatchCenter, useMatches } from '@/hooks';
+import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
 
 export function HomeMatches() {
   const { t, i18n } = useTranslation('match');
   const { effectiveSeasonId, currentRound } = useTournament();
-  const { matches, loading, error } = useMatches({
+  const useTourBasedMatches = currentRound !== null;
+
+  const {
+    matches: tourMatches,
+    loading: tourMatchesLoading,
+    error: tourMatchesError,
+  } = useMatches({
     seasonId: effectiveSeasonId,
-    tour: currentRound ?? 26
+    tour: currentRound ?? DEFAULT_TOUR,
+    enabled: useTourBasedMatches,
   });
+
+  const {
+    groups,
+    loading: groupedMatchesLoading,
+    error: groupedMatchesError,
+  } = useMatchCenter({
+    season_id: effectiveSeasonId,
+    group_by_date: true,
+    limit: 20,
+    enabled: !useTourBasedMatches,
+  });
+
+  const groupedMatches = groups.flatMap((group) => group.games);
+  const matches = useTourBasedMatches ? tourMatches : groupedMatches;
+  const loading = useTourBasedMatches ? tourMatchesLoading : groupedMatchesLoading;
+  const error = useTourBasedMatches ? tourMatchesError : groupedMatchesError;
 
   if (loading) {
     return (
@@ -36,7 +60,7 @@ export function HomeMatches() {
     );
   }
 
-  if (error || !matches) {
+  if (error) {
     return (
       <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full">
         <div className="flex items-center justify-between mb-4">

@@ -13,7 +13,7 @@ interface MatchHeaderProps {
   match: MatchDetail;
   events?: EnhancedMatchEvent[];
   eventsLoading?: boolean;
-  playerCountryMap?: Record<string, PlayerCountry>;
+  playerCountryMap?: Record<number, PlayerCountry>;
 }
 
 export function MatchHeader({ match, events = [], eventsLoading = false, playerCountryMap = {} }: MatchHeaderProps) {

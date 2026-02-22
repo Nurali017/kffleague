@@ -14,7 +14,7 @@ export interface Stadium {
 }
 
 export interface Game {
-  id: string;
+  id: number;
   date: string;
   time: string | null;
   tour: number | null;
@@ -39,9 +39,9 @@ export interface MatchEvent {
   type: 'goal' | 'yellow_card' | 'red_card' | 'substitution';
   minute: number;
   team: 'home' | 'away';
-  player_id: string;
+  player_id: number | null;
   player_name: string;
-  assist_player_id?: string;
+  assist_player_id?: number | null;
   assist_player_name?: string;
   substitute_in?: string;  // Для замен
   substitute_out?: string; // Для замен
@@ -53,15 +53,15 @@ export interface EnhancedMatchEvent {
   half: 1 | 2; // Разделение по таймам
   minute: number;
   event_type: 'goal' | 'yellow_card' | 'red_card' | 'substitution' | 'penalty';
-  team_id: number;
+  team_id: number | null;
   team_name: string;
-  player_id: string;
+  player_id: number | null;
   player_name: string;
-  player_number: number;
-  assist_player_id?: string;
+  player_number: number | null;
+  assist_player_id?: number | null;
   assist_player_name?: string;
   assist_player_number?: number;
-  player2_id?: string; // Для замен (выходит)
+  player2_id?: number | null; // Для замен (выходит)
   player2_name?: string;
   player2_number?: number;
   description?: string;
@@ -69,7 +69,7 @@ export interface EnhancedMatchEvent {
 
 // Статистика игрока в матче (из API /games/{id}/stats)
 export interface PlayerMatchStats {
-  player_id: string;
+  player_id: number;
   player_name: string;
   player_number: number;
   team_id: number;
@@ -99,7 +99,7 @@ export interface TeamLineup {
 }
 
 export interface LineupPlayer {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   number: number;
@@ -116,11 +116,13 @@ export interface PlayerCountry {
 }
 
 export interface LineupPlayerExtended {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   number: number;
   position: 'GK' | 'DEF' | 'MID' | 'FWD';
+  amplua?: 'Gk' | 'D' | 'DM' | 'M' | 'AM' | 'F' | null;
+  field_position?: 'L' | 'LC' | 'C' | 'RC' | 'R' | null;
   is_captain: boolean;
   photo_url?: string;
   country?: PlayerCountry;
@@ -134,6 +136,7 @@ export interface TeamLineupData {
   team_id: number;
   team_name: string;
   formation: string; // "4-4-2", "4-3-3"
+  kit_color?: string | null;
   coach_name?: string;
   starters: LineupPlayerExtended[];
   substitutes: LineupPlayerExtended[];
@@ -196,13 +199,13 @@ export interface MatchDetail extends Game {
 
 // Response типы для API
 export interface MatchPlayerStatsResponse {
-  match_id: string;
+  match_id: number;
   team_stats?: any;
   player_stats: PlayerMatchStats[];
 }
 
 export interface LineupResponse {
-  match_id: string;
+  match_id: number;
   lineups: MatchLineups;
   referees?: RefereeInfo[];
   coaches?: {
@@ -212,7 +215,7 @@ export interface LineupResponse {
 }
 
 export interface EventsResponse {
-  game_id: string;
+  game_id: number;
   total: number;
   events: EnhancedMatchEvent[];
 }

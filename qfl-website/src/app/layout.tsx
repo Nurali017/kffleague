@@ -6,8 +6,14 @@ import { Footer } from '@/components/Footer';
 import { SponsorsSection } from '@/components/SponsorsSection';
 import { BackToTop } from '@/components/BackToTop';
 import { TournamentBar } from '@/components/tournament';
+import { JsonLd } from '@/components/JsonLd';
 import { getLanguageFromCookie } from '@/lib/i18n/cookies.server';
-import { getTournamentFromCookie } from '@/lib/tournament/cookies.server';
+import {
+  getSecondLeagueStageFromCookie,
+  getTournamentFromCookie,
+} from '@/lib/tournament/cookies.server';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION_RU, DEFAULT_OG_IMAGE } from '@/lib/seo/constants';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -17,13 +23,29 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Қазақстан Премьер-Лигасы',
-  description: 'Официальный сайт Казахстанской Премьер-Лиги',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION_RU,
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-icon.png',
   },
   manifest: '/manifest.json',
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 // Inline script to prevent theme flash - runs before React hydration
@@ -76,6 +98,7 @@ export default function RootLayout({
 }) {
   const lang = getLanguageFromCookie();
   const initialTournamentId = getTournamentFromCookie();
+  const initialSecondLeagueStage = getSecondLeagueStageFromCookie();
 
   return (
     <html lang={lang} suppressHydrationWarning>
@@ -84,7 +107,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: leagueColorScript }} />
       </head>
       <body className={`${montserrat.className} min-h-screen bg-[#F5F5F5] dark:bg-dark-bg`}>
-        <Providers initialLang={lang} initialTournamentId={initialTournamentId}>
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        <Providers
+          initialLang={lang}
+          initialTournamentId={initialTournamentId}
+          initialSecondLeagueStage={initialSecondLeagueStage}
+        >
           <TournamentBar />
           <Header />
           <main>{children}</main>

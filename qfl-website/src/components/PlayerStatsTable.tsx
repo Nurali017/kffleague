@@ -8,7 +8,7 @@ import { usePlayerStats } from '@/hooks';
 const AVATAR_PLACEHOLDER_SRC = '/images/placeholders/avatar.svg';
 
 interface Player {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   photo_url?: string | null;

@@ -14,7 +14,7 @@ const events: EnhancedMatchEvent[] = [
     event_type: 'goal',
     team_id: 1,
     team_name: 'Home',
-    player_id: 'p1',
+    player_id: 1,
     player_name: 'Player One',
     player_number: 9,
   },
@@ -44,4 +44,3 @@ describe('MatchEventTimeline (mobile)', () => {
     });
   });
 });
-

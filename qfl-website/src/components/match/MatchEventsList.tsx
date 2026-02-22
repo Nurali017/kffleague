@@ -119,14 +119,18 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
 
               {/* Player Info */}
               <div className="flex-1 min-w-0">
-                <Link
-                  href={`/player/${event.player_id}`}
-                  className="block hover:text-primary transition-colors"
-                >
-                  <div className="text-[13px] font-semibold text-gray-800">
-                    {event.player_name}
-                  </div>
-                </Link>
+                {event.player_id ? (
+                  <Link
+                    href={`/player/${event.player_id}`}
+                    className="block hover:text-primary transition-colors"
+                  >
+                    <div className="text-[13px] font-semibold text-gray-800">
+                      {event.player_name}
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="text-[13px] font-semibold text-gray-800">{event.player_name}</div>
+                )}
 
                 {/* Additional info */}
                 {event.event_type === 'substitution' && event.player2_name && (
@@ -153,9 +157,12 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading }: MatchEv
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{
-                    backgroundColor: event.team_id === homeTeam.id
-                      ? HOME_COLOR
-                      : AWAY_COLOR
+                    backgroundColor:
+                      event.team_id === homeTeam.id
+                        ? HOME_COLOR
+                        : event.team_id === awayTeam.id
+                          ? AWAY_COLOR
+                          : '#9CA3AF',
                   }}
                 />
               </div>

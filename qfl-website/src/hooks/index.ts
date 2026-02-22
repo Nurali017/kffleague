@@ -1,4 +1,6 @@
 export { useH2H } from './useH2H';
+export { useCupOverview } from './useCupOverview';
+export { useCupSchedule } from './useCupSchedule';
 export { useLeagueTable } from './useLeagueTable';
 export { useResultsGrid } from './useResultsGrid';
 export { useMatches } from './useMatches';

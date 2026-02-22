@@ -36,8 +36,8 @@ describe('TeamPageHero', () => {
     );
 
     expect(screen.getByText('Кайрат')).toBeInTheDocument();
-    expect(screen.getByText('Алматы')).toBeInTheDocument();
-    expect(screen.getByText('59')).toBeInTheDocument();
+    expect(screen.getByText('Орталық стадион')).toBeInTheDocument();
+    expect(screen.getByText('Премьер-Лига · 2025')).toBeInTheDocument();
   });
 
   it('renders without crashing in dark mode', () => {

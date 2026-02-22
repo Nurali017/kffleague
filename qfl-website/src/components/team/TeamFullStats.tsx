@@ -360,8 +360,8 @@ function DisciplinarySection({ s }: { s: TeamStats }) {
 
 export function TeamFullStats({ teamId }: TeamFullStatsProps) {
     const { t: tTeam } = useTranslation('team');
-    const { currentSeason } = useTournament();
-    const { stats, loading } = useTeamStats(teamId, currentSeason.id);
+    const { effectiveSeasonId } = useTournament();
+    const { stats, loading } = useTeamStats(teamId, effectiveSeasonId);
 
     if (loading) {
         return (

@@ -36,7 +36,6 @@ export const teamStatsTableService = {
         if (!response.success) {
             throw new Error(response.error?.message || 'Failed to fetch team statistics');
         }
-
         return response.data;
     },
 };

@@ -8,7 +8,7 @@ export interface CountryInfo {
 }
 
 export interface PlayerDetail {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   photo_url?: string | null;
@@ -42,7 +42,7 @@ export interface PlayerDetail {
 
 // API response format for player detail
 export interface PlayerDetailAPIResponse {
-  id: string;
+  id: number;
   first_name: string | null;
   last_name: string | null;
   birthday: string | null;
@@ -56,7 +56,7 @@ export interface PlayerDetailAPIResponse {
 }
 
 export interface PlayerMatchPerformance {
-  match_id: string;
+  match_id: number;
   date: string;
   home_team: { id: number; name: string; logo_url?: string };
   away_team: { id: number; name: string; logo_url?: string };
@@ -76,7 +76,7 @@ export interface PlayerMatchPerformance {
 
 // Player season stats response from /players/{id}/stats
 export interface PlayerSeasonStatsResponse {
-  player_id: string;
+  player_id: number;
   season_id: number;
   team_id: number | null;
 
@@ -114,7 +114,7 @@ export interface PlayerSeasonStatsResponse {
 
 // Player teammate
 export interface PlayerTeammate {
-  player_id: string;
+  player_id: number;
   first_name: string | null;
   last_name: string | null;
   jersey_number: number | null;

@@ -1,8 +1,16 @@
 'use client';
 
 import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
-import { getFormationPositions } from '@/lib/utils/formations';
+import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
+
+const HEX_COLOR_RE = /^#[0-9A-Fa-f]{6}$/;
+
+function resolveKitColor(raw: string | null | undefined, fallback: string): string {
+  if (!raw) return fallback;
+  const color = raw.trim();
+  return HEX_COLOR_RE.test(color) ? color.toUpperCase() : fallback;
+}
 
 // Mini Jersey Icon Component
 function JerseyIconMini({ color, number }: { color: string; number: number }) {
@@ -54,11 +62,20 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
     );
   }
 
-  const homeColor = HOME_COLOR;
-  const awayColor = AWAY_COLOR;
-
-  const homePositions = getFormationPositions(lineups.home_team.formation || '4-4-2', false);
-  const awayPositions = getFormationPositions(lineups.away_team.formation || '4-4-2', true);
+  const homeColor = resolveKitColor(lineups.home_team.kit_color, HOME_COLOR);
+  const awayColor = resolveKitColor(lineups.away_team.kit_color, AWAY_COLOR);
+  const homeStartersOrdered = orderStartersForPlacement(lineups.home_team.starters).slice(0, 11);
+  const awayStartersOrdered = orderStartersForPlacement(lineups.away_team.starters).slice(0, 11);
+  const homePlacedPlayers = buildPlacedPlayers({
+    starters: homeStartersOrdered,
+    invertY: false,
+    mirrorX: false,
+  });
+  const awayPlacedPlayers = buildPlacedPlayers({
+    starters: awayStartersOrdered,
+    invertY: true,
+    mirrorX: true,
+  });
 
   // Map to field halves
   const mapToHomeHalf = (pos: { x: number; y: number }) => ({
@@ -118,11 +135,8 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
 
         {/* Home Players */}
         <div className="absolute inset-0 z-10">
-          {lineups.home_team.starters.slice(0, 11).map((player, index) => {
-            const rawPos = homePositions[index];
-            if (!rawPos) return null;
-            const pos = mapToHomeHalf(rawPos);
-
+          {homePlacedPlayers.map(({ player, position }) => {
+            const pos = mapToHomeHalf(position);
             return (
               <PlayerMarkerMini
                 key={player.player_id}
@@ -136,11 +150,8 @@ export function LineupFieldMini({ lineups, homeTeam, awayTeam, loading }: Lineup
 
         {/* Away Players */}
         <div className="absolute inset-0 z-10">
-          {lineups.away_team.starters.slice(0, 11).map((player, index) => {
-            const rawPos = awayPositions[index];
-            if (!rawPos) return null;
-            const pos = mapToAwayHalf(rawPos);
-
+          {awayPlacedPlayers.map(({ player, position }) => {
+            const pos = mapToAwayHalf(position);
             return (
               <PlayerMarkerMini
                 key={player.player_id}
@@ -165,6 +176,7 @@ interface PlayerMarkerMiniProps {
 function PlayerMarkerMini({ player, position, teamColor }: PlayerMarkerMiniProps) {
   return (
     <div
+      data-testid={`lineup-marker-${player.player_id}`}
       className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5"
       style={{
         left: `${position.x}%`,

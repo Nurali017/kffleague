@@ -6,7 +6,7 @@ export interface PlayerStatCountry {
 }
 
 export interface PlayerStat {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   photo_url: string | null;

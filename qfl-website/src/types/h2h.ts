@@ -13,7 +13,7 @@ export interface H2HOverallStats {
 }
 
 export interface FormGuideMatch {
-  game_id: string;
+  game_id: number;
   date: string;
   result: 'W' | 'D' | 'L';
   opponent_id: number;
@@ -47,7 +47,7 @@ export interface SeasonTableEntry {
 }
 
 export interface PreviousMeeting {
-  game_id: string;
+  game_id: number;
   date: string;
   home_team_id: number;
   home_team_name: string;

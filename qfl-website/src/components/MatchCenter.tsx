@@ -11,7 +11,7 @@ import { MatchCenterSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { MatchCenterFilters as FiltersType } from '@/types';
-import { getMatchCenterFiltersFromUrl, syncMatchCenterFiltersToUrl } from '@/lib/utils/urlState';
+import { getMatchCenterFiltersFromUrl } from '@/lib/utils/urlState';
 
 export function MatchCenter() {
   const { t, i18n } = useTranslation('match');
@@ -42,8 +42,17 @@ export function MatchCenter() {
   const handleFilterChange = (newFilters: FiltersType) => {
     setFilters(newFilters);
 
-    // Build URL with new filters
-    const params = new URLSearchParams();
+    // Keep existing params (tournament/stage/lang) and only update match-center keys.
+    const params = new URLSearchParams(searchParams.toString());
+    [
+      'season_id',
+      'tours',
+      'team_ids',
+      'month',
+      'year',
+      'status',
+      'hide_past',
+    ].forEach((key) => params.delete(key));
 
     if (newFilters.season_id) params.set('season_id', String(newFilters.season_id));
     if (newFilters.tours?.length) params.set('tours', newFilters.tours.join(','));

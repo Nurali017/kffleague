@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { leagueService } from '@/lib/api/services';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { TeamStanding, TableFilters, LeagueTableResponse } from '@/types';
+import { queryKeys } from '@/lib/api/queryKeys';
+import { prefetchKeys } from '@/lib/api/prefetchKeys';
+import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
 
 interface UseLeagueTableOptions {
   seasonId?: number;
@@ -10,6 +13,7 @@ interface UseLeagueTableOptions {
   tourFrom?: number;
   tourTo?: number;
   homeAway?: 'home' | 'away' | null;
+  enabled?: boolean;
 }
 
 export function useLeagueTable(options: UseLeagueTableOptions = {}) {
@@ -19,17 +23,30 @@ export function useLeagueTable(options: UseLeagueTableOptions = {}) {
     limit,
     tourFrom,
     tourTo,
-    homeAway
+    homeAway,
+    enabled = true,
   } = options;
 
   const filters: TableFilters | undefined = (tourFrom || tourTo || homeAway)
     ? { tour_from: tourFrom, tour_to: tourTo, home_away: homeAway }
     : undefined;
+  const prefetched = useRoutePrefetchValue<LeagueTableResponse>(
+    prefetchKeys.leagueTable(
+      seasonId,
+      tourFrom,
+      tourTo,
+      homeAway,
+      i18n.language
+    )
+  );
 
   const { data, error, isLoading, mutate } = useSWR<LeagueTableResponse>(
-    ['leagueTable', seasonId, tourFrom, tourTo, homeAway, i18n.language],
+    enabled
+      ? queryKeys.league.table(seasonId, tourFrom, tourTo, homeAway, i18n.language)
+      : null,
     () => leagueService.getTable(seasonId, filters, i18n.language),
     {
+      fallbackData: prefetched,
       keepPreviousData: true,
       revalidateOnFocus: false,
     }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTournament } from '@/contexts/TournamentContext';
-import { useLeagueTable, useResultsGrid } from '@/hooks';
+import { useCupOverview, useCupSchedule, useLeagueTable, useResultsGrid } from '@/hooks';
 import {
   TableFilters,
   FullLeagueTable,
@@ -17,6 +17,8 @@ import { LoadingSpinner } from '@/components/ui';
 import { HeroBackground } from '@/components/ui/HeroBackground';
 import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { updateSearchParams } from '@/lib/utils/urlState';
+import { CupBracket, CupOverview, CupSchedule } from '@/components/cup';
+import { SecondLeagueStageSwitcher } from '@/components/tournament';
 
 // Skeleton for loading state
 function TableSkeleton() {
@@ -61,7 +63,8 @@ export default function LeagueTablePage() {
   const { t } = useTranslation('table');
   const { t: tErrors } = useTranslation('errors');
   const searchParams = useSearchParams();
-  const { effectiveSeasonId, showTable, showBracket, currentTournament } = useTournament();
+  const { effectiveSeasonId, showTable, showBracket } = useTournament();
+  const isCup = showBracket;
 
   // Active tab state
   const [activeTab, setActiveTab] = useState<TableTabType>(() => {
@@ -84,6 +87,10 @@ export default function LeagueTablePage() {
     const param = searchParams.get('home_away');
     return param === 'home' || param === 'away' ? param : null;
   });
+  const [roundKey, setRoundKey] = useState<string | null>(() => {
+    const param = searchParams.get('round_key');
+    return param || null;
+  });
 
   // Update URL when filters or tab change
   useEffect(() => {
@@ -93,10 +100,11 @@ export default function LeagueTablePage() {
         tour_from: tourFrom !== 1 ? tourFrom : undefined,
         tour_to: tourTo !== DEFAULT_TOUR ? tourTo : undefined,
         home_away: homeAway ?? undefined,
+        round_key: isCup ? roundKey ?? undefined : undefined,
       },
       { replace: true }
     );
-  }, [activeTab, tourFrom, tourTo, homeAway]);
+  }, [activeTab, tourFrom, tourTo, homeAway, roundKey, isCup]);
 
   // Fetch data based on active tab and selected tournament
   const {
@@ -109,6 +117,7 @@ export default function LeagueTablePage() {
     tourFrom,
     tourTo,
     homeAway,
+    enabled: showTable,
   });
 
   const {
@@ -119,7 +128,48 @@ export default function LeagueTablePage() {
     refetch: refetchResults,
   } = useResultsGrid({
     seasonId: effectiveSeasonId,
+    enabled: showTable,
   });
+
+  const {
+    overview: cupOverview,
+    loading: cupOverviewLoading,
+    error: cupOverviewError,
+    refetch: refetchCupOverview,
+  } = useCupOverview({
+    seasonId: effectiveSeasonId,
+    enabled: isCup,
+  });
+
+  const {
+    schedule: cupSchedule,
+    loading: cupScheduleLoading,
+    error: cupScheduleError,
+    refetch: refetchCupSchedule,
+  } = useCupSchedule({
+    seasonId: effectiveSeasonId,
+    roundKey,
+    enabled: isCup,
+  });
+
+  const resolvedMaxTour = totalTours > 0 ? totalTours : DEFAULT_TOUR;
+
+  useEffect(() => {
+    if (!showTable) return;
+
+    if (tourTo > resolvedMaxTour) {
+      setTourTo(resolvedMaxTour);
+    }
+    if (tourFrom > resolvedMaxTour) {
+      setTourFrom(1);
+    }
+  }, [resolvedMaxTour, showTable, tourFrom, tourTo]);
+
+  useEffect(() => {
+    if (!isCup && roundKey !== null) {
+      setRoundKey(null);
+    }
+  }, [isCup, roundKey]);
 
   const hasStandings = standings.length > 0;
   const showStandingsSkeleton = standingsLoading && !hasStandings;
@@ -150,20 +200,41 @@ export default function LeagueTablePage() {
             </h1>
           </div>
 
+          <SecondLeagueStageSwitcher className="mb-4" />
+
           {/* Bracket View for Cup tournaments */}
           {showBracket && (
-            <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border overflow-hidden">
-              <div className="bg-primary px-4 md:px-6 py-3 md:py-4">
-                <h2 className="text-base md:text-lg font-bold text-white">{currentTournament.name.ru}</h2>
-              </div>
-              <div className="p-5 md:p-8 text-center">
-                <p className="text-gray-500 dark:text-slate-400 mb-4">
-                  {t('bracketComingSoon', { defaultValue: 'Кубок турнирінің кестесі жуықта қолжетімді болады' })}
-                </p>
-                <p className="text-sm text-gray-400 dark:text-slate-500">
-                  {t('bracketDescription', { defaultValue: 'Турнир сетка скоро будет доступна' })}
-                </p>
-              </div>
+            <div className="space-y-4">
+              {(cupOverviewLoading || cupScheduleLoading) && (
+                <div className="mb-3 flex items-center gap-2 text-xs text-gray-500 dark:text-slate-400">
+                  <LoadingSpinner size="sm" />
+                  <span>{t('updating', { defaultValue: 'Обновление...' })}</span>
+                </div>
+              )}
+
+              {(cupOverviewError || cupScheduleError) ? (
+                <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8">
+                  <ErrorMessage
+                    message={tErrors('loadTable')}
+                    onRetry={() => {
+                      refetchCupOverview();
+                      refetchCupSchedule();
+                    }}
+                  />
+                </div>
+              ) : (
+                <>
+                  {cupOverview && <CupOverview overview={cupOverview} />}
+                  {cupOverview?.bracket && <CupBracket bracket={cupOverview.bracket} />}
+                  {cupSchedule && (
+                    <CupSchedule
+                      schedule={cupSchedule}
+                      selectedRoundKey={roundKey}
+                      onRoundChange={setRoundKey}
+                    />
+                  )}
+                </>
+              )}
             </div>
           )}
 
@@ -182,7 +253,7 @@ export default function LeagueTablePage() {
                   <TableFilters
                     tourFrom={tourFrom}
                     tourTo={tourTo}
-                    maxTour={DEFAULT_TOUR}
+                    maxTour={resolvedMaxTour}
                     homeAway={homeAway}
                     onTourFromChange={setTourFrom}
                     onTourToChange={setTourTo}

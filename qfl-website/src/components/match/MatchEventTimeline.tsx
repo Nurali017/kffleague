@@ -14,7 +14,7 @@ interface MatchEventTimelineProps {
   awayTeam: GameTeam;
   currentMinute?: number;
   loading?: boolean;
-  playerCountryMap?: Record<string, PlayerCountry>;
+  playerCountryMap?: Record<number, PlayerCountry>;
 }
 
 export function MatchEventTimeline({
@@ -34,7 +34,7 @@ export function MatchEventTimeline({
         ['goal', 'yellow_card', 'red_card', 'substitution', 'penalty'].includes(e.event_type) && e.minute <= 130
       )
       .slice()
-      .sort((a, b) => (a.minute - b.minute) || (a.team_id - b.team_id) || (a.id - b.id));
+      .sort((a, b) => (a.minute - b.minute) || ((a.team_id ?? 0) - (b.team_id ?? 0)) || (a.id - b.id));
   }, [events]);
 
   const maxEventMinute = useMemo(() => {

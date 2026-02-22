@@ -1,6 +1,10 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_LANGUAGE } from '../endpoints';
 import { NewsArticle, SliderNews, NewsPagination, NewsFilters, NewsNavigation, NewsReactions } from '@/types';
+import { adaptNewsReactionsFallback, getNewsBackendGapMessage } from '../adapters/newsAdapter';
+
+type NewsQuery = Record<string, string | number | boolean | Array<string | number>>;
+let reactionsGapLogged = false;
 
 export const newsService = {
   async getSlider(
@@ -8,7 +12,7 @@ export const newsService = {
     limit: number = 5,
     tournamentId?: string
   ): Promise<SliderNews[]> {
-    const params: Record<string, any> = {
+    const params: NewsQuery = {
       lang: language,
       limit,
     };
@@ -28,7 +32,7 @@ export const newsService = {
     limit: number = 10,
     tournamentId?: string
   ): Promise<NewsArticle[]> {
-    const params: Record<string, any> = {
+    const params: NewsQuery = {
       lang: language,
       limit,
     };
@@ -64,7 +68,7 @@ export const newsService = {
     page: number = 1,
     limit: number = 12
   ): Promise<NewsPagination> {
-    const params: Record<string, any> = {
+    const params: NewsQuery = {
       lang: language,
       page,
       per_page: limit,  // Backend expects per_page, not limit
@@ -90,8 +94,10 @@ export const newsService = {
     const response = await apiClient.post(ENDPOINTS.NEWS_VIEW(id), {});
 
     if (!response.success) {
-      // Silently fail for view tracking
-      console.warn('Failed to increment view count');
+      if (!reactionsGapLogged && response.error?.status === 404) {
+        console.warn(getNewsBackendGapMessage());
+        reactionsGapLogged = true;
+      }
     }
   },
 
@@ -112,8 +118,11 @@ export const newsService = {
     const response = await apiClient.get<NewsReactions>(ENDPOINTS.NEWS_REACTIONS(id));
 
     if (!response.success) {
-      // Return default values if endpoint fails
-      return { views: 0, likes: 0, liked: false };
+      if (!reactionsGapLogged && response.error?.status === 404) {
+        console.warn(getNewsBackendGapMessage());
+        reactionsGapLogged = true;
+      }
+      return adaptNewsReactionsFallback(response.error);
     }
 
     return response.data;

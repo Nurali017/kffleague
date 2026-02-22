@@ -1,0 +1,942 @@
+{
+  "generatedAt": "2026-02-20T20:19:22.663Z",
+  "startedAt": "2026-02-20T20:17:58.422Z",
+  "backendBaseUrl": "http://localhost:8000",
+  "openapiUrl": "http://localhost:8000/openapi.json",
+  "seasonId": 61,
+  "language": "ru",
+  "tournamentId": "pl",
+  "overallOk": true,
+  "sections": [
+    {
+      "section": "contract",
+      "ok": true,
+      "total": 38,
+      "passed": 38,
+      "failed": 0
+    },
+    {
+      "section": "schema",
+      "ok": true,
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "section": "runtime_get",
+      "ok": true,
+      "total": 35,
+      "passed": 35,
+      "failed": 0
+    },
+    {
+      "section": "runtime_write",
+      "ok": true,
+      "total": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "section": "negative",
+      "ok": true,
+      "total": 7,
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "section": "log_guard",
+      "ok": true,
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  ],
+  "results": [
+    {
+      "section": "contract",
+      "key": "SEASON_TABLE",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/table",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/table",
+      "actual": "/api/v1/seasons/{season_id}/table",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_RESULTS_GRID",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/results-grid",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/results-grid",
+      "actual": "/api/v1/seasons/{season_id}/results-grid",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_GAMES",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/games",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/games",
+      "actual": "/api/v1/seasons/{season_id}/games",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "CUP_OVERVIEW",
+      "method": "GET",
+      "path": "/api/v1/cup/{}/overview",
+      "pass": true,
+      "expected": "/api/v1/cup/{}/overview",
+      "actual": "/api/v1/cup/{season_id}/overview",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "CUP_SCHEDULE",
+      "method": "GET",
+      "path": "/api/v1/cup/{}/schedule",
+      "pass": true,
+      "expected": "/api/v1/cup/{}/schedule",
+      "actual": "/api/v1/cup/{season_id}/schedule",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_PLAYER_STATS",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/player-stats",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/player-stats",
+      "actual": "/api/v1/seasons/{season_id}/player-stats",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_TEAM_STATS",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/team-stats",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/team-stats",
+      "actual": "/api/v1/seasons/{season_id}/team-stats",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_STATISTICS",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/statistics",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/statistics",
+      "actual": "/api/v1/seasons/{season_id}/statistics",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "SEASON_GOALS_BY_PERIOD",
+      "method": "GET",
+      "path": "/api/v1/seasons/{}/goals-by-period",
+      "pass": true,
+      "expected": "/api/v1/seasons/{}/goals-by-period",
+      "actual": "/api/v1/seasons/{season_id}/goals-by-period",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "GAMES",
+      "method": "GET",
+      "path": "/api/v1/games",
+      "pass": true,
+      "expected": "/api/v1/games",
+      "actual": "/api/v1/games",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_SLIDER",
+      "method": "GET",
+      "path": "/api/v1/news/slider",
+      "pass": true,
+      "expected": "/api/v1/news/slider",
+      "actual": "/api/v1/news/slider",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_LATEST",
+      "method": "GET",
+      "path": "/api/v1/news/latest",
+      "pass": true,
+      "expected": "/api/v1/news/latest",
+      "actual": "/api/v1/news/latest",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_BY_ID",
+      "method": "GET",
+      "path": "/api/v1/news/{}",
+      "pass": true,
+      "expected": "/api/v1/news/{}",
+      "actual": "/api/v1/news/{news_id}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_PAGINATED",
+      "method": "GET",
+      "path": "/api/v1/news",
+      "pass": true,
+      "expected": "/api/v1/news",
+      "actual": "/api/v1/news",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_VIEW",
+      "method": "POST",
+      "path": "/api/v1/news/{}/view",
+      "pass": true,
+      "expected": "/api/v1/news/{}/view",
+      "actual": "/api/v1/news/{news_id}/view",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_LIKE",
+      "method": "POST",
+      "path": "/api/v1/news/{}/like",
+      "pass": true,
+      "expected": "/api/v1/news/{}/like",
+      "actual": "/api/v1/news/{news_id}/like",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_REACTIONS",
+      "method": "GET",
+      "path": "/api/v1/news/{}/reactions",
+      "pass": true,
+      "expected": "/api/v1/news/{}/reactions",
+      "actual": "/api/v1/news/{news_id}/reactions",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "NEWS_NAVIGATION",
+      "method": "GET",
+      "path": "/api/v1/news/{}/navigation",
+      "pass": true,
+      "expected": "/api/v1/news/{}/navigation",
+      "actual": "/api/v1/news/{news_id}/navigation",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "MATCH_DETAIL",
+      "method": "GET",
+      "path": "/api/v1/games/{}",
+      "pass": true,
+      "expected": "/api/v1/games/{}",
+      "actual": "/api/v1/games/{game_id}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "MATCH_STATS",
+      "method": "GET",
+      "path": "/api/v1/games/{}/stats",
+      "pass": true,
+      "expected": "/api/v1/games/{}/stats",
+      "actual": "/api/v1/games/{game_id}/stats",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "MATCH_LINEUP",
+      "method": "GET",
+      "path": "/api/v1/games/{}/lineup",
+      "pass": true,
+      "expected": "/api/v1/games/{}/lineup",
+      "actual": "/api/v1/games/{game_id}/lineup",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "MATCH_EVENTS",
+      "method": "GET",
+      "path": "/api/v1/live/events/{}",
+      "pass": true,
+      "expected": "/api/v1/live/events/{}",
+      "actual": "/api/v1/live/events/{game_id}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PLAYER_DETAIL",
+      "method": "GET",
+      "path": "/api/v1/players/{}",
+      "pass": true,
+      "expected": "/api/v1/players/{}",
+      "actual": "/api/v1/players/{player_id}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PLAYER_MATCHES",
+      "method": "GET",
+      "path": "/api/v1/players/{}/games",
+      "pass": true,
+      "expected": "/api/v1/players/{}/games",
+      "actual": "/api/v1/players/{player_id}/games",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PLAYER_STATS",
+      "method": "GET",
+      "path": "/api/v1/players/{}/stats",
+      "pass": true,
+      "expected": "/api/v1/players/{}/stats",
+      "actual": "/api/v1/players/{player_id}/stats",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PLAYER_TEAMMATES",
+      "method": "GET",
+      "path": "/api/v1/players/{}/teammates",
+      "pass": true,
+      "expected": "/api/v1/players/{}/teammates",
+      "actual": "/api/v1/players/{player_id}/teammates",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PLAYER_TOURNAMENTS",
+      "method": "GET",
+      "path": "/api/v1/players/{}/tournaments",
+      "pass": true,
+      "expected": "/api/v1/players/{}/tournaments",
+      "actual": "/api/v1/players/{player_id}/tournaments",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAMS",
+      "method": "GET",
+      "path": "/api/v1/teams",
+      "pass": true,
+      "expected": "/api/v1/teams",
+      "actual": "/api/v1/teams",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_DETAIL",
+      "method": "GET",
+      "path": "/api/v1/teams/{}",
+      "pass": true,
+      "expected": "/api/v1/teams/{}",
+      "actual": "/api/v1/teams/{team_id}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_OVERVIEW",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/overview",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/overview",
+      "actual": "/api/v1/teams/{team_id}/overview",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_STATS",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/stats",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/stats",
+      "actual": "/api/v1/teams/{team_id}/stats",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_PLAYERS",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/players",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/players",
+      "actual": "/api/v1/teams/{team_id}/players",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_GAMES",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/games",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/games",
+      "actual": "/api/v1/teams/{team_id}/games",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "TEAM_COACHES",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/coaches",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/coaches",
+      "actual": "/api/v1/teams/{team_id}/coaches",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "HEAD_TO_HEAD",
+      "method": "GET",
+      "path": "/api/v1/teams/{}/vs/{}/head-to-head",
+      "pass": true,
+      "expected": "/api/v1/teams/{}/vs/{}/head-to-head",
+      "actual": "/api/v1/teams/{team1_id}/vs/{team2_id}/head-to-head",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PAGE_LEADERSHIP",
+      "method": "GET",
+      "path": "/api/v1/pages/leadership/{}",
+      "pass": true,
+      "expected": "/api/v1/pages/leadership/{}",
+      "actual": "/api/v1/pages/leadership/{language}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PAGE_CONTACTS",
+      "method": "GET",
+      "path": "/api/v1/pages/contacts/{}",
+      "pass": true,
+      "expected": "/api/v1/pages/contacts/{}",
+      "actual": "/api/v1/pages/contacts/{language}",
+      "detail": "ok"
+    },
+    {
+      "section": "contract",
+      "key": "PAGE_DOCUMENTS",
+      "method": "GET",
+      "path": "/api/v1/pages/documents/{}",
+      "pass": true,
+      "expected": "/api/v1/pages/documents/{}",
+      "actual": "/api/v1/pages/documents/{language}",
+      "detail": "ok"
+    },
+    {
+      "section": "schema",
+      "key": "alembic_head_vs_current",
+      "pass": true,
+      "detail": "head=a2b3c4d5e6f7 current=a2b3c4d5e6f7"
+    },
+    {
+      "section": "schema",
+      "key": "db_alembic_version",
+      "pass": true,
+      "detail": "head=a2b3c4d5e6f7 version_table=a2b3c4d5e6f7"
+    },
+    {
+      "section": "schema",
+      "key": "games_id_bigint",
+      "pass": true,
+      "detail": "games.id type=bigint"
+    },
+    {
+      "section": "schema",
+      "key": "games_sota_id_exists",
+      "pass": true,
+      "detail": "games.sota_id columns=1"
+    },
+    {
+      "section": "runtime_get",
+      "key": "discovered_ids",
+      "pass": true,
+      "detail": "team1=595 team2=625 player=1184 news=433 game=93"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_table",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/table?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,filters,table"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_results_grid",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/results-grid?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,total_tours,teams"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_games",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/games?tour=26&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_player_stats",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/player-stats?sort_by=goals&limit=5&offset=0&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,sort_by,items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_team_stats",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/team-stats?sort_by=points&limit=20&offset=0&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,sort_by,items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_statistics",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/statistics?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,season_name,matches_played,wins,draws,total_attendance"
+    },
+    {
+      "section": "runtime_get",
+      "key": "season_goals_by_period",
+      "method": "GET",
+      "path": "/api/v1/seasons/61/goals-by-period",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:season_id,period_size_minutes,periods,meta"
+    },
+    {
+      "section": "runtime_get",
+      "key": "games_match_center",
+      "method": "GET",
+      "path": "/api/v1/games?season_id=61&group_by_date=true&lang=ru&limit=10",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:groups,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_slider",
+      "method": "GET",
+      "path": "/api/v1/news/slider?lang=ru&limit=5&tournament_id=pl",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:0,1,2,3"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_latest",
+      "method": "GET",
+      "path": "/api/v1/news/latest?lang=ru&limit=10&tournament_id=pl",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:0,1,2,3,4,5"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_paginated",
+      "method": "GET",
+      "path": "/api/v1/news?lang=ru&page=1&per_page=12&tournament_id=pl",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total,page,per_page,pages"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_by_id",
+      "method": "GET",
+      "path": "/api/v1/news/433?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,source_id,source_url,language,title,excerpt"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_navigation",
+      "method": "GET",
+      "path": "/api/v1/news/433/navigation?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:previous"
+    },
+    {
+      "section": "runtime_get",
+      "key": "news_reactions",
+      "method": "GET",
+      "path": "/api/v1/news/433/reactions",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:views,likes,liked"
+    },
+    {
+      "section": "runtime_get",
+      "key": "teams_list",
+      "method": "GET",
+      "path": "/api/v1/teams?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_detail",
+      "method": "GET",
+      "path": "/api/v1/teams/595?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,name,city,logo_url,primary_color,secondary_color"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_overview",
+      "method": "GET",
+      "path": "/api/v1/teams/595/overview?season_id=61&fixtures_limit=5&leaders_limit=8&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:team,season,summary,form_last5,recent_match,upcoming_matches"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_stats",
+      "method": "GET",
+      "path": "/api/v1/teams/595/stats?season_id=61&lang=ru",
+      "status": 404,
+      "pass": true,
+      "expected": "200|404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_players",
+      "method": "GET",
+      "path": "/api/v1/teams/595/players?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_games",
+      "method": "GET",
+      "path": "/api/v1/teams/595/games?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "team_coaches",
+      "method": "GET",
+      "path": "/api/v1/teams/595/coaches?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "head_to_head",
+      "method": "GET",
+      "path": "/api/v1/teams/595/vs/625/head-to-head?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:team1_id,team1_name,team2_id,team2_name,season_id,overall"
+    },
+    {
+      "section": "runtime_get",
+      "key": "player_detail",
+      "method": "GET",
+      "path": "/api/v1/players/1184?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,first_name,last_name,birthday,player_type,country"
+    },
+    {
+      "section": "runtime_get",
+      "key": "player_games",
+      "method": "GET",
+      "path": "/api/v1/players/1184/games?season_id=61&limit=10&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "player_stats",
+      "method": "GET",
+      "path": "/api/v1/players/1184/stats?season_id=61&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:player_id,season_id,team_id,games_played,games_starting,minutes_played"
+    },
+    {
+      "section": "runtime_get",
+      "key": "player_teammates",
+      "method": "GET",
+      "path": "/api/v1/players/1184/teammates?season_id=61&limit=10&lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "player_tournaments",
+      "method": "GET",
+      "path": "/api/v1/players/1184/tournaments?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:items,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "match_detail",
+      "method": "GET",
+      "path": "/api/v1/games/93?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,date,time,tour,season_id,stage_id"
+    },
+    {
+      "section": "runtime_get",
+      "key": "match_stats",
+      "method": "GET",
+      "path": "/api/v1/games/93/stats?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:game_id,team_stats,player_stats,events"
+    },
+    {
+      "section": "runtime_get",
+      "key": "match_lineup",
+      "method": "GET",
+      "path": "/api/v1/games/93/lineup?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:game_id,has_lineup,referees,coaches,lineups"
+    },
+    {
+      "section": "runtime_get",
+      "key": "match_events",
+      "method": "GET",
+      "path": "/api/v1/live/events/93?lang=ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:game_id,events,total"
+    },
+    {
+      "section": "runtime_get",
+      "key": "page_leadership",
+      "method": "GET",
+      "path": "/api/v1/pages/leadership/ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,slug,language,title,content,content_text"
+    },
+    {
+      "section": "runtime_get",
+      "key": "page_contacts",
+      "method": "GET",
+      "path": "/api/v1/pages/contacts/ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,slug,language,title,content,content_text"
+    },
+    {
+      "section": "runtime_get",
+      "key": "page_documents",
+      "method": "GET",
+      "path": "/api/v1/pages/documents/ru",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:id,slug,language,title,content,content_text"
+    },
+    {
+      "section": "runtime_write",
+      "key": "post_view",
+      "method": "POST",
+      "path": "/api/v1/news/433/view",
+      "status": 200,
+      "pass": true,
+      "expected": "200",
+      "detail": "keys:ok"
+    },
+    {
+      "section": "runtime_write",
+      "key": "view_increment",
+      "method": "GET",
+      "path": "/api/v1/news/433/reactions",
+      "status": 200,
+      "pass": true,
+      "expected": "views increment",
+      "detail": "beforeViews=4 afterViews=5"
+    },
+    {
+      "section": "runtime_write",
+      "key": "post_like_first",
+      "method": "POST",
+      "path": "/api/v1/news/433/like",
+      "status": 200,
+      "pass": true,
+      "expected": "200 + liked=true",
+      "detail": "keys:likes,liked"
+    },
+    {
+      "section": "runtime_write",
+      "key": "reactions_after_first_like",
+      "method": "GET",
+      "path": "/api/v1/news/433/reactions",
+      "status": 200,
+      "pass": true,
+      "expected": "200 + liked=true",
+      "detail": "keys:views,likes,liked"
+    },
+    {
+      "section": "runtime_write",
+      "key": "post_like_second",
+      "method": "POST",
+      "path": "/api/v1/news/433/like",
+      "status": 200,
+      "pass": true,
+      "expected": "200 + liked=false",
+      "detail": "keys:likes,liked"
+    },
+    {
+      "section": "runtime_write",
+      "key": "reactions_after_second_like",
+      "method": "GET",
+      "path": "/api/v1/news/433/reactions",
+      "status": 200,
+      "pass": true,
+      "expected": "200 + liked=false",
+      "detail": "keys:views,likes,liked"
+    },
+    {
+      "section": "negative",
+      "key": "news_by_id_not_found",
+      "method": "GET",
+      "path": "/api/v1/news/999999999?lang=ru",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "news_view_not_found",
+      "method": "POST",
+      "path": "/api/v1/news/999999999/view",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "news_like_not_found",
+      "method": "POST",
+      "path": "/api/v1/news/999999999/like",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "news_reactions_not_found",
+      "method": "GET",
+      "path": "/api/v1/news/999999999/reactions",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "team_not_found",
+      "method": "GET",
+      "path": "/api/v1/teams/999999999?lang=ru",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "player_not_found",
+      "method": "GET",
+      "path": "/api/v1/players/999999999?season_id=61&lang=ru",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "negative",
+      "key": "game_not_found",
+      "method": "GET",
+      "path": "/api/v1/games/999999999?lang=ru",
+      "status": 404,
+      "pass": true,
+      "expected": "404",
+      "detail": "keys:detail"
+    },
+    {
+      "section": "log_guard",
+      "key": "no_500_in_tested_routes",
+      "pass": true,
+      "detail": "no 500 lines"
+    }
+  ]
+}

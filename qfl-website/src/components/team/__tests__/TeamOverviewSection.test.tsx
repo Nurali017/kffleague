@@ -5,7 +5,7 @@ import { TeamOverviewLeaders } from '@/types/team';
 
 const leadersMock: TeamOverviewLeaders = {
   top_scorer: {
-    player_id: 'p1',
+    player_id: 1,
     first_name: 'Дастан',
     last_name: 'Сатпаев',
     photo_url: null,
@@ -22,7 +22,7 @@ const leadersMock: TeamOverviewLeaders = {
     red_cards: 1,
   },
   top_assister: {
-    player_id: 'p2',
+    player_id: 2,
     first_name: 'Гиорги',
     last_name: 'Зария',
     photo_url: null,
@@ -54,7 +54,7 @@ describe('TeamOverviewSection', () => {
     renderWithProviders(
       <TeamOverviewSection
         recentMatch={{
-          id: 'm1',
+          id: 1,
           date: '2026-02-05',
           time: '18:00:00',
           tour: 12,
@@ -69,7 +69,7 @@ describe('TeamOverviewSection', () => {
         }}
         formLast5={[
           {
-            game_id: 'm1',
+            game_id: 1,
             is_home: true,
             opponent_name: 'Тобол',
             opponent_logo: null,
@@ -80,7 +80,7 @@ describe('TeamOverviewSection', () => {
         ]}
         upcomingMatches={[
           {
-            id: 'm2',
+            id: 2,
             date: '2026-02-09',
             time: '16:00:00',
             tour: 13,

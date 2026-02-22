@@ -43,14 +43,14 @@ function ErrorState({ error }: { error?: string }) {
 
 export default function MatchDetailPage() {
   const params = useParams();
-  const matchId = params.id as string;
+  const matchId = params.id ? Number(params.id) : null;
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const { i18n } = useTranslation();
 
   // Data fetching
   const { match, loading: matchLoading, error: matchError } = useMatchDetail(matchId);
   const { events, loading: eventsLoading } = useMatchEvents(matchId, match?.is_live || false);
-  const { lineup, loading: lineupLoading } = useMatchLineup(matchId);
+  const { lineup, loading: lineupLoading } = useMatchLineup(matchId, match?.is_live || false);
   const { stats, loading: statsLoading } = useMatchStats(matchId);
 
   // Трансформировать team_stats в формат home/away
@@ -66,7 +66,7 @@ export default function MatchDetailPage() {
 
   // Создать маппинг player_id -> country из lineup данных
   const playerCountryMap = useMemo(() => {
-    const map: Record<string, PlayerCountry> = {};
+    const map: Record<number, PlayerCountry> = {};
     if (lineup?.lineups) {
       const allPlayers = [
         ...(lineup.lineups.home_team?.starters || []),

@@ -57,7 +57,7 @@ export function H2HPreviousMeetings({
     return 'bg-yellow-50 border-yellow-200';
   };
 
-  const handleMatchClick = (gameId: string) => {
+  const handleMatchClick = (gameId: number) => {
     router.push(`/matches/${gameId}`);
   };
 

@@ -1,4 +1,4 @@
-import { Tournament, TournamentColors, Season } from '@/types/tournament';
+import { Tournament, TournamentColors, Season, SecondLeagueStage } from '@/types/tournament';
 
 // Color palettes as RGB channels for Tailwind opacity support
 export const TOURNAMENT_COLORS: Record<string, TournamentColors> = {
@@ -133,6 +133,12 @@ export const TOURNAMENTS: Record<string, Tournament> = {
 };
 
 export const DEFAULT_TOURNAMENT_ID = 'pl';
+export const DEFAULT_SECOND_LEAGUE_STAGE: SecondLeagueStage = 'a';
+export const SECOND_LEAGUE_STAGE_SEASON_IDS: Record<SecondLeagueStage, number> = {
+  a: 80,
+  b: 81,
+  final: 157,
+};
 
 export const SEASONS: Season[] = [
   {
@@ -163,4 +169,8 @@ export function isLeagueTournament(tournament: Tournament): boolean {
 
 export function isCupTournament(tournament: Tournament): boolean {
   return tournament.type === 'cup' || tournament.type === 'supercup';
+}
+
+export function getSecondLeagueSeasonId(stage: SecondLeagueStage): number {
+  return SECOND_LEAGUE_STAGE_SEASON_IDS[stage];
 }

@@ -1,17 +1,23 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
 import {
-  PlayerDetail,
   PlayerDetailAPIResponse,
   PlayerMatchPerformance,
   PlayerSeasonStatsResponse,
   PlayerTeammatesResponse,
   PlayerTournamentHistoryResponse,
 } from '@/types/player';
+import {
+  adaptPlayerDetailResponse,
+  adaptPlayerMatchesResponse,
+  adaptPlayerStatsResponse,
+  adaptPlayerTeammatesResponse,
+  adaptPlayerTournamentsResponse,
+} from '../adapters/playerAdapter';
 
 export const playerService = {
   async getPlayerById(
-    playerId: string,
+    playerId: number,
     seasonId: number = DEFAULT_SEASON_ID,
     language?: string
   ): Promise<PlayerDetailAPIResponse | null> {
@@ -27,11 +33,11 @@ export const playerService = {
       throw new Error(response.error?.message || 'Failed to fetch player');
     }
 
-    return response.data;
+    return adaptPlayerDetailResponse(response.data);
   },
 
   async getPlayerMatches(
-    playerId: string,
+    playerId: number,
     options?: {
       seasonId?: number;
       limit?: number;
@@ -51,11 +57,11 @@ export const playerService = {
       throw new Error(response.error?.message || 'Failed to fetch player matches');
     }
 
-    return response.data.items;
+    return adaptPlayerMatchesResponse(response.data).items;
   },
 
   async getPlayerStats(
-    playerId: string,
+    playerId: number,
     seasonId: number = DEFAULT_SEASON_ID,
     language?: string
   ): Promise<PlayerSeasonStatsResponse | null> {
@@ -75,11 +81,11 @@ export const playerService = {
       throw new Error(response.error?.message || 'Failed to fetch player stats');
     }
 
-    return response.data;
+    return adaptPlayerStatsResponse(response.data);
   },
 
   async getPlayerTeammates(
-    playerId: string,
+    playerId: number,
     options?: {
       seasonId?: number;
       limit?: number;
@@ -99,11 +105,11 @@ export const playerService = {
       throw new Error(response.error?.message || 'Failed to fetch player teammates');
     }
 
-    return response.data;
+    return adaptPlayerTeammatesResponse(response.data);
   },
 
   async getPlayerTournaments(
-    playerId: string,
+    playerId: number,
     language?: string
   ): Promise<PlayerTournamentHistoryResponse> {
     const response = await apiClient.get<PlayerTournamentHistoryResponse>(
@@ -117,6 +123,6 @@ export const playerService = {
       throw new Error(response.error?.message || 'Failed to fetch player tournaments');
     }
 
-    return response.data;
+    return adaptPlayerTournamentsResponse(response.data);
   },
 };

@@ -43,7 +43,7 @@ export const handlers = [
     return HttpResponse.json({
       items: [
         {
-          id: '1',
+          id: 1,
           date: '2024-11-15',
           time: '18:00',
           tour: 26,
@@ -97,7 +97,7 @@ export const handlers = [
 
     const allItems = [
       {
-        player_id: '1',
+        player_id: 1,
         first_name: 'Иван',
         last_name: 'Иванов',
         photo_url: null,
@@ -139,7 +139,7 @@ export const handlers = [
         dry_match: null,
       },
       {
-        player_id: '2',
+        player_id: 2,
         first_name: 'Павел',
         last_name: 'Петров',
         photo_url: null,
@@ -181,7 +181,7 @@ export const handlers = [
         dry_match: 8,
       },
       {
-        player_id: '3',
+        player_id: 3,
         first_name: 'Азамат',
         last_name: 'Алиев',
         photo_url: null,

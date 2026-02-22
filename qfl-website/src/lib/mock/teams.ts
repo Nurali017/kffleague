@@ -25,7 +25,7 @@ interface LeagueTableItem {
 }
 
 interface TopScorer {
-    player_id: string;
+    player_id: number;
     name: string;
     team_logo: string;
     photo_url: string;
@@ -103,7 +103,7 @@ export const MOCKED_TABLE: LeagueTableItem[] = [
 
 // 3. Top Scorer Data
 export const MOCKED_TOP_SCORER: TopScorer = {
-    player_id: '10',
+    player_id: 10,
     name: 'Ramazan Karimov',
     team_logo: '/uploads/astana-logo.png',
     photo_url: '/uploads/players/karimov_cutout.png',
@@ -140,7 +140,7 @@ export const MOCKED_NEWS = [
 const baseDate = new Date();
 export const MOCKED_GAMES: Game[] = [
     {
-        id: '1',
+        id: 1,
         date: new Date(baseDate.getTime() - 86400000 * 14).toISOString(),
         time: '18:00',
         tour: 5,
@@ -158,7 +158,7 @@ export const MOCKED_GAMES: Game[] = [
         stadium: { id: 1, name: 'Astana Arena', city: 'Astana', capacity: 30000 }
     },
     {
-        id: '2',
+        id: 2,
         date: new Date(baseDate.getTime() - 86400000 * 7).toISOString(),
         time: '19:00',
         tour: 6,
@@ -176,7 +176,7 @@ export const MOCKED_GAMES: Game[] = [
         stadium: { id: 2, name: 'Koblandy Batyr', city: 'Aktobe', capacity: 13000 }
     },
     {
-        id: '3',
+        id: 3,
         date: new Date(baseDate.getTime() + 86400000 * 3).toISOString(),
         time: '20:00',
         tour: 7,

@@ -5,7 +5,7 @@ export interface Team {
 }
 
 export interface NextGame {
-  game_id: string;
+  game_id: number;
   date: string;
   opponent_id: number;
   opponent_name: string;
@@ -89,7 +89,7 @@ export interface TeamDetail extends Team {
 
 // Player from /teams/{id}/players endpoint
 export interface TeamPlayer {
-  id: string;
+  id: number;
   first_name: string;
   last_name: string;
   birthday: string;
@@ -115,7 +115,7 @@ export interface TeamPlayersResponse {
 
 // Mapped player for squad display
 export interface SquadPlayer {
-  player_id: string;
+  player_id: number;
   first_name: string;
   last_name: string;
   jersey_number: number | null;
@@ -260,10 +260,11 @@ export interface TeamOverviewMatchTeam {
 export interface TeamOverviewStadium {
   name: string | null;
   city: string | null;
+  capacity?: number | null;
 }
 
 export interface TeamOverviewMatch {
-  id: string;
+  id: number;
   date: string;
   time: string | null;
   tour: number | null;
@@ -278,7 +279,7 @@ export interface TeamOverviewMatch {
 }
 
 export interface TeamOverviewFormEntry {
-  game_id: string;
+  game_id: number;
   is_home: boolean;
   opponent_name: string;
   opponent_logo?: string | null;
@@ -300,7 +301,7 @@ export interface TeamOverviewStandingEntry {
 }
 
 export interface TeamOverviewLeaderPlayer {
-  player_id: string;
+  player_id: number;
   first_name: string | null;
   last_name: string | null;
   photo_url: string | null;

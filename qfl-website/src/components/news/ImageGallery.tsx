@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ImageGalleryProps {
@@ -12,6 +12,14 @@ interface ImageGalleryProps {
 export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePrevious = useCallback(() => {
+    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  }, [images.length]);
+
+  const handleNext = useCallback(() => {
+    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  }, [images.length]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -29,7 +37,7 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isModalOpen, selectedIndex]);
+  }, [handleNext, handlePrevious, isModalOpen]);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -42,14 +50,6 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
       document.body.style.overflow = '';
     };
   }, [isModalOpen]);
-
-  const handlePrevious = () => {
-    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
 
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);

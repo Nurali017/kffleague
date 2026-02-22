@@ -164,7 +164,7 @@ export const mockTeamStatistics: TeamStatistics[] = [
 
 export const mockPlayerStatistics: ExtendedPlayerStat[] = [
     {
-        player_id: 'p1',
+        player_id: 1,
         first_name: 'Бакдаулет',
         last_name: 'Алиев',
         team_id: 1,
@@ -200,7 +200,7 @@ export const mockPlayerStatistics: ExtendedPlayerStat[] = [
         ground_duel: 74,
     },
     {
-        player_id: 'p2',
+        player_id: 2,
         first_name: 'Жоао',
         last_name: 'Пауло',
         team_id: 2,
@@ -236,7 +236,7 @@ export const mockPlayerStatistics: ExtendedPlayerStat[] = [
         ground_duel: 70,
     },
     {
-        player_id: 'p3',
+        player_id: 3,
         first_name: 'Асхат',
         last_name: 'Тагыберген',
         team_id: 3,
@@ -272,7 +272,7 @@ export const mockPlayerStatistics: ExtendedPlayerStat[] = [
         ground_duel: 90,
     },
     {
-        player_id: 'p4',
+        player_id: 4,
         first_name: 'Игорь',
         last_name: 'Шацкий',
         team_id: 4,
@@ -308,7 +308,7 @@ export const mockPlayerStatistics: ExtendedPlayerStat[] = [
         ground_duel: 2,
     },
     {
-        player_id: 'p5',
+        player_id: 5,
         first_name: 'Александр',
         last_name: 'Марочкин',
         team_id: 1,

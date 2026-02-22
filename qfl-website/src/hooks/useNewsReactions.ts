@@ -2,6 +2,9 @@ import { useState, useCallback } from 'react';
 import useSWR from 'swr';
 import { newsService } from '@/lib/api/services';
 import { NewsReactions } from '@/types';
+import { queryKeys } from '@/lib/api/queryKeys';
+import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
+import { prefetchKeys } from '@/lib/api/prefetchKeys';
 
 interface UseNewsReactionsResult {
   reactions: NewsReactions;
@@ -14,11 +17,15 @@ interface UseNewsReactionsResult {
 
 export function useNewsReactions(newsId: number | null): UseNewsReactionsResult {
   const [isLiking, setIsLiking] = useState(false);
+  const prefetched = useRoutePrefetchValue<NewsReactions>(
+    newsId ? prefetchKeys.newsReactions(newsId) : null
+  );
 
   const { data, error, isLoading, mutate } = useSWR<NewsReactions>(
-    newsId ? ['newsReactions', newsId] : null,
+    newsId ? queryKeys.news.reactions(newsId) : null,
     () => (newsId ? newsService.getReactions(newsId) : Promise.resolve({ views: 0, likes: 0 })),
     {
+      fallbackData: prefetched,
       revalidateOnFocus: false,
       dedupingInterval: 10000, // 10 seconds
     }

@@ -3,8 +3,16 @@
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { MatchLineups, GameTeam, LineupPlayerExtended } from '@/types';
-import { getFormationPositions } from '@/lib/utils/formations';
+import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
+
+const HEX_COLOR_RE = /^#[0-9A-Fa-f]{6}$/;
+
+function resolveKitColor(raw: string | null | undefined, fallback: string): string {
+  if (!raw) return fallback;
+  const color = raw.trim();
+  return HEX_COLOR_RE.test(color) ? color.toUpperCase() : fallback;
+}
 
 // Jersey Icon Component (UEFA Style)
 function JerseyIcon({ color, number, isGoalkeeper = false }: { color: string; number: number; isGoalkeeper?: boolean }) {
@@ -83,8 +91,10 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
     );
   }
 
-  const homeColor = HOME_COLOR;
-  const awayColor = AWAY_COLOR;
+  const homeColor = resolveKitColor(lineups.home_team.kit_color, HOME_COLOR);
+  const awayColor = resolveKitColor(lineups.away_team.kit_color, AWAY_COLOR);
+  const homeStartersOrdered = orderStartersForPlacement(lineups.home_team.starters).slice(0, 11);
+  const awayStartersOrdered = orderStartersForPlacement(lineups.away_team.starters).slice(0, 11);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px_1fr] gap-0 lg:gap-6 items-start">
@@ -95,13 +105,13 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
           <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 object-contain" alt={homeTeam.name} />
           <span className="font-bold text-gray-900">{homeTeam.name}</span>
         </div>
-        {lineups.home_team.starters.map(p => <PlayerRow key={p.player_id} player={p} />)}
+        {homeStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
       </div>
 
       {/* Field Visualization - The Star */}
       <FieldVisualization
-        homeStarters={lineups.home_team.starters}
-        awayStarters={lineups.away_team.starters}
+        homeStarters={homeStartersOrdered}
+        awayStarters={awayStartersOrdered}
         homeFormation={lineups.home_team.formation}
         awayFormation={lineups.away_team.formation}
         homeColor={homeColor}
@@ -118,7 +128,7 @@ export function LineupField({ lineups, homeTeam, awayTeam, loading }: LineupFiel
           <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 object-contain" alt={awayTeam.name} />
           <span className="font-bold text-gray-900">{awayTeam.name}</span>
         </div>
-        {lineups.away_team.starters.map(p => <PlayerRow key={p.player_id} player={p} />)}
+        {awayStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
       </div>
 
     </div>
@@ -150,8 +160,16 @@ function FieldVisualization({
   homeCoach,
   awayCoach
 }: FieldVisualizationProps) {
-  const homePositions = getFormationPositions(homeFormation, false);
-  const awayPositions = getFormationPositions(awayFormation, true);
+  const homePlacedPlayers = buildPlacedPlayers({
+    starters: homeStarters,
+    invertY: false,
+    mirrorX: false,
+  });
+  const awayPlacedPlayers = buildPlacedPlayers({
+    starters: awayStarters,
+    invertY: true,
+    mirrorX: true,
+  });
 
   // Home -> GK(y=5)=8%, нападающие(y=80)=46% (имя на своей половине)
   const mapToHomeHalf = (pos: { x: number; y: number }) => ({
@@ -221,11 +239,8 @@ function FieldVisualization({
 
       {/* Players Home */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-        {homeStarters.slice(0, 11).map((player, index) => {
-          const rawPos = homePositions[index];
-          if (!rawPos) return null;
-          const pos = mapToHomeHalf(rawPos);
-
+        {homePlacedPlayers.map(({ player, position }) => {
+          const pos = mapToHomeHalf(position);
           return (
             <PlayerMarker
               key={player.player_id}
@@ -239,11 +254,8 @@ function FieldVisualization({
 
       {/* Players Away */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-        {awayStarters.slice(0, 11).map((player, index) => {
-          const rawPos = awayPositions[index];
-          if (!rawPos) return null;
-          const pos = mapToAwayHalf(rawPos);
-
+        {awayPlacedPlayers.map(({ player, position }) => {
+          const pos = mapToAwayHalf(position);
           return (
             <PlayerMarker
               key={player.player_id}
@@ -267,6 +279,7 @@ interface PlayerMarkerProps {
 function PlayerMarker({ player, position, teamColor }: PlayerMarkerProps) {
   return (
     <div
+      data-testid={`lineup-marker-${player.player_id}`}
       className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer flex flex-col items-center gap-1 pointer-events-auto"
       style={{
         left: `${position.x}%`,

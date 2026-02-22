@@ -92,7 +92,10 @@ function PlayerNotFound() {
 
 export default function PlayerProfilePage() {
   const params = useParams();
-  const playerId = params?.id as string;
+  const rawPlayerId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const parsedPlayerId = Number.parseInt(rawPlayerId ?? '', 10);
+  const isPlayerIdValid = Number.isInteger(parsedPlayerId) && parsedPlayerId > 0;
+  const playerId = isPlayerIdValid ? parsedPlayerId : null;
   const { t } = useTranslation('player');
   const { effectiveSeasonId } = useTournament();
 
@@ -110,6 +113,10 @@ export default function PlayerProfilePage() {
   const tournaments = useMemo(() => transformTournaments(apiTournaments), [apiTournaments]);
   const teammates = useMemo(() => transformTeammates(apiTeammates), [apiTeammates]);
   const pageVariant = DEFAULT_PLAYER_PAGE_VARIANT;
+
+  if (!isPlayerIdValid) {
+    return <PlayerNotFound />;
+  }
 
   // Loading state
   const isLoading = playerLoading || statsLoading;

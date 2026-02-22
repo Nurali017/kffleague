@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import { useTournament } from '@/contexts/TournamentContext';
-import { leagueService } from '@/lib/api/services';
+import { teamService } from '@/lib/api/services';
 import { MatchCenterFilters as FiltersType } from '@/types';
 import { MultiSelect } from '@/components/ui';
 
@@ -23,20 +23,21 @@ export function MatchCenterFilters({
   variant = 'default',
 }: MatchCenterFiltersProps) {
   const { t } = useTranslation('match');
-  const { currentSeason } = useTournament();
+  const { i18n } = useTranslation();
+  const { effectiveSeasonId } = useTournament();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const isHero = variant === 'hero';
 
-  // Load teams from league table
-  const { data: tableData } = useSWR(
-    ['teams-list', filters.season_id || currentSeason.id],
-    () => leagueService.getTable(filters.season_id || currentSeason.id)
+  // Load teams from season participants endpoint to support cup/2l flows.
+  const { data: teamsData } = useSWR(
+    ['teams-list', filters.season_id || effectiveSeasonId, i18n.language],
+    () => teamService.getTeams(filters.season_id || effectiveSeasonId, i18n.language)
   );
 
-  const teams = tableData?.table.map(standing => ({
-    id: standing.team_id,
-    name: standing.team_name,
-    logo_url: standing.team_logo,
+  const teams = teamsData?.map(team => ({
+    id: team.id,
+    name: team.name,
+    logo_url: team.logo_url,
   })) ?? [];
 
   // Generate tour options (1-26) for MultiSelect

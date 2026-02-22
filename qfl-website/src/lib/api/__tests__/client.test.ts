@@ -3,7 +3,7 @@ import { apiClient } from '../client';
 
 describe('apiClient', () => {
   it('should make a successful GET request', async () => {
-    const response = await apiClient.get('/seasons/61/table');
+    const response = await apiClient.get<{ table: unknown[] }>('/seasons/61/table');
 
     expect(response.success).toBe(true);
     expect(response.data).toBeDefined();
@@ -11,7 +11,7 @@ describe('apiClient', () => {
   });
 
   it('should handle request with query params', async () => {
-    const response = await apiClient.get('/seasons/61/games', {
+    const response = await apiClient.get<{ items: unknown[] }>('/seasons/61/games', {
       tour: 26,
     });
 

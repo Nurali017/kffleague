@@ -88,6 +88,7 @@ export default function TeamsPage() {
   const { t } = useTranslation('navigation');
   const { effectiveSeasonId } = useTournament();
   const { teams, loading, error } = useTeams(effectiveSeasonId);
+  const errorMessage = error instanceof Error ? error.message : 'Failed to load teams';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
@@ -121,7 +122,8 @@ export default function TeamsPage() {
           </div>
         ) : error ? (
           <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8 text-center">
-            <p className="text-red-500">Failed to load teams</p>
+            <p className="text-red-500 font-semibold">Failed to load teams</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-slate-400">{errorMessage}</p>
           </div>
         ) : teams.length === 0 ? (
           <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8 text-center">

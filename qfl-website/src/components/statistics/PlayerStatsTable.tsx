@@ -44,7 +44,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
     const columns = useMemo(() => getColumnsForSubTab(subTab, 'players'), [subTab]);
     const [sortBy, setSortBy] = useState<string>(() => getDefaultSortBy(subTab, columns));
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-    const [brokenPhotoIds, setBrokenPhotoIds] = useState<Set<string>>(new Set());
+    const [brokenPhotoIds, setBrokenPhotoIds] = useState<Set<number>>(new Set());
 
     // Ensure sort column exists in current subTab
     useEffect(() => {
@@ -94,7 +94,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
         }
     };
 
-    const handlePhotoError = (playerId: string) => {
+    const handlePhotoError = (playerId: number) => {
         setBrokenPhotoIds((prev) => {
             if (prev.has(playerId)) return prev;
             const next = new Set(prev);

@@ -20,8 +20,8 @@ const ROLE_LABELS: Record<string, Record<string, string>> = {
 export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
     const { i18n } = useTranslation();
     const lang = i18n.language === 'kz' ? 'kz' : 'ru';
-    const { currentSeason } = useTournament();
-    const { coaches, loading } = useTeamCoaches(teamId, currentSeason.id);
+    const { effectiveSeasonId } = useTournament();
+    const { coaches, loading } = useTeamCoaches(teamId, effectiveSeasonId);
 
     if (loading) {
         return (

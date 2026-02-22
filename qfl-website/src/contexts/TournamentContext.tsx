@@ -10,33 +10,81 @@ import {
   useEffect,
 } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Tournament, Season } from '@/types/tournament';
+import { Tournament, Season, SecondLeagueStage } from '@/types/tournament';
 import {
   TOURNAMENTS,
   SEASONS,
   DEFAULT_TOURNAMENT_ID,
+  DEFAULT_SECOND_LEAGUE_STAGE,
   getTournamentById,
   getActiveTournaments,
+  getSecondLeagueSeasonId,
   isLeagueTournament,
   isCupTournament,
 } from '@/config/tournaments';
 import {
   setTournamentCookie,
   getClientTournamentCookie,
+  setSecondLeagueStageCookie,
+  getClientSecondLeagueStageCookie,
+  clearSecondLeagueStageCookie,
 } from '@/lib/tournament/cookies.client';
+import { tournamentMetaService, FrontMapEntry } from '@/lib/api/services/tournamentMetaService';
 
 const STORAGE_KEY = 'qfl_selected_tournament';
+const SECOND_LEAGUE_STAGE_STORAGE_KEY = 'qfl_2l_stage';
+
+type TournamentFrontMap = Record<string, FrontMapEntry>;
+
+function isSecondLeagueStage(value: string | null | undefined): value is SecondLeagueStage {
+  return value === 'a' || value === 'b' || value === 'final';
+}
+
+function getFallbackSeasonId(
+  tournamentId: string,
+  stage: SecondLeagueStage | null
+): number {
+  const tournament = getTournamentById(tournamentId);
+  if (tournamentId === '2l') {
+    return getSecondLeagueSeasonId(stage ?? DEFAULT_SECOND_LEAGUE_STAGE);
+  }
+  return tournament?.seasonId || TOURNAMENTS[DEFAULT_TOURNAMENT_ID].seasonId;
+}
+
+function getSeasonIdFromFrontMap(
+  tournamentId: string,
+  stage: SecondLeagueStage | null,
+  frontMap: TournamentFrontMap | null
+): number {
+  if (frontMap) {
+    const entry = frontMap[tournamentId];
+    if (tournamentId === '2l') {
+      const stageKey = stage ?? DEFAULT_SECOND_LEAGUE_STAGE;
+      const stageSeasonId = entry?.stages?.[stageKey];
+      if (stageSeasonId != null && Number.isFinite(stageSeasonId)) {
+        return stageSeasonId;
+      }
+    }
+    if (Number.isFinite(entry?.season_id)) {
+      return Number(entry?.season_id);
+    }
+  }
+
+  return getFallbackSeasonId(tournamentId, stage);
+}
 
 interface TournamentContextValue {
   currentTournament: Tournament;
   currentSeason: Season;
-  effectiveSeasonId: number; // Always matches currentTournament.seasonId
+  effectiveSeasonId: number;
   currentRound: number | null;
+  secondLeagueStage: SecondLeagueStage | null;
   availableTournaments: Tournament[];
   availableSeasons: Season[];
   setTournament: (tournamentId: string) => void;
   setSeason: (seasonId: number) => void;
   setRound: (round: number) => void;
+  setSecondLeagueStage: (stage: SecondLeagueStage) => void;
   isLeague: boolean;
   isCup: boolean;
   showTable: boolean;
@@ -48,24 +96,24 @@ const TournamentContext = createContext<TournamentContextValue | null>(null);
 interface TournamentProviderProps {
   children: ReactNode;
   initialTournamentId?: string;
+  initialSecondLeagueStage?: SecondLeagueStage | null;
 }
 
 export function TournamentProvider({
   children,
   initialTournamentId,
+  initialSecondLeagueStage,
 }: TournamentProviderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get initial tournament: URL > server cookie > default
   const getInitialTournament = (): string => {
     const urlTournament = searchParams.get('tournament');
     if (urlTournament && getTournamentById(urlTournament)) {
       return urlTournament;
     }
 
-    // Use server-provided initial value (from cookie)
     if (initialTournamentId && getTournamentById(initialTournamentId)) {
       return initialTournamentId;
     }
@@ -73,22 +121,76 @@ export function TournamentProvider({
     return DEFAULT_TOURNAMENT_ID;
   };
 
-  const [tournamentId, setTournamentId] = useState<string>(getInitialTournament);
+  const getInitialSecondLeagueStage = (
+    initialTournament: string
+  ): SecondLeagueStage | null => {
+    if (initialTournament !== '2l') {
+      return null;
+    }
+
+    const urlStage = searchParams.get('stage');
+    if (isSecondLeagueStage(urlStage)) {
+      return urlStage;
+    }
+
+    if (initialSecondLeagueStage && isSecondLeagueStage(initialSecondLeagueStage)) {
+      return initialSecondLeagueStage;
+    }
+
+    if (typeof window !== 'undefined') {
+      const storedStage = localStorage.getItem(SECOND_LEAGUE_STAGE_STORAGE_KEY);
+      if (isSecondLeagueStage(storedStage)) {
+        return storedStage;
+      }
+
+      const cookieStage = getClientSecondLeagueStageCookie();
+      if (cookieStage) {
+        return cookieStage;
+      }
+    }
+
+    return DEFAULT_SECOND_LEAGUE_STAGE;
+  };
+
+  const initialTournament = getInitialTournament();
+  const [tournamentId, setTournamentId] = useState<string>(initialTournament);
+  const [secondLeagueStage, setSecondLeagueStageState] = useState<SecondLeagueStage | null>(() =>
+    getInitialSecondLeagueStage(initialTournament)
+  );
+  const [frontMap, setFrontMap] = useState<TournamentFrontMap | null>(null);
 
   const currentTournament =
     getTournamentById(tournamentId) || TOURNAMENTS[DEFAULT_TOURNAMENT_ID];
 
-  // Season from URL or default
-  const seasonId = Number(searchParams.get('season')) || undefined;
+  const effectiveSeasonId = getSeasonIdFromFrontMap(
+    currentTournament.id,
+    secondLeagueStage,
+    frontMap
+  );
+
+  const seasonFromUrl = Number(searchParams.get('season'));
+  const resolvedSeasonFromUrl = Number.isFinite(seasonFromUrl)
+    ? seasonFromUrl
+    : undefined;
+
+  const fallbackSeason: Season = {
+    id: effectiveSeasonId,
+    year: String(effectiveSeasonId),
+    tournaments: Object.values(TOURNAMENTS),
+    isCurrentSeason: false,
+  };
+
   const currentSeason =
-    SEASONS.find((s) => s.id === seasonId) ||
-    SEASONS.find((s) => s.isCurrentSeason)!;
+    SEASONS.find((s) => s.id === resolvedSeasonFromUrl) ||
+    SEASONS.find((s) => s.id === effectiveSeasonId) ||
+    SEASONS.find((s) => s.isCurrentSeason) ||
+    fallbackSeason;
 
-  // Round from URL or tournament default
-  const currentRound =
-    Number(searchParams.get('round')) || currentTournament.currentRound || null;
+  const roundFromUrl = Number(searchParams.get('round'));
+  const currentRound = Number.isFinite(roundFromUrl)
+    ? roundFromUrl
+    : currentTournament.currentRound || null;
 
-  // Update URL when tournament changes
   const updateUrl = useCallback(
     (params: Record<string, string | undefined>) => {
       const newParams = new URLSearchParams(searchParams.toString());
@@ -99,7 +201,8 @@ export function TournamentProvider({
           newParams.set(key, value);
         }
       });
-      const newUrl = `${pathname}?${newParams.toString()}`;
+      const queryString = newParams.toString();
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
       router.push(newUrl, { scroll: false });
     },
     [router, pathname, searchParams]
@@ -108,21 +211,83 @@ export function TournamentProvider({
   const setTournament = useCallback(
     (id: string) => {
       const tournament = getTournamentById(id);
-      if (tournament) {
-        setTournamentId(id);
-        // Save to both localStorage and cookie
+      if (!tournament) {
+        return;
+      }
+
+      setTournamentId(id);
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, id);
+        setTournamentCookie(id);
+      }
+
+      if (id === '2l') {
+        const storedStage =
+          typeof window !== 'undefined'
+            ? localStorage.getItem(SECOND_LEAGUE_STAGE_STORAGE_KEY)
+            : null;
+
+        const nextStage =
+          secondLeagueStage ||
+          (isSecondLeagueStage(storedStage) ? storedStage : null) ||
+          getClientSecondLeagueStageCookie() ||
+          DEFAULT_SECOND_LEAGUE_STAGE;
+
+        setSecondLeagueStageState(nextStage);
         if (typeof window !== 'undefined') {
-          localStorage.setItem(STORAGE_KEY, id);
-          setTournamentCookie(id);
+          localStorage.setItem(SECOND_LEAGUE_STAGE_STORAGE_KEY, nextStage);
         }
+        setSecondLeagueStageCookie(nextStage);
+        const nextSeasonId = getSeasonIdFromFrontMap('2l', nextStage, frontMap);
+
         updateUrl({
           tournament: id,
-          season: tournament.seasonId.toString(), // Sync season with tournament
+          stage: nextStage,
+          season: nextSeasonId.toString(),
           round: tournament.currentRound?.toString(),
         });
+
+        return;
       }
+
+      setSecondLeagueStageState(null);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(SECOND_LEAGUE_STAGE_STORAGE_KEY);
+      }
+      clearSecondLeagueStageCookie();
+      const nextSeasonId = getSeasonIdFromFrontMap(id, null, frontMap);
+
+      updateUrl({
+        tournament: id,
+        stage: undefined,
+        season: nextSeasonId.toString(),
+        round: tournament.currentRound?.toString(),
+      });
     },
-    [updateUrl]
+    [frontMap, secondLeagueStage, updateUrl]
+  );
+
+  const setSecondLeagueStage = useCallback(
+    (stage: SecondLeagueStage) => {
+      if (tournamentId !== '2l') {
+        return;
+      }
+
+      setSecondLeagueStageState(stage);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(SECOND_LEAGUE_STAGE_STORAGE_KEY, stage);
+      }
+      setSecondLeagueStageCookie(stage);
+      const nextSeasonId = getSeasonIdFromFrontMap('2l', stage, frontMap);
+
+      updateUrl({
+        tournament: '2l',
+        stage,
+        season: nextSeasonId.toString(),
+      });
+    },
+    [frontMap, tournamentId, updateUrl]
   );
 
   const setSeason = useCallback(
@@ -139,34 +304,116 @@ export function TournamentProvider({
     [updateUrl]
   );
 
-  // Sync URL tournament param with state on mount and URL changes
   useEffect(() => {
     const urlTournament = searchParams.get('tournament');
-    if (urlTournament && getTournamentById(urlTournament)) {
-      setTournamentId(urlTournament);
+    const nextTournament =
+      urlTournament && getTournamentById(urlTournament) ? urlTournament : null;
+
+    if (nextTournament && nextTournament !== tournamentId) {
+      setTournamentId(nextTournament);
       if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, urlTournament);
-        setTournamentCookie(urlTournament);
+        localStorage.setItem(STORAGE_KEY, nextTournament);
       }
+      setTournamentCookie(nextTournament);
     }
-  }, [searchParams]);
 
-  // Sync localStorage and cookie on mount
+    const resolvedTournament = nextTournament ?? tournamentId;
+
+    if (resolvedTournament === '2l') {
+      const urlStage = searchParams.get('stage');
+      const storedStage =
+        typeof window !== 'undefined'
+          ? localStorage.getItem(SECOND_LEAGUE_STAGE_STORAGE_KEY)
+          : null;
+
+      const nextStage =
+        (isSecondLeagueStage(urlStage) ? urlStage : null) ||
+        (isSecondLeagueStage(storedStage) ? storedStage : null) ||
+        getClientSecondLeagueStageCookie() ||
+        DEFAULT_SECOND_LEAGUE_STAGE;
+
+      if (secondLeagueStage !== nextStage) {
+        setSecondLeagueStageState(nextStage);
+      }
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(SECOND_LEAGUE_STAGE_STORAGE_KEY, nextStage);
+      }
+      setSecondLeagueStageCookie(nextStage);
+      return;
+    }
+
+    if (secondLeagueStage !== null) {
+      setSecondLeagueStageState(null);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(SECOND_LEAGUE_STAGE_STORAGE_KEY);
+    }
+    clearSecondLeagueStageCookie();
+  }, [searchParams, secondLeagueStage, tournamentId]);
+
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const cookieVal = getClientTournamentCookie();
+    let isMounted = true;
 
-    // If localStorage has value but cookie doesn't, set cookie
-    if (stored && !cookieVal) {
-      setTournamentCookie(stored);
+    tournamentMetaService
+      .getFrontMap()
+      .then((map) => {
+        if (isMounted) {
+          setFrontMap(map);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFrontMap(null);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!frontMap) {
+      return;
     }
-    // If cookie has value but localStorage doesn't, set localStorage
-    if (cookieVal && !stored) {
-      localStorage.setItem(STORAGE_KEY, cookieVal);
+
+    const expectedSeasonId = getSeasonIdFromFrontMap(
+      tournamentId,
+      secondLeagueStage,
+      frontMap
+    );
+    const seasonFromQuery = Number(searchParams.get('season'));
+    if (!Number.isFinite(seasonFromQuery) || seasonFromQuery !== expectedSeasonId) {
+      updateUrl({ season: expectedSeasonId.toString() });
+    }
+  }, [frontMap, searchParams, secondLeagueStage, tournamentId, updateUrl]);
+
+  useEffect(() => {
+    const storedTournament = localStorage.getItem(STORAGE_KEY);
+    const cookieTournament = getClientTournamentCookie();
+
+    if (storedTournament && !cookieTournament && getTournamentById(storedTournament)) {
+      setTournamentCookie(storedTournament);
+    }
+
+    if (cookieTournament && !storedTournament) {
+      localStorage.setItem(STORAGE_KEY, cookieTournament);
+    }
+
+    const storedStage = localStorage.getItem(SECOND_LEAGUE_STAGE_STORAGE_KEY);
+    const parsedStoredStage = isSecondLeagueStage(storedStage) ? storedStage : null;
+    const cookieStage = getClientSecondLeagueStageCookie();
+
+    if (parsedStoredStage && !cookieStage) {
+      setSecondLeagueStageCookie(parsedStoredStage);
+    }
+
+    if (cookieStage && !parsedStoredStage) {
+      localStorage.setItem(SECOND_LEAGUE_STAGE_STORAGE_KEY, cookieStage);
     }
   }, []);
 
-  // Apply league color theme via CSS custom properties
   useEffect(() => {
     const root = document.documentElement;
     const colors = currentTournament.colors;
@@ -177,20 +424,19 @@ export function TournamentProvider({
     root.style.setProperty('--league-accent-soft', colors.accentSoft);
   }, [currentTournament]);
 
-  // effectiveSeasonId always matches the currently selected tournament
-  const effectiveSeasonId = currentTournament.seasonId;
-
   const value = useMemo<TournamentContextValue>(
     () => ({
       currentTournament,
       currentSeason,
       effectiveSeasonId,
       currentRound,
+      secondLeagueStage,
       availableTournaments: getActiveTournaments(),
       availableSeasons: SEASONS,
       setTournament,
       setSeason,
       setRound,
+      setSecondLeagueStage,
       isLeague: isLeagueTournament(currentTournament),
       isCup: isCupTournament(currentTournament),
       showTable: currentTournament.hasTable,
@@ -199,11 +445,13 @@ export function TournamentProvider({
     [
       currentTournament,
       currentSeason,
-      effectiveSeasonId,
       currentRound,
+      effectiveSeasonId,
+      secondLeagueStage,
       setTournament,
       setSeason,
       setRound,
+      setSecondLeagueStage,
     ]
   );
 

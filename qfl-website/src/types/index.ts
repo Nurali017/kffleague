@@ -5,4 +5,5 @@ export * from './player';
 export * from './playerStats';
 export * from './seasonStats';
 export * from './tournament';
+export * from './cup';
 export * from './pages';

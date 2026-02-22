@@ -1,3 +1,4 @@
+export { cupService } from './cupService';
 export { h2hService } from './h2hService';
 export { leagueService } from './leagueService';
 export { matchService } from './matchService';
@@ -7,3 +8,4 @@ export { playerStatsService } from './playerStatsService';
 export { seasonStatsService } from './seasonStatsService';
 export { teamService } from './teamService';
 export { teamStatsTableService } from './teamStatsTableService';
+export { tournamentMetaService } from './tournamentMetaService';

@@ -27,9 +27,23 @@ function mapPlayerTypeToPosition(
   return 'FWD'; // forward, striker, attacker
 }
 
-interface TeamsListResponse {
-  items: TeamDetail[];
+interface TeamMembershipSeed {
+  team_id: number;
+  team_name?: string | null;
+  team_logo?: string | null;
+}
+
+interface SeasonTeamsResponse {
+  items: TeamMembershipSeed[];
   total: number;
+}
+
+function mapSeedToDetail(entry: TeamMembershipSeed): TeamDetail {
+  return {
+    id: entry.team_id,
+    name: entry.team_name || `Team #${entry.team_id}`,
+    logo_url: entry.team_logo || undefined,
+  };
 }
 
 export const teamService = {
@@ -37,16 +51,16 @@ export const teamService = {
     seasonId: number = DEFAULT_SEASON_ID,
     language?: string
   ): Promise<TeamDetail[]> {
-    const response = await apiClient.get<TeamsListResponse>(ENDPOINTS.TEAMS, {
-      season_id: seasonId,
-      ...(language ? { lang: language } : {}),
-    });
+    const response = await apiClient.get<SeasonTeamsResponse>(
+      ENDPOINTS.SEASON_TEAMS(seasonId),
+      language ? { lang: language } : undefined
+    );
 
     if (!response.success) {
-      return [];
+      throw new Error(response.error?.message || 'Failed to fetch teams');
     }
 
-    return response.data.items;
+    return response.data.items.map(mapSeedToDetail);
   },
 
   async getTeamById(

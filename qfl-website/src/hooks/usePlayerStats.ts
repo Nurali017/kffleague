@@ -8,6 +8,9 @@ import {
   PlayerStatsSortBy,
   PositionCode,
 } from '@/types';
+import { queryKeys } from '@/lib/api/queryKeys';
+import { prefetchKeys } from '@/lib/api/prefetchKeys';
+import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
 
 interface UsePlayerStatsOptions {
   seasonId?: number;
@@ -30,10 +33,8 @@ export function usePlayerStats(options: UsePlayerStatsOptions = {}) {
     positionCode,
     nationality,
   } = options;
-
-  const { data, error, isLoading, mutate } = useSWR(
-    [
-      'playerStats',
+  const prefetched = useRoutePrefetchValue<PlayerStat[]>(
+    prefetchKeys.playerStats(
       seasonId,
       sortBy,
       limit,
@@ -41,8 +42,21 @@ export function usePlayerStats(options: UsePlayerStatsOptions = {}) {
       teamId ?? null,
       positionCode ?? null,
       nationality ?? null,
-      i18n.language,
-    ],
+      i18n.language
+    )
+  );
+
+  const { data, error, isLoading, mutate } = useSWR(
+    queryKeys.stats.players(
+      seasonId,
+      sortBy,
+      limit,
+      offset,
+      teamId ?? null,
+      positionCode ?? null,
+      nationality ?? null,
+      i18n.language
+    ),
     async () => {
       const response = await playerStatsService.getPlayerStats({
         seasonId,
@@ -55,6 +69,9 @@ export function usePlayerStats(options: UsePlayerStatsOptions = {}) {
         language: i18n.language,
       });
       return response.items;
+    },
+    {
+      fallbackData: prefetched,
     }
   );
 
