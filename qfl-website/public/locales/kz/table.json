@@ -44,5 +44,23 @@
     "draw": "Тең",
     "loss": "Жеңіліс"
   },
+  "cup": {
+    "schedule": "Кубок кестесі",
+    "allRounds": "Барлық раундтар",
+    "noSchedule": "Таңдалған раунд бойынша матчтар жоқ",
+    "groups": "Топтар",
+    "group": "Топ",
+    "currentRound": "Ағымдағы раунд",
+    "recentResults": "Соңғы нәтижелер",
+    "upcomingGames": "Алдағы матчтар",
+    "noRecentResults": "Ойналған матчтар жоқ",
+    "noUpcomingGames": "Алдағы матчтар жоқ",
+    "homePlayoffRoundsTitle": "Плей-офф раундтары",
+    "homeRoundFilterLabel": "Раундты таңдау",
+    "homeNoPlayoffRounds": "Плей-офф раундтары әлі анықталмады",
+    "bracket": "Плей-офф торы",
+    "noBracket": "Плей-офф торы әлі анықталмады",
+    "penalties": "пен."
+  },
   "updating": "Жаңартылуда..."
 }

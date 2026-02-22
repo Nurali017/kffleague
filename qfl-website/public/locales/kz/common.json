@@ -115,5 +115,16 @@
   "newsSection": {
     "title": "Жаңалықтар",
     "viewAll": "Барлық жаңалықтар"
+  },
+  "home": {
+    "cup": {
+      "groupsTitle": "Топтар",
+      "playoffTitle": "Плей-офф"
+    },
+    "secondLeague": {
+      "groupATitle": "Лига A",
+      "groupBTitle": "Лига B",
+      "finalTitle": "Финал"
+    }
   }
 }

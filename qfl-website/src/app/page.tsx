@@ -15,12 +15,22 @@ import {
   newsService,
   playerStatsService,
   seasonStatsService,
+  cupService,
 } from '@/lib/api/services';
 import { getServerPrefetchContext, safePrefetch } from '@/lib/api/server/prefetch';
 import { prefetchKeys } from '@/lib/api/prefetchKeys';
 import { DEFAULT_SEASON_ID, DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { buildMetadata, getSeoLang, getDefaultDescription } from '@/lib/seo/metadata';
 import { SITE_NAME } from '@/lib/seo/constants';
+import { DEFAULT_TOURNAMENT_ID, getTournamentById } from '@/config/tournaments';
+import {
+  MatchCenterFilters,
+  CupOverviewResponse,
+  CupScheduleResponse,
+  GroupedMatchesResponse,
+  LeagueTableResponse,
+} from '@/types';
+import { TournamentHomeContent, type CupHomeData, type SecondLeagueHomeData } from '@/components/home';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getSeoLang();
@@ -30,105 +40,294 @@ export async function generateMetadata(): Promise<Metadata> {
     path: '/',
   });
 }
-import { getTournamentById } from '@/config/tournaments';
-import { MatchCenterFilters } from '@/types';
+
+function buildMatchCenterFiltersHash(
+  language: string,
+  filters: Omit<MatchCenterFilters, 'group_by_date' | 'language'>
+) {
+  return JSON.stringify({
+    group_by_date: true,
+    language,
+    ...filters,
+  });
+}
 
 export default async function HomePage() {
   const { language, seasonId, tournamentId } = getServerPrefetchContext();
-  const effectiveSeasonId = seasonId || DEFAULT_SEASON_ID;
   const tournament = getTournamentById(tournamentId);
+  const currentTournamentId = tournament?.id ?? DEFAULT_TOURNAMENT_ID;
+  const effectiveSeasonId = seasonId || tournament?.seasonId || DEFAULT_SEASON_ID;
+
+  const isSecondLeague = currentTournamentId === '2l';
+  const isCup = currentTournamentId === 'cup';
+
   const tour = tournament?.currentRound ?? DEFAULT_TOUR;
   const shouldPrefetchByTour = typeof tournament?.currentRound === 'number';
+
+  const newsLimit = 5;
+  const leaderboardLimit = 5;
+  const secondLeagueMatchLimit = 6;
+
   const homeMatchFilters: MatchCenterFilters = {
     season_id: effectiveSeasonId,
     group_by_date: true,
     language,
     limit: 20,
   };
-  const homeMatchFiltersHash = JSON.stringify({
-    group_by_date: true,
-    language,
+  const homeMatchFiltersHash = buildMatchCenterFiltersHash(language, {
     season_id: effectiveSeasonId,
     limit: 20,
   });
-  const newsLimit = 5;
-  const leaderboardLimit = 5;
 
-  const [
-    matches,
-    sliderNews,
-    latestNews,
-    stats,
-    table,
-    playerLeaderboard,
-  ] = await Promise.all([
-    shouldPrefetchByTour
-      ? safePrefetch(() => matchService.getGamesByTour(effectiveSeasonId, tour, language))
-      : safePrefetch(() => matchService.getMatchCenter(homeMatchFilters)),
-    safePrefetch(() => newsService.getSlider(language, newsLimit, tournamentId)),
-    safePrefetch(() => newsService.getLatest(language, newsLimit, tournamentId)),
-    safePrefetch(() => seasonStatsService.getSeasonStatistics(effectiveSeasonId, language)),
-    safePrefetch(() => leagueService.getTable(effectiveSeasonId, undefined, language)),
-    safePrefetch(async () => {
-      const [scorersRes, assistersRes, cleanSheetsRes] = await Promise.all([
-        playerStatsService.getPlayerStats({
-          seasonId: effectiveSeasonId,
-          sortBy: 'goals',
-          limit: leaderboardLimit,
-          language,
-        }),
-        playerStatsService.getPlayerStats({
-          seasonId: effectiveSeasonId,
-          sortBy: 'assists',
-          limit: leaderboardLimit,
-          language,
-        }),
-        playerStatsService.getPlayerStats({
-          seasonId: effectiveSeasonId,
-          sortBy: 'dry_match',
-          limit: leaderboardLimit,
-          language,
-        }),
-      ]);
+  let matches: unknown;
+  let stats: unknown;
+  let table: LeagueTableResponse | undefined;
+  let playerLeaderboard: unknown;
+  let sliderNews: unknown;
+  let latestNews: unknown;
 
-      return {
-        scorers: scorersRes.items,
-        assisters: assistersRes.items,
-        cleanSheets: cleanSheetsRes.items,
-      };
-    }),
-  ]);
+  let groupATableResponse: LeagueTableResponse | undefined;
+  let groupBTableResponse: LeagueTableResponse | undefined;
+  let groupAMatchesResponse: GroupedMatchesResponse | undefined;
+  let groupBMatchesResponse: GroupedMatchesResponse | undefined;
+  let finalMatchesResponse: GroupedMatchesResponse | undefined;
+
+  let cupOverviewResponse: CupOverviewResponse | undefined;
+  let cupScheduleResponse: CupScheduleResponse | undefined;
+
+  if (isSecondLeague) {
+    const [
+      sliderNewsRes,
+      latestNewsRes,
+      groupATableRes,
+      groupBTableRes,
+      groupAMatchesRes,
+      groupBMatchesRes,
+      finalMatchesRes,
+    ] = await Promise.all([
+      safePrefetch(() => newsService.getSlider(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => newsService.getLatest(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => leagueService.getTable(effectiveSeasonId, { group: 'A' }, language)),
+      safePrefetch(() => leagueService.getTable(effectiveSeasonId, { group: 'B' }, language)),
+      safePrefetch(() => matchService.getMatchCenter({
+        season_id: effectiveSeasonId,
+        group: 'A',
+        group_by_date: true,
+        language,
+        limit: secondLeagueMatchLimit,
+      }) as Promise<GroupedMatchesResponse>),
+      safePrefetch(() => matchService.getMatchCenter({
+        season_id: effectiveSeasonId,
+        group: 'B',
+        group_by_date: true,
+        language,
+        limit: secondLeagueMatchLimit,
+      }) as Promise<GroupedMatchesResponse>),
+      safePrefetch(() => matchService.getMatchCenter({
+        season_id: effectiveSeasonId,
+        final: true,
+        group_by_date: true,
+        language,
+        limit: secondLeagueMatchLimit,
+      }) as Promise<GroupedMatchesResponse>),
+    ]);
+
+    sliderNews = sliderNewsRes;
+    latestNews = latestNewsRes;
+    groupATableResponse = groupATableRes;
+    groupBTableResponse = groupBTableRes;
+    groupAMatchesResponse = groupAMatchesRes;
+    groupBMatchesResponse = groupBMatchesRes;
+    finalMatchesResponse = finalMatchesRes;
+  } else if (isCup) {
+    const [sliderNewsRes, latestNewsRes, cupOverviewRes, cupScheduleRes] = await Promise.all([
+      safePrefetch(() => newsService.getSlider(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => newsService.getLatest(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => cupService.getOverview(effectiveSeasonId, language)),
+      safePrefetch(() => cupService.getSchedule(effectiveSeasonId, language)),
+    ]);
+
+    sliderNews = sliderNewsRes;
+    latestNews = latestNewsRes;
+    cupOverviewResponse = cupOverviewRes;
+    cupScheduleResponse = cupScheduleRes;
+  } else {
+    const [
+      matchesRes,
+      sliderNewsRes,
+      latestNewsRes,
+      statsRes,
+      tableRes,
+      playerLeaderboardRes,
+    ] = await Promise.all([
+      shouldPrefetchByTour
+        ? safePrefetch(() => matchService.getGamesByTour(effectiveSeasonId, tour, language))
+        : safePrefetch(() => matchService.getMatchCenter(homeMatchFilters)),
+      safePrefetch(() => newsService.getSlider(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => newsService.getLatest(language, newsLimit, currentTournamentId)),
+      safePrefetch(() => seasonStatsService.getSeasonStatistics(effectiveSeasonId, language)),
+      safePrefetch(() => leagueService.getTable(effectiveSeasonId, undefined, language)),
+      safePrefetch(async () => {
+        const [scorersRes, assistersRes, cleanSheetsRes] = await Promise.all([
+          playerStatsService.getPlayerStats({
+            seasonId: effectiveSeasonId,
+            sortBy: 'goals',
+            limit: leaderboardLimit,
+            language,
+          }),
+          playerStatsService.getPlayerStats({
+            seasonId: effectiveSeasonId,
+            sortBy: 'assists',
+            limit: leaderboardLimit,
+            language,
+          }),
+          playerStatsService.getPlayerStats({
+            seasonId: effectiveSeasonId,
+            sortBy: 'dry_match',
+            limit: leaderboardLimit,
+            language,
+          }),
+        ]);
+
+        return {
+          scorers: scorersRes.items,
+          assisters: assistersRes.items,
+          cleanSheets: cleanSheetsRes.items,
+        };
+      }),
+    ]);
+
+    matches = matchesRes;
+    sliderNews = sliderNewsRes;
+    latestNews = latestNewsRes;
+    stats = statsRes;
+    table = tableRes;
+    playerLeaderboard = playerLeaderboardRes;
+  }
 
   const prefetch: Record<string, unknown> = {};
-  if (matches !== undefined) {
-    if (shouldPrefetchByTour) {
-      prefetch[prefetchKeys.matchesByTour(effectiveSeasonId, tour, language)] = matches;
-    } else {
-      prefetch[prefetchKeys.matchCenter(homeMatchFiltersHash)] = matches;
-    }
-  }
+
   if (sliderNews !== undefined) {
-    prefetch[prefetchKeys.newsSlider(language, newsLimit, tournamentId)] = sliderNews;
+    prefetch[prefetchKeys.newsSlider(language, newsLimit, currentTournamentId)] = sliderNews;
   }
   if (latestNews !== undefined) {
-    prefetch[prefetchKeys.newsLatest(language, newsLimit, tournamentId)] = latestNews;
+    prefetch[prefetchKeys.newsLatest(language, newsLimit, currentTournamentId)] = latestNews;
   }
-  if (stats !== undefined) {
-    prefetch[prefetchKeys.seasonStats(effectiveSeasonId, language)] = stats;
+
+  if (isSecondLeague) {
+    if (groupATableResponse !== undefined) {
+      prefetch[prefetchKeys.leagueTable(
+        effectiveSeasonId,
+        undefined,
+        undefined,
+        undefined,
+        'A',
+        false,
+        language
+      )] = groupATableResponse;
+    }
+
+    if (groupBTableResponse !== undefined) {
+      prefetch[prefetchKeys.leagueTable(
+        effectiveSeasonId,
+        undefined,
+        undefined,
+        undefined,
+        'B',
+        false,
+        language
+      )] = groupBTableResponse;
+    }
+
+    if (groupAMatchesResponse !== undefined) {
+      prefetch[prefetchKeys.matchCenter(buildMatchCenterFiltersHash(language, {
+        season_id: effectiveSeasonId,
+        group: 'A',
+        limit: secondLeagueMatchLimit,
+      }))] = groupAMatchesResponse;
+    }
+
+    if (groupBMatchesResponse !== undefined) {
+      prefetch[prefetchKeys.matchCenter(buildMatchCenterFiltersHash(language, {
+        season_id: effectiveSeasonId,
+        group: 'B',
+        limit: secondLeagueMatchLimit,
+      }))] = groupBMatchesResponse;
+    }
+
+    if (finalMatchesResponse !== undefined) {
+      prefetch[prefetchKeys.matchCenter(buildMatchCenterFiltersHash(language, {
+        season_id: effectiveSeasonId,
+        final: true,
+        limit: secondLeagueMatchLimit,
+      }))] = finalMatchesResponse;
+    }
   }
-  if (table !== undefined) {
-    prefetch[prefetchKeys.leagueTable(
-      effectiveSeasonId,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      false,
-      language
-    )] = table;
+
+  if (isCup && cupOverviewResponse !== undefined) {
+    prefetch[prefetchKeys.cupOverview(effectiveSeasonId, language, 5, 5)] = cupOverviewResponse;
   }
-  if (playerLeaderboard !== undefined) {
-    prefetch[prefetchKeys.playerLeaderboard(effectiveSeasonId, leaderboardLimit, language)] = playerLeaderboard;
+  if (isCup && cupScheduleResponse !== undefined) {
+    prefetch[prefetchKeys.cupSchedule(effectiveSeasonId, language, null)] = cupScheduleResponse;
+  }
+
+  if (!isSecondLeague && !isCup) {
+    if (matches !== undefined) {
+      if (shouldPrefetchByTour) {
+        prefetch[prefetchKeys.matchesByTour(effectiveSeasonId, tour, language)] = matches;
+      } else {
+        prefetch[prefetchKeys.matchCenter(homeMatchFiltersHash)] = matches;
+      }
+    }
+
+    if (stats !== undefined) {
+      prefetch[prefetchKeys.seasonStats(effectiveSeasonId, language)] = stats;
+    }
+
+    if (table !== undefined) {
+      prefetch[prefetchKeys.leagueTable(
+        effectiveSeasonId,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        false,
+        language
+      )] = table;
+    }
+
+    if (playerLeaderboard !== undefined) {
+      prefetch[prefetchKeys.playerLeaderboard(effectiveSeasonId, leaderboardLimit, language)] = playerLeaderboard;
+    }
+  }
+
+  const secondLeagueData: SecondLeagueHomeData | null = isSecondLeague
+    ? {
+        groupAStandings: groupATableResponse?.table ?? [],
+        groupBStandings: groupBTableResponse?.table ?? [],
+        groupAMatches: groupAMatchesResponse ?? null,
+        groupBMatches: groupBMatchesResponse ?? null,
+        finalMatches: finalMatchesResponse ?? null,
+      }
+    : null;
+
+  const cupData: CupHomeData | null = isCup
+    ? {
+        overview: cupOverviewResponse ?? null,
+        schedule: cupScheduleResponse ?? null,
+      }
+    : null;
+
+  if (isSecondLeague || isCup) {
+    return (
+      <RoutePrefetchProvider value={prefetch}>
+        <TournamentHomeContent
+          tournamentId={currentTournamentId}
+          secondLeagueData={secondLeagueData}
+          cupData={cupData}
+        />
+      </RoutePrefetchProvider>
+    );
   }
 
   // KFF League videos from kffleague.kz - показываем 4 видео в одну строку

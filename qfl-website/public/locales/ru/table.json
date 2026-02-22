@@ -44,5 +44,23 @@
     "draw": "Ничья",
     "loss": "Поражение"
   },
+  "cup": {
+    "schedule": "Расписание кубка",
+    "allRounds": "Все раунды",
+    "noSchedule": "Нет матчей по выбранному раунду",
+    "groups": "Группы",
+    "group": "Группа",
+    "currentRound": "Текущий раунд",
+    "recentResults": "Последние результаты",
+    "upcomingGames": "Ближайшие матчи",
+    "noRecentResults": "Нет сыгранных матчей",
+    "noUpcomingGames": "Нет ближайших матчей",
+    "homePlayoffRoundsTitle": "Раунды плей-офф",
+    "homeRoundFilterLabel": "Выбор раунда",
+    "homeNoPlayoffRounds": "Раунды плей-офф пока не определены",
+    "bracket": "Сетка плей-офф",
+    "noBracket": "Сетка плей-офф пока не определена",
+    "penalties": "пен."
+  },
   "updating": "Обновление..."
 }

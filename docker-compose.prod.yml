@@ -39,11 +39,7 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
       - MINIO_SECURE=false
-      - SOTA_ENABLED=${SOTA_ENABLED:-true}
-      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
-      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
       - ALLOWED_ORIGINS=https://${SITE_DOMAIN}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
@@ -149,11 +145,7 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
       - MINIO_SECURE=false
-      - SOTA_ENABLED=${SOTA_ENABLED:-true}
-      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
-      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
       db:
@@ -178,17 +170,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
       - REDIS_URL=redis://qfl-redis:6379/0
-      - MINIO_ENDPOINT=qfl-minio:9000
-      - MINIO_PUBLIC_ENDPOINT=${SITE_DOMAIN}/storage
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
-      - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
-      - MINIO_SECURE=false
-      - SOTA_ENABLED=${SOTA_ENABLED:-true}
-      - SOTA_API_EMAIL=${SOTA_API_EMAIL}
-      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD}
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-[61,85,71,80,81,84]}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
       db:

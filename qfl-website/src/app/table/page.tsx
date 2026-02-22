@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTournament } from '@/contexts/TournamentContext';
-import { useCupOverview, useCupSchedule, useLeagueTable, useMatchCenter, useResultsGrid } from '@/hooks';
+import { useCupSchedule, useLeagueTable, useMatchCenter, useResultsGrid } from '@/hooks';
 import {
   TableFilters,
   FullLeagueTable,
@@ -17,7 +17,7 @@ import { LoadingSpinner } from '@/components/ui';
 import { HeroBackground } from '@/components/ui/HeroBackground';
 import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { updateSearchParams } from '@/lib/utils/urlState';
-import { CupBracket, CupOverview, CupSchedule } from '@/components/cup';
+import { CupSchedule } from '@/components/cup';
 import { MatchCard } from '@/components/matches/MatchCard';
 
 type LeaguePhase = 'all' | 'groupA' | 'groupB' | 'final';
@@ -167,23 +167,12 @@ export default function LeagueTablePage() {
   });
 
   const {
-    overview: cupOverview,
-    loading: cupOverviewLoading,
-    error: cupOverviewError,
-    refetch: refetchCupOverview,
-  } = useCupOverview({
-    seasonId: effectiveSeasonId,
-    enabled: isCup,
-  });
-
-  const {
     schedule: cupSchedule,
     loading: cupScheduleLoading,
     error: cupScheduleError,
     refetch: refetchCupSchedule,
   } = useCupSchedule({
     seasonId: effectiveSeasonId,
-    roundKey,
     enabled: isCup,
   });
 
@@ -248,27 +237,22 @@ export default function LeagueTablePage() {
           {/* Bracket View for Cup tournaments */}
           {showBracket && (
             <div className="space-y-4">
-              {(cupOverviewLoading || cupScheduleLoading) && (
+              {cupScheduleLoading && (
                 <div className="mb-3 flex items-center gap-2 text-xs text-gray-500 dark:text-slate-400">
                   <LoadingSpinner size="sm" />
                   <span>{t('updating', { defaultValue: 'Обновление...' })}</span>
                 </div>
               )}
 
-              {(cupOverviewError || cupScheduleError) ? (
+              {cupScheduleError ? (
                 <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-100 dark:border-dark-border p-8">
                   <ErrorMessage
                     message={tErrors('loadTable')}
-                    onRetry={() => {
-                      refetchCupOverview();
-                      refetchCupSchedule();
-                    }}
+                    onRetry={refetchCupSchedule}
                   />
                 </div>
               ) : (
                 <>
-                  {cupOverview && <CupOverview overview={cupOverview} />}
-                  {cupOverview?.bracket && <CupBracket bracket={cupOverview.bracket} />}
                   {cupSchedule && (
                     <CupSchedule
                       schedule={cupSchedule}
