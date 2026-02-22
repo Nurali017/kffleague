@@ -24,13 +24,26 @@ describe('queryKeys', () => {
   });
 
   it('keeps nullable filters in league table key', () => {
-    expect(queryKeys.league.table(61, undefined, undefined, null, 'ru')).toEqual([
+    expect(queryKeys.league.table(61, undefined, undefined, null, null, false, 'ru')).toEqual([
       '/seasons',
       61,
       'table',
       undefined,
       undefined,
       null,
+      null,
+      false,
+      'ru',
+    ]);
+  });
+
+  it('encodes phase filters in results-grid key', () => {
+    expect(queryKeys.league.resultsGrid(80, 'A', false, 'ru')).toEqual([
+      '/seasons',
+      80,
+      'results-grid',
+      'A',
+      false,
       'ru',
     ]);
   });

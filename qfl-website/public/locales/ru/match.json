@@ -131,6 +131,7 @@
   },
   "filters": {
     "season": "Сезон",
+    "phase": "Фаза",
     "tour": "Тур",
     "month": "Месяц",
     "year": "Год",
@@ -164,6 +165,12 @@
     "upcoming": "Предстоящие",
     "live": "В прямом эфире",
     "finished": "Завершенные"
+  },
+  "phase": {
+    "all": "Все матчи",
+    "groupA": "Лига A",
+    "groupB": "Лига B",
+    "final": "Финал"
   },
   "statisticsTab": {
     "title": "Статистика",

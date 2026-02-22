@@ -131,6 +131,7 @@
   },
   "filters": {
     "season": "Маусым",
+    "phase": "Кезең",
     "tour": "Тур",
     "month": "Ай",
     "year": "Жыл",
@@ -164,6 +165,12 @@
     "upcoming": "Алдағы",
     "live": "Тікелей эфирде",
     "finished": "Аяқталған"
+  },
+  "phase": {
+    "all": "Барлық матчтар",
+    "groupA": "Лига A",
+    "groupB": "Лига B",
+    "final": "Финал"
   },
   "statisticsTab": {
     "title": "Статистика",

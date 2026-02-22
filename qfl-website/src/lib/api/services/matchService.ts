@@ -118,6 +118,8 @@ export const matchService = {
     const params: MatchCenterQuery = {};
 
     if (filters.season_id) params.season_id = filters.season_id;
+    if (filters.group) params.group = filters.group;
+    if (filters.final) params.final = true;
     if (filters.tours?.length) params.tours = filters.tours;
     if (filters.team_ids?.length) params.team_ids = filters.team_ids;
     if (filters.month) params.month = filters.month;

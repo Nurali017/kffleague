@@ -57,10 +57,16 @@ export const queryKeys = {
       tourFrom: number | undefined,
       tourTo: number | undefined,
       homeAway: 'home' | 'away' | null | undefined,
+      group: string | null | undefined,
+      final: boolean | undefined,
       language: string
-    ) => ['/seasons', seasonId, 'table', tourFrom, tourTo, homeAway, language] as const,
-    resultsGrid: (seasonId: number, language: string) =>
-      ['/seasons', seasonId, 'results-grid', language] as const,
+    ) => ['/seasons', seasonId, 'table', tourFrom, tourTo, homeAway, group, final, language] as const,
+    resultsGrid: (
+      seasonId: number,
+      group: string | null | undefined,
+      final: boolean | undefined,
+      language: string
+    ) => ['/seasons', seasonId, 'results-grid', group, final, language] as const,
   },
   stats: {
     season: (seasonId: number, language: string) =>

@@ -9,6 +9,8 @@ import { teamService } from '@/lib/api/services';
 import { MatchCenterFilters as FiltersType } from '@/types';
 import { MultiSelect } from '@/components/ui';
 
+type MatchPhase = 'all' | 'groupA' | 'groupB' | 'final';
+
 interface MatchCenterFiltersProps {
   filters: FiltersType;
   onFilterChange: (filters: FiltersType) => void;
@@ -24,9 +26,11 @@ export function MatchCenterFilters({
 }: MatchCenterFiltersProps) {
   const { t } = useTranslation('match');
   const { i18n } = useTranslation();
-  const { effectiveSeasonId } = useTournament();
+  const { currentTournament, effectiveSeasonId } = useTournament();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const isHero = variant === 'hero';
+  const isSecondLeague = currentTournament.id === '2l';
+  const hasFinalPhase = (currentTournament.finalStageIds?.length ?? 0) > 0;
 
   // Load teams from season participants endpoint to support cup/2l flows.
   const { data: teamsData } = useSWR(
@@ -71,11 +75,37 @@ export function MatchCenterFilters({
     onFilterChange({ ...filters, hide_past: !filters.hide_past });
   };
 
+  const currentPhase: MatchPhase = filters.final
+    ? 'final'
+    : filters.group === 'A'
+      ? 'groupA'
+      : filters.group === 'B'
+        ? 'groupB'
+        : 'all';
+
+  const handlePhaseChange = (phase: MatchPhase) => {
+    if (phase === 'all') {
+      onFilterChange({ ...filters, group: undefined, final: undefined });
+      return;
+    }
+    if (phase === 'groupA') {
+      onFilterChange({ ...filters, group: 'A', final: undefined });
+      return;
+    }
+    if (phase === 'groupB') {
+      onFilterChange({ ...filters, group: 'B', final: undefined });
+      return;
+    }
+    onFilterChange({ ...filters, group: undefined, final: true });
+  };
+
   const handleClearFilters = () => {
     onFilterChange({});
   };
 
   const hasActiveFilters =
+    filters.group !== undefined ||
+    filters.final === true ||
     (filters.tours && filters.tours.length > 0) ||
     filters.month !== undefined ||
     filters.status !== undefined ||
@@ -99,6 +129,8 @@ export function MatchCenterFilters({
           {hasActiveFilters && (
             <span className="ml-1 px-2 py-0.5 bg-accent text-white text-xs rounded-full">
               {[
+                filters.group,
+                filters.final,
                 filters.tours?.length,
                 filters.month,
                 filters.status,
@@ -120,6 +152,56 @@ export function MatchCenterFilters({
             : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border'
         }`}
       >
+        {isSecondLeague && (
+          <div className="mb-4">
+            <label className={`mb-1.5 block text-xs font-medium uppercase ${
+              isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
+            }`}>
+              {t('filters.phase', { defaultValue: 'Фаза' })}
+            </label>
+            <div className="inline-flex flex-wrap gap-2">
+              {(['all', 'groupA', 'groupB'] as const).map((phase) => (
+                <button
+                  key={phase}
+                  type="button"
+                  onClick={() => handlePhaseChange(phase)}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                    currentPhase === phase
+                      ? 'bg-accent text-primary-dark'
+                      : isHero
+                        ? 'bg-white/70 text-gray-700 hover:text-primary dark:bg-white/10 dark:text-white/80 dark:hover:text-white'
+                        : 'bg-gray-100 text-gray-700 hover:text-primary dark:bg-dark-surface-soft dark:text-slate-300 dark:hover:text-accent-cyan'
+                  }`}
+                >
+                  {t(`phase.${phase}`, {
+                    defaultValue:
+                      phase === 'all'
+                        ? 'Все матчи'
+                        : phase === 'groupA'
+                          ? 'Лига A'
+                          : 'Лига B',
+                  })}
+                </button>
+              ))}
+              {hasFinalPhase && (
+                <button
+                  type="button"
+                  onClick={() => handlePhaseChange('final')}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                    currentPhase === 'final'
+                      ? 'bg-accent text-primary-dark'
+                      : isHero
+                        ? 'bg-white/70 text-gray-700 hover:text-primary dark:bg-white/10 dark:text-white/80 dark:hover:text-white'
+                        : 'bg-gray-100 text-gray-700 hover:text-primary dark:bg-dark-surface-soft dark:text-slate-300 dark:hover:text-accent-cyan'
+                  }`}
+                >
+                  {t('phase.final', { defaultValue: 'Финал' })}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* All Filters in One Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end">
           {/* Tour MultiSelect */}
@@ -255,6 +337,23 @@ export function MatchCenterFilters({
         {/* Active Filters Pills */}
         {hasActiveFilters && (
           <div className="mt-4 flex flex-wrap gap-2">
+            {(filters.group || filters.final) && (
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-primary'
+              }`}>
+                {filters.final
+                  ? t('phase.final', { defaultValue: 'Финал' })
+                  : filters.group === 'A'
+                    ? t('phase.groupA', { defaultValue: 'Лига A' })
+                    : t('phase.groupB', { defaultValue: 'Лига B' })}
+                <button
+                  onClick={() => onFilterChange({ ...filters, group: undefined, final: undefined })}
+                  className="hover:bg-white/20 rounded-full p-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
             {filters.tours && filters.tours.length > 0 && (
               <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
                 isHero ? 'bg-white/20' : 'bg-primary'

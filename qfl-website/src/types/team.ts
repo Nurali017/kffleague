@@ -34,6 +34,8 @@ export interface TableFilters {
   tour_from?: number;
   tour_to?: number;
   home_away?: 'home' | 'away' | null;
+  group?: string | null;
+  final?: boolean;
 }
 
 export interface LeagueTableResponse {

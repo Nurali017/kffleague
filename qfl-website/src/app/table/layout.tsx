@@ -34,7 +34,7 @@ export default async function TableLayout({ children }: TableLayoutProps) {
       : safePrefetch(() => leagueService.getTable(effectiveSeasonId, undefined, language)),
     tournamentId === 'cup'
       ? Promise.resolve(undefined)
-      : safePrefetch(() => leagueService.getResultsGrid(effectiveSeasonId, language)),
+      : safePrefetch(() => leagueService.getResultsGrid(effectiveSeasonId, undefined, language)),
     tournamentId === 'cup'
       ? safePrefetch(() => cupService.getOverview(effectiveSeasonId, language))
       : Promise.resolve(undefined),
@@ -45,10 +45,18 @@ export default async function TableLayout({ children }: TableLayoutProps) {
 
   const prefetch: Record<string, unknown> = {};
   if (table !== undefined) {
-    prefetch[prefetchKeys.leagueTable(effectiveSeasonId, undefined, undefined, undefined, language)] = table;
+    prefetch[prefetchKeys.leagueTable(
+      effectiveSeasonId,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      language
+    )] = table;
   }
   if (resultsGrid !== undefined) {
-    prefetch[prefetchKeys.resultsGrid(effectiveSeasonId, language)] = resultsGrid;
+    prefetch[prefetchKeys.resultsGrid(effectiveSeasonId, undefined, false, language)] = resultsGrid;
   }
   if (cupOverview !== undefined) {
     prefetch[prefetchKeys.cupOverview(effectiveSeasonId, language, 5, 5)] = cupOverview;

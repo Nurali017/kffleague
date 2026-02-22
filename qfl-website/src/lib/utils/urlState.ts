@@ -98,6 +98,14 @@ export function getMatchCenterFiltersFromUrl(searchParams: URLSearchParams): Mat
   const seasonId = searchParams.get('season_id');
   if (seasonId) filters.season_id = parseInt(seasonId, 10);
 
+  const final = searchParams.get('final');
+  if (final === 'true') {
+    filters.final = true;
+  } else {
+    const group = searchParams.get('group');
+    if (group) filters.group = group;
+  }
+
   // Tours array
   const tours = searchParams.get('tours');
   if (tours) filters.tours = tours.split(',').map(id => parseInt(id, 10));
@@ -132,6 +140,11 @@ export function syncMatchCenterFiltersToUrl(filters: MatchCenterFilters): void {
   const params: Record<string, any> = {};
 
   if (filters.season_id) params.season_id = filters.season_id;
+  if (filters.final) {
+    params.final = 'true';
+  } else if (filters.group) {
+    params.group = filters.group;
+  }
   if (filters.tours?.length) params.tours = filters.tours.join(',');
   if (filters.team_ids?.length) params.team_ids = filters.team_ids.join(',');
   if (filters.month) params.month = filters.month;

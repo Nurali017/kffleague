@@ -25,6 +25,7 @@ export interface Tournament {
   order: number;
   hasTable: boolean;
   hasBracket: boolean;
+  finalStageIds?: number[];
   currentRound?: number;
   totalRounds?: number;
 }

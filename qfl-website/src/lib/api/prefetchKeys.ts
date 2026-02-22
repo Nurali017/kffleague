@@ -66,10 +66,16 @@ export const prefetchKeys = {
     tourFrom: number | undefined,
     tourTo: number | undefined,
     homeAway: 'home' | 'away' | null | undefined,
+    group: string | null | undefined,
+    final: boolean | undefined,
     language: string
-  ) => `league:${seasonId}:${tourFrom ?? ''}:${tourTo ?? ''}:${homeAway ?? ''}:${language}:table`,
-  resultsGrid: (seasonId: number, language: string) =>
-    `league:${seasonId}:${language}:results-grid`,
+  ) => `league:${seasonId}:${tourFrom ?? ''}:${tourTo ?? ''}:${homeAway ?? ''}:${group ?? ''}:${final ? 1 : 0}:${language}:table`,
+  resultsGrid: (
+    seasonId: number,
+    group: string | null | undefined,
+    final: boolean | undefined,
+    language: string
+  ) => `league:${seasonId}:${group ?? ''}:${final ? 1 : 0}:${language}:results-grid`,
 
   seasonStats: (seasonId: number, language: string) =>
     `stats:${seasonId}:${language}:season`,

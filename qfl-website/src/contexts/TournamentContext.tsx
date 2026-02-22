@@ -43,6 +43,7 @@ function buildTournamentFromApi(
     format: (entry.tournament_format as Tournament['format']) ?? fallback.format,
     hasTable: entry.has_table ?? fallback.hasTable,
     hasBracket: entry.has_bracket ?? fallback.hasBracket,
+    finalStageIds: entry.final_stage_ids ?? fallback.finalStageIds,
     sponsorName: entry.sponsor_name ?? fallback.sponsorName,
     logo: entry.logo ?? fallback.logo,
     colors: entry.colors ?? fallback.colors,

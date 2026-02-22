@@ -264,6 +264,8 @@ export interface StandardMatchesResponse {
 
 export interface MatchCenterFilters {
   season_id?: number;
+  group?: string;
+  final?: boolean;
   tours?: number[];
   team_ids?: number[];
   month?: number;

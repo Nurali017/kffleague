@@ -37,6 +37,15 @@ export function MatchCenter() {
     season_id: filters.season_id || effectiveSeasonId,
     ...filters,
   });
+  const hasActiveFilters =
+    filters.group !== undefined ||
+    filters.final === true ||
+    (filters.tours?.length ?? 0) > 0 ||
+    (filters.team_ids?.length ?? 0) > 0 ||
+    filters.month !== undefined ||
+    filters.year !== undefined ||
+    filters.status !== undefined ||
+    filters.hide_past === true;
 
   // Sync filters to URL when they change
   const handleFilterChange = (newFilters: FiltersType) => {
@@ -46,6 +55,8 @@ export function MatchCenter() {
     const params = new URLSearchParams(searchParams.toString());
     [
       'season_id',
+      'group',
+      'final',
       'tours',
       'team_ids',
       'month',
@@ -55,6 +66,8 @@ export function MatchCenter() {
     ].forEach((key) => params.delete(key));
 
     if (newFilters.season_id) params.set('season_id', String(newFilters.season_id));
+    if (newFilters.group) params.set('group', newFilters.group);
+    if (newFilters.final) params.set('final', 'true');
     if (newFilters.tours?.length) params.set('tours', newFilters.tours.join(','));
     if (newFilters.team_ids?.length) params.set('team_ids', newFilters.team_ids.join(','));
     if (newFilters.month) params.set('month', String(newFilters.month));
@@ -99,7 +112,7 @@ export function MatchCenter() {
       {groups.length === 0 ? (
         <div className="text-center py-12 bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border">
           <p className="text-gray-500 dark:text-slate-400 text-lg">
-            {Object.keys(filters).length > 0
+            {hasActiveFilters
               ? t('noMatchesFiltered')
               : t('noData.noMatches', { ns: 'common' })}
           </p>

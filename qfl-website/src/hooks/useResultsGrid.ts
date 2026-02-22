@@ -9,19 +9,26 @@ import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
 
 interface UseResultsGridOptions {
   seasonId?: number;
+  group?: string | null;
+  final?: boolean;
   enabled?: boolean;
 }
 
 export function useResultsGrid(options: UseResultsGridOptions = {}) {
   const { i18n } = useTranslation();
-  const { seasonId = DEFAULT_SEASON_ID, enabled = true } = options;
+  const {
+    seasonId = DEFAULT_SEASON_ID,
+    group,
+    final = false,
+    enabled = true,
+  } = options;
   const prefetched = useRoutePrefetchValue<ResultsGridResponse>(
-    prefetchKeys.resultsGrid(seasonId, i18n.language)
+    prefetchKeys.resultsGrid(seasonId, group, final, i18n.language)
   );
 
   const { data, error, isLoading, mutate } = useSWR<ResultsGridResponse>(
-    enabled ? queryKeys.league.resultsGrid(seasonId, i18n.language) : null,
-    () => leagueService.getResultsGrid(seasonId, i18n.language),
+    enabled ? queryKeys.league.resultsGrid(seasonId, group, final, i18n.language) : null,
+    () => leagueService.getResultsGrid(seasonId, { group: group ?? undefined, final }, i18n.language),
     {
       fallbackData: prefetched,
       keepPreviousData: true,

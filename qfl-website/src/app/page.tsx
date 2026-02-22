@@ -117,7 +117,15 @@ export default async function HomePage() {
     prefetch[prefetchKeys.seasonStats(effectiveSeasonId, language)] = stats;
   }
   if (table !== undefined) {
-    prefetch[prefetchKeys.leagueTable(effectiveSeasonId, undefined, undefined, undefined, language)] = table;
+    prefetch[prefetchKeys.leagueTable(
+      effectiveSeasonId,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      language
+    )] = table;
   }
   if (playerLeaderboard !== undefined) {
     prefetch[prefetchKeys.playerLeaderboard(effectiveSeasonId, leaderboardLimit, language)] = playerLeaderboard;

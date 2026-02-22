@@ -9,6 +9,7 @@ export interface FrontMapEntry {
   tournament_format?: string | null;
   has_table?: boolean;
   has_bracket?: boolean;
+  final_stage_ids?: number[] | null;
   sponsor_name?: string | null;
   logo?: string | null;
   colors?: TournamentColors | null;

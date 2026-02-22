@@ -13,6 +13,8 @@ interface UseLeagueTableOptions {
   tourFrom?: number;
   tourTo?: number;
   homeAway?: 'home' | 'away' | null;
+  group?: string | null;
+  final?: boolean;
   enabled?: boolean;
 }
 
@@ -24,11 +26,19 @@ export function useLeagueTable(options: UseLeagueTableOptions = {}) {
     tourFrom,
     tourTo,
     homeAway,
+    group,
+    final = false,
     enabled = true,
   } = options;
 
-  const filters: TableFilters | undefined = (tourFrom || tourTo || homeAway)
-    ? { tour_from: tourFrom, tour_to: tourTo, home_away: homeAway }
+  const filters: TableFilters | undefined = (tourFrom || tourTo || homeAway || group || final)
+    ? {
+        tour_from: tourFrom,
+        tour_to: tourTo,
+        home_away: homeAway,
+        group,
+        final,
+      }
     : undefined;
   const prefetched = useRoutePrefetchValue<LeagueTableResponse>(
     prefetchKeys.leagueTable(
@@ -36,13 +46,15 @@ export function useLeagueTable(options: UseLeagueTableOptions = {}) {
       tourFrom,
       tourTo,
       homeAway,
+      group,
+      final,
       i18n.language
     )
   );
 
   const { data, error, isLoading, mutate } = useSWR<LeagueTableResponse>(
     enabled
-      ? queryKeys.league.table(seasonId, tourFrom, tourTo, homeAway, i18n.language)
+      ? queryKeys.league.table(seasonId, tourFrom, tourTo, homeAway, group, final, i18n.language)
       : null,
     () => leagueService.getTable(seasonId, filters, i18n.language),
     {
