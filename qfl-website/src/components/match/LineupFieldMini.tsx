@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
+import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
 const HEX_COLOR_RE = /^#[0-9A-Fa-f]{6}$/;
@@ -39,13 +41,29 @@ interface LineupFieldMiniProps {
 }
 
 function MiniPlayerName({ player }: { player: LineupPlayerExtended }) {
-  return (
-    <div className="flex items-center gap-2 py-1 text-xs">
+  const playerHref = getPlayerHref(player.player_id);
+
+  const content = (
+    <>
       <span className="inline-flex w-5 h-5 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-700">
         {player.number}
       </span>
       <span className="truncate text-gray-800">{`${player.first_name} ${player.last_name}`}</span>
-    </div>
+    </>
+  );
+
+  if (!playerHref) {
+    return (
+      <div className="flex items-center gap-2 py-1 text-xs">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link href={playerHref} className="flex items-center gap-2 py-1 text-xs hover:text-primary transition-colors">
+      {content}
+    </Link>
   );
 }
 
@@ -86,6 +104,8 @@ export function LineupFieldMini({
 
   const homeColor = resolveKitColor(lineups.home_team.kit_color, HOME_COLOR);
   const awayColor = resolveKitColor(lineups.away_team.kit_color, AWAY_COLOR);
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
   const homeStartersOrdered = orderStartersForPlacement(lineups.home_team.starters).slice(0, 11);
   const awayStartersOrdered = orderStartersForPlacement(lineups.away_team.starters).slice(0, 11);
 
@@ -97,10 +117,17 @@ export function LineupFieldMini({
         </div>
         <div className="grid grid-cols-1 gap-4 p-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
-              <span className="text-xs font-bold text-gray-800">{homeTeam.name}</span>
-            </div>
+            {homeTeamHref ? (
+              <Link href={homeTeamHref} className="flex items-center gap-2 mb-2 hover:text-primary transition-colors">
+                <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
+                <span className="text-xs font-bold text-gray-800">{homeTeam.name}</span>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2 mb-2">
+                <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
+                <span className="text-xs font-bold text-gray-800">{homeTeam.name}</span>
+              </div>
+            )}
             <div className="space-y-1">
               {homeStartersOrdered.map((player) => (
                 <MiniPlayerName key={player.player_id} player={player} />
@@ -109,10 +136,17 @@ export function LineupFieldMini({
           </div>
 
           <div className="border-t border-gray-100 pt-3">
-            <div className="flex items-center gap-2 mb-2">
-              <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
-              <span className="text-xs font-bold text-gray-800">{awayTeam.name}</span>
-            </div>
+            {awayTeamHref ? (
+              <Link href={awayTeamHref} className="flex items-center gap-2 mb-2 hover:text-primary transition-colors">
+                <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
+                <span className="text-xs font-bold text-gray-800">{awayTeam.name}</span>
+              </Link>
+            ) : (
+              <div className="flex items-center gap-2 mb-2">
+                <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
+                <span className="text-xs font-bold text-gray-800">{awayTeam.name}</span>
+              </div>
+            )}
             <div className="space-y-1">
               {awayStartersOrdered.map((player) => (
                 <MiniPlayerName key={player.player_id} player={player} />
@@ -157,10 +191,17 @@ export function LineupFieldMini({
       <div className="relative w-full aspect-[3/4] bg-[#050B14]">
         {/* Home Team Header */}
         <div className="absolute top-0 left-0 right-0 px-3 py-2 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent z-20">
-          <div className="flex items-center gap-2">
-            <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
-            <span className="text-white font-semibold text-xs truncate max-w-[100px]">{homeTeam.name}</span>
-          </div>
+          {homeTeamHref ? (
+            <Link href={homeTeamHref} className="flex items-center gap-2 group">
+              <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
+              <span className="text-white font-semibold text-xs truncate max-w-[100px] group-hover:text-cyan-300 transition-colors">{homeTeam.name}</span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-5 h-5 object-contain" alt={homeTeam.name} />
+              <span className="text-white font-semibold text-xs truncate max-w-[100px]">{homeTeam.name}</span>
+            </div>
+          )}
           <span className="font-mono text-white/50 text-xs font-bold">{lineups.home_team.formation}</span>
         </div>
 
@@ -185,10 +226,17 @@ export function LineupFieldMini({
         {/* Away Team Footer */}
         <div className="absolute bottom-0 left-0 right-0 px-3 py-2 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent z-20">
           <span className="font-mono text-white/50 text-xs font-bold">{lineups.away_team.formation}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-white font-semibold text-xs truncate max-w-[100px]">{awayTeam.name}</span>
-            <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
-          </div>
+          {awayTeamHref ? (
+            <Link href={awayTeamHref} className="flex items-center gap-2 group">
+              <span className="text-white font-semibold text-xs truncate max-w-[100px] group-hover:text-cyan-300 transition-colors">{awayTeam.name}</span>
+              <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-white font-semibold text-xs truncate max-w-[100px]">{awayTeam.name}</span>
+              <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-5 h-5 object-contain" alt={awayTeam.name} />
+            </div>
+          )}
         </div>
 
         {/* Home Players */}
@@ -232,8 +280,35 @@ interface PlayerMarkerMiniProps {
 }
 
 function PlayerMarkerMini({ player, position, teamColor }: PlayerMarkerMiniProps) {
+  const playerHref = getPlayerHref(player.player_id);
+
+  const content = (
+    <>
+      <JerseyIconMini color={teamColor} number={player.number} />
+      <span className="text-[7px] font-medium text-white text-center leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] max-w-[50px] truncate">
+        {player.last_name}
+      </span>
+    </>
+  );
+
+  if (!playerHref) {
+    return (
+      <div
+        data-testid={`lineup-marker-${player.player_id}`}
+        className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5"
+        style={{
+          left: `${position.x}%`,
+          top: `${position.y}%`,
+        }}
+      >
+        {content}
+      </div>
+    );
+  }
+
   return (
-    <div
+    <Link
+      href={playerHref}
       data-testid={`lineup-marker-${player.player_id}`}
       className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5"
       style={{
@@ -241,10 +316,7 @@ function PlayerMarkerMini({ player, position, teamColor }: PlayerMarkerMiniProps
         top: `${position.y}%`,
       }}
     >
-      <JerseyIconMini color={teamColor} number={player.number} />
-      <span className="text-[7px] font-medium text-white text-center leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] max-w-[50px] truncate">
-        {player.last_name}
-      </span>
-    </div>
+      {content}
+    </Link>
   );
 }

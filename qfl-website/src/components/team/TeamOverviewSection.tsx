@@ -9,6 +9,7 @@ import {
   TeamOverviewMatch,
   TeamOverviewStandingEntry,
 } from '@/types/team';
+import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { EmptyState, SectionCard, SectionHeader } from './TeamUiPrimitives';
 import { TeamPlayerStats } from './TeamPlayerStats';
@@ -47,29 +48,59 @@ function LastMatchCard({ match }: { match: TeamOverviewMatch | null }) {
     <SectionCard className="p-4 md:p-5">
       <SectionHeader title={t('sections.recentMatch', 'Последний матч')} />
       <div className="mt-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          {match.home_team.logo_url ? (
-            <img src={match.home_team.logo_url} alt={match.home_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-          ) : (
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
-          )}
-          <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white">{match.home_team.name}</span>
-        </div>
+        {(() => {
+          const teamHref = getTeamHref(match.home_team.id);
+          const content = (
+            <>
+              {match.home_team.logo_url ? (
+                <img src={match.home_team.logo_url} alt={match.home_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+              ) : (
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+              )}
+              <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white">{match.home_team.name}</span>
+            </>
+          );
+
+          if (!teamHref) {
+            return <div className="flex items-center gap-2.5 min-w-0 flex-1">{content}</div>;
+          }
+
+          return (
+            <Link href={teamHref} className="flex items-center gap-2.5 min-w-0 flex-1 hover:text-primary transition-colors">
+              {content}
+            </Link>
+          );
+        })()}
 
         <MatchScore home={match.home_score} away={match.away_score} />
 
-        <div className="flex items-center justify-end gap-2.5 min-w-0 flex-1">
-          <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white text-right">{match.away_team.name}</span>
-          {match.away_team.logo_url ? (
-            <img src={match.away_team.logo_url} alt={match.away_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
-          ) : (
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
-          )}
-        </div>
+        {(() => {
+          const teamHref = getTeamHref(match.away_team.id);
+          const content = (
+            <>
+              <span className="truncate text-xs md:text-sm font-bold text-slate-900 dark:text-white text-right">{match.away_team.name}</span>
+              {match.away_team.logo_url ? (
+                <img src={match.away_team.logo_url} alt={match.away_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+              ) : (
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-white/15" />
+              )}
+            </>
+          );
+
+          if (!teamHref) {
+            return <div className="flex items-center justify-end gap-2.5 min-w-0 flex-1">{content}</div>;
+          }
+
+          return (
+            <Link href={teamHref} className="flex items-center justify-end gap-2.5 min-w-0 flex-1 hover:text-primary transition-colors">
+              {content}
+            </Link>
+          );
+        })()}
       </div>
       <div className="mt-3 flex items-center justify-between text-xs text-slate-500 dark:text-white/60">
         <span>{formatMatchDate(match.date, i18n.language)}</span>
-        <Link href={`/matches/${match.id}`} className="font-bold text-primary dark:text-cyan-300 hover:text-primary-dark dark:hover:text-cyan-200">
+        <Link href={getMatchHref(match.id) || '/matches'} className="font-bold text-primary dark:text-cyan-300 hover:text-primary-dark dark:hover:text-cyan-200">
           {t('buttons.matchCentre', 'Матч-центр')}
         </Link>
       </div>
@@ -88,17 +119,40 @@ function FormCard({ items }: { items: TeamOverviewFormEntry[] }) {
       ) : (
         <div className="mt-4 grid grid-cols-3 sm:grid-cols-5 gap-2">
           {items.map((item) => (
-            <div key={item.game_id} className="rounded-lg border border-gray-200 dark:border-white/10 p-2 text-center bg-gray-50 dark:bg-white/5">
-              {item.opponent_logo ? (
-                <img src={item.opponent_logo} alt={item.opponent_name} className="w-7 h-7 object-contain mx-auto" />
-              ) : (
-                <div className="w-7 h-7 mx-auto rounded-full bg-gray-300 dark:bg-white/20" />
-              )}
-              <div className="mt-1 text-[11px] font-bold text-slate-900 dark:text-white">
-                {item.team_score}:{item.opponent_score}
-              </div>
-              <div className="mt-0.5 text-[10px] font-semibold text-slate-500 dark:text-white/60">{item.result}</div>
-            </div>
+            (() => {
+              const matchHref = getMatchHref(item.game_id);
+              const content = (
+                <>
+                  {item.opponent_logo ? (
+                    <img src={item.opponent_logo} alt={item.opponent_name} className="w-7 h-7 object-contain mx-auto" />
+                  ) : (
+                    <div className="w-7 h-7 mx-auto rounded-full bg-gray-300 dark:bg-white/20" />
+                  )}
+                  <div className="mt-1 text-[11px] font-bold text-slate-900 dark:text-white">
+                    {item.team_score}:{item.opponent_score}
+                  </div>
+                  <div className="mt-0.5 text-[10px] font-semibold text-slate-500 dark:text-white/60">{item.result}</div>
+                </>
+              );
+
+              if (!matchHref) {
+                return (
+                  <div key={item.game_id} className="rounded-lg border border-gray-200 dark:border-white/10 p-2 text-center bg-gray-50 dark:bg-white/5">
+                    {content}
+                  </div>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.game_id}
+                  href={matchHref}
+                  className="block rounded-lg border border-gray-200 dark:border-white/10 p-2 text-center bg-gray-50 dark:bg-white/5 hover:border-gray-300 dark:hover:border-white/20 transition-colors"
+                >
+                  {content}
+                </Link>
+              );
+            })()
           ))}
         </div>
       )}
@@ -149,7 +203,18 @@ function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
                     {row.team_logo ? (
                       <img src={row.team_logo} alt="" className="w-5 h-5 object-contain" />
                     ) : null}
-                    <span className="font-semibold text-slate-900 dark:text-white">{row.team_name}</span>
+                    {(() => {
+                      const teamHref = getTeamHref(row.team_id);
+                      if (!teamHref) {
+                        return <span className="font-semibold text-slate-900 dark:text-white">{row.team_name}</span>;
+                      }
+
+                      return (
+                        <Link href={teamHref} className="font-semibold text-slate-900 dark:text-white hover:text-primary dark:hover:text-cyan-300 transition-colors">
+                          {row.team_name}
+                        </Link>
+                      );
+                    })()}
                   </div>
                 </td>
                 <td className="py-2.5 text-center text-slate-600 dark:text-white/80">{row.games_played}</td>
@@ -179,7 +244,7 @@ function FixturesRail({ matches }: { matches: TeamOverviewMatch[] }) {
           {matches.map((match) => (
             <Link
               key={match.id}
-              href={`/matches/${match.id}`}
+              href={getMatchHref(match.id) || '/matches'}
               className="block rounded-xl border border-gray-200 dark:border-white/10 p-3 hover:border-gray-300 dark:hover:border-white/25 transition-colors"
             >
               <div className="text-[11px] text-slate-500 dark:text-white/60">

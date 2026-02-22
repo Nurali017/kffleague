@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Building, Users, Clock } from 'lucide-react';
 import { MatchDetail, EnhancedMatchEvent, PlayerCountry } from '@/types';
 import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { formatMatchDayDate } from '@/lib/utils/dateFormat';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
 import { WhistleIcon } from '@/components/icons/WhistleIcon';
 import { HeroBackground } from '@/components/ui/HeroBackground';
@@ -23,6 +25,8 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
   const awayLogoUrl = match.away_team.logo_url || getTeamLogo(match.away_team.id);
   const homeColor = HOME_COLOR;
   const awayColor = AWAY_COLOR;
+  const homeTeamHref = getTeamHref(match.home_team.id);
+  const awayTeamHref = getTeamHref(match.away_team.id);
 
   const hasScore = match.home_score !== undefined && match.away_score !== undefined;
   const isLive = match.is_live || match.status === 'live';
@@ -93,30 +97,60 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4 md:gap-12 max-w-4xl mx-auto">
 
           {/* Home Team */}
-          <div className="flex flex-col items-center text-center group min-w-0">
-            <div className="relative mb-4">
-              <div
-                className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
-              >
-                {homeLogoUrl ? (
-                  <img
-                    src={homeLogoUrl}
-                    alt={match.home_team.name}
-                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
-                  />
-                ) : (
-                  <span className="text-2xl font-bold" style={{ color: homeColor }}>
-                    {match.home_team.name[0]}
-                  </span>
-                )}
+          {homeTeamHref ? (
+            <Link
+              href={homeTeamHref}
+              className="flex flex-col items-center text-center group min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            >
+              <div className="relative mb-4">
+                <div
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                >
+                  {homeLogoUrl ? (
+                    <img
+                      src={homeLogoUrl}
+                      alt={match.home_team.name}
+                      className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold" style={{ color: homeColor }}>
+                      {match.home_team.name[0]}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
-              {match.home_team.name}
-            </h2>
-            <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('home')}</p>
-          </div>
+              <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words group-hover:text-accent transition-colors">
+                {match.home_team.name}
+              </h2>
+              <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('home')}</p>
+            </Link>
+          ) : (
+            <div className="flex flex-col items-center text-center group min-w-0">
+              <div className="relative mb-4">
+                <div
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                >
+                  {homeLogoUrl ? (
+                    <img
+                      src={homeLogoUrl}
+                      alt={match.home_team.name}
+                      className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold" style={{ color: homeColor }}>
+                      {match.home_team.name[0]}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
+                {match.home_team.name}
+              </h2>
+              <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('home')}</p>
+            </div>
+          )}
 
           {/* Score / Status */}
           <div className="flex flex-col items-center justify-center min-w-[86px] sm:min-w-[120px] md:min-w-[180px]">
@@ -159,30 +193,60 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
           </div>
 
           {/* Away Team */}
-          <div className="flex flex-col items-center text-center group min-w-0">
-            <div className="relative mb-4">
-              <div
-                className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
-              >
-                {awayLogoUrl ? (
-                  <img
-                    src={awayLogoUrl}
-                    alt={match.away_team.name}
-                    className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
-                  />
-                ) : (
-                  <span className="text-2xl font-bold" style={{ color: awayColor }}>
-                    {match.away_team.name[0]}
-                  </span>
-                )}
+          {awayTeamHref ? (
+            <Link
+              href={awayTeamHref}
+              className="flex flex-col items-center text-center group min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            >
+              <div className="relative mb-4">
+                <div
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                >
+                  {awayLogoUrl ? (
+                    <img
+                      src={awayLogoUrl}
+                      alt={match.away_team.name}
+                      className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold" style={{ color: awayColor }}>
+                      {match.away_team.name[0]}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
-              {match.away_team.name}
-            </h2>
-            <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('away')}</p>
-          </div>
+              <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words group-hover:text-accent transition-colors">
+                {match.away_team.name}
+              </h2>
+              <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('away')}</p>
+            </Link>
+          ) : (
+            <div className="flex flex-col items-center text-center group min-w-0">
+              <div className="relative mb-4">
+                <div
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 flex items-center justify-center relative z-10 transition-transform duration-500 group-hover:scale-105"
+                >
+                  {awayLogoUrl ? (
+                    <img
+                      src={awayLogoUrl}
+                      alt={match.away_team.name}
+                      className="w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 object-contain drop-shadow-2xl"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold" style={{ color: awayColor }}>
+                      {match.away_team.name[0]}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <h2 className="text-sm sm:text-xl md:text-3xl font-bold text-white tracking-tight leading-tight mb-1 max-w-full break-words">
+                {match.away_team.name}
+              </h2>
+              <p className="text-[11px] sm:text-sm font-medium text-white/50">{t('away')}</p>
+            </div>
+          )}
         </div>
       </div>
 

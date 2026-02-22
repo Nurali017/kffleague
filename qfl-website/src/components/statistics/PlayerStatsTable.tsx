@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { formatValue, getColumnsForSubTab } from '@/lib/mock/statisticsHelpers';
 import { ExtendedPlayerStat, StatSubTab } from '@/types/statistics';
 import { PlayerStatsNationalityFilter } from '@/types';
+import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { TableSkeleton } from './TableSkeleton';
 
 interface PlayerStatsTableProps {
@@ -171,40 +173,56 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                     {index + 1}
                                 </td>
                                 <td className="px-4 py-2 sticky left-12 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
-                                    <div className="flex items-center gap-3">
-                                        <div className="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-surface-soft overflow-hidden border border-gray-200 dark:border-dark-border-soft shrink-0">
-                                            {player.photo_url && !brokenPhotoIds.has(player.player_id) ? (
-                                                <img
-                                                    src={player.photo_url}
-                                                    alt={player.last_name}
-                                                    className="w-full h-full object-cover object-top"
-                                                    onError={() => handlePhotoError(player.player_id)}
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-slate-400">
-                                                    <span className="text-xs">{t('table.noImage', { defaultValue: 'No Img' })}</span>
+                                    {(() => {
+                                        const playerHref = getPlayerHref(player.player_id);
+                                        const content = (
+                                            <div className="flex items-center gap-3">
+                                                <div className="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-dark-surface-soft overflow-hidden border border-gray-200 dark:border-dark-border-soft shrink-0">
+                                                    {player.photo_url && !brokenPhotoIds.has(player.player_id) ? (
+                                                        <img
+                                                            src={player.photo_url}
+                                                            alt={player.last_name}
+                                                            className="w-full h-full object-cover object-top"
+                                                            onError={() => handlePhotoError(player.player_id)}
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-slate-400">
+                                                            <span className="text-xs">{t('table.noImage', { defaultValue: 'No Img' })}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <div className="flex items-center gap-1.5 min-w-0">
-                                                <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate">
-                                                    {player.last_name}
-                                                </span>
-                                                {player.country?.flag_url ? (
-                                                    <img
-                                                        src={player.country.flag_url}
-                                                        alt={player.country?.code ? `${player.country.code.toUpperCase()} flag` : 'flag'}
-                                                        className="w-4 h-3 rounded-[1px] object-cover border border-gray-200 dark:border-dark-border-soft shrink-0"
-                                                        onError={(e) => {
-                                                            e.currentTarget.style.display = 'none';
-                                                        }}
-                                                    />
-                                                ) : null}
+                                                <div className="min-w-0">
+                                                    <div className="flex items-center gap-1.5 min-w-0">
+                                                        <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate">
+                                                            {player.last_name}
+                                                        </span>
+                                                        {player.country?.flag_url ? (
+                                                            <img
+                                                                src={player.country.flag_url}
+                                                                alt={player.country?.code ? `${player.country.code.toUpperCase()} flag` : 'flag'}
+                                                                className="w-4 h-3 rounded-[1px] object-cover border border-gray-200 dark:border-dark-border-soft shrink-0"
+                                                                onError={(e) => {
+                                                                    e.currentTarget.style.display = 'none';
+                                                                }}
+                                                            />
+                                                        ) : null}
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 dark:text-slate-400 truncate">{player.first_name}</div>
+                                                </div>
                                             </div>
-                                            <div className="text-xs text-gray-500 dark:text-slate-400 truncate">{player.first_name}</div>
-                                        </div>
-                                    </div>
+                                        );
+
+                                        if (!playerHref) return content;
+
+                                        return (
+                                            <Link
+                                                href={playerHref}
+                                                className="block rounded-md transition-colors hover:bg-blue-50/40 dark:hover:bg-cyan-500/10"
+                                            >
+                                                {content}
+                                            </Link>
+                                        );
+                                    })()}
                                 </td>
                                 <td className="px-4 py-4">
                                     <div className="flex items-center gap-2">
@@ -219,7 +237,23 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                                 img.src = TEAM_LOGO_PLACEHOLDER_SRC;
                                             }}
                                         />
-                                        <span className="text-sm text-gray-600 dark:text-slate-300 hidden xl:inline">{player.team_name}</span>
+                                        {(() => {
+                                            const teamHref = getTeamHref(player.team_id);
+                                            if (!teamHref) {
+                                                return (
+                                                    <span className="text-sm text-gray-600 dark:text-slate-300 hidden xl:inline">{player.team_name}</span>
+                                                );
+                                            }
+
+                                            return (
+                                                <Link
+                                                    href={teamHref}
+                                                    className="text-sm text-gray-600 dark:text-slate-300 hidden xl:inline hover:text-primary dark:hover:text-accent-cyan transition-colors"
+                                                >
+                                                    {player.team_name}
+                                                </Link>
+                                            );
+                                        })()}
                                     </div>
                                 </td>
                                 <td className="px-4 py-4 text-xs font-bold text-gray-500 dark:text-slate-400">

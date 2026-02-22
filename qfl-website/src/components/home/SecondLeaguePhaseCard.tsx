@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DateGroup, TeamStanding } from '@/types';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
 import { PhaseMatchesList } from './PhaseMatchesList';
 
@@ -76,7 +77,18 @@ export function SecondLeaguePhaseCard({
                       e.currentTarget.src = '/images/team-placeholder.png';
                     }}
                   />
-                  <span className="truncate text-gray-900 dark:text-slate-100">{team.team_name}</span>
+                  {(() => {
+                    const teamHref = getTeamHref(team.team_id);
+                    if (!teamHref) {
+                      return <span className="truncate text-gray-900 dark:text-slate-100">{team.team_name}</span>;
+                    }
+
+                    return (
+                      <Link href={teamHref} className="truncate text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                        {team.team_name}
+                      </Link>
+                    );
+                  })()}
                 </div>
                 <span className="text-center text-gray-700 dark:text-slate-300">{team.games_played}</span>
                 <span className="text-center font-bold text-primary dark:text-accent-cyan">{team.points}</span>
@@ -90,4 +102,3 @@ export function SecondLeaguePhaseCard({
     </article>
   );
 }
-

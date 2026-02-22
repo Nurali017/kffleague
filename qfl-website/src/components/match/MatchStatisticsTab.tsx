@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { MatchDetail } from '@/types';
 import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 
 interface MatchStatisticsTabProps {
     match: MatchDetail;
@@ -96,6 +98,8 @@ export function MatchStatisticsTab({ match }: MatchStatisticsTabProps) {
     const awayColor = AWAY_COLOR;
     const homeLogo = home_team.logo_url || getTeamLogo(home_team.id);
     const awayLogo = away_team.logo_url || getTeamLogo(away_team.id);
+    const homeTeamHref = getTeamHref(home_team.id);
+    const awayTeamHref = getTeamHref(away_team.id);
 
     const getStat = (category: keyof NonNullable<typeof stats>, team: 'home' | 'away') => {
         if (!stats || !stats[category]) return 0;
@@ -114,21 +118,39 @@ export function MatchStatisticsTab({ match }: MatchStatisticsTabProps) {
         <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header with team logos */}
             <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
-                        {homeLogo && <img src={homeLogo} className="w-full h-full object-contain" alt={home_team.name} />}
+                {homeTeamHref ? (
+                    <Link href={homeTeamHref} className="flex items-center gap-3 group">
+                        <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
+                            {homeLogo && <img src={homeLogo} className="w-full h-full object-contain" alt={home_team.name} />}
+                        </div>
+                        <span className="font-bold text-gray-900 hidden md:inline group-hover:text-primary transition-colors">{home_team.name}</span>
+                    </Link>
+                ) : (
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
+                            {homeLogo && <img src={homeLogo} className="w-full h-full object-contain" alt={home_team.name} />}
+                        </div>
+                        <span className="font-bold text-gray-900 hidden md:inline">{home_team.name}</span>
                     </div>
-                    <span className="font-bold text-gray-900 hidden md:inline">{home_team.name}</span>
-                </div>
+                )}
 
                 <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400">{t('statisticsTab.title')}</h3>
 
-                <div className="flex items-center gap-3">
-                    <span className="font-bold text-gray-900 hidden md:inline">{away_team.name}</span>
-                    <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
-                        {awayLogo && <img src={awayLogo} className="w-full h-full object-contain" alt={away_team.name} />}
+                {awayTeamHref ? (
+                    <Link href={awayTeamHref} className="flex items-center gap-3 group">
+                        <span className="font-bold text-gray-900 hidden md:inline group-hover:text-primary transition-colors">{away_team.name}</span>
+                        <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
+                            {awayLogo && <img src={awayLogo} className="w-full h-full object-contain" alt={away_team.name} />}
+                        </div>
+                    </Link>
+                ) : (
+                    <div className="flex items-center gap-3">
+                        <span className="font-bold text-gray-900 hidden md:inline">{away_team.name}</span>
+                        <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
+                            {awayLogo && <img src={awayLogo} className="w-full h-full object-contain" alt={away_team.name} />}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <div className="space-y-6">

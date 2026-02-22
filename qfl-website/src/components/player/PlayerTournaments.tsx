@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils/cn';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { PlayerPageVariant } from './playerPageVariants';
 
 interface Tournament {
@@ -8,6 +10,7 @@ interface Tournament {
   season: string;
   name: string;
   team: string;
+  teamId?: number | null;
   matches: number;
   minutes: number;
   goals: number;
@@ -149,7 +152,28 @@ export function PlayerTournaments({ tournaments, variant = 'clarity' }: PlayerTo
                 >
                   {tournament.name || '-'}
                 </td>
-                <td className="px-4 py-3 md:px-6">{tournament.team || '-'}</td>
+                <td className="px-4 py-3 md:px-6">
+                  {(() => {
+                    const teamHref = getTeamHref(tournament.teamId);
+                    if (!teamHref || !tournament.team) {
+                      return tournament.team || '-';
+                    }
+
+                    return (
+                      <Link
+                        href={teamHref}
+                        className={cn(
+                          'font-semibold transition-colors',
+                          isStudio
+                            ? 'text-white hover:text-cyan-300'
+                            : 'text-slate-700 hover:text-primary dark:text-slate-100 dark:hover:text-accent-cyan'
+                        )}
+                      >
+                        {tournament.team}
+                      </Link>
+                    );
+                  })()}
+                </td>
                 <td className="px-3 py-3 text-center font-semibold md:px-4">{tournament.matches}</td>
                 <td className="px-3 py-3 text-center md:px-4">{tournament.minutes}</td>
                 <td className="px-3 py-3 text-center md:px-4">{tournament.goals}</td>

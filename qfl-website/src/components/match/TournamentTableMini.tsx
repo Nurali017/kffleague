@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { useLeagueTable } from '@/hooks';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 
 interface TournamentTableMiniProps {
   seasonId?: number;
@@ -113,26 +114,44 @@ export function TournamentTableMini({ seasonId, homeTeamId, awayTeamId }: Tourna
                 {row.position}
               </span>
 
-              <div className="flex-1 flex items-center gap-2 min-w-0">
-                {/* Team Logo */}
-                {row.team_logo && (
-                  <img
-                    src={row.team_logo}
-                    alt={row.team_name || ''}
-                    className="w-5 h-5 object-contain flex-shrink-0"
-                  />
-                )}
-                {/* Team Color Dot for highlighted teams */}
-                {isHighlighted && !row.team_logo && (
-                  <div
-                    className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isHome ? 'bg-primary' : 'bg-accent'}`}
-                  />
-                )}
-                <span
-                  className={`text-xs truncate ${isHighlighted ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}
-                >
-                  {row.team_name}
-                </span>
+                <div className="flex-1 flex items-center gap-2 min-w-0">
+                {(() => {
+                  const teamHref = getTeamHref(row.team_id);
+                  const content = (
+                    <>
+                      {/* Team Logo */}
+                      {row.team_logo && (
+                        <img
+                          src={row.team_logo}
+                          alt={row.team_name || ''}
+                          className="w-5 h-5 object-contain flex-shrink-0"
+                        />
+                      )}
+                      {/* Team Color Dot for highlighted teams */}
+                      {isHighlighted && !row.team_logo && (
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isHome ? 'bg-primary' : 'bg-accent'}`}
+                        />
+                      )}
+                      <span
+                        className={`text-xs truncate ${isHighlighted ? 'font-bold text-gray-900' : 'font-medium text-gray-700'}`}
+                      >
+                        {row.team_name}
+                      </span>
+                    </>
+                  );
+
+                  if (!teamHref) return content;
+
+                  return (
+                    <Link
+                      href={teamHref}
+                      className="flex items-center gap-2 min-w-0 hover:text-primary transition-colors"
+                    >
+                      {content}
+                    </Link>
+                  );
+                })()}
               </div>
 
               <span className="w-8 text-center text-xs text-gray-500 font-medium">

@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { FormGuide } from '@/types/h2h';
+import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 
 interface H2HFormStreakProps {
   homeTeam: GameTeam;
@@ -52,6 +54,8 @@ export function H2HFormStreak({
 
   const team1Matches = formGuide.team1?.matches || [];
   const team2Matches = formGuide.team2?.matches || [];
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
 
   return (
     <div className="space-y-4">
@@ -72,22 +76,51 @@ export function H2HFormStreak({
             className="w-1.5 h-1.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: homeColor }}
           />
-          <span className="text-xs font-semibold text-gray-700 truncate">
-            {homeTeam.name}
-          </span>
+          {homeTeamHref ? (
+            <Link href={homeTeamHref} className="text-xs font-semibold text-gray-700 truncate hover:text-primary transition-colors">
+              {homeTeam.name}
+            </Link>
+          ) : (
+            <span className="text-xs font-semibold text-gray-700 truncate">
+              {homeTeam.name}
+            </span>
+          )}
         </div>
         <div className="flex gap-1 ml-4">
           {team1Matches.length > 0 ? (
             team1Matches.slice(0, 5).map((match, i) => (
-              <div
-                key={match.game_id || i}
-                className={`w-6 h-6 rounded flex items-center justify-center ${getFormBadgeStyle(match.result)} transition-transform hover:scale-110`}
-                title={`${match.was_home ? 'vs' : '@'} ${match.opponent_name}: ${match.home_score}-${match.away_score}`}
-              >
-                <span className="text-white text-[9px] font-black">
-                  {match.result}
-                </span>
-              </div>
+              (() => {
+                const matchHref = getMatchHref(match.game_id);
+                const className = `w-6 h-6 rounded flex items-center justify-center ${getFormBadgeStyle(match.result)} transition-transform hover:scale-110`;
+                const title = `${match.was_home ? 'vs' : '@'} ${match.opponent_name}: ${match.home_score}-${match.away_score}`;
+
+                if (!matchHref) {
+                  return (
+                    <div
+                      key={match.game_id || i}
+                      className={className}
+                      title={title}
+                    >
+                      <span className="text-white text-[9px] font-black">
+                        {match.result}
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={match.game_id || i}
+                    href={matchHref}
+                    className={className}
+                    title={title}
+                  >
+                    <span className="text-white text-[9px] font-black">
+                      {match.result}
+                    </span>
+                  </Link>
+                );
+              })()
             ))
           ) : (
             Array.from({ length: 5 }).map((_, i) => (
@@ -109,22 +142,51 @@ export function H2HFormStreak({
             className="w-1.5 h-1.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: awayColor }}
           />
-          <span className="text-xs font-semibold text-gray-700 truncate">
-            {awayTeam.name}
-          </span>
+          {awayTeamHref ? (
+            <Link href={awayTeamHref} className="text-xs font-semibold text-gray-700 truncate hover:text-primary transition-colors">
+              {awayTeam.name}
+            </Link>
+          ) : (
+            <span className="text-xs font-semibold text-gray-700 truncate">
+              {awayTeam.name}
+            </span>
+          )}
         </div>
         <div className="flex gap-1 ml-4">
           {team2Matches.length > 0 ? (
             team2Matches.slice(0, 5).map((match, i) => (
-              <div
-                key={match.game_id || i}
-                className={`w-6 h-6 rounded flex items-center justify-center ${getFormBadgeStyle(match.result)} transition-transform hover:scale-110`}
-                title={`${match.was_home ? 'vs' : '@'} ${match.opponent_name}: ${match.home_score}-${match.away_score}`}
-              >
-                <span className="text-white text-[9px] font-black">
-                  {match.result}
-                </span>
-              </div>
+              (() => {
+                const matchHref = getMatchHref(match.game_id);
+                const className = `w-6 h-6 rounded flex items-center justify-center ${getFormBadgeStyle(match.result)} transition-transform hover:scale-110`;
+                const title = `${match.was_home ? 'vs' : '@'} ${match.opponent_name}: ${match.home_score}-${match.away_score}`;
+
+                if (!matchHref) {
+                  return (
+                    <div
+                      key={match.game_id || i}
+                      className={className}
+                      title={title}
+                    >
+                      <span className="text-white text-[9px] font-black">
+                        {match.result}
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={match.game_id || i}
+                    href={matchHref}
+                    className={className}
+                    title={title}
+                  >
+                    <span className="text-white text-[9px] font-black">
+                      {match.result}
+                    </span>
+                  </Link>
+                );
+              })()
             ))
           ) : (
             Array.from({ length: 5 }).map((_, i) => (

@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { SeasonTableEntry, H2HComputedMetrics } from '@/types/h2h';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { StatBar } from '../StatBar';
 
 interface H2HSeasonStatsProps {
@@ -23,6 +25,8 @@ export function H2HSeasonStats({
   awayColor,
 }: H2HSeasonStatsProps) {
   const { t } = useTranslation('match');
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
 
   // Find teams in season table
   const homeEntry = seasonTable.find((t) => t.team_id === homeTeam.id);
@@ -59,6 +63,15 @@ export function H2HSeasonStats({
             <span className="text-2xl font-black text-gray-900">
               #{homeEntry.position || '-'}
             </span>
+            {homeTeamHref ? (
+              <div>
+                <Link href={homeTeamHref} className="text-[10px] font-semibold text-primary hover:text-primary-dark transition-colors">
+                  {homeTeam.name}
+                </Link>
+              </div>
+            ) : (
+              <p className="text-[10px] text-gray-500 uppercase mt-1">{homeTeam.name}</p>
+            )}
             <p className="text-[10px] text-gray-500 uppercase mt-1">
               {t('h2h.tablePosition', 'позиция')}
             </p>
@@ -81,6 +94,15 @@ export function H2HSeasonStats({
             <span className="text-2xl font-black text-gray-900">
               #{awayEntry.position || '-'}
             </span>
+            {awayTeamHref ? (
+              <div>
+                <Link href={awayTeamHref} className="text-[10px] font-semibold text-primary hover:text-primary-dark transition-colors">
+                  {awayTeam.name}
+                </Link>
+              </div>
+            ) : (
+              <p className="text-[10px] text-gray-500 uppercase mt-1">{awayTeam.name}</p>
+            )}
             <p className="text-[10px] text-gray-500 uppercase mt-1">
               {t('h2h.tablePosition', 'позиция')}
             </p>

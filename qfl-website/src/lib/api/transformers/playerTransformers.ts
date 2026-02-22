@@ -78,6 +78,7 @@ export function transformTournaments(apiTournaments: PlayerTournamentHistory[]) 
     season: t.season_name || String(t.season_id),
     name: t.championship_name || '',
     team: t.team_name || '',
+    teamId: t.team_id,
     matches: t.games_played || 0,
     minutes: t.minutes_played || 0,
     goals: t.goals || 0,

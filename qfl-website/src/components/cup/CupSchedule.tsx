@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { CupScheduleResponse } from '@/types';
+import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 
 interface CupScheduleProps {
@@ -75,15 +77,58 @@ export function CupSchedule({
                       {game.time ? ` · ${game.time}` : ''}
                     </div>
                     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
-                      <span className="truncate text-right text-gray-900 dark:text-slate-100">
-                        {game.home_team?.name || '-'}
-                      </span>
-                      <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
-                        {game.home_score ?? '-'}:{game.away_score ?? '-'}
-                      </span>
-                      <span className="truncate text-gray-900 dark:text-slate-100">
-                        {game.away_team?.name || '-'}
-                      </span>
+                      {(() => {
+                        const homeTeamHref = getTeamHref(game.home_team?.id);
+                        if (!homeTeamHref) {
+                          return (
+                            <span className="truncate text-right text-gray-900 dark:text-slate-100">
+                              {game.home_team?.name || '-'}
+                            </span>
+                          );
+                        }
+
+                        return (
+                          <Link href={homeTeamHref} className="truncate text-right text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                            {game.home_team?.name || '-'}
+                          </Link>
+                        );
+                      })()}
+                      {(() => {
+                        const matchHref = getMatchHref(game.id);
+                        const score = `${game.home_score ?? '-'}:${game.away_score ?? '-'}`;
+                        if (!matchHref) {
+                          return (
+                            <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
+                              {score}
+                            </span>
+                          );
+                        }
+
+                        return (
+                          <Link
+                            href={matchHref}
+                            className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white hover:opacity-90 transition-opacity"
+                          >
+                            {score}
+                          </Link>
+                        );
+                      })()}
+                      {(() => {
+                        const awayTeamHref = getTeamHref(game.away_team?.id);
+                        if (!awayTeamHref) {
+                          return (
+                            <span className="truncate text-gray-900 dark:text-slate-100">
+                              {game.away_team?.name || '-'}
+                            </span>
+                          );
+                        }
+
+                        return (
+                          <Link href={awayTeamHref} className="truncate text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                            {game.away_team?.name || '-'}
+                          </Link>
+                        );
+                      })()}
                     </div>
                   </div>
                 ))}

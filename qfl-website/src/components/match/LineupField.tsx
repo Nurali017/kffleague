@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
+import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { HOME_COLOR, AWAY_COLOR, getTeamLogo } from '@/lib/utils/teamLogos';
 
 const HEX_COLOR_RE = /^#[0-9A-Fa-f]{6}$/;
@@ -45,11 +46,10 @@ function JerseyIcon({ color, number, isGoalkeeper = false }: { color: string; nu
 // Side List Row
 function PlayerRow({ player }: { player: LineupPlayerExtended }) {
   const fullName = `${player.first_name} ${player.last_name}`;
-  return (
-    <Link
-      href={`/player/${player.player_id}`}
-      className={`flex items-center gap-3 px-4 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors`}
-    >
+  const playerHref = getPlayerHref(player.player_id);
+
+  const content = (
+    <>
       <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-[10px] font-bold text-gray-700">
         {player.number}
       </div>
@@ -63,6 +63,23 @@ function PlayerRow({ player }: { player: LineupPlayerExtended }) {
       <div className="text-xs font-semibold text-gray-800 truncate">
         {fullName}
       </div>
+    </>
+  );
+
+  if (!playerHref) {
+    return (
+      <div className="flex items-center gap-3 px-4 py-2 border-b border-gray-100">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={playerHref}
+      className={`flex items-center gap-3 px-4 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors`}
+    >
+      {content}
     </Link>
   );
 }
@@ -82,12 +99,24 @@ function TeamLineupListCard({
   startersTitle: string;
   substitutesTitle: string;
 }) {
+  const teamHref = getTeamHref(team.id);
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-      <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
-        <img src={logoUrl || getTeamLogo(team.id) || ''} className="w-8 h-8 object-contain" alt={team.name} />
-        <span className="font-bold text-gray-900">{team.name}</span>
-      </div>
+      {teamHref ? (
+        <Link
+          href={teamHref}
+          className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 hover:bg-gray-100 transition-colors"
+        >
+          <img src={logoUrl || getTeamLogo(team.id) || ''} className="w-8 h-8 object-contain" alt={team.name} />
+          <span className="font-bold text-gray-900">{team.name}</span>
+        </Link>
+      ) : (
+        <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
+          <img src={logoUrl || getTeamLogo(team.id) || ''} className="w-8 h-8 object-contain" alt={team.name} />
+          <span className="font-bold text-gray-900">{team.name}</span>
+        </div>
+      )}
 
       <div className="px-4 py-2 text-[11px] font-bold uppercase tracking-wide text-gray-500 bg-gray-50/60 border-b border-gray-100">
         {startersTitle}
@@ -239,6 +268,9 @@ function FieldVisualization({
   homeCoach,
   awayCoach
 }: FieldVisualizationProps) {
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
+
   const homePlacedPlayers = buildPlacedPlayers({
     starters: homeStarters,
     invertY: false,
@@ -267,13 +299,23 @@ function FieldVisualization({
 
       {/* Header Overlay (Home Team) - TOP */}
       <div className="absolute top-0 left-0 right-0 p-3 md:p-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent z-20">
-        <div className="flex items-center gap-3">
-          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={homeTeam.name} />
-          <div className="flex flex-col">
-            <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{homeTeam.name}</span>
-            <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
+        {homeTeamHref ? (
+          <Link href={homeTeamHref} className="flex items-center gap-3 group rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+            <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={homeTeam.name} />
+            <div className="flex flex-col">
+              <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate group-hover:text-cyan-300 transition-colors">{homeTeam.name}</span>
+              <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
+            </div>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-3">
+            <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={homeTeam.name} />
+            <div className="flex flex-col">
+              <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{homeTeam.name}</span>
+              <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {homeCoach || 'N/A'}</span>
+            </div>
           </div>
-        </div>
+        )}
         <span className="font-mono text-white/40 text-base md:text-xl font-bold">{homeFormation}</span>
       </div>
 
@@ -307,13 +349,23 @@ function FieldVisualization({
       {/* Footer Overlay (Away Team) - BOTTOM */}
       <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent z-20">
         <span className="font-mono text-white/40 text-base md:text-xl font-bold">{awayFormation}</span>
-        <div className="flex items-center gap-3 text-right">
-          <div className="flex flex-col items-end">
-            <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{awayTeam.name}</span>
-            <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
+        {awayTeamHref ? (
+          <Link href={awayTeamHref} className="flex items-center gap-3 text-right group rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+            <div className="flex flex-col items-end">
+              <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate group-hover:text-cyan-300 transition-colors">{awayTeam.name}</span>
+              <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
+            </div>
+            <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={awayTeam.name} />
+          </Link>
+        ) : (
+          <div className="flex items-center gap-3 text-right">
+            <div className="flex flex-col items-end">
+              <span className="text-white font-bold text-sm md:text-lg leading-none max-w-[120px] md:max-w-none truncate">{awayTeam.name}</span>
+              <span className="text-white/60 text-[10px] md:text-xs mt-1">Coach: {awayCoach || 'N/A'}</span>
+            </div>
+            <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={awayTeam.name} />
           </div>
-          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={awayTeam.name} />
-        </div>
+        )}
       </div>
 
       {/* Players Home */}
@@ -356,15 +408,10 @@ interface PlayerMarkerProps {
 }
 
 function PlayerMarker({ player, position, teamColor }: PlayerMarkerProps) {
-  return (
-    <div
-      data-testid={`lineup-marker-${player.player_id}`}
-      className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer flex flex-col items-center gap-1 pointer-events-auto"
-      style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-      }}
-    >
+  const playerHref = getPlayerHref(player.player_id);
+
+  const content = (
+    <>
       <JerseyIcon color={teamColor} number={player.number} />
 
       {/* Name Label */}
@@ -385,6 +432,35 @@ function PlayerMarker({ player, position, teamColor }: PlayerMarkerProps) {
           </span>
         )}
       </div>
-    </div>
+    </>
+  );
+
+  if (!playerHref) {
+    return (
+      <div
+        data-testid={`lineup-marker-${player.player_id}`}
+        className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer flex flex-col items-center gap-1 pointer-events-auto"
+        style={{
+          left: `${position.x}%`,
+          top: `${position.y}%`,
+        }}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={playerHref}
+      data-testid={`lineup-marker-${player.player_id}`}
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer flex flex-col items-center gap-1 pointer-events-auto"
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+      }}
+    >
+      {content}
+    </Link>
   );
 }

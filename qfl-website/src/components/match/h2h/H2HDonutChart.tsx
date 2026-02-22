@@ -1,9 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { H2HOverallStats } from '@/types/h2h';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
 
 interface H2HDonutChartProps {
@@ -25,6 +27,8 @@ export function H2HDonutChart({
 
   const homeLogoUrl = homeTeam.logo_url || getTeamLogo(homeTeam.id);
   const awayLogoUrl = awayTeam.logo_url || getTeamLogo(awayTeam.id);
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
 
   // Calculate percentages for donut chart
   const { homePercent, drawPercent, awayPercent } = useMemo(() => {
@@ -60,22 +64,41 @@ export function H2HDonutChart({
       {/* Teams and Chart */}
       <div className="flex items-center justify-between w-full max-w-md">
         {/* Home Team */}
-        <div className="flex flex-col items-center gap-2 w-20">
-          <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
-            {homeLogoUrl ? (
-              <img
-                src={homeLogoUrl}
-                alt={homeTeam.name}
-                className="w-full h-full object-contain"
-              />
-            ) : (
-              <div className="w-full h-full rounded-full bg-gray-200" />
-            )}
+        {homeTeamHref ? (
+          <Link href={homeTeamHref} className="flex flex-col items-center gap-2 w-20 group">
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
+              {homeLogoUrl ? (
+                <img
+                  src={homeLogoUrl}
+                  alt={homeTeam.name}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200" />
+              )}
+            </div>
+            <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+              {homeTeam.name}
+            </span>
+          </Link>
+        ) : (
+          <div className="flex flex-col items-center gap-2 w-20">
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
+              {homeLogoUrl ? (
+                <img
+                  src={homeLogoUrl}
+                  alt={homeTeam.name}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200" />
+              )}
+            </div>
+            <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2">
+              {homeTeam.name}
+            </span>
           </div>
-          <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2">
-            {homeTeam.name}
-          </span>
-        </div>
+        )}
 
         {/* Donut Chart */}
         <div className="relative w-32 h-32">
@@ -142,22 +165,41 @@ export function H2HDonutChart({
         </div>
 
         {/* Away Team */}
-        <div className="flex flex-col items-center gap-2 w-20">
-          <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
-            {awayLogoUrl ? (
-              <img
-                src={awayLogoUrl}
-                alt={awayTeam.name}
-                className="w-full h-full object-contain"
-              />
-            ) : (
-              <div className="w-full h-full rounded-full bg-gray-200" />
-            )}
+        {awayTeamHref ? (
+          <Link href={awayTeamHref} className="flex flex-col items-center gap-2 w-20 group">
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
+              {awayLogoUrl ? (
+                <img
+                  src={awayLogoUrl}
+                  alt={awayTeam.name}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200" />
+              )}
+            </div>
+            <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+              {awayTeam.name}
+            </span>
+          </Link>
+        ) : (
+          <div className="flex flex-col items-center gap-2 w-20">
+            <div className="w-14 h-14 flex items-center justify-center bg-gray-50 rounded-full p-2 border border-gray-100">
+              {awayLogoUrl ? (
+                <img
+                  src={awayLogoUrl}
+                  alt={awayTeam.name}
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <div className="w-full h-full rounded-full bg-gray-200" />
+              )}
+            </div>
+            <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2">
+              {awayTeam.name}
+            </span>
           </div>
-          <span className="text-[10px] text-gray-500 text-center font-bold uppercase leading-tight line-clamp-2">
-            {awayTeam.name}
-          </span>
-        </div>
+        )}
       </div>
 
       {/* Legend */}

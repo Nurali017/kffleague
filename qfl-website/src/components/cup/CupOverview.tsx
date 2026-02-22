@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { CupOverviewResponse } from '@/types';
+import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 
 interface CupOverviewProps {
@@ -10,6 +12,10 @@ interface CupOverviewProps {
 
 function CupGameRow({ game }: { game: CupOverviewResponse['recent_results'][number] }) {
   const { i18n } = useTranslation();
+  const matchHref = getMatchHref(game.id);
+  const homeTeamHref = getTeamHref(game.home_team?.id);
+  const awayTeamHref = getTeamHref(game.away_team?.id);
+  const score = `${game.home_score ?? '-'}:${game.away_score ?? '-'}`;
 
   return (
     <div className="rounded-lg border border-gray-100 bg-white p-3 dark:border-dark-border dark:bg-dark-surface-soft">
@@ -18,15 +24,33 @@ function CupGameRow({ game }: { game: CupOverviewResponse['recent_results'][numb
         {game.stage_name ? ` · ${game.stage_name}` : ''}
       </div>
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
-        <span className="truncate text-right text-gray-900 dark:text-slate-100">
-          {game.home_team?.name || '-'}
-        </span>
-        <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
-          {game.home_score ?? '-'}:{game.away_score ?? '-'}
-        </span>
-        <span className="truncate text-gray-900 dark:text-slate-100">
-          {game.away_team?.name || '-'}
-        </span>
+        {homeTeamHref ? (
+          <Link href={homeTeamHref} className="truncate text-right text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+            {game.home_team?.name || '-'}
+          </Link>
+        ) : (
+          <span className="truncate text-right text-gray-900 dark:text-slate-100">
+            {game.home_team?.name || '-'}
+          </span>
+        )}
+        {matchHref ? (
+          <Link href={matchHref} className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white hover:opacity-90 transition-opacity">
+            {score}
+          </Link>
+        ) : (
+          <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
+            {score}
+          </span>
+        )}
+        {awayTeamHref ? (
+          <Link href={awayTeamHref} className="truncate text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+            {game.away_team?.name || '-'}
+          </Link>
+        ) : (
+          <span className="truncate text-gray-900 dark:text-slate-100">
+            {game.away_team?.name || '-'}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -62,9 +86,19 @@ export function CupOverview({ overview }: CupOverviewProps) {
                 <div className="p-3 space-y-1 text-sm">
                   {group.standings.slice(0, 5).map((team) => (
                     <div key={team.team_id} className="flex items-center justify-between gap-2">
-                      <span className="truncate text-gray-900 dark:text-slate-100">
-                        {team.position}. {team.team_name || '-'}
-                      </span>
+                      {(() => {
+                        const teamHref = getTeamHref(team.team_id);
+                        const label = `${team.position}. ${team.team_name || '-'}`;
+                        if (!teamHref) {
+                          return <span className="truncate text-gray-900 dark:text-slate-100">{label}</span>;
+                        }
+
+                        return (
+                          <Link href={teamHref} className="truncate text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                            {label}
+                          </Link>
+                        );
+                      })()}
                       <span className="font-bold text-primary">{team.points}</span>
                     </div>
                   ))}

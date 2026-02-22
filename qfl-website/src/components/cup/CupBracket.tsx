@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { PlayoffBracketResponse } from '@/types';
+import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 
 interface CupBracketProps {
@@ -48,15 +50,58 @@ export function CupBracket({ bracket }: CupBracketProps) {
                     </div>
                   )}
                   <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm">
-                    <span className="truncate text-right text-gray-900 dark:text-slate-100">
-                      {entry.game?.home_team?.name || '-'}
-                    </span>
-                    <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
-                      {entry.game?.home_score ?? '-'}:{entry.game?.away_score ?? '-'}
-                    </span>
-                    <span className="truncate text-gray-900 dark:text-slate-100">
-                      {entry.game?.away_team?.name || '-'}
-                    </span>
+                    {(() => {
+                      const homeTeamHref = getTeamHref(entry.game?.home_team?.id);
+                      if (!homeTeamHref) {
+                        return (
+                          <span className="truncate text-right text-gray-900 dark:text-slate-100">
+                            {entry.game?.home_team?.name || '-'}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <Link href={homeTeamHref} className="truncate text-right text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                          {entry.game?.home_team?.name || '-'}
+                        </Link>
+                      );
+                    })()}
+                    {(() => {
+                      const matchHref = getMatchHref(entry.game?.id);
+                      const score = `${entry.game?.home_score ?? '-'}:${entry.game?.away_score ?? '-'}`;
+                      if (!matchHref) {
+                        return (
+                          <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">
+                            {score}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          href={matchHref}
+                          className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white hover:opacity-90 transition-opacity"
+                        >
+                          {score}
+                        </Link>
+                      );
+                    })()}
+                    {(() => {
+                      const awayTeamHref = getTeamHref(entry.game?.away_team?.id);
+                      if (!awayTeamHref) {
+                        return (
+                          <span className="truncate text-gray-900 dark:text-slate-100">
+                            {entry.game?.away_team?.name || '-'}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <Link href={awayTeamHref} className="truncate text-gray-900 dark:text-slate-100 hover:text-primary transition-colors">
+                          {entry.game?.away_team?.name || '-'}
+                        </Link>
+                      );
+                    })()}
                   </div>
                   {(entry.game?.home_penalty_score != null || entry.game?.away_penalty_score != null) && (
                     <div className="mt-1 text-center text-xs text-gray-500 dark:text-slate-400">

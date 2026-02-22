@@ -36,6 +36,7 @@ describe('MatchEventTimeline (mobile)', () => {
 
     expect(screen.getByRole('dialog', { name: /детали события/i })).toBeInTheDocument();
     expect(screen.getByText('Player One')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Player One' })).toHaveAttribute('href', '/player/1');
 
     fireEvent.click(screen.getByTestId('timeline-event-backdrop'));
 

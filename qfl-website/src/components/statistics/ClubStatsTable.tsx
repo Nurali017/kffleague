@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,6 +10,7 @@ import {
   getColumnsForSubTab,
 } from '@/lib/mock/statisticsHelpers';
 import { StatSubTab, TeamStatistics } from '@/types/statistics';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { TableSkeleton } from './TableSkeleton';
 
 interface ClubStatsTableProps {
@@ -194,9 +196,25 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                         img.src = TEAM_LOGO_PLACEHOLDER_SRC;
                       }}
                     />
-                    <span className="font-semibold text-gray-900 dark:text-slate-100">
-                      {team.team_name}
-                    </span>
+                    {(() => {
+                      const teamHref = getTeamHref(team.team_id);
+                      if (!teamHref) {
+                        return (
+                          <span className="font-semibold text-gray-900 dark:text-slate-100">
+                            {team.team_name}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          href={teamHref}
+                          className="font-semibold text-gray-900 dark:text-slate-100 hover:text-primary dark:hover:text-accent-cyan transition-colors"
+                        >
+                          {team.team_name}
+                        </Link>
+                      );
+                    })()}
                   </div>
                 </td>
                 {columns.map((col) => (

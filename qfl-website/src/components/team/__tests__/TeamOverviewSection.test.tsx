@@ -113,6 +113,10 @@ describe('TeamOverviewSection', () => {
 
     expect(screen.getAllByText('Кайрат').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Тобол').length).toBeGreaterThan(0);
+    expect(document.querySelector('a[href="/team/13"]')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/team/90"]')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/matches/1"]')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/matches/2"]')).toBeInTheDocument();
   });
 
   it('shows empty states when no match/fixtures', () => {

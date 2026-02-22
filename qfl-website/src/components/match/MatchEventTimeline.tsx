@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { EnhancedMatchEvent, GameTeam, PlayerCountry } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon, JerseyIcon } from './MatchEventIcons';
+import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { getTeamLogo, getTeamInitials, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { bottomSheetSlideUp, modalBackdrop } from '@/lib/motion';
 
@@ -153,9 +155,22 @@ export function MatchEventTimeline({
                             className="w-5 h-4 object-cover rounded-[1px]"
                           />
                         )}
-                        <span className="text-white text-base font-bold whitespace-nowrap truncate">
-                          {activeEvent.player2_name}
-                        </span>
+                        {(() => {
+                          const playerHref = getPlayerHref(activeEvent.player2_id);
+                          if (!playerHref) {
+                            return (
+                              <span className="text-white text-base font-bold whitespace-nowrap truncate">
+                                {activeEvent.player2_name}
+                              </span>
+                            );
+                          }
+
+                          return (
+                            <Link href={playerHref} className="text-white text-base font-bold whitespace-nowrap truncate hover:text-cyan-300 transition-colors">
+                              {activeEvent.player2_name}
+                            </Link>
+                          );
+                        })()}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-red-400 text-xs font-extrabold">OFF</span>
@@ -172,9 +187,22 @@ export function MatchEventTimeline({
                             className="w-5 h-4 object-cover rounded-[1px]"
                           />
                         )}
-                        <span className="text-white text-base font-bold whitespace-nowrap truncate">
-                          {activeEvent.player_name}
-                        </span>
+                        {(() => {
+                          const playerHref = getPlayerHref(activeEvent.player_id);
+                          if (!playerHref) {
+                            return (
+                              <span className="text-white text-base font-bold whitespace-nowrap truncate">
+                                {activeEvent.player_name}
+                              </span>
+                            );
+                          }
+
+                          return (
+                            <Link href={playerHref} className="text-white text-base font-bold whitespace-nowrap truncate hover:text-cyan-300 transition-colors">
+                              {activeEvent.player_name}
+                            </Link>
+                          );
+                        })()}
                       </div>
                     </div>
                   ) : (
@@ -191,9 +219,22 @@ export function MatchEventTimeline({
                           className="w-5 h-4 object-cover rounded-[1px]"
                         />
                       )}
-                      <span className="text-white text-lg font-extrabold whitespace-nowrap truncate">
-                        {activeEvent.player_name}
-                      </span>
+                      {(() => {
+                        const playerHref = getPlayerHref(activeEvent.player_id);
+                        if (!playerHref) {
+                          return (
+                            <span className="text-white text-lg font-extrabold whitespace-nowrap truncate">
+                              {activeEvent.player_name}
+                            </span>
+                          );
+                        }
+
+                        return (
+                          <Link href={playerHref} className="text-white text-lg font-extrabold whitespace-nowrap truncate hover:text-cyan-300 transition-colors">
+                            {activeEvent.player_name}
+                          </Link>
+                        );
+                      })()}
                     </div>
                   )}
                 </div>
@@ -282,7 +323,18 @@ export function MatchEventTimeline({
                               className="w-4 h-3 object-cover rounded-[1px]"
                             />
                           )}
-                          <span className="text-white text-sm font-medium whitespace-nowrap">{event.player2_name}</span>
+                          {(() => {
+                            const playerHref = getPlayerHref(event.player2_id);
+                            if (!playerHref) {
+                              return <span className="text-white text-sm font-medium whitespace-nowrap">{event.player2_name}</span>;
+                            }
+
+                            return (
+                              <Link href={playerHref} className="text-white text-sm font-medium whitespace-nowrap hover:text-cyan-300 transition-colors">
+                                {event.player2_name}
+                              </Link>
+                            );
+                          })()}
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-red-500 text-xs font-bold">OFF</span>
@@ -295,7 +347,18 @@ export function MatchEventTimeline({
                               className="w-4 h-3 object-cover rounded-[1px]"
                             />
                           )}
-                          <span className="text-white text-sm whitespace-nowrap">{event.player_name}</span>
+                          {(() => {
+                            const playerHref = getPlayerHref(event.player_id);
+                            if (!playerHref) {
+                              return <span className="text-white text-sm whitespace-nowrap">{event.player_name}</span>;
+                            }
+
+                            return (
+                              <Link href={playerHref} className="text-white text-sm whitespace-nowrap hover:text-cyan-300 transition-colors">
+                                {event.player_name}
+                              </Link>
+                            );
+                          })()}
                         </div>
                       </div>
                     ) : (
@@ -309,7 +372,18 @@ export function MatchEventTimeline({
                             className="w-4 h-3 object-cover rounded-[1px]"
                           />
                         )}
-                        <span className="text-white font-bold whitespace-nowrap">{event.player_name}</span>
+                        {(() => {
+                          const playerHref = getPlayerHref(event.player_id);
+                          if (!playerHref) {
+                            return <span className="text-white font-bold whitespace-nowrap">{event.player_name}</span>;
+                          }
+
+                          return (
+                            <Link href={playerHref} className="text-white font-bold whitespace-nowrap hover:text-cyan-300 transition-colors">
+                              {event.player_name}
+                            </Link>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>
@@ -406,35 +480,39 @@ function MobileTimeline({ homeTeam, awayTeam, events, maxTime, activeEventId, on
 interface TeamLogoMarkerProps {
   team: GameTeam;
   color: string;
+  href: string | null;
   position: 'top' | 'bottom';
 }
 
-function TeamLogoMarker({ team, color, position }: TeamLogoMarkerProps) {
+function TeamLogoMarker({ team, color, href, position }: TeamLogoMarkerProps) {
   const [imageError, setImageError] = useState(false);
 
   const logoUrl = team.logo_url || getTeamLogo(team.id);
   const teamInitials = getTeamInitials(team.name);
+  const wrapperClass = 'w-10 h-10 md:w-12 md:h-12 flex items-center justify-center';
 
-  if (!logoUrl || imageError) {
-    return (
-      <div
-        className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold shadow-md"
-        style={{ backgroundColor: color }}
-      >
-        {teamInitials}
-      </div>
-    );
-  }
+  const content = (!logoUrl || imageError) ? (
+    <div
+      className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-bold shadow-md"
+      style={{ backgroundColor: color }}
+    >
+      {teamInitials}
+    </div>
+  ) : (
+    <img
+      src={logoUrl}
+      alt={`${team.name} logo`}
+      className="w-8 h-8 md:w-10 md:h-10 object-contain"
+      onError={() => setImageError(true)}
+    />
+  );
+
+  if (!href) return <div className={wrapperClass}>{content}</div>;
 
   return (
-    <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
-      <img
-        src={logoUrl}
-        alt={`${team.name} logo`}
-        className="w-8 h-8 md:w-10 md:h-10 object-contain"
-        onError={() => setImageError(true)}
-      />
-    </div>
+    <Link href={href} className={`${wrapperClass} rounded-full hover:bg-white/10 transition-colors`}>
+      {content}
+    </Link>
   );
 }
 
@@ -447,14 +525,16 @@ interface TimelineEndpointProps {
 
 function TimelineEndpoint({ homeTeam, awayTeam, label, position }: TimelineEndpointProps) {
   const positionClass = position === 'static' ? '' : (position === 'left' ? 'absolute left-0 top-1/2 -translate-y-1/2' : 'absolute right-0 top-1/2 -translate-y-1/2');
+  const homeTeamHref = getTeamHref(homeTeam.id);
+  const awayTeamHref = getTeamHref(awayTeam.id);
 
   return (
     <div className={`${positionClass} z-10 flex flex-col items-center gap-1`}>
-      <TeamLogoMarker team={homeTeam} color={HOME_COLOR} position="top" />
+      <TeamLogoMarker team={homeTeam} color={HOME_COLOR} href={homeTeamHref} position="top" />
       <div className="text-[10px] md:text-xs font-bold text-white/70 uppercase tracking-wider">
         {label}
       </div>
-      <TeamLogoMarker team={awayTeam} color={AWAY_COLOR} position="bottom" />
+      <TeamLogoMarker team={awayTeam} color={AWAY_COLOR} href={awayTeamHref} position="bottom" />
     </div>
   );
 }
