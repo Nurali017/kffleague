@@ -16,7 +16,7 @@ export const newsService = {
       lang: language,
       limit,
     };
-    if (tournamentId) params.tournament_id = tournamentId;
+    if (tournamentId) params.championship_code = tournamentId;
 
     const response = await apiClient.get<SliderNews[]>(ENDPOINTS.NEWS_SLIDER, params);
 
@@ -36,7 +36,7 @@ export const newsService = {
       lang: language,
       limit,
     };
-    if (tournamentId) params.tournament_id = tournamentId;
+    if (tournamentId) params.championship_code = tournamentId;
 
     const response = await apiClient.get<NewsArticle[]>(ENDPOINTS.NEWS_LATEST, params);
 
@@ -74,7 +74,7 @@ export const newsService = {
       per_page: limit,  // Backend expects per_page, not limit
     };
 
-    if (filters.tournament_id) params.tournament_id = filters.tournament_id;
+    if (filters.championship_code) params.championship_code = filters.championship_code;
     if (filters.article_type) params.article_type = filters.article_type;
     if (filters.search) params.search = filters.search;
     if (filters.sort) params.sort = filters.sort;

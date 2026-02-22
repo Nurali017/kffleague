@@ -23,7 +23,6 @@ describe('cup hooks', () => {
     const overviewSpy = vi.spyOn(cupService, 'getOverview').mockResolvedValue({
       season_id: 71,
       season_name: 'Cup 2025',
-      tournament_name: 'Cup',
       championship_name: 'Cup',
       current_round: null,
       groups: null,

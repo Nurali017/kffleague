@@ -39,7 +39,7 @@ export function CupOverview({ overview }: CupOverviewProps) {
     <div className="space-y-4">
       <div className="rounded-xl border border-gray-100 bg-white p-4 dark:border-dark-border dark:bg-dark-surface">
         <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100">
-          {overview.tournament_name || t('bracketTitle', { defaultValue: 'Кубок' })}
+          {overview.championship_name || t('bracketTitle', { defaultValue: 'Кубок' })}
         </h2>
         {overview.current_round && (
           <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">

@@ -13,7 +13,7 @@ export interface NewsArticle {
   excerpt?: string;
   content?: string;
   image_url?: string;
-  tournament_id?: string;  // Tournament ID: pl, 1l, cup, 2l, el
+  championship_code?: string;  // Championship code: pl, 1l, cup, 2l, el
   article_type?: ArticleType | null;
   publish_date: string;
   is_slider?: boolean;
@@ -38,7 +38,7 @@ export interface NewsPagination {
 }
 
 export interface NewsFilters {
-  tournament_id?: string;  // Tournament ID: pl, 1l, cup, 2l, el
+  championship_code?: string;  // Championship code: pl, 1l, cup, 2l, el
   article_type?: 'news' | 'analytics';
   search?: string;
   sort?: 'date_desc' | 'date_asc' | 'views_desc' | 'likes_desc';

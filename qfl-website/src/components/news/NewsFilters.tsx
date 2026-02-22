@@ -53,7 +53,7 @@ export function NewsFilters({
     setSearchInput('');
     onFilterChange({
       article_type: filters.article_type,
-      tournament_id: filters.tournament_id,
+      championship_code: filters.championship_code,
     }); // Keep article_type and tournament filter
   };
 

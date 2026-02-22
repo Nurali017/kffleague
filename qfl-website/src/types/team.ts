@@ -225,7 +225,7 @@ export interface TeamStats {
 export interface TeamOverviewSeason {
   id: number;
   name: string;
-  tournament_id: number | null;
+  championship_id: number | null;
 }
 
 export interface TeamOverviewTeam {

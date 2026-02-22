@@ -8,10 +8,7 @@ import { BackToTop } from '@/components/BackToTop';
 import { TournamentBar } from '@/components/tournament';
 import { JsonLd } from '@/components/JsonLd';
 import { getLanguageFromCookie } from '@/lib/i18n/cookies.server';
-import {
-  getSecondLeagueStageFromCookie,
-  getTournamentFromCookie,
-} from '@/lib/tournament/cookies.server';
+import { getTournamentFromCookie } from '@/lib/tournament/cookies.server';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION_RU, DEFAULT_OG_IMAGE } from '@/lib/seo/constants';
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
 import './globals.css';
@@ -98,7 +95,6 @@ export default function RootLayout({
 }) {
   const lang = getLanguageFromCookie();
   const initialTournamentId = getTournamentFromCookie();
-  const initialSecondLeagueStage = getSecondLeagueStageFromCookie();
 
   return (
     <html lang={lang} suppressHydrationWarning>
@@ -111,7 +107,6 @@ export default function RootLayout({
         <Providers
           initialLang={lang}
           initialTournamentId={initialTournamentId}
-          initialSecondLeagueStage={initialSecondLeagueStage}
         >
           <TournamentBar />
           <Header />

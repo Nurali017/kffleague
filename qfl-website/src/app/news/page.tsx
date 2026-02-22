@@ -21,7 +21,7 @@ function NewsPageContent() {
   // Initialize state from URL
   const [filters, setFilters] = useState<NewsFiltersType>(() => ({
     ...getFiltersFromSearchParams(searchParams),
-    tournament_id: currentTournament.id,
+    championship_code: currentTournament.id,
   }));
   const [page, setPage] = useState(() => getPageFromSearchParams(searchParams));
   const [mounted, setMounted] = useState(false);
@@ -41,8 +41,8 @@ function NewsPageContent() {
   // Sync tournament filter from header selection
   useEffect(() => {
     setFilters((prev) => {
-      if (prev.tournament_id === currentTournament.id) return prev;
-      return { ...prev, tournament_id: currentTournament.id };
+      if (prev.championship_code === currentTournament.id) return prev;
+      return { ...prev, championship_code: currentTournament.id };
     });
     setPage(1);
   }, [currentTournament.id]);
@@ -52,7 +52,7 @@ function NewsPageContent() {
     const handlePopState = () => {
       const newFilters = {
         ...getFiltersFromSearchParams(new URLSearchParams(window.location.search)),
-        tournament_id: currentTournament.id,
+        championship_code: currentTournament.id,
       };
       const newPage = getPageFromSearchParams(new URLSearchParams(window.location.search));
       setFilters(newFilters);

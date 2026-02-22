@@ -17,6 +17,10 @@ export function CupSchedule({
 }: CupScheduleProps) {
   const { t, i18n } = useTranslation('table');
 
+  const filteredRounds = selectedRoundKey
+    ? schedule.rounds.filter((r) => r.round_key === selectedRoundKey)
+    : schedule.rounds;
+
   return (
     <div className="rounded-xl border border-gray-100 bg-white p-4 dark:border-dark-border dark:bg-dark-surface">
       <h3 className="mb-3 text-base font-bold text-gray-900 dark:text-slate-100">
@@ -49,13 +53,13 @@ export function CupSchedule({
         ))}
       </div>
 
-      {schedule.rounds.length === 0 ? (
+      {filteredRounds.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-slate-400">
           {t('cup.noSchedule', { defaultValue: 'Нет матчей по выбранному раунду' })}
         </p>
       ) : (
         <div className="space-y-3">
-          {schedule.rounds.map((round) => (
+          {filteredRounds.map((round) => (
             <div key={round.round_key}>
               <div className="mb-2 text-sm font-semibold text-primary">
                 {round.round_name}

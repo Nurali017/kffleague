@@ -26,7 +26,7 @@ interface NewsLayoutProps {
 export default async function NewsLayout({ children }: NewsLayoutProps) {
   const { language, tournamentId } = getServerPrefetchContext();
   const filters: NewsFilters = {
-    tournament_id: tournamentId,
+    championship_code: tournamentId,
   };
   const filtersHash = JSON.stringify(filters);
   const page = 1;

@@ -9,7 +9,6 @@ import { StatisticsHero } from '@/components/statistics/StatisticsHero';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { HeroBackground } from '@/components/ui/HeroBackground';
 import { useTournament } from '@/contexts/TournamentContext';
-import { SecondLeagueStageSwitcher } from '@/components/tournament';
 
 function HeroSkeleton() {
     return (
@@ -114,10 +113,6 @@ export default function StatsLayout({ children }: StatsLayoutProps) {
             )}
 
             <MainTabs />
-
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20 pt-4">
-                <SecondLeagueStageSwitcher />
-            </div>
 
             {children}
         </div>

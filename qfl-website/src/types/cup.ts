@@ -91,7 +91,6 @@ export interface PlayoffBracketResponse {
 export interface CupOverviewResponse {
   season_id: number;
   season_name?: string | null;
-  tournament_name?: string | null;
   championship_name?: string | null;
   current_round?: CupRound | null;
   groups?: CupGroup[] | null;

@@ -76,7 +76,7 @@ export function transformTournaments(apiTournaments: PlayerTournamentHistory[]) 
   return apiTournaments.map((t, index) => ({
     id: index + 1,
     season: t.season_name || String(t.season_id),
-    name: t.tournament_name || '',
+    name: t.championship_name || '',
     team: t.team_name || '',
     matches: t.games_played || 0,
     minutes: t.minutes_played || 0,

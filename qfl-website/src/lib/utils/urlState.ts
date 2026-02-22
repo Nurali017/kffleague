@@ -40,8 +40,8 @@ export function updateSearchParams(
 export function getFiltersFromSearchParams(searchParams: URLSearchParams): NewsFilters {
   const filters: NewsFilters = {};
 
-  const tournamentId = searchParams.get('tournament_id');
-  if (tournamentId) filters.tournament_id = tournamentId;
+  const tournamentId = searchParams.get('championship_code');
+  if (tournamentId) filters.championship_code = tournamentId;
 
   const articleType = searchParams.get('article_type');
   if (articleType && ['news', 'analytics'].includes(articleType)) {
@@ -79,7 +79,7 @@ export function getPageFromSearchParams(searchParams: URLSearchParams): number {
  */
 export function syncFiltersToUrl(filters: NewsFilters, page: number): void {
   updateSearchParams({
-    tournament_id: filters.tournament_id,
+    championship_code: filters.championship_code,
     article_type: filters.article_type,
     search: filters.search,
     sort: filters.sort,

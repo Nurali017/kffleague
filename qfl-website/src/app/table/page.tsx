@@ -18,7 +18,6 @@ import { HeroBackground } from '@/components/ui/HeroBackground';
 import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { updateSearchParams } from '@/lib/utils/urlState';
 import { CupBracket, CupOverview, CupSchedule } from '@/components/cup';
-import { SecondLeagueStageSwitcher } from '@/components/tournament';
 
 // Skeleton for loading state
 function TableSkeleton() {
@@ -199,8 +198,6 @@ export default function LeagueTablePage() {
               {showBracket ? t('bracketTitle', { defaultValue: 'Кубок турнирі' }) : t('title')}
             </h1>
           </div>
-
-          <SecondLeagueStageSwitcher className="mb-4" />
 
           {/* Bracket View for Cup tournaments */}
           {showBracket && (

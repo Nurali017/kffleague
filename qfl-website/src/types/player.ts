@@ -132,7 +132,7 @@ export interface PlayerTeammatesResponse {
 export interface PlayerTournamentHistory {
   season_id: number;
   season_name: string | null;
-  tournament_name: string | null;
+  championship_name: string | null;
   team_id: number | null;
   team_name: string | null;
   position: string | null;

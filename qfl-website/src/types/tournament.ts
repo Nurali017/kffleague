@@ -1,6 +1,5 @@
 export type TournamentType = 'league' | 'cup' | 'supercup';
 export type TournamentFormat = 'round_robin' | 'knockout' | 'group_knockout';
-export type SecondLeagueStage = 'a' | 'b' | 'final';
 
 export interface TournamentColors {
   primary: string;

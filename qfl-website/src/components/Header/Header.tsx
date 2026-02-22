@@ -24,13 +24,9 @@ export function Header() {
   const { t, i18n } = useTranslation('navigation');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { currentTournament, effectiveSeasonId, secondLeagueStage } = useTournament();
+  const { currentTournament, effectiveSeasonId } = useTournament();
   const lang = i18n.language?.substring(0, 2) === 'kz' ? 'kz' : 'ru';
-  const teamsHref = `/teams?tournament=${currentTournament.id}&season=${effectiveSeasonId}${
-    currentTournament.id === '2l' && secondLeagueStage
-      ? `&stage=${secondLeagueStage}`
-      : ''
-  }`;
+  const teamsHref = `/teams?tournament=${currentTournament.id}&season=${effectiveSeasonId}`;
 
   // Navigation items with translations
   const navItems: NavItem[] = [

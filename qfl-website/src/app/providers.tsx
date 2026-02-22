@@ -11,13 +11,10 @@ import {
   setLanguageCookie,
   getClientLanguageCookie,
 } from '@/lib/i18n/cookies.client';
-import { SecondLeagueStage } from '@/types/tournament';
-
 interface ProvidersProps {
   children: ReactNode;
   initialLang?: string;
   initialTournamentId?: string;
-  initialSecondLeagueStage?: SecondLeagueStage | null;
 }
 
 const clientLangSet = { current: false };
@@ -26,7 +23,6 @@ export function Providers({
   children,
   initialLang,
   initialTournamentId,
-  initialSecondLeagueStage,
 }: ProvidersProps) {
   // Use server language for first render so SSR and client hydration match.
   // On server: set every time (each request is fresh). On client: set only once.
@@ -62,7 +58,6 @@ export function Providers({
           <Suspense fallback={null}>
             <TournamentProvider
               initialTournamentId={initialTournamentId}
-              initialSecondLeagueStage={initialSecondLeagueStage}
             >
               {children}
             </TournamentProvider>

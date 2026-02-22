@@ -1,9 +1,20 @@
 import { apiClient } from '../client';
 import { ENDPOINTS } from '../endpoints';
+import { TournamentColors } from '@/types/tournament';
 
 export interface FrontMapEntry {
   season_id: number | null;
-  stages?: Record<string, number> | null;
+  name?: string | null;
+  tournament_type?: string | null;
+  tournament_format?: string | null;
+  has_table?: boolean;
+  has_bracket?: boolean;
+  sponsor_name?: string | null;
+  logo?: string | null;
+  colors?: TournamentColors | null;
+  current_round?: number | null;
+  total_rounds?: number | null;
+  sort_order?: number;
 }
 
 interface FrontMapResponse {
