@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { notFound, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
@@ -16,6 +16,9 @@ import {
 } from '@/components/team';
 import { useTeamGames, useTeamOverview, useTeamPlayers, useTeamStats } from '@/hooks/useTeam';
 import { useTournament } from '@/contexts/TournamentContext';
+import { PageSeasonProvider } from '@/contexts/PageSeasonContext';
+import { useChampionshipsTree } from '@/hooks/useChampionshipsTree';
+import { SeasonTournamentSelector } from '@/components/shared/SeasonTournamentSelector';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { fadeInUp, staggerContainer } from '@/lib/motion/variants';
@@ -29,7 +32,7 @@ interface TeamPageProps {
 
 export default function TeamPage({ params }: TeamPageProps) {
   const { t, i18n } = useTranslation('team');
-  const { effectiveSeasonId, currentTournament } = useTournament();
+  const { effectiveSeasonId: globalSeasonId, currentTournament } = useTournament();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,6 +54,28 @@ export default function TeamPage({ params }: TeamPageProps) {
     next.set('tab', tab);
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
+
+  // Local season selector state
+  const { items: treeItems } = useChampionshipsTree();
+  const seasonFromUrl = searchParams.get('season');
+
+  const defaultSeasonId = useMemo(() => {
+    if (seasonFromUrl) {
+      const parsed = Number(seasonFromUrl);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return globalSeasonId;
+  }, [seasonFromUrl, globalSeasonId]);
+
+  const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (selectedSeasonId === null && defaultSeasonId) {
+      setSelectedSeasonId(defaultSeasonId);
+    }
+  }, [defaultSeasonId, selectedSeasonId]);
+
+  const effectiveSeasonId = selectedSeasonId ?? defaultSeasonId;
 
   const { overview, loading: overviewLoading, error: overviewError } = useTeamOverview(teamId, effectiveSeasonId);
   const { stats: detailedStats } = useTeamStats(activeTab === 'overview' ? teamId : null, effectiveSeasonId);
@@ -80,63 +105,76 @@ export default function TeamPage({ params }: TeamPageProps) {
   const tournamentName = (currentTournament.name as Record<string, string>)[lang] || currentTournament.name.short;
 
   return (
-    <main className="min-h-screen bg-slate-100 dark:bg-[#090f1a] pb-24 font-sans">
-      <TeamPageHero
-        team={overview.team}
-        summary={overview.summary}
-        seasonName={overview.season?.name}
-        tournamentName={tournamentName}
-      />
+    <PageSeasonProvider seasonId={effectiveSeasonId}>
+      <main className="min-h-screen bg-slate-100 dark:bg-[#090f1a] pb-24 font-sans">
+        <TeamPageHero
+          team={overview.team}
+          summary={overview.summary}
+          seasonName={overview.season?.name}
+          tournamentName={tournamentName}
+        />
 
-      <TeamPageTabs activeTab={activeTab} onChange={handleTabChange} />
+        {/* Season/Tournament Selector */}
+        {treeItems.length > 0 && (
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4">
+            <SeasonTournamentSelector
+              items={treeItems}
+              selectedSeasonId={effectiveSeasonId}
+              onSeasonChange={setSelectedSeasonId}
+            />
+          </div>
+        )}
 
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-8 md:space-y-10">
-        {activeTab === 'overview' ? (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="space-y-6"
-          >
-            <motion.div variants={fadeInUp}>
-              <TeamKeyStats stats={overview.summary} details={detailedStats} />
+        <TeamPageTabs activeTab={activeTab} onChange={handleTabChange} />
+
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-8 md:space-y-10">
+          {activeTab === 'overview' ? (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="space-y-6"
+            >
+              <motion.div variants={fadeInUp}>
+                <TeamKeyStats stats={overview.summary} details={detailedStats} />
+              </motion.div>
+              <motion.div variants={fadeInUp}>
+                <TeamOverviewSection
+                  recentMatch={overview.recent_match}
+                  formLast5={overview.form_last5}
+                  upcomingMatches={overview.upcoming_matches}
+                  standingsWindow={overview.standings_window}
+                  leaders={overview.leaders}
+                />
+              </motion.div>
             </motion.div>
-            <motion.div variants={fadeInUp}>
-              <TeamOverviewSection
-                recentMatch={overview.recent_match}
-                formLast5={overview.form_last5}
-                upcomingMatches={overview.upcoming_matches}
-                standingsWindow={overview.standings_window}
-                leaders={overview.leaders}
-              />
+          ) : null}
+
+          {activeTab === 'matches' ? (
+            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+              <TeamMatches games={games} teamId={teamId} loading={gamesLoading} />
             </motion.div>
-          </motion.div>
-        ) : null}
+          ) : null}
 
-        {activeTab === 'matches' ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <TeamMatches games={games} teamId={teamId} loading={gamesLoading} />
-          </motion.div>
-        ) : null}
+          {activeTab === 'squad' ? (
+            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+              <TeamSquad players={players} loading={playersLoading} />
+            </motion.div>
+          ) : null}
 
-        {activeTab === 'squad' ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <TeamSquad players={players} loading={playersLoading} />
-          </motion.div>
-        ) : null}
+          {activeTab === 'stats' ? (
+            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+              <TeamFullStats teamId={teamId} />
+            </motion.div>
+          ) : null}
 
-        {activeTab === 'stats' ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <TeamFullStats teamId={teamId} />
-          </motion.div>
-        ) : null}
-
-        {activeTab === 'staff' ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-            <TeamCoachingStaff teamId={teamId} />
-          </motion.div>
-        ) : null}
-      </div>
-    </main>
+          {activeTab === 'staff' ? (
+            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+              <TeamCoachingStaff teamId={teamId} />
+            </motion.div>
+          ) : null}
+        </div>
+      </main>
+    </PageSeasonProvider>
   );
 }

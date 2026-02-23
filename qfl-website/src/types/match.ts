@@ -3,6 +3,9 @@ export interface GameTeam {
   name: string;
   name_kz?: string | null;
   name_en?: string | null;
+  short_name?: string | null;
+  short_name_kz?: string | null;
+  short_name_en?: string | null;
   logo_url?: string | null;
 }
 

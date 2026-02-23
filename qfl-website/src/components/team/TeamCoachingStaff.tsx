@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useTeamCoaches } from '@/hooks/useTeam';
-import { useTournament } from '@/contexts/TournamentContext';
+import { usePageSeason } from '@/contexts/PageSeasonContext';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
 interface TeamCoachingStaffProps {
@@ -20,7 +20,7 @@ const ROLE_LABELS: Record<string, Record<string, string>> = {
 export function TeamCoachingStaff({ teamId }: TeamCoachingStaffProps) {
     const { i18n } = useTranslation();
     const lang = i18n.language === 'kz' ? 'kz' : 'ru';
-    const { effectiveSeasonId } = useTournament();
+    const effectiveSeasonId = usePageSeason();
     const { coaches, loading } = useTeamCoaches(teamId, effectiveSeasonId);
 
     if (loading) {

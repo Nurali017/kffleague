@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLeagueTable } from '@/hooks/useLeagueTable';
+import { usePageSeason } from '@/contexts/PageSeasonContext';
 import { useTournament } from '@/contexts/TournamentContext';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -16,7 +17,8 @@ export function TeamLeagueTable({ teamId }: TeamLeagueTableProps) {
     const { t: tTable, i18n } = useTranslation('table');
     const { t: tCommon } = useTranslation('common');
     const lang = i18n.language === 'kz' ? 'kz' : 'ru';
-    const { currentTournament, currentSeason, effectiveSeasonId } = useTournament();
+    const effectiveSeasonId = usePageSeason();
+    const { currentTournament, currentSeason } = useTournament();
     const { standings: allStandings, loading } = useLeagueTable({
         seasonId: effectiveSeasonId
     });

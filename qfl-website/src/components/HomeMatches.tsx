@@ -8,6 +8,15 @@ import { useMatchCenter, useMatches } from '@/hooks';
 import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
+import {
+  getTeamNameSizing,
+  TeamNameFontClass,
+} from '@/components/HomeMatches/teamNameSizing';
+
+const TEAM_NAME_FONT_CLASS_MAP: Record<TeamNameFontClass, string> = {
+  'text-[11px]': 'text-[11px]',
+  'text-[9px]': 'text-[9px]',
+};
 
 export function HomeMatches() {
   const { t, i18n } = useTranslation('match');
@@ -113,67 +122,78 @@ export function HomeMatches() {
             {t('noData.noMatches', { ns: 'common' })}
           </p>
         ) : (
-          displayGames.map((game) => (
-            <Link
-              key={game.id}
-              href={`/matches/${game.id}`}
-              className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-2 md:p-2.5 transition-colors"
-            >
-              {/* Teams */}
-              <div className="flex items-center justify-between gap-3">
-                {/* Home team */}
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <img
-                    src={game.home_team.logo_url || getTeamLogo(game.home_team.id) || '/images/team-placeholder.png'}
-                    alt={game.home_team.name}
-                    className="w-6 h-6 object-contain flex-shrink-0"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/team-placeholder.png';
-                    }}
-                  />
-                  <span className="font-medium text-gray-900 dark:text-slate-100 truncate text-xs sm:text-sm">
-                    {game.home_team.name}
-                  </span>
+          displayGames.map((game) => {
+            const homeTeamDisplay = getTeamNameSizing(game.home_team, i18n.language);
+            const awayTeamDisplay = getTeamNameSizing(game.away_team, i18n.language);
+
+            return (
+              <Link
+                key={game.id}
+                href={`/matches/${game.id}`}
+                className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-1.5 md:p-2 transition-colors"
+              >
+                {/* Teams */}
+                <div className="flex items-center justify-between gap-1.5">
+                  {/* Home team */}
+                  <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                    <img
+                      src={game.home_team.logo_url || getTeamLogo(game.home_team.id) || '/images/team-placeholder.png'}
+                      alt={game.home_team.name}
+                      className="w-6 h-6 object-contain flex-shrink-0"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/team-placeholder.png';
+                      }}
+                    />
+                    <span
+                      title={homeTeamDisplay.fullName}
+                      className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight ${TEAM_NAME_FONT_CLASS_MAP[homeTeamDisplay.fontClass]}`}
+                    >
+                      {homeTeamDisplay.displayName}
+                    </span>
+                  </div>
+
+                  {/* Score or Time */}
+                  <div className="flex-shrink-0 text-center min-w-[44px] sm:min-w-[52px]">
+                    {game.home_score !== null && game.away_score !== null ? (
+                      <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100">
+                        {game.home_score} : {game.away_score}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500 dark:text-slate-400 font-medium">
+                        {game.time || '-'}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Away team */}
+                  <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
+                    <span
+                      title={awayTeamDisplay.fullName}
+                      className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight text-right ${TEAM_NAME_FONT_CLASS_MAP[awayTeamDisplay.fontClass]}`}
+                    >
+                      {awayTeamDisplay.displayName}
+                    </span>
+                    <img
+                      src={game.away_team.logo_url || getTeamLogo(game.away_team.id) || '/images/team-placeholder.png'}
+                      alt={game.away_team.name}
+                      className="w-6 h-6 object-contain flex-shrink-0"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/team-placeholder.png';
+                      }}
+                    />
+                  </div>
                 </div>
 
-                {/* Score or Time */}
-                <div className="flex-shrink-0 text-center min-w-[52px] sm:min-w-[60px]">
-                  {game.home_score !== null && game.away_score !== null ? (
-                    <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100">
-                      {game.home_score} : {game.away_score}
-                    </div>
-                  ) : (
-                    <div className="text-sm text-gray-500 dark:text-slate-400 font-medium">
-                      {game.time || '-'}
-                    </div>
-                  )}
-                </div>
-
-                {/* Away team */}
-                <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
-                  <span className="font-medium text-gray-900 dark:text-slate-100 truncate text-xs sm:text-sm text-right">
-                    {game.away_team.name}
-                  </span>
-                  <img
-                    src={game.away_team.logo_url || getTeamLogo(game.away_team.id) || '/images/team-placeholder.png'}
-                    alt={game.away_team.name}
-                    className="w-6 h-6 object-contain flex-shrink-0"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/team-placeholder.png';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Live badge */}
-              {(game.is_live || game.status === 'live') && (
-                <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
-                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                  LIVE
-                </div>
-              )}
-            </Link>
-          ))
+                {/* Live badge */}
+                {(game.is_live || game.status === 'live') && (
+                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                    LIVE
+                  </div>
+                )}
+              </Link>
+            );
+          })
         )}
       </div>
     </div>

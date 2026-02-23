@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTeamStats } from '@/hooks/useTeam';
-import { useTournament } from '@/contexts/TournamentContext';
+import { usePageSeason } from '@/contexts/PageSeasonContext';
 import { TeamStats } from '@/types/team';
 import { ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -360,7 +360,7 @@ function DisciplinarySection({ s }: { s: TeamStats }) {
 
 export function TeamFullStats({ teamId }: TeamFullStatsProps) {
     const { t: tTeam } = useTranslation('team');
-    const { effectiveSeasonId } = useTournament();
+    const effectiveSeasonId = usePageSeason();
     const { stats, loading } = useTeamStats(teamId, effectiveSeasonId);
 
     if (loading) {

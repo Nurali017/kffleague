@@ -217,7 +217,7 @@ export function TournamentProvider({
 
   const fallbackSeason: Season = {
     id: effectiveSeasonId,
-    year: String(effectiveSeasonId),
+    year: String(new Date().getFullYear()),
     tournaments: Object.values(TOURNAMENTS),
     isCurrentSeason: false,
   };

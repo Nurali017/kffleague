@@ -8,7 +8,7 @@ export function MiniLeagueTable() {
     return (
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col h-full">
             <div className="flex items-center justify-between mb-4">
-                <span className="bg-primary-dark text-white text-xs font-bold px-3 py-1 rounded-full uppercase">2025</span>
+                <span className="bg-primary-dark text-white text-xs font-bold px-3 py-1 rounded-full uppercase">{new Date().getFullYear()}</span>
                 <span className="text-xs font-bold text-gray-500">Премьер-Лига</span>
             </div>
 

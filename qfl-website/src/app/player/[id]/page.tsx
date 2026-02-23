@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,7 +12,6 @@ import {
   usePlayerTournaments,
   useTeamDetail,
 } from '@/hooks';
-import { useTournament } from '@/contexts/TournamentContext';
 import { PlayerPageHero } from '@/components/player/PlayerPageHero';
 import { PlayerStatsSection } from '@/components/player/PlayerStatsSection';
 import { PlayerDetailStats } from '@/components/player/PlayerDetailStats';
@@ -28,6 +27,7 @@ import {
 import {
   DEFAULT_PLAYER_PAGE_VARIANT,
 } from '@/components/player/playerPageVariants';
+import { SeasonTournamentSelector, SeasonTournamentItem } from '@/components/shared/SeasonTournamentSelector';
 
 // Loading skeleton component
 function PlayerPageSkeleton() {
@@ -90,20 +90,65 @@ function PlayerNotFound() {
   );
 }
 
+function extractYear(seasonName: string | null): string {
+  if (!seasonName) return '';
+  const match = seasonName.match(/(\d{4})/);
+  return match ? match[1] : '';
+}
+
+function extractTournamentName(seasonName: string | null): string {
+  if (!seasonName) return '';
+  return seasonName.replace(/\s*\d{4}\s*/, '').trim() || seasonName;
+}
+
 export default function PlayerProfilePage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const rawPlayerId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const parsedPlayerId = Number.parseInt(rawPlayerId ?? '', 10);
   const isPlayerIdValid = Number.isInteger(parsedPlayerId) && parsedPlayerId > 0;
   const playerId = isPlayerIdValid ? parsedPlayerId : null;
   const { t } = useTranslation('player');
-  const { effectiveSeasonId } = useTournament();
+
+  // Load player tournaments to build the selector
+  const { tournaments: apiTournaments, loading: tournamentsLoading } = usePlayerTournaments(playerId);
+
+  // Build selector items from player tournaments
+  const selectorItems = useMemo<SeasonTournamentItem[]>(() => {
+    if (!apiTournaments) return [];
+    return apiTournaments.map((t) => ({
+      seasonId: t.season_id,
+      seasonName: t.season_name || '',
+      year: extractYear(t.season_name),
+      tournamentName: t.championship_name || extractTournamentName(t.season_name),
+    }));
+  }, [apiTournaments]);
+
+  // Season from URL or first available from tournaments
+  const seasonFromUrl = searchParams.get('season');
+  const defaultSeasonId = useMemo(() => {
+    if (seasonFromUrl) {
+      const parsed = Number(seasonFromUrl);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return selectorItems[0]?.seasonId ?? null;
+  }, [seasonFromUrl, selectorItems]);
+
+  const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
+
+  // Initialize selectedSeasonId once we have data
+  useEffect(() => {
+    if (selectedSeasonId === null && defaultSeasonId !== null) {
+      setSelectedSeasonId(defaultSeasonId);
+    }
+  }, [defaultSeasonId, selectedSeasonId]);
+
+  const effectiveSeasonId = selectedSeasonId ?? defaultSeasonId;
 
   // Fetch all player data
-  const { player: apiPlayer, loading: playerLoading, error: playerError } = usePlayerDetail(playerId, effectiveSeasonId);
-  const { stats: apiStats, loading: statsLoading } = usePlayerSeasonStats(playerId, effectiveSeasonId);
-  const { teammates: apiTeammates, loading: teammatesLoading } = usePlayerTeammates(playerId, { limit: 10, seasonId: effectiveSeasonId });
-  const { tournaments: apiTournaments, loading: tournamentsLoading } = usePlayerTournaments(playerId);
+  const { player: apiPlayer, loading: playerLoading, error: playerError } = usePlayerDetail(playerId, effectiveSeasonId ?? undefined);
+  const { stats: apiStats, loading: statsLoading } = usePlayerSeasonStats(playerId, effectiveSeasonId ?? undefined);
+  const { teammates: apiTeammates, loading: teammatesLoading } = usePlayerTeammates(playerId, { limit: 10, seasonId: effectiveSeasonId ?? undefined });
   const teamId = apiPlayer?.teams?.[0] ?? null;
   const { team } = useTeamDetail(teamId);
 
@@ -144,6 +189,17 @@ export default function PlayerProfilePage() {
 
       {/* 2. Stats Summary (White Bar) */}
       <PlayerStatsSection stats={stats} variant={pageVariant} />
+
+      {/* Season/Tournament Selector */}
+      {selectorItems.length > 0 && (
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pt-6">
+          <SeasonTournamentSelector
+            items={selectorItems}
+            selectedSeasonId={effectiveSeasonId}
+            onSeasonChange={setSelectedSeasonId}
+          />
+        </div>
+      )}
 
       {/* 3. Main Content Area */}
       <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-8 ${contentGap}`}>

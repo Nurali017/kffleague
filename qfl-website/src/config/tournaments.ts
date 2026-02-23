@@ -136,10 +136,16 @@ export const DEFAULT_TOURNAMENT_ID = 'pl';
 
 export const SEASONS: Season[] = [
   {
+    id: 0,
+    year: '2026',
+    tournaments: Object.values(TOURNAMENTS),
+    isCurrentSeason: true,
+  },
+  {
     id: 61,
     year: '2025',
     tournaments: Object.values(TOURNAMENTS),
-    isCurrentSeason: true,
+    isCurrentSeason: false,
   },
   {
     id: 60,
