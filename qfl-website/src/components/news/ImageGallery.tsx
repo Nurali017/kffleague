@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ImageGalleryProps {
   images: string[];
@@ -10,6 +11,7 @@ interface ImageGalleryProps {
 }
 
 export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps) {
+  const { t } = useTranslation('news');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -117,7 +119,7 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
           <button
             onClick={() => setIsModalOpen(false)}
             className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-10"
-            aria-label="Закрыть"
+            aria-label={t('gallery.close')}
           >
             <X className="w-6 h-6" />
           </button>
@@ -135,7 +137,7 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
                 handlePrevious();
               }}
               className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
-              aria-label="Предыдущее изображение"
+              aria-label={t('gallery.previous')}
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
@@ -161,7 +163,7 @@ export function ImageGallery({ images, alt, className = '' }: ImageGalleryProps)
                 handleNext();
               }}
               className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
-              aria-label="Следующее изображение"
+              aria-label={t('gallery.next')}
             >
               <ChevronRight className="w-6 h-6" />
             </button>

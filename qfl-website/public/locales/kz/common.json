@@ -126,5 +126,25 @@
       "groupBTitle": "Лига B",
       "finalTitle": "Финал"
     }
-  }
+  },
+  "search": {
+    "placeholder": "Жаңалықтарды іздеу...",
+    "closeSearch": "Іздеуді жабу",
+    "noResults": "«{{query}}» сұранысы бойынша ештеңе табылмады",
+    "minChars": "Іздеу үшін кемінде 2 таңба енгізіңіз",
+    "quickLinks": "Жылдам сілтемелер",
+    "escHint": "Жабу үшін ESC басыңыз"
+  },
+  "accessibility": {
+    "close": "Жабу",
+    "backToTop": "Жоғарыға",
+    "previousSlide": "Алдыңғы слайд",
+    "nextSlide": "Келесі слайд",
+    "goToSlide": "{{n}} слайдқа өту",
+    "switchToDark": "Қараңғы тақырыпқа ауысу",
+    "switchToLight": "Жарық тақырыпқа ауысу"
+  },
+  "dataUnavailable": "Деректер қолжетімсіз",
+  "technicalWin": "Техникалық жеңіс",
+  "noEvents": "Көрсетілетін оқиғалар жоқ"
 }

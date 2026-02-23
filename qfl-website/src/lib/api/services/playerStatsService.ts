@@ -6,6 +6,7 @@ import {
   PlayerStatsSortBy,
   PositionCode,
 } from '@/types';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 interface GetPlayerStatsParams {
   seasonId?: number;
@@ -43,7 +44,7 @@ export const playerStatsService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player stats');
+      throw new Error(response.error?.message || getErrorMessage('fetchTeamStats'));
     }
 
     return response.data;

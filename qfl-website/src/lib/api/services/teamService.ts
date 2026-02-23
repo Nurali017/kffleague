@@ -9,6 +9,7 @@ import {
   TeamStats,
 } from '@/types';
 import { Game } from '@/types/match';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 // Map player_type to position category
 function mapPlayerTypeToPosition(
@@ -57,7 +58,7 @@ export const teamService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch teams');
+      throw new Error(response.error?.message || getErrorMessage('fetchTeams'));
     }
 
     return response.data.items.map(mapSeedToDetail);
@@ -137,7 +138,7 @@ export const teamService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch players');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayers'));
     }
 
     // Map TeamPlayer to SquadPlayer
@@ -168,7 +169,7 @@ export const teamService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch games');
+      throw new Error(response.error?.message || getErrorMessage('fetchGames'));
     }
 
     return response.data.items;

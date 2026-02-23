@@ -72,7 +72,7 @@ export function Navigation() {
               <span
                 key={item.key}
                 className="text-sm font-bold uppercase tracking-wide text-white/40 cursor-not-allowed"
-                title="Скоро"
+                title={t('comingSoon')}
               >
                 {item.label}
               </span>
@@ -85,21 +85,21 @@ export function Navigation() {
           <LanguageSwitcher />
           <button
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
-            aria-label="Поиск"
+            aria-label={t('search')}
             onClick={() => setIsSearchOpen(true)}
           >
             <Search className="w-5 h-5" />
           </button>
           <button
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
-            aria-label="Профиль"
+            aria-label={t('profile')}
           >
             <User className="w-5 h-5" />
           </button>
           <button
             className="lg:hidden p-2 hover:bg-white/10 rounded-full transition-colors"
             onClick={toggleMenu}
-            aria-label={isMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
+            aria-label={isMenuOpen ? t('closeMenu') : t('openMenu')}
             aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -135,7 +135,7 @@ export function Navigation() {
                   className="px-4 py-3 text-sm font-bold uppercase tracking-wide text-white/40 cursor-not-allowed"
                 >
                   {item.label}
-                  <span className="ml-2 text-xs normal-case font-normal">(скоро)</span>
+                  <span className="ml-2 text-xs normal-case font-normal">{t('comingSoonBadge')}</span>
                 </span>
               )
             )}

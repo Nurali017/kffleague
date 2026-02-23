@@ -144,5 +144,11 @@
     "accuracyPct": "Дәлдік {{value}}%",
     "successPct": "{{value}}% сәтті",
     "wonPct": "{{value}}% жеңіс"
-  }
+  },
+  "topScorers": "Бомбардирлер",
+  "topAssisters": "Ассистенттер",
+  "goalsLabel": "ГОЛДАР",
+  "assistsLabel": "ГОЛДЫҚ ПАСТАР",
+  "player": "ОЙЫНШЫ",
+  "fullList": "Толық тізім"
 }

@@ -1,6 +1,7 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
 import { TeamStatsTableResponse } from '@/types/statistics';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 interface GetTeamStatsOptions {
     seasonId?: number;
@@ -34,7 +35,7 @@ export const teamStatsTableService = {
         );
 
         if (!response.success) {
-            throw new Error(response.error?.message || 'Failed to fetch team statistics');
+            throw new Error(response.error?.message || getErrorMessage('fetchTeamStats'));
         }
         return response.data;
     },

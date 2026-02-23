@@ -3,6 +3,7 @@
 import React from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { usePlayerStats } from '@/hooks';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
@@ -45,6 +46,8 @@ function PlayerRowSkeleton() {
 }
 
 function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTableProps) {
+  const { t } = useTranslation('statistics');
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       {/* Header */}
@@ -57,7 +60,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
         <thead>
           <tr className="bg-primary text-white text-xs">
             <th className="py-2 px-3 text-left w-8">#</th>
-            <th className="py-2 px-3 text-left">ИГРОК</th>
+            <th className="py-2 px-3 text-left">{t('player')}</th>
             <th className="py-2 px-3 text-right">{statLabel}</th>
           </tr>
         </thead>
@@ -106,7 +109,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
       {/* Footer */}
       <div className="p-3 border-t border-gray-100">
         <button className="text-primary font-bold text-sm hover:text-accent flex items-center transition-colors">
-          Полный список
+          {t('fullList')}
           <ChevronRight className="w-4 h-4 ml-1" />
         </button>
       </div>
@@ -115,6 +118,7 @@ function PlayerTable({ title, statLabel, players, statKey, loading }: PlayerTabl
 }
 
 export function PlayerStatsTable() {
+  const { t } = useTranslation('statistics');
   const { players: scorers, loading: scorersLoading } = usePlayerStats({
     sortBy: 'goals',
     limit: 6,
@@ -127,15 +131,15 @@ export function PlayerStatsTable() {
   return (
     <div className="space-y-6">
       <PlayerTable
-        title="Бомбардиры"
-        statLabel="ГОЛЫ"
+        title={t('topScorers')}
+        statLabel={t('goalsLabel')}
         players={scorers}
         statKey="goals"
         loading={scorersLoading}
       />
       <PlayerTable
-        title="Ассистенты"
-        statLabel="ГОЛЕВЫЕ ПЕРЕДАЧИ"
+        title={t('topAssisters')}
+        statLabel={t('assistsLabel')}
         players={assisters}
         statKey="assists"
         loading={assistersLoading}

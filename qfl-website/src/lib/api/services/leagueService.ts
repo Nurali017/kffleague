@@ -1,6 +1,7 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
 import { TeamStanding, TableFilters, LeagueTableResponse, ResultsGridResponse } from '@/types';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export const leagueService = {
   async getTable(
@@ -22,7 +23,7 @@ export const leagueService = {
     const response = await apiClient.get<LeagueTableResponse>(endpoint);
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch league table');
+      throw new Error(response.error?.message || getErrorMessage('fetchLeagueTable'));
     }
 
     return response.data;
@@ -53,7 +54,7 @@ export const leagueService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch results grid');
+      throw new Error(response.error?.message || getErrorMessage('fetchResultsGrid'));
     }
 
     return response.data;

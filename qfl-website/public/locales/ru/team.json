@@ -67,5 +67,14 @@
   },
   "coming_soon": "Скоро будет доступно",
   "staff_title": "Тренерский штаб",
-  "transfers_title": "Трансферы"
+  "transfers_title": "Трансферы",
+  "lastMatch": "Последний матч",
+  "teamForm": "Форма команды",
+  "upcomingMatches": "Предстоящие матчи",
+  "noPlayedMatches": "Нет сыгранных матчей",
+  "noUpcomingMatches": "Нет предстоящих матчей",
+  "noSquadData": "Нет данных о составе",
+  "allMatches": "Все матчи",
+  "total": "Всего",
+  "keyStats": "Ключевая статистика"
 }

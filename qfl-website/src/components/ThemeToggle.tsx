@@ -2,6 +2,7 @@
 
 import { Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface ThemeToggleProps {
@@ -10,6 +11,7 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className = '' }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation('common');
 
   return (
     <motion.button
@@ -22,7 +24,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
         dark:border-dark-border-soft dark:bg-dark-surface-soft dark:hover:bg-dark-border-soft dark:text-accent-cyan
         ${className}
       `}
-      aria-label={theme === 'light' ? 'Переключить на темную тему' : 'Переключить на светлую тему'}
+      aria-label={theme === 'light' ? t('accessibility.switchToDark') : t('accessibility.switchToLight')}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div

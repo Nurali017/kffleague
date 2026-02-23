@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
 import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 
@@ -25,6 +26,7 @@ const defaultStats: MatchStat[] = [
 ];
 
 export function MatchStatsCard({ homeTeam, awayTeam, stats = defaultStats }: MatchStatsCardProps) {
+  const { t } = useTranslation('match');
   const homeColor = HOME_COLOR;
   const awayColor = AWAY_COLOR;
 
@@ -32,7 +34,7 @@ export function MatchStatsCard({ homeTeam, awayTeam, stats = defaultStats }: Mat
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h3 className="text-base font-bold text-gray-900">Статистика команд</h3>
+        <h3 className="text-base font-bold text-gray-900">{t('teamStats')}</h3>
         <div className="flex gap-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: homeColor }} />

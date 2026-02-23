@@ -2,6 +2,7 @@
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { Circle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { EnhancedMatchEvent, GameTeam } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon } from './MatchEventIcons';
 import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
@@ -15,6 +16,8 @@ interface MatchEventsListProps {
 }
 
 export function MatchEventsList({ events, homeTeam, awayTeam, loading, isTechnical }: MatchEventsListProps) {
+  const { t } = useTranslation('match');
+
   if (loading) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-pulse">
@@ -34,9 +37,9 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading, isTechnic
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div className="px-4 py-8 text-center">
           {isTechnical ? (
-            <span className="text-orange-500 font-medium">Техническая победа</span>
+            <span className="text-orange-500 font-medium">{t('events.technicalWin')}</span>
           ) : (
-            <span className="text-gray-500">Нет событий для отображения</span>
+            <span className="text-gray-500">{t('events.noEvents')}</span>
           )}
         </div>
       </div>
@@ -86,15 +89,15 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading, isTechnic
   const getEventLabel = (eventType: string) => {
     switch (eventType) {
       case 'goal':
-        return 'ГОЛ';
+        return t('events.goal');
       case 'yellow_card':
-        return 'Желтая карточка';
+        return t('yellowCard');
       case 'red_card':
-        return 'Красная карточка';
+        return t('redCard');
       case 'substitution':
-        return 'Замена';
+        return t('substitution');
       case 'penalty':
-        return 'Пенальти';
+        return t('events.penalty');
       default:
         return '';
     }
@@ -140,13 +143,13 @@ export function MatchEventsList({ events, homeTeam, awayTeam, loading, isTechnic
                 {/* Additional info */}
                 {event.event_type === 'substitution' && event.player2_name && (
                   <div className="text-[11px] text-gray-500 mt-0.5">
-                    Вышел: {event.player2_name}
+                    {t('events.subIn')}: {event.player2_name}
                   </div>
                 )}
 
                 {event.event_type === 'goal' && event.player2_name && (
                   <div className="text-[11px] text-gray-500 mt-0.5">
-                    Ассист: {event.player2_name}
+                    {t('events.assistLabel')}: {event.player2_name}
                   </div>
                 )}
 

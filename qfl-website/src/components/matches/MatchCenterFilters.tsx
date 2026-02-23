@@ -209,7 +209,7 @@ export function MatchCenterFilters({
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
-              Тур (стадия)
+              {t('filters.tour')}
             </label>
             <MultiSelect
               options={tours}
@@ -225,7 +225,7 @@ export function MatchCenterFilters({
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
-              Месяц
+              {t('filters.month')}
             </label>
             <select
               value={filters.month || ''}
@@ -251,7 +251,7 @@ export function MatchCenterFilters({
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
-              Клубы
+              {t('filters.clubs')}
             </label>
             <MultiSelect
               options={teams}
@@ -267,7 +267,7 @@ export function MatchCenterFilters({
             <label className={`block text-xs font-medium mb-1.5 uppercase ${
               isHero ? 'text-gray-500 dark:text-white/60' : 'text-gray-500 dark:text-slate-400'
             }`}>
-              Статус
+              {t('filters.status')}
             </label>
             <select
               value={filters.status || ''}
@@ -313,7 +313,7 @@ export function MatchCenterFilters({
               <span className={`text-xs leading-tight ${
                 isHero ? 'text-gray-700 dark:text-white/70' : 'text-gray-700 dark:text-slate-300'
               }`}>
-                Скрыть<br/>прошедшие
+                {t('filters.hidePast')}
               </span>
             </label>
           </div>
@@ -329,7 +329,7 @@ export function MatchCenterFilters({
                   : 'bg-gray-100 dark:bg-dark-surface-soft hover:bg-gray-200 dark:hover:bg-dark-surface-soft text-primary dark:text-accent-cyan'
               }`}
             >
-              Сбросить фильтры
+              {t('filters.resetFilters')}
             </button>
           </div>
         </div>

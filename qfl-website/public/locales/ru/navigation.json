@@ -23,5 +23,7 @@
   "profile": "Профиль",
   "liveBadge": "Онлайн",
   "openMenu": "Открыть меню",
-  "closeMenu": "Закрыть меню"
+  "closeMenu": "Закрыть меню",
+  "comingSoon": "Скоро",
+  "comingSoonBadge": "(скоро)"
 }

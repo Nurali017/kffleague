@@ -4,6 +4,7 @@ import { TournamentAwareLink as Link } from '@/components/navigation/TournamentA
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { EnhancedMatchEvent, GameTeam, PlayerCountry } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon, JerseyIcon } from './MatchEventIcons';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
@@ -27,6 +28,7 @@ export function MatchEventTimeline({
   loading,
   playerCountryMap = {},
 }: MatchEventTimelineProps) {
+  const { t } = useTranslation('match');
   const [hoveredEvent, setHoveredEvent] = useState<number | null>(null);
   const [activeEventId, setActiveEventId] = useState<number | null>(null);
 
@@ -117,21 +119,21 @@ export function MatchEventTimeline({
                 exit="exit"
                 role="dialog"
                 aria-modal="true"
-                aria-label="Детали события"
+                aria-label={t('events.eventDetails')}
               >
                 <div className="px-4 pt-3 pb-2 border-b border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-white font-extrabold shrink-0">{activeEvent.minute}&apos;</span>
                     <EventMarker type={activeEvent.event_type} isHovered={false} />
                     <span className="text-gray-300 uppercase text-xs font-semibold truncate">
-                      {getEventLabel(activeEvent.event_type)}
+                      {t(EVENT_LABEL_KEYS[activeEvent.event_type] || 'events.title', getEventLabel(activeEvent.event_type))}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setActiveEventId(null)}
                     className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-                    aria-label="Закрыть"
+                    aria-label={t('events.eventDetails', 'Закрыть')}
                   >
                     <X className="w-5 h-5 text-white/80" />
                   </button>
@@ -306,7 +308,7 @@ export function MatchEventTimeline({
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-white font-bold">{event.minute}&apos;</span>
                       <EventMarker type={event.event_type} isHovered={false} />
-                      <span className="text-gray-400 uppercase text-xs">{getEventLabel(event.event_type)}</span>
+                      <span className="text-gray-400 uppercase text-xs">{t(EVENT_LABEL_KEYS[event.event_type] || 'events.title', getEventLabel(event.event_type))}</span>
                     </div>
 
                     {event.event_type === 'substitution' && event.player2_name ? (
@@ -408,6 +410,7 @@ interface MobileTimelineProps {
 }
 
 function MobileTimeline({ homeTeam, awayTeam, events, maxTime, activeEventId, onEventToggle }: MobileTimelineProps) {
+  const { t } = useTranslation('match');
   const PX_PER_MIN = 8;
   const TRACK_PAD_LEFT = 16;
   const TRACK_PAD_RIGHT = 24;
@@ -460,7 +463,7 @@ function MobileTimeline({ homeTeam, awayTeam, events, maxTime, activeEventId, on
                     transition-transform duration-200
                     ${isActive ? 'scale-110 bg-white/10' : 'active:scale-95'}
                   `}
-                  aria-label={`Открыть событие ${event.minute}'`}
+                  aria-label={t('events.openEvent', { minute: event.minute })}
                   data-testid={`timeline-event-${event.id}`}
                 >
                   <EventMarker type={event.event_type} isHovered={isActive} />
@@ -577,7 +580,16 @@ function EventMarker({ type, isHovered }: { type: string; isHovered: boolean }) 
   }
 }
 
+const EVENT_LABEL_KEYS: Record<string, string> = {
+  goal: 'events.goal',
+  penalty: 'events.penalty',
+  yellow_card: 'yellowCard',
+  red_card: 'redCard',
+  substitution: 'events.substitution',
+};
+
 function getEventLabel(type: string) {
+  // Fallback labels used when called outside translation context
   switch (type) {
     case 'goal': return 'Goal';
     case 'penalty': return 'Penalty';

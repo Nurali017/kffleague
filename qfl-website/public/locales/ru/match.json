@@ -95,7 +95,12 @@
     "assist": "Ассист",
     "in": "вышел",
     "out": "вместо",
-    "substitution": "Замена"
+    "substitution": "Замена",
+    "technicalWin": "Техническая победа",
+    "subIn": "Вышел",
+    "assistLabel": "Ассист",
+    "openEvent": "Открыть событие {{minute}}'",
+    "eventDetails": "Детали события"
   },
   "playerStats": {
     "title": "Статистика игроков",
@@ -184,5 +189,15 @@
   },
   "buyTicket": "Купить билет",
   "totalMatches": "Найдено матчей: {{count}}",
-  "noMatchesFiltered": "Матчи не найдены. Попробуйте изменить фильтры."
+  "noMatchesFiltered": "Матчи не найдены. Попробуйте изменить фильтры.",
+  "teamStats": "Статистика команд",
+  "videoReview": "Видеообзор матча",
+  "videoTitle": "Видео матча",
+  "tournamentTable": "Турнирная таблица",
+  "viewAll": "Все",
+  "table": {
+    "team": "Команда",
+    "matches": "И",
+    "points": "О"
+  }
 }

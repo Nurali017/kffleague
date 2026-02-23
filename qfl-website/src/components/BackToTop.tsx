@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { buttonVisibility } from '@/lib/motion';
 
 export function BackToTop() {
+  const { t } = useTranslation('common');
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export function BackToTop() {
   return (
     <motion.button
       onClick={scrollToTop}
-      aria-label="Наверх"
+      aria-label={t('accessibility.backToTop')}
       animate={isVisible ? 'visible' : 'hidden'}
       variants={buttonVisibility}
       whileHover={{ scale: 1.1, backgroundColor: '#E5B73B' }}

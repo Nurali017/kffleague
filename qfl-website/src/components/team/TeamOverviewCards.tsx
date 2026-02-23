@@ -13,13 +13,13 @@ interface TeamOverviewCardsProps {
 
 // Most Recent Result card
 function MostRecentResult({ match }: { match: Game | null }) {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation('team');
     const lang = i18n.language === 'kz' ? 'kz' : 'ru';
 
     if (!match) {
         return (
             <div className="bg-white rounded-2xl border border-gray-100 p-8 flex items-center justify-center h-full">
-                <p className="text-gray-400 text-sm">{lang === 'kz' ? 'Матч жоқ' : 'Нет матчей'}</p>
+                <p className="text-gray-400 text-sm">{t('empty.noRecentMatches')}</p>
             </div>
         );
     }
@@ -33,7 +33,7 @@ function MostRecentResult({ match }: { match: Game | null }) {
     return (
         <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col h-full">
             <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider text-center mb-6">
-                {lang === 'kz' ? 'СОҢҒЫ НӘТИЖЕ' : 'ПОСЛЕДНИЙ РЕЗУЛЬТАТ'}
+                {t('lastMatch')}
             </h3>
 
             <div className="flex items-center justify-between flex-1">
@@ -77,7 +77,7 @@ function MostRecentResult({ match }: { match: Game | null }) {
                     href={`/matches/${match.id}`}
                     className="inline-block border border-gray-200 rounded-full px-6 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                    Match Centre
+                    {t('buttons.matchCentre')}
                 </Link>
             </div>
         </div>
@@ -86,14 +86,13 @@ function MostRecentResult({ match }: { match: Game | null }) {
 
 // Team Form card — last 5 results
 function TeamForm({ matches, teamId }: { matches: Game[]; teamId: number }) {
-    const { i18n } = useTranslation();
-    const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+    const { t } = useTranslation('team');
     const last5 = matches.slice(0, 5);
 
     return (
         <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col h-full">
             <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider text-center mb-6">
-                {lang === 'kz' ? 'КОМАНДА ФОРМАСЫ' : 'ФОРМА КОМАНДЫ'}
+                {t('teamForm')}
             </h3>
 
             <div className="flex items-center justify-center gap-3 flex-1">
@@ -119,7 +118,7 @@ function TeamForm({ matches, teamId }: { matches: Game[]; teamId: number }) {
                                 </span>
                             </div>
                             <span className="text-[10px] text-gray-400 font-medium">
-                                {isHome ? 'H' : 'A'}
+                                {isHome ? t('form.homeShort') : t('form.awayShort')}
                             </span>
                         </div>
                     );
@@ -128,7 +127,7 @@ function TeamForm({ matches, teamId }: { matches: Game[]; teamId: number }) {
 
             {last5.length === 0 && (
                 <p className="text-gray-400 text-sm text-center flex-1 flex items-center justify-center">
-                    {lang === 'kz' ? 'Деректер жоқ' : 'Нет данных'}
+                    {t('noPlayedMatches')}
                 </p>
             )}
         </div>
@@ -137,14 +136,14 @@ function TeamForm({ matches, teamId }: { matches: Game[]; teamId: number }) {
 
 // Fixtures card — upcoming matches
 function FixturesList({ matches, teamId }: { matches: Game[]; teamId: number }) {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation('team');
     const lang = i18n.language === 'kz' ? 'kz' : 'ru';
     const upcoming = matches.slice(0, 5);
 
     return (
         <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col h-full">
             <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider text-center mb-4">
-                {lang === 'kz' ? 'КЕСТЕ' : 'РАСПИСАНИЕ'}
+                {t('upcomingMatches')}
             </h3>
 
             <div className="flex-1 space-y-3">
@@ -165,7 +164,7 @@ function FixturesList({ matches, teamId }: { matches: Game[]; teamId: number }) 
                         <div key={game.id}>
                             {game.tour && (
                                 <div className="text-[10px] font-bold text-gray-900 mb-1">
-                                    GW {game.tour} <span className="text-gray-400 font-normal">- {dateStr}</span>
+                                    {t('matches_sections.tour', { number: game.tour })} <span className="text-gray-400 font-normal">- {dateStr}</span>
                                 </div>
                             )}
                             <div className="flex items-center justify-between">
@@ -189,7 +188,7 @@ function FixturesList({ matches, teamId }: { matches: Game[]; teamId: number }) 
 
             {upcoming.length === 0 && (
                 <p className="text-gray-400 text-sm text-center flex-1 flex items-center justify-center">
-                    {lang === 'kz' ? 'Алдағы матчтар жоқ' : 'Нет предстоящих матчей'}
+                    {t('noUpcomingMatches')}
                 </p>
             )}
 
@@ -198,7 +197,7 @@ function FixturesList({ matches, teamId }: { matches: Game[]; teamId: number }) 
                     href="/matches"
                     className="inline-flex items-center gap-1 border border-gray-200 rounded-full px-6 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                    {lang === 'kz' ? 'Барлық кестені көру' : 'Все матчи'} <ArrowRight className="w-3 h-3" />
+                    {t('allMatches')} <ArrowRight className="w-3 h-3" />
                 </Link>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import { apiClient } from '../client';
 import { ENDPOINTS } from '../endpoints';
 import { CupOverviewResponse, CupScheduleResponse } from '@/types';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export const cupService = {
   async getOverview(
@@ -19,7 +20,7 @@ export const cupService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch cup overview');
+      throw new Error(response.error?.message || getErrorMessage('fetchCupOverview'));
     }
 
     return response.data;
@@ -39,7 +40,7 @@ export const cupService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch cup schedule');
+      throw new Error(response.error?.message || getErrorMessage('fetchCupSchedule'));
     }
 
     return response.data;

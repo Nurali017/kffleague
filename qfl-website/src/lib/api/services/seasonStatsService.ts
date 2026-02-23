@@ -2,6 +2,7 @@ import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
 import { SeasonStatistics } from '@/types';
 import { SeasonGoalsByPeriodResponse } from '@/types/statistics';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export const seasonStatsService = {
   async getSeasonStatistics(
@@ -14,7 +15,7 @@ export const seasonStatsService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch season statistics');
+      throw new Error(response.error?.message || getErrorMessage('fetchSeasonStats'));
     }
 
     return response.data;
@@ -28,7 +29,7 @@ export const seasonStatsService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch season goals by period');
+      throw new Error(response.error?.message || getErrorMessage('fetchSeasonGoals'));
     }
 
     return response.data;

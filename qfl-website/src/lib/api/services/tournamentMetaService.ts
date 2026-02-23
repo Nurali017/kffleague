@@ -1,6 +1,7 @@
 import { apiClient } from '../client';
 import { ENDPOINTS } from '../endpoints';
 import { TournamentColors } from '@/types/tournament';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export interface FrontMapEntry {
   season_id: number | null;
@@ -30,7 +31,7 @@ export const tournamentMetaService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch tournament front map');
+      throw new Error(response.error?.message || getErrorMessage('fetchTournamentMap'));
     }
 
     return response.data.items || {};

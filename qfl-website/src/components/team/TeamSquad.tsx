@@ -85,7 +85,7 @@ function PlayerCard({ player }: PlayerCardProps) {
 }
 
 export function TeamSquad({ players, loading }: TeamSquadProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('team');
   const lang = i18n.language === 'kz' ? 'kz' : 'ru';
 
   // Group players by position
@@ -137,7 +137,7 @@ export function TeamSquad({ players, loading }: TeamSquadProps) {
           </svg>
         </div>
         <p className="text-slate-500 dark:text-white/60">
-          {lang === 'kz' ? 'Құрам туралы мәлімет жоқ' : 'Нет данных о составе'}
+          {t('noSquadData')}
         </p>
       </div>
     );
@@ -154,7 +154,7 @@ export function TeamSquad({ players, loading }: TeamSquadProps) {
             {/* Position Header */}
             <div className="flex items-center gap-2.5 px-5 pt-5 pb-2">
               <h2 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.06em]">
-                {POSITION_LABELS[position][lang]}
+                {t(`squad_positions.${position}`, POSITION_LABELS[position][lang])}
               </h2>
               <span className="text-xs text-slate-400 dark:text-white/40">{group.players.length}</span>
             </div>

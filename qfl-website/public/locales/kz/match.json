@@ -95,7 +95,12 @@
     "assist": "Ассист",
     "in": "кірді",
     "out": "орнына",
-    "substitution": "Ауыстыру"
+    "substitution": "Ауыстыру",
+    "technicalWin": "Техникалық жеңіс",
+    "subIn": "Кірді",
+    "assistLabel": "Ассист",
+    "openEvent": "{{minute}}' оқиғаны ашу",
+    "eventDetails": "Оқиға мәліметтері"
   },
   "playerStats": {
     "title": "Ойыншылар статистикасы",
@@ -184,5 +189,15 @@
   },
   "buyTicket": "Билет сатып алу",
   "totalMatches": "Табылған матчтар: {{count}}",
-  "noMatchesFiltered": "Матчтар табылмады. Сүзгілерді өзгертіп көріңіз."
+  "noMatchesFiltered": "Матчтар табылмады. Сүзгілерді өзгертіп көріңіз.",
+  "teamStats": "Командалар статистикасы",
+  "videoReview": "Матч бейнешолуы",
+  "videoTitle": "Матч бейнесі",
+  "tournamentTable": "Турнир кестесі",
+  "viewAll": "Барлығы",
+  "table": {
+    "team": "Команда",
+    "matches": "О",
+    "points": "У"
+  }
 }

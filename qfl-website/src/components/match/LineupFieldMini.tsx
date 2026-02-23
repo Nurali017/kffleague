@@ -1,6 +1,7 @@
 'use client';
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useTranslation } from 'react-i18next';
 import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
@@ -74,11 +75,13 @@ export function LineupFieldMini({
   loading,
   renderingMode = 'field',
 }: LineupFieldMiniProps) {
+  const { t } = useTranslation('match');
+
   if (loading) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h3 className="text-sm font-bold text-gray-900">Составы</h3>
+          <h3 className="text-sm font-bold text-gray-900">{t('lineups')}</h3>
         </div>
         <div className="animate-pulse aspect-[3/4] bg-gray-100" />
       </div>
@@ -93,10 +96,10 @@ export function LineupFieldMini({
     return (
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h3 className="text-sm font-bold text-gray-900">Составы</h3>
+          <h3 className="text-sm font-bold text-gray-900">{t('lineups')}</h3>
         </div>
         <div className="p-6 text-center text-sm text-gray-500">
-          Данные недоступны
+          {t('lineup.noData')}
         </div>
       </div>
     );
@@ -113,7 +116,7 @@ export function LineupFieldMini({
     return (
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          <h3 className="text-sm font-bold text-gray-900">Составы</h3>
+          <h3 className="text-sm font-bold text-gray-900">{t('lineups')}</h3>
         </div>
         <div className="grid grid-cols-1 gap-4 p-4">
           <div>
@@ -184,7 +187,7 @@ export function LineupFieldMini({
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-        <h3 className="text-sm font-bold text-gray-900">Составы</h3>
+        <h3 className="text-sm font-bold text-gray-900">{t('lineups')}</h3>
       </div>
 
       {/* Field */}

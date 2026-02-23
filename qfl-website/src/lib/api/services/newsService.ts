@@ -2,6 +2,7 @@ import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_LANGUAGE } from '../endpoints';
 import { NewsArticle, SliderNews, NewsPagination, NewsFilters, NewsNavigation, NewsReactions } from '@/types';
 import { adaptNewsReactionsFallback, getNewsBackendGapMessage } from '../adapters/newsAdapter';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 type NewsQuery = Record<string, string | number | boolean | Array<string | number>>;
 let reactionsGapLogged = false;
@@ -21,7 +22,7 @@ export const newsService = {
     const response = await apiClient.get<SliderNews[]>(ENDPOINTS.NEWS_SLIDER, params);
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch slider news');
+      throw new Error(response.error?.message || getErrorMessage('fetchSliderNews'));
     }
 
     return response.data;
@@ -41,7 +42,7 @@ export const newsService = {
     const response = await apiClient.get<NewsArticle[]>(ENDPOINTS.NEWS_LATEST, params);
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch latest news');
+      throw new Error(response.error?.message || getErrorMessage('fetchLatestNews'));
     }
 
     return response.data;
@@ -84,7 +85,7 @@ export const newsService = {
     const response = await apiClient.get<NewsPagination>(ENDPOINTS.NEWS_PAGINATED, params);
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch paginated news');
+      throw new Error(response.error?.message || getErrorMessage('fetchPaginatedNews'));
     }
 
     return response.data;
@@ -108,7 +109,7 @@ export const newsService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to toggle like');
+      throw new Error(response.error?.message || getErrorMessage('toggleLike'));
     }
 
     return response.data;

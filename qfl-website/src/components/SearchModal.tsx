@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Search, X, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useLatestNews } from '@/hooks';
 
 interface SearchModalProps {
@@ -11,6 +12,7 @@ interface SearchModalProps {
 }
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  const { t } = useTranslation('common');
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -82,7 +84,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Поиск по новостям..."
+              placeholder={t('search.placeholder')}
               className="flex-1 text-lg outline-none placeholder-gray-400"
             />
             {isSearching && (
@@ -91,7 +93,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             <button
               onClick={handleClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Закрыть поиск"
+              aria-label={t('search.closeSearch')}
             >
               <X className="w-5 h-5 text-gray-500" />
             </button>
@@ -131,19 +133,19 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </div>
               ) : (
                 <div className="py-12 text-center text-gray-500">
-                  <p>Ничего не найдено по запросу &ldquo;{query}&rdquo;</p>
+                  <p>{t('search.noResults', { query })}</p>
                 </div>
               )
             ) : (
               <div className="py-8 text-center text-gray-400">
-                <p>Введите минимум 2 символа для поиска</p>
+                <p>{t('search.minChars')}</p>
               </div>
             )}
           </div>
 
           {/* Quick Links */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-            <p className="text-xs text-gray-500 mb-2">Быстрые ссылки</p>
+            <p className="text-xs text-gray-500 mb-2">{t('search.quickLinks')}</p>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/news"
@@ -173,7 +175,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {/* Keyboard hint */}
         <div className="mt-4 text-center">
           <span className="text-white/60 text-sm">
-            Нажмите <kbd className="px-2 py-1 bg-white/20 rounded text-white/80">ESC</kbd> для закрытия
+            {t('search.escHint')}
           </span>
         </div>
       </div>

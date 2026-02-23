@@ -26,5 +26,20 @@
   "likes": "лайк",
   "share": "Бөлісу",
   "copyLink": "Сілтемені көшіру",
-  "linkCopied": "Сілтеме көшірілді!"
+  "linkCopied": "Сілтеме көшірілді!",
+  "gallery": {
+    "close": "Жабу",
+    "previous": "Алдыңғы сурет",
+    "next": "Келесі сурет"
+  },
+  "filters": {
+    "filter": "Сүзгі",
+    "searchNews": "Жаңалықтарды іздеу...",
+    "resetFilters": "Сүзгілерді тастау"
+  },
+  "pagination": {
+    "label": "Жаңалықтар пагинациясы",
+    "previous": "Артқа",
+    "next": "Алға"
+  }
 }

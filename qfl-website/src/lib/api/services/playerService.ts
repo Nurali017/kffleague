@@ -14,6 +14,7 @@ import {
   adaptPlayerTeammatesResponse,
   adaptPlayerTournamentsResponse,
 } from '../adapters/playerAdapter';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export const playerService = {
   async getPlayerById(
@@ -30,7 +31,7 @@ export const playerService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayer'));
     }
 
     return adaptPlayerDetailResponse(response.data);
@@ -54,7 +55,7 @@ export const playerService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player matches');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayerMatches'));
     }
 
     return adaptPlayerMatchesResponse(response.data).items;
@@ -78,7 +79,7 @@ export const playerService = {
       if (response.error?.status === 404) {
         return null;
       }
-      throw new Error(response.error?.message || 'Failed to fetch player stats');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayerStats'));
     }
 
     return adaptPlayerStatsResponse(response.data);
@@ -102,7 +103,7 @@ export const playerService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player teammates');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayerTeammates'));
     }
 
     return adaptPlayerTeammatesResponse(response.data);
@@ -120,7 +121,7 @@ export const playerService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player tournaments');
+      throw new Error(response.error?.message || getErrorMessage('fetchPlayerTournaments'));
     }
 
     return adaptPlayerTournamentsResponse(response.data);

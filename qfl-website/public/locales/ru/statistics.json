@@ -144,5 +144,11 @@
     "accuracyPct": "Точность {{value}}%",
     "successPct": "{{value}}% успеха",
     "wonPct": "{{value}}% выиграно"
-  }
+  },
+  "topScorers": "Бомбардиры",
+  "topAssisters": "Ассистенты",
+  "goalsLabel": "ГОЛЫ",
+  "assistsLabel": "ГОЛЕВЫЕ ПЕРЕДАЧИ",
+  "player": "ИГРОК",
+  "fullList": "Полный список"
 }

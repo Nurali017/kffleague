@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Tournament } from '@/types/tournament';
 import { bottomSheetSlideUp, modalBackdrop } from '@/lib/motion';
 
@@ -27,6 +28,7 @@ export function TournamentSwitcherView({
   onOpenChange,
   onSelect,
 }: TournamentSwitcherViewProps) {
+  const { t: tCommon } = useTranslation('common');
   const currentTournament = tournaments.find((t) => t.id === currentId) || tournaments[0];
 
   // Close on escape + lock body scroll while open
@@ -50,7 +52,9 @@ export function TournamentSwitcherView({
   if (!currentTournament) return null;
 
   const triggerLabel = getTournamentLabel(currentTournament, lang);
-  const activeLabel = lang === 'kz' ? 'ТАҢДАЛҒАН' : 'ВЫБРАН';
+  const selectTournamentLabel = lang === 'kz' ? 'Турнирді таңдау' : 'Выбор турнира';
+  const selectedLabel = lang === 'kz' ? 'ТАҢДАЛҒАН' : 'ВЫБРАН';
+  const currentlyLabel = lang === 'kz' ? 'Қазір' : 'Сейчас';
 
   return (
     <div className="lg:hidden">
@@ -64,7 +68,7 @@ export function TournamentSwitcherView({
           hover:bg-slate-50 transition-colors
           dark:border-dark-border-soft dark:bg-dark-surface-soft dark:text-accent-cyan dark:hover:bg-dark-border-soft
         "
-        aria-label="Выбрать турнир"
+        aria-label={selectTournamentLabel}
       >
         <img
           src={currentTournament.logo}
@@ -106,22 +110,22 @@ export function TournamentSwitcherView({
               exit="exit"
               role="dialog"
               aria-modal="true"
-              aria-label="Выбор турнира"
+              aria-label={selectTournamentLabel}
             >
               <div className="px-4 pt-3 pb-2 border-b border-slate-200 dark:border-dark-border flex items-center justify-between">
                 <div className="min-w-0">
                   <div className="text-sm font-extrabold text-primary dark:text-white truncate">
-                    Выбор турнира
+                    {selectTournamentLabel}
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                    Сейчас: {currentTournament.name?.short || triggerLabel}
+                    {currentlyLabel}: {currentTournament.name?.short || triggerLabel}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}
                   className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-dark-surface-soft transition-colors"
-                  aria-label="Закрыть"
+                  aria-label={tCommon('accessibility.close')}
                 >
                   <X className="w-5 h-5 text-slate-700 dark:text-slate-200" />
                 </button>
@@ -145,7 +149,6 @@ export function TournamentSwitcherView({
                         onSelect(t.id);
                         onOpenChange(false);
                       }}
-                      aria-label={`Выбрать ${label}`}
                     >
                       <img
                         src={t.logo}
@@ -165,7 +168,7 @@ export function TournamentSwitcherView({
                       </div>
                       {active && (
                         <span className="text-[11px] font-extrabold px-2 py-1 rounded-full bg-accent/20 text-primary-dark dark:bg-accent/15 dark:text-accent">
-                          {activeLabel}
+                          {selectedLabel}
                         </span>
                       )}
                     </button>

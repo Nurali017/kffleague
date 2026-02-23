@@ -126,5 +126,25 @@
       "groupBTitle": "Лига B",
       "finalTitle": "Финал"
     }
-  }
+  },
+  "search": {
+    "placeholder": "Поиск по новостям...",
+    "closeSearch": "Закрыть поиск",
+    "noResults": "Ничего не найдено по запросу «{{query}}»",
+    "minChars": "Введите минимум 2 символа для поиска",
+    "quickLinks": "Быстрые ссылки",
+    "escHint": "Нажмите ESC для закрытия"
+  },
+  "accessibility": {
+    "close": "Закрыть",
+    "backToTop": "Наверх",
+    "previousSlide": "Предыдущий слайд",
+    "nextSlide": "Следующий слайд",
+    "goToSlide": "Перейти к слайду {{n}}",
+    "switchToDark": "Переключить на темную тему",
+    "switchToLight": "Переключить на светлую тему"
+  },
+  "dataUnavailable": "Данные недоступны",
+  "technicalWin": "Техническая победа",
+  "noEvents": "Нет событий для отображения"
 }

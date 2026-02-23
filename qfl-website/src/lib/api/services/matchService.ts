@@ -15,6 +15,7 @@ import {
   transformMatchEvents,
 } from '../transformers/matchTransformers';
 import { BackendLineupResponse, BackendLiveEventsResponse } from '../adapters/matchAdapter';
+import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 interface GamesResponse {
   items: Game[];
@@ -40,7 +41,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch games');
+      throw new Error(response.error?.message || getErrorMessage('fetchGames'));
     }
 
     return response.data.items;
@@ -56,7 +57,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch match');
+      throw new Error(response.error?.message || getErrorMessage('fetchMatch'));
     }
 
     return response.data;
@@ -72,7 +73,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch player stats');
+      throw new Error(response.error?.message || getErrorMessage('loadStats'));
     }
 
     return response.data;
@@ -88,7 +89,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch lineup');
+      throw new Error(response.error?.message || getErrorMessage('fetchLineup'));
     }
 
     // Применить трансформацию: shirt_number → number
@@ -105,7 +106,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch events');
+      throw new Error(response.error?.message || getErrorMessage('fetchEvents'));
     }
 
     // Применить трансформацию для событий
@@ -139,7 +140,7 @@ export const matchService = {
     );
 
     if (!response.success) {
-      throw new Error(response.error?.message || 'Failed to fetch matches');
+      throw new Error(response.error?.message || getErrorMessage('fetchGames'));
     }
 
     return response.data;

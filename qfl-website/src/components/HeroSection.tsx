@@ -83,14 +83,14 @@ export function HeroSection() {
       <>
         <button
           onClick={goToPrevious}
-          aria-label="Предыдущий слайд"
+          aria-label={t('accessibility.previousSlide')}
           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all"
         >
           <ChevronLeft className="w-5 h-5 text-white" />
         </button>
         <button
           onClick={goToNext}
-          aria-label="Следующий слайд"
+          aria-label={t('accessibility.nextSlide')}
           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all"
         >
           <ChevronRight className="w-5 h-5 text-white" />
@@ -109,7 +109,7 @@ export function HeroSection() {
               setDirection('next');
               setCurrentIndex(index);
             }}
-            aria-label={`Перейти к слайду ${index + 1}`}
+            aria-label={t('accessibility.goToSlide', { n: index + 1 })}
             className={`relative h-1 rounded-full overflow-hidden transition-all duration-300 hover:bg-white/50 ${
               index === currentIndex ? 'w-8 bg-white/30' : 'w-4 bg-white/30'
             }`}

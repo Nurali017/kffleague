@@ -67,5 +67,14 @@
   },
   "coming_soon": "Жақында қосылады",
   "staff_title": "Жаттықтырушылар",
-  "transfers_title": "Трансферлер"
+  "transfers_title": "Трансферлер",
+  "lastMatch": "Соңғы матч",
+  "teamForm": "Команда формасы",
+  "upcomingMatches": "Алдағы матчтар",
+  "noPlayedMatches": "Ойналған матчтар жоқ",
+  "noUpcomingMatches": "Алдағы матчтар жоқ",
+  "noSquadData": "Құрам туралы деректер жоқ",
+  "allMatches": "Барлық матчтар",
+  "total": "Барлығы",
+  "keyStats": "Негізгі статистика"
 }
