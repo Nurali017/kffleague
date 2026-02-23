@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { SuperCupHero } from './SuperCupHero';
 
 const { useMatchCenterMock, useTournamentMock } = vi.hoisted(() => ({
@@ -104,6 +104,18 @@ describe('SuperCupHero', () => {
     // minutes and seconds are both '00'
     expect(screen.getAllByText('00').length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText('До начала матча')).toBeInTheDocument();
+  });
+
+  it('renders countdown and CTA inside shared bottom backplate', () => {
+    render(<SuperCupHero />);
+
+    const backplate = screen.getByTestId('supercup-bottom-backplate');
+    expect(backplate).toBeInTheDocument();
+
+    const scope = within(backplate);
+    expect(scope.getByLabelText('До начала матча')).toBeInTheDocument();
+    expect(scope.getByRole('link', { name: 'Купить билет' })).toBeInTheDocument();
+    expect(scope.getByRole('link', { name: /Открыть матч/ })).toBeInTheDocument();
   });
 
   it('hides countdown when match has started', () => {

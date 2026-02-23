@@ -11,6 +11,8 @@
   "sortByDate": "По дате",
   "sortByViews": "По просмотрам",
   "sortByLikes": "По лайкам",
+  "dateFrom": "Дата от",
+  "dateTo": "Дата до",
   "clearFilters": "Сбросить фильтры",
   "filter": "Фильтр",
   "noResults": "Новостей не найдено",

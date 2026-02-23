@@ -13,5 +13,10 @@ describe('TeamPageTabs', () => {
     await user.click(screen.getByRole('button', { name: /Матчи/i }));
     expect(onChange).toHaveBeenCalledWith('matches');
   });
-});
 
+  it('does not render staff tab in navigation', () => {
+    renderWithProviders(<TeamPageTabs activeTab="overview" onChange={vi.fn()} />);
+
+    expect(screen.queryByRole('button', { name: /Персонал/i })).not.toBeInTheDocument();
+  });
+});

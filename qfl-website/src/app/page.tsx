@@ -68,16 +68,19 @@ export default async function HomePage() {
   const leaderboardLimit = 5;
   const secondLeagueMatchLimit = 6;
 
-  // Pre-season: matches show the new season (2026), stats/leaderboards/table fall back to previous
+  // Pre-season: matches show the new season (2026), stats/leaderboards fall back to previous
   const preSeasonFallback = !PRE_SEASON_CONFIG.seasonStarted && effectiveSeasonId === PRE_SEASON_CONFIG.currentSeasonId;
   const displaySeasonId = effectiveSeasonId; // matches always use current season
   const leaderboardSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
   const statsSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
-  const tableSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
+  const tableSeasonId = currentTournamentId === 'pl'
+    ? PRE_SEASON_CONFIG.currentSeasonId
+    : effectiveSeasonId;
   const homeMatchesQueryPlan = getHomeMatchesQueryPlan({
     tournamentId: currentTournamentId,
     seasonId: displaySeasonId,
     currentRound: tournament?.currentRound ?? null,
+    totalRounds: tournament?.totalRounds ?? null,
   });
 
   const homeMatchFiltersHash = homeMatchesQueryPlan.source === 'matchCenter'
@@ -345,14 +348,18 @@ export default async function HomePage() {
     { id: 3, title: 'Премьер-лиганың 21-турының үздік голдары', youtubeId: 'K_6ov7ERSuE' },
     { id: 4, title: 'Премьер-лиганың 20-турының үздік голдары', youtubeId: 'hSb0s6kj_JA' },
   ];
+  const showSuperCupHero = currentTournamentId === 'pl' && SUPER_CUP_HERO_ENABLED;
+  const heroContainerClassName = showSuperCupHero
+    ? 'lg:col-span-9 h-[520px] sm:h-[500px] lg:h-[580px]'
+    : 'lg:col-span-9 h-[420px] sm:h-[500px] lg:h-[580px]';
 
   return (
     <RoutePrefetchProvider value={prefetch}>
       <div className="max-w-[1400px] mx-auto px-4 py-6 md:py-10 space-y-6 md:space-y-8 dark:bg-dark-bg">
         {/* Row 1: Hero + HomeMatches */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
-          <div className="lg:col-span-9 h-[420px] sm:h-[500px] lg:h-[580px]">
-            {currentTournamentId === 'pl' && SUPER_CUP_HERO_ENABLED ? <SuperCupHero /> : <HeroSection />}
+          <div className={heroContainerClassName}>
+            {showSuperCupHero ? <SuperCupHero /> : <HeroSection />}
           </div>
           <div className="lg:col-span-3 lg:min-h-[500px]">
             <HomeMatches />

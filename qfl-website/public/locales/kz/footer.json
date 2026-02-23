@@ -1,9 +1,15 @@
 {
+  "brand": {
+    "logoAlt": "Қазақстан Премьер-лигасы",
+    "country": "ҚАЗАҚСТАН",
+    "premierLeague": "ПРЕМЬЕР-ЛИГАСЫ",
+    "sponsor": "ALATAU CITY BANK"
+  },
   "tournaments": {
     "title": "ТУРНИРЛЕР",
     "premierLeague": "ПРЕМЬЕР-ЛИГА",
     "firstLeague": "БІРІНШІ ЛИГА",
-    "cup": "OLIMPBET ҚАЗАҚСТАН КУБОГІ",
+    "cup": "OLIMPBET ҚАЗАҚСТАН КУБОГЫ",
     "superCup": "СУПЕРКУБОК",
     "secondLeague": "ЕКІНШІ ЛИГА",
     "womenLeague": "ӘЙЕЛДЕР ЛИГАСЫ"
@@ -17,6 +23,12 @@
   },
   "partners": {
     "techPartner": "Ресми технологиялық, деректер және инновациялық серіктес"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "telegram": "Telegram",
+    "youtube": "YouTube"
   },
   "copyright": "© {{year}} Қазақстан Премьер-лигасы. Материалдарды пайдалану кезінде ресми сайтқа сілтеме беру қажет."
 }

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils/cn';
-import { TEAM_PAGE_TABS, TeamPageTab } from './tabState';
+import { TEAM_PAGE_NAV_TABS, TeamPageTab } from './tabState';
 
 interface TeamPageTabsProps {
   activeTab: TeamPageTab;
@@ -63,7 +63,7 @@ export function TeamPageTabs({
               ref={scrollerRef}
               className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2.5 md:py-3 flex-1 min-w-0"
             >
-              {TEAM_PAGE_TABS.map((tab) => {
+              {TEAM_PAGE_NAV_TABS.map((tab) => {
                 const isActive = activeTab === tab;
 
                 return (

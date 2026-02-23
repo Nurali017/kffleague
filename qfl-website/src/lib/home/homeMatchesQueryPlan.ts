@@ -11,6 +11,7 @@ interface GetHomeMatchesQueryPlanOptions {
   tournamentId: string;
   seasonId: number;
   currentRound: number | null;
+  totalRounds?: number | null;
   seasonStarted?: boolean;
 }
 
@@ -49,6 +50,23 @@ export function getHomeMatchesQueryPlan(
         limit: HOME_MATCHES_PRESEASON_LIMIT,
       },
     };
+  }
+
+  if (options.tournamentId === '1l' || options.tournamentId === 'el') {
+    const normalizedTotalRounds = Number(options.totalRounds);
+    const normalizedCurrentRound = Number(options.currentRound);
+    const lastTour = Number.isInteger(normalizedTotalRounds) && normalizedTotalRounds > 0
+      ? normalizedTotalRounds
+      : Number.isInteger(normalizedCurrentRound) && normalizedCurrentRound > 0
+        ? normalizedCurrentRound
+        : null;
+
+    if (lastTour !== null) {
+      return {
+        source: 'tour',
+        tour: lastTour,
+      };
+    }
   }
 
   if (options.currentRound !== null) {

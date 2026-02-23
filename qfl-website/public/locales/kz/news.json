@@ -11,8 +11,10 @@
   "sortByDate": "Күні бойынша",
   "sortByViews": "Көрілім бойынша",
   "sortByLikes": "Лайктар бойынша",
-  "clearFilters": "Сүзгілерді тазалау",
-  "filter": "Сүзгі",
+  "dateFrom": "Күні (бастап)",
+  "dateTo": "Күні (дейін)",
+  "clearFilters": "Фильтр тазалау",
+  "filter": "Фильтр",
   "noResults": "Жаңалықтар табылмады",
   "previous": "Артқа",
   "next": "Алға",
@@ -33,9 +35,9 @@
     "next": "Келесі сурет"
   },
   "filters": {
-    "filter": "Сүзгі",
+    "filter": "Фильтр",
     "searchNews": "Жаңалықтарды іздеу...",
-    "resetFilters": "Сүзгілерді өшіру"
+    "resetFilters": "Фильтр өшіру"
   },
   "pagination": {
     "label": "Жаңалықтарды парақтау",

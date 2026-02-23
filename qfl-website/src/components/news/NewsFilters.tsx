@@ -49,15 +49,37 @@ export function NewsFilters({
     onFilterChange({ ...filters, sort });
   };
 
+  const handleDateFromChange = (value: string) => {
+    onFilterChange({ ...filters, dateFrom: value || undefined });
+  };
+
+  const handleDateToChange = (value: string) => {
+    onFilterChange({ ...filters, dateTo: value || undefined });
+  };
+
   const handleClearFilters = () => {
     setSearchInput('');
     onFilterChange({
       article_type: filters.article_type,
       championship_code: filters.championship_code,
+      sort: undefined,
+      dateFrom: undefined,
+      dateTo: undefined,
     }); // Keep article_type and tournament filter
   };
 
-  const hasActiveFilters = filters.search || filters.sort;
+  const hasActiveFilters = Boolean(
+    filters.search ||
+    (filters.sort && filters.sort !== 'date_desc') ||
+    filters.dateFrom ||
+    filters.dateTo
+  );
+  const activeFiltersCount = [
+    Boolean(filters.search),
+    Boolean(filters.sort && filters.sort !== 'date_desc'),
+    Boolean(filters.dateFrom),
+    Boolean(filters.dateTo),
+  ].filter(Boolean).length;
 
   return (
     <div className={`mb-6 ${className}`}>
@@ -75,7 +97,7 @@ export function NewsFilters({
           {t('filter', 'Фильтр')}
           {hasActiveFilters && (
             <span className="ml-1 px-2 py-0.5 bg-accent text-white text-xs rounded-full">
-              {[filters.search, filters.sort].filter(Boolean).length}
+              {activeFiltersCount}
             </span>
           )}
         </button>
@@ -91,12 +113,12 @@ export function NewsFilters({
             : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border'
         }`}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
-          {/* Search Input */}
-          <div className="lg:col-span-8">
-            <div className="relative">
-              <Search
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-4">
+            {/* Search Input */}
+            <div className="lg:col-span-4">
+              <div className="relative">
+                <Search
+                  className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
                   isHero ? 'text-gray-400 dark:text-white/50' : 'text-gray-400 dark:text-slate-500'
                 }`}
               />
@@ -123,11 +145,11 @@ export function NewsFilters({
                   <X className="w-4 h-4" />
                 </button>
               )}
+              </div>
             </div>
-          </div>
 
-          {/* Sort Select */}
-          <div className="lg:col-span-3">
+            {/* Sort Select */}
+            <div className="lg:col-span-3">
             <div className="relative">
               <select
                 value={filters.sort || 'date_desc'}
@@ -156,11 +178,41 @@ export function NewsFilters({
                   isHero ? 'text-gray-400 dark:text-white/50' : 'text-gray-400 dark:text-slate-500'
                 }`}
               />
+              </div>
             </div>
-          </div>
 
-          {/* Clear Filters Button */}
-          {hasActiveFilters && (
+            {/* Date From */}
+            <div className="lg:col-span-2">
+              <input
+                type="date"
+                value={filters.dateFrom || ''}
+                onChange={(e) => handleDateFromChange(e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 ${
+                  isHero
+                    ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
+                    : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
+                }`}
+                aria-label={t('dateFrom', 'Дата от')}
+              />
+            </div>
+
+            {/* Date To */}
+            <div className="lg:col-span-2">
+              <input
+                type="date"
+                value={filters.dateTo || ''}
+                onChange={(e) => handleDateToChange(e.target.value)}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-blue-500 ${
+                  isHero
+                    ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
+                    : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
+                }`}
+                aria-label={t('dateTo', 'Дата до')}
+              />
+            </div>
+
+            {/* Clear Filters Button */}
+            {hasActiveFilters && (
             <div className="lg:col-span-1">
               <button
                 onClick={handleClearFilters}
@@ -189,6 +241,39 @@ export function NewsFilters({
                 {t('search', 'Поиск')}: {filters.search}
                 <button
                   onClick={() => handleSearchChange('')}
+                  className="hover:bg-white/20 rounded-full p-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.sort && filters.sort !== 'date_desc' && (
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-primary dark:bg-cyan-700'
+              }`}>
+                {t('sortByDate', 'Сортировка')}: {filters.sort}
+              </span>
+            )}
+            {filters.dateFrom && (
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-primary dark:bg-cyan-700'
+              }`}>
+                {t('dateFrom', 'Дата от')}: {filters.dateFrom}
+                <button
+                  onClick={() => handleDateFromChange('')}
+                  className="hover:bg-white/20 rounded-full p-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+            {filters.dateTo && (
+              <span className={`inline-flex items-center gap-1 px-3 py-1 text-white text-sm rounded-full ${
+                isHero ? 'bg-white/20' : 'bg-primary dark:bg-cyan-700'
+              }`}>
+                {t('dateTo', 'Дата до')}: {filters.dateTo}
+                <button
+                  onClick={() => handleDateToChange('')}
                   className="hover:bg-white/20 rounded-full p-0.5"
                 >
                   <X className="w-3 h-3" />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseTeamPageTab } from '../tabState';
+import { parseTeamPageTab, TEAM_PAGE_NAV_TABS } from '../tabState';
 
 describe('team tab state', () => {
   it('parses valid tabs', () => {
@@ -16,5 +16,8 @@ describe('team tab state', () => {
     expect(parseTeamPageTab(undefined)).toBeNull();
     expect(parseTeamPageTab(null)).toBeNull();
   });
-});
 
+  it('excludes staff from navigation tabs', () => {
+    expect(TEAM_PAGE_NAV_TABS).not.toContain('staff');
+  });
+});

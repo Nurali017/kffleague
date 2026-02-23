@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -29,6 +29,11 @@ import {
 } from '@/components/player/playerPageVariants';
 import { SeasonTournamentSelector, SeasonTournamentItem } from '@/components/shared/SeasonTournamentSelector';
 import { PRE_SEASON_CONFIG } from '@/config/tournaments';
+import {
+  buildCanonicalPlayerQueryParams,
+  inferTournamentIdFromItem,
+  resolveDefaultPlayerSeasonId,
+} from '@/lib/utils/playerSeasonSelection';
 
 // Loading skeleton component
 function PlayerPageSkeleton() {
@@ -104,6 +109,8 @@ function extractTournamentName(seasonName: string | null): string {
 
 export default function PlayerProfilePage() {
   const params = useParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const rawPlayerId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const parsedPlayerId = Number.parseInt(rawPlayerId ?? '', 10);
@@ -125,24 +132,16 @@ export default function PlayerProfilePage() {
     }));
   }, [apiTournaments]);
 
-  // Season from URL or first available from tournaments
-  // Pre-season: prefer previous season if available in player's tournaments
   const seasonFromUrl = searchParams.get('season');
+  const tournamentFromUrl = searchParams.get('tournament');
   const defaultSeasonId = useMemo(() => {
-    if (seasonFromUrl) {
-      const parsed = Number(seasonFromUrl);
-      if (Number.isFinite(parsed)) return parsed;
-    }
-    if (!PRE_SEASON_CONFIG.seasonStarted) {
-      // Try the exact PL previous season first
-      const prevItem = selectorItems.find((item) => item.seasonId === PRE_SEASON_CONFIG.previousSeasonId);
-      if (prevItem) return prevItem.seasonId;
-      // Fallback: any 2025 season the player participated in (e.g. 1L, Cup)
-      const any2025 = selectorItems.find((item) => item.year === '2025');
-      if (any2025) return any2025.seasonId;
-    }
-    return selectorItems[0]?.seasonId ?? null;
-  }, [seasonFromUrl, selectorItems]);
+    return resolveDefaultPlayerSeasonId({
+      items: selectorItems,
+      seasonFromUrl,
+      tournamentFromUrl,
+      preSeasonConfig: PRE_SEASON_CONFIG,
+    });
+  }, [seasonFromUrl, selectorItems, tournamentFromUrl]);
 
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
 
@@ -154,6 +153,46 @@ export default function PlayerProfilePage() {
   }, [defaultSeasonId, selectedSeasonId]);
 
   const effectiveSeasonId = selectedSeasonId ?? defaultSeasonId;
+  const selectedSeasonItem = useMemo(() => {
+    if (effectiveSeasonId === null) return null;
+    return selectorItems.find((item) => item.seasonId === effectiveSeasonId) ?? null;
+  }, [effectiveSeasonId, selectorItems]);
+
+  // Keep URL in sync with effective player page context
+  useEffect(() => {
+    if (effectiveSeasonId === null) {
+      return;
+    }
+
+    const inferredTournamentId = selectedSeasonItem
+      ? inferTournamentIdFromItem(selectedSeasonItem)
+      : null;
+
+    const nextParams = buildCanonicalPlayerQueryParams(
+      new URLSearchParams(searchParams.toString()),
+      {
+        seasonId: effectiveSeasonId,
+        inferredTournamentId,
+        currentTournamentFromUrl: tournamentFromUrl,
+      }
+    );
+
+    const currentQuery = searchParams.toString();
+    const nextQuery = nextParams.toString();
+    if (nextQuery === currentQuery) {
+      return;
+    }
+
+    const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+    router.replace(nextUrl, { scroll: false });
+  }, [
+    effectiveSeasonId,
+    pathname,
+    router,
+    searchParams,
+    selectedSeasonItem,
+    tournamentFromUrl,
+  ]);
 
   // Fetch all player data
   const { player: apiPlayer, loading: playerLoading, error: playerError } = usePlayerDetail(playerId, effectiveSeasonId ?? undefined);

@@ -42,6 +42,52 @@ describe('getHomeMatchesQueryPlan', () => {
     });
   });
 
+  it('returns last tour for first league when totalRounds is available', () => {
+    const plan = getHomeMatchesQueryPlan({
+      tournamentId: '1l',
+      seasonId: 85,
+      currentRound: null,
+      totalRounds: 30,
+    });
+
+    expect(plan).toEqual({
+      source: 'tour',
+      tour: 30,
+    });
+  });
+
+  it('returns current round for women league when totalRounds is missing', () => {
+    const plan = getHomeMatchesQueryPlan({
+      tournamentId: 'el',
+      seasonId: 84,
+      currentRound: 18,
+      totalRounds: null,
+    });
+
+    expect(plan).toEqual({
+      source: 'tour',
+      tour: 18,
+    });
+  });
+
+  it('falls back to match center for first league when both rounds are missing', () => {
+    const plan = getHomeMatchesQueryPlan({
+      tournamentId: '1l',
+      seasonId: 85,
+      currentRound: null,
+      totalRounds: null,
+    });
+
+    expect(plan.source).toBe('matchCenter');
+    if (plan.source !== 'matchCenter') return;
+
+    expect(plan.matchCenterFilters).toEqual({
+      season_id: 85,
+      group_by_date: true,
+      limit: HOME_MATCHES_DEFAULT_LIMIT,
+    });
+  });
+
   it('returns default match center query when round is missing outside pre-season mode', () => {
     const plan = getHomeMatchesQueryPlan({
       tournamentId: 'pl',

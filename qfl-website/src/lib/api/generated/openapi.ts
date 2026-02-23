@@ -1,6 +1,6 @@
 /**
  * AUTO-GENERATED FILE. DO NOT EDIT.
- * Source: http://localhost:8000/openapi.json
+ * Source: local app.openapi() snapshot
  * Run: npm run gen:api-types
  */
 export type paths = {
@@ -304,6 +304,23 @@ export type paths = {
         patch: operations["update_material_api_v1_admin_news_materials__group_id__patch"];
         trace?: never;
     };
+    "/api/v1/admin/news/materials/{group_id}/article-type": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Set Material Article Type */
+        patch: operations["set_material_article_type_api_v1_admin_news_materials__group_id__article_type_patch"];
+        trace?: never;
+    };
     "/api/v1/admin/news/materials/{group_id}/translation/{lang}": {
         parameters: {
             query?: never;
@@ -321,41 +338,7 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/ops/live/active-games": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Live Active Games */
-        get: operations["live_active_games_api_v1_admin_ops_live_active_games_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/live/events/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Live Events */
-        get: operations["live_events_api_v1_admin_ops_live_events__game_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/live/start/{game_id}": {
+    "/api/v1/admin/news/materials/classify": {
         parameters: {
             query?: never;
             header?: never;
@@ -364,280 +347,8 @@ export type paths = {
         };
         get?: never;
         put?: never;
-        /** Live Start */
-        post: operations["live_start_api_v1_admin_ops_live_start__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/live/stop/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Live Stop */
-        post: operations["live_stop_api_v1_admin_ops_live_stop__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/live/sync-events/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Live Sync Events */
-        post: operations["live_sync_events_api_v1_admin_ops_live_sync_events__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/live/sync-lineup/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Live Sync Lineup */
-        post: operations["live_sync_lineup_api_v1_admin_ops_live_sync_lineup__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/all-game-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync All Game Events */
-        post: operations["sync_all_game_events_api_v1_admin_ops_sync_all_game_events_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/finished-lineups-positions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Finished Lineups Positions */
-        post: operations["sync_finished_lineups_positions_api_v1_admin_ops_sync_finished_lineups_positions_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/full": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Full */
-        post: operations["sync_full_api_v1_admin_ops_sync_full_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/game-events/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Game Events */
-        post: operations["sync_game_events_api_v1_admin_ops_sync_game_events__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/game-lineup/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Game Lineup */
-        post: operations["sync_game_lineup_api_v1_admin_ops_sync_game_lineup__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/game-stats/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Game Stats */
-        post: operations["sync_game_stats_api_v1_admin_ops_sync_game_stats__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/games": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Games */
-        post: operations["sync_games_api_v1_admin_ops_sync_games_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/player-season-stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Player Season Stats */
-        post: operations["sync_player_season_stats_api_v1_admin_ops_sync_player_season_stats_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/players": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Players */
-        post: operations["sync_players_api_v1_admin_ops_sync_players_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/score-table": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Score Table */
-        post: operations["sync_score_table_api_v1_admin_ops_sync_score_table_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/team-logos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Team Logos */
-        post: operations["sync_team_logos_api_v1_admin_ops_sync_team_logos_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/team-season-stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Team Season Stats */
-        post: operations["sync_team_season_stats_api_v1_admin_ops_sync_team_season_stats_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/ops/sync/teams": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Sync Teams */
-        post: operations["sync_teams_api_v1_admin_ops_sync_teams_post"];
+        /** Classify Materials */
+        post: operations["classify_materials_api_v1_admin_news_materials_classify_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -787,25 +498,25 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/playoff-brackets": {
+    "/api/v1/admin/season-participants": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Playoff Brackets */
-        get: operations["list_playoff_brackets_api_v1_admin_playoff_brackets_get"];
+        /** List Season Participants */
+        get: operations["list_season_participants_api_v1_admin_season_participants_get"];
         put?: never;
-        /** Create Playoff Bracket */
-        post: operations["create_playoff_bracket_api_v1_admin_playoff_brackets_post"];
+        /** Create Season Participant */
+        post: operations["create_season_participant_api_v1_admin_season_participants_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/playoff-brackets/{id}": {
+    "/api/v1/admin/season-participants/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -815,12 +526,47 @@ export type paths = {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete Playoff Bracket */
-        delete: operations["delete_playoff_bracket_api_v1_admin_playoff_brackets__id__delete"];
+        /** Delete Season Participant */
+        delete: operations["delete_season_participant_api_v1_admin_season_participants__id__delete"];
         options?: never;
         head?: never;
-        /** Update Playoff Bracket */
-        patch: operations["update_playoff_bracket_api_v1_admin_playoff_brackets__id__patch"];
+        /** Update Season Participant */
+        patch: operations["update_season_participant_api_v1_admin_season_participants__id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/seasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Seasons */
+        get: operations["list_seasons_api_v1_admin_seasons_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/seasons/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Season */
+        get: operations["get_season_api_v1_admin_seasons__id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Season */
+        patch: operations["update_season_api_v1_admin_seasons__id__patch"];
         trace?: never;
     };
     "/api/v1/admin/stages": {
@@ -859,40 +605,41 @@ export type paths = {
         patch: operations["update_stage_api_v1_admin_stages__id__patch"];
         trace?: never;
     };
-    "/api/v1/admin/team-tournaments": {
+    "/api/v1/admin/team-of-week": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Team Tournaments */
-        get: operations["list_team_tournaments_api_v1_admin_team_tournaments_get"];
+        /** List Team Of Week */
+        get: operations["list_team_of_week_api_v1_admin_team_of_week_get"];
         put?: never;
-        /** Create Team Tournament */
-        post: operations["create_team_tournament_api_v1_admin_team_tournaments_post"];
+        /** Create Team Of Week */
+        post: operations["create_team_of_week_api_v1_admin_team_of_week_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/admin/team-tournaments/{id}": {
+    "/api/v1/admin/team-of-week/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get Team Of Week */
+        get: operations["get_team_of_week_api_v1_admin_team_of_week__id__get"];
         put?: never;
         post?: never;
-        /** Delete Team Tournament */
-        delete: operations["delete_team_tournament_api_v1_admin_team_tournaments__id__delete"];
+        /** Delete Team Of Week */
+        delete: operations["delete_team_of_week_api_v1_admin_team_of_week__id__delete"];
         options?: never;
         head?: never;
-        /** Update Team Tournament */
-        patch: operations["update_team_tournament_api_v1_admin_team_tournaments__id__patch"];
+        /** Update Team Of Week */
+        patch: operations["update_team_of_week_api_v1_admin_team_of_week__id__patch"];
         trace?: never;
     };
     "/api/v1/admin/users": {
@@ -987,6 +734,29 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/championships/front-map": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Front Map
+         * @description Return current season mapping for frontend tournament IDs.
+         *
+         *     Uses the `frontend_code` column on seasons to build the map.
+         *     For each frontend_code, picks the current (active) season.
+         */
+        get: operations["get_front_map_api_v1_championships_front_map_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/championships/tree": {
         parameters: {
             query?: never;
@@ -996,7 +766,7 @@ export type paths = {
         };
         /**
          * Get Championships Tree
-         * @description Get full tree: Championship → Tournaments → Seasons.
+         * @description Get full tree: Championship → Seasons.
          */
         get: operations["get_championships_tree_api_v1_championships_tree_get"];
         put?: never;
@@ -1340,18 +1110,22 @@ export type paths = {
          *
          *     Filters:
          *     - season_id: Filter by season (defaults to current season)
+         *     - group: Filter by group name using season_participants
+         *     - final: Show only games from season.final_stage_ids
          *     - team_id: Filter by single team (home or away)
          *     - team_ids: Filter by multiple teams (home or away) - use ?team_ids=1&team_ids=5
          *     - tour: Filter by single tour/round number
          *     - tours: Filter by multiple tours - use ?tours=18&tours=19&tours=20
-         *     - month: Filter by month (1-12, requires year)
-         *     - year: Year for month filter
+         *     - month: Filter by month (1-12). Works independently or with year
+         *     - year: Year for month filter (used when month is provided)
          *     - date_from: Start of date range
          *     - date_to: End of date range
          *     - status: Filter by match status (upcoming, finished, live, all)
          *     - hide_past: Hide matches before today
          *     - group_by_date: Group results by date with formatted labels
          *     - lang: Language for localized fields (kz, ru, en)
+         *
+         *     `group` and `final=true` cannot be used together.
          */
         get: operations["get_games_api_v1_games_get"];
         put?: never;
@@ -1423,46 +1197,6 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/live/active-games": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Active Games
-         * @description Get list of currently live games.
-         */
-        get: operations["get_active_games_api_v1_live_active_games_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/live/connections/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Websocket Connections
-         * @description Get number of WebSocket connections for a game.
-         */
-        get: operations["get_websocket_connections_api_v1_live_connections__game_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/live/events/{game_id}": {
         parameters: {
             query?: never;
@@ -1477,98 +1211,6 @@ export type paths = {
         get: operations["get_game_events_api_v1_live_events__game_id__get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/live/start/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Start Live Sync
-         * @description Start live tracking for a match.
-         *
-         *     - Syncs lineup if not already done
-         *     - Sets is_live=True
-         *     - Syncs initial events
-         *     - Broadcasts game_started status to connected clients
-         */
-        post: operations["start_live_sync_api_v1_live_start__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/live/stop/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Stop Live Sync
-         * @description Stop live tracking for a match.
-         *
-         *     - Sets is_live=False
-         *     - Broadcasts game_ended status to connected clients
-         */
-        post: operations["stop_live_sync_api_v1_live_stop__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/live/sync-events/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Events
-         * @description Sync live events for a match.
-         *
-         *     Fetches events from SOTA and broadcasts new ones via WebSocket.
-         */
-        post: operations["sync_events_api_v1_live_sync_events__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/live/sync-lineup/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Lineup
-         * @description Sync pre-game lineup for a match.
-         *
-         *     Fetches lineup from SOTA /em/ endpoints and saves to database.
-         */
-        post: operations["sync_lineup_api_v1_live_sync_lineup__game_id__post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1615,6 +1257,26 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/news/{news_id}/like": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Toggle News Like
+         * @description Toggle like for a news article (IP-based).
+         */
+        post: operations["toggle_news_like_api_v1_news__news_id__like_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/news/{news_id}/navigation": {
         parameters: {
             query?: never;
@@ -1629,6 +1291,46 @@ export type paths = {
         get: operations["get_news_navigation_api_v1_news__news_id__navigation_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/{news_id}/reactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get News Reactions
+         * @description Get view/like counts and whether current IP has liked.
+         */
+        get: operations["get_news_reactions_api_v1_news__news_id__reactions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/news/{news_id}/view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record News View
+         * @description Increment view counter for a news article.
+         */
+        post: operations["record_news_view_api_v1_news__news_id__view_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1993,7 +1695,7 @@ export type paths = {
         };
         /**
          * Get Season Bracket
-         * @description Get playoff bracket for a season.
+         * @description Get playoff bracket for a season, derived from games and stages.
          */
         get: operations["get_season_bracket_api_v1_seasons__season_id__bracket_get"];
         put?: never;
@@ -2204,7 +1906,7 @@ export type paths = {
          * @description Get league table for a season.
          *
          *     Filters:
-         *     - group: Filter by group name (from TeamTournament.group_name)
+         *     - group: Filter by group name (from SeasonParticipant.group_name)
          *     - tour_from: Starting matchweek (inclusive)
          *     - tour_to: Ending matchweek (inclusive)
          *     - home_away: "home" for home games only, "away" for away games only
@@ -2261,240 +1963,20 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/sync/all-game-events": {
+    "/api/v1/team-of-week": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /**
-         * Sync All Game Events
-         * @description Sync events for all games in a season.
+         * Get Team Of Week
+         * @description Get team of the week / season entries.
          */
-        post: operations["sync_all_game_events_api_v1_sync_all_game_events_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/full": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
+        get: operations["get_team_of_week_api_v1_team_of_week_get"];
         put?: never;
-        /**
-         * Sync Full
-         * @description Perform full data synchronization from SOTA API.
-         */
-        post: operations["sync_full_api_v1_sync_full_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/game-events/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Game Events
-         * @description Sync events (goals, cards, substitutions) for a specific game.
-         */
-        post: operations["sync_game_events_api_v1_sync_game_events__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/game-lineup/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Game Lineup
-         * @description Sync pre-game lineup (referees, coaches, lineups) for a specific game.
-         */
-        post: operations["sync_game_lineup_api_v1_sync_game_lineup__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/game-stats/{game_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Game Stats
-         * @description Sync statistics for a specific game.
-         */
-        post: operations["sync_game_stats_api_v1_sync_game_stats__game_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/games": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Games
-         * @description Sync games for a specific season.
-         */
-        post: operations["sync_games_api_v1_sync_games_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/player-season-stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Player Season Stats
-         * @description Sync player season stats for ALL players from SOTA API v2 (50+ metrics).
-         */
-        post: operations["sync_player_season_stats_api_v1_sync_player_season_stats_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/players": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Players
-         * @description Sync players for a specific season.
-         */
-        post: operations["sync_players_api_v1_sync_players_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/score-table": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Score Table
-         * @description Sync league table for a specific season.
-         */
-        post: operations["sync_score_table_api_v1_sync_score_table_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/team-logos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Team Logos
-         * @description Sync team logos from MinIO storage to database.
-         */
-        post: operations["sync_team_logos_api_v1_sync_team_logos_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/team-season-stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Team Season Stats
-         * @description Sync team season stats for ALL teams from SOTA API v2 (92 metrics).
-         */
-        post: operations["sync_team_season_stats_api_v1_sync_team_season_stats_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sync/teams": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sync Teams
-         * @description Sync teams from SOTA API.
-         */
-        post: operations["sync_teams_api_v1_sync_teams_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2613,6 +2095,26 @@ export type paths = {
          * @description Get players for a team in a specific season.
          */
         get: operations["get_team_players_api_v1_teams__team_id__players_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teams/{team_id}/seasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Team Seasons
+         * @description Get all seasons a team has participated in, based on games data.
+         */
+        get: operations["get_team_seasons_api_v1_teams__team_id__seasons_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2909,6 +2411,60 @@ export type components = {
             /** Name */
             name: string;
         };
+        /** AdminNewsArticleTypeUpdateRequest */
+        AdminNewsArticleTypeUpdateRequest: {
+            /** Article Type */
+            article_type?: string | null;
+        };
+        /** AdminNewsClassifyRequest */
+        AdminNewsClassifyRequest: {
+            /**
+             * Apply
+             * @default false
+             */
+            apply: boolean;
+            /** Championship Code */
+            championship_code?: string | null;
+            /** Date From */
+            date_from?: string | null;
+            /** Date To */
+            date_to?: string | null;
+            /** Limit */
+            limit?: number | null;
+            /**
+             * Min Confidence
+             * @default 0.7
+             */
+            min_confidence: number;
+            /**
+             * Only Unclassified
+             * @default true
+             */
+            only_unclassified: boolean;
+        };
+        /** AdminNewsClassifyResponse */
+        AdminNewsClassifyResponse: {
+            /** Needs Review */
+            needs_review: components["schemas"]["AdminNewsNeedsReviewItem"][];
+            summary: components["schemas"]["AdminNewsClassifySummary"];
+            /** Updated Group Ids */
+            updated_group_ids: string[];
+        };
+        /** AdminNewsClassifySummary */
+        AdminNewsClassifySummary: {
+            /** Classified Groups */
+            classified_groups: number;
+            /** Dry Run */
+            dry_run: boolean;
+            /** Needs Review Count */
+            needs_review_count: number;
+            /** Total Groups */
+            total_groups: number;
+            /** Unchanged Groups */
+            unchanged_groups: number;
+            /** Updated Groups */
+            updated_groups: number;
+        };
         /** AdminNewsMaterialCreateRequest */
         AdminNewsMaterialCreateRequest: {
             kz: components["schemas"]["AdminNewsTranslationPayload"];
@@ -2938,6 +2494,24 @@ export type components = {
             kz?: components["schemas"]["AdminNewsTranslationPayload"] | null;
             ru?: components["schemas"]["AdminNewsTranslationPayload"] | null;
         };
+        /** AdminNewsNeedsReviewItem */
+        AdminNewsNeedsReviewItem: {
+            /** Confidence */
+            confidence: number;
+            /**
+             * Group Id
+             * Format: uuid
+             */
+            group_id: string;
+            /** Reason */
+            reason?: string | null;
+            /** Representative News Id */
+            representative_news_id?: number | null;
+            /** Representative Title */
+            representative_title?: string | null;
+            /** Source */
+            source: string;
+        };
         /** AdminNewsTranslationCreateRequest */
         AdminNewsTranslationCreateRequest: {
             data: components["schemas"]["AdminNewsTranslationPayload"];
@@ -2948,6 +2522,8 @@ export type components = {
             article_type?: string | null;
             /** Category */
             category?: string | null;
+            /** Championship Code */
+            championship_code?: string | null;
             /** Content */
             content?: string | null;
             /** Content Text */
@@ -2969,8 +2545,6 @@ export type components = {
             source_url?: string | null;
             /** Title */
             title: string;
-            /** Tournament Id */
-            tournament_id?: string | null;
             /** Video Url */
             video_url?: string | null;
         };
@@ -2980,6 +2554,8 @@ export type components = {
             article_type?: string | null;
             /** Category */
             category?: string | null;
+            /** Championship Code */
+            championship_code?: string | null;
             /** Content */
             content?: string | null;
             /** Content Text */
@@ -3010,8 +2586,6 @@ export type components = {
             source_url?: string | null;
             /** Title */
             title: string;
-            /** Tournament Id */
-            tournament_id?: string | null;
             /**
              * Updated At
              * Format: date-time
@@ -3320,87 +2894,168 @@ export type components = {
             /** Top Role Kz */
             top_role_kz?: string | null;
         };
-        /** AdminPlayoffBracketCreateRequest */
-        AdminPlayoffBracketCreateRequest: {
-            /** Game Id */
-            game_id?: string | null;
+        /** AdminSeasonParticipantCreateRequest */
+        AdminSeasonParticipantCreateRequest: {
             /**
-             * Is Third Place
+             * Fine Points
+             * @default 0
+             */
+            fine_points: number;
+            /** Group Name */
+            group_name?: string | null;
+            /**
+             * Is Disqualified
              * @default false
              */
-            is_third_place: boolean;
-            /**
-             * Is Visible
-             * @default true
-             */
-            is_visible: boolean;
-            /** Round Name */
-            round_name: string;
+            is_disqualified: boolean;
             /** Season Id */
             season_id: number;
             /**
-             * Side
-             * @default left
-             */
-            side: string;
-            /**
              * Sort Order
-             * @default 1
+             * @default 0
              */
             sort_order: number;
+            /** Stadium Id */
+            stadium_id?: number | null;
+            /** Team Id */
+            team_id: number;
         };
-        /** AdminPlayoffBracketResponse */
-        AdminPlayoffBracketResponse: {
-            /** Game Id */
-            game_id?: string | null;
+        /** AdminSeasonParticipantResponse */
+        AdminSeasonParticipantResponse: {
+            /**
+             * Fine Points
+             * @default 0
+             */
+            fine_points: number;
+            /** Group Name */
+            group_name?: string | null;
             /** Id */
             id: number;
             /**
-             * Is Third Place
+             * Is Disqualified
              * @default false
              */
-            is_third_place: boolean;
-            /**
-             * Is Visible
-             * @default true
-             */
-            is_visible: boolean;
-            /** Round Name */
-            round_name: string;
+            is_disqualified: boolean;
             /** Season Id */
             season_id: number;
             /**
-             * Side
-             * @default left
-             */
-            side: string;
-            /**
              * Sort Order
-             * @default 1
+             * @default 0
              */
             sort_order: number;
+            /** Stadium Id */
+            stadium_id?: number | null;
+            /** Team Id */
+            team_id: number;
         };
-        /** AdminPlayoffBracketsListResponse */
-        AdminPlayoffBracketsListResponse: {
+        /** AdminSeasonParticipantsListResponse */
+        AdminSeasonParticipantsListResponse: {
             /** Items */
-            items: components["schemas"]["AdminPlayoffBracketResponse"][];
+            items: components["schemas"]["AdminSeasonParticipantResponse"][];
             /** Total */
             total: number;
         };
-        /** AdminPlayoffBracketUpdateRequest */
-        AdminPlayoffBracketUpdateRequest: {
-            /** Game Id */
-            game_id?: string | null;
-            /** Is Third Place */
-            is_third_place?: boolean | null;
-            /** Is Visible */
-            is_visible?: boolean | null;
-            /** Round Name */
-            round_name?: string | null;
-            /** Side */
-            side?: string | null;
+        /** AdminSeasonParticipantUpdateRequest */
+        AdminSeasonParticipantUpdateRequest: {
+            /** Fine Points */
+            fine_points?: number | null;
+            /** Group Name */
+            group_name?: string | null;
+            /** Is Disqualified */
+            is_disqualified?: boolean | null;
             /** Sort Order */
             sort_order?: number | null;
+            /** Stadium Id */
+            stadium_id?: number | null;
+        };
+        /** AdminSeasonResponse */
+        AdminSeasonResponse: {
+            /** Championship Id */
+            championship_id?: number | null;
+            /** Colors */
+            colors?: Record<string, never> | null;
+            /** Current Round */
+            current_round?: number | null;
+            /** Final Stage Ids */
+            final_stage_ids?: number[] | null;
+            /** Frontend Code */
+            frontend_code?: string | null;
+            /**
+             * Has Bracket
+             * @default false
+             */
+            has_bracket: boolean;
+            /**
+             * Has Table
+             * @default false
+             */
+            has_table: boolean;
+            /** Id */
+            id: number;
+            /** Logo */
+            logo?: string | null;
+            /** Name */
+            name: string;
+            /** Name En */
+            name_en?: string | null;
+            /** Name Kz */
+            name_kz?: string | null;
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
+            /** Sponsor Name */
+            sponsor_name?: string | null;
+            /** Sponsor Name Kz */
+            sponsor_name_kz?: string | null;
+            /**
+             * Sync Enabled
+             * @default true
+             */
+            sync_enabled: boolean;
+            /** Total Rounds */
+            total_rounds?: number | null;
+            /** Tournament Format */
+            tournament_format?: string | null;
+            /** Tournament Type */
+            tournament_type?: string | null;
+        };
+        /** AdminSeasonsListResponse */
+        AdminSeasonsListResponse: {
+            /** Items */
+            items: components["schemas"]["AdminSeasonResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** AdminSeasonUpdateRequest */
+        AdminSeasonUpdateRequest: {
+            /** Colors */
+            colors?: Record<string, never> | null;
+            /** Current Round */
+            current_round?: number | null;
+            /** Final Stage Ids */
+            final_stage_ids?: number[] | null;
+            /** Frontend Code */
+            frontend_code?: string | null;
+            /** Has Bracket */
+            has_bracket?: boolean | null;
+            /** Has Table */
+            has_table?: boolean | null;
+            /** Logo */
+            logo?: string | null;
+            /** Sort Order */
+            sort_order?: number | null;
+            /** Sponsor Name */
+            sponsor_name?: string | null;
+            /** Sponsor Name Kz */
+            sponsor_name_kz?: string | null;
+            /** Total Rounds */
+            total_rounds?: number | null;
+            /** Tournament Format */
+            tournament_format?: string | null;
+            /** Tournament Type */
+            tournament_type?: string | null;
         };
         /** AdminStageCreateRequest */
         AdminStageCreateRequest: {
@@ -3460,79 +3115,62 @@ export type components = {
             /** Stage Number */
             stage_number?: number | null;
         };
-        /** AdminTeamTournamentCreateRequest */
-        AdminTeamTournamentCreateRequest: {
+        /** AdminTeamOfWeekCreateRequest */
+        AdminTeamOfWeekCreateRequest: {
             /**
-             * Fine Points
-             * @default 0
+             * Locale
+             * @default ru
              */
-            fine_points: number;
-            /** Group Name */
-            group_name?: string | null;
+            locale: string;
             /**
-             * Is Disqualified
-             * @default false
+             * Payload
+             * @default []
              */
-            is_disqualified: boolean;
+            payload: unknown[];
+            /** Scheme */
+            scheme?: string | null;
             /** Season Id */
             season_id: number;
-            /**
-             * Sort Order
-             * @default 0
-             */
-            sort_order: number;
-            /** Stadium Id */
-            stadium_id?: number | null;
-            /** Team Id */
-            team_id: number;
+            /** Tour Key */
+            tour_key: string;
         };
-        /** AdminTeamTournamentResponse */
-        AdminTeamTournamentResponse: {
-            /**
-             * Fine Points
-             * @default 0
-             */
-            fine_points: number;
-            /** Group Name */
-            group_name?: string | null;
-            /** Id */
-            id: number;
-            /**
-             * Is Disqualified
-             * @default false
-             */
-            is_disqualified: boolean;
-            /** Season Id */
-            season_id: number;
-            /**
-             * Sort Order
-             * @default 0
-             */
-            sort_order: number;
-            /** Stadium Id */
-            stadium_id?: number | null;
-            /** Team Id */
-            team_id: number;
-        };
-        /** AdminTeamTournamentsListResponse */
-        AdminTeamTournamentsListResponse: {
+        /** AdminTeamOfWeekListResponse */
+        AdminTeamOfWeekListResponse: {
             /** Items */
-            items: components["schemas"]["AdminTeamTournamentResponse"][];
+            items: components["schemas"]["AdminTeamOfWeekResponse"][];
             /** Total */
             total: number;
         };
-        /** AdminTeamTournamentUpdateRequest */
-        AdminTeamTournamentUpdateRequest: {
-            /** Fine Points */
-            fine_points?: number | null;
-            /** Group Name */
-            group_name?: string | null;
-            /** Is Disqualified */
-            is_disqualified?: boolean | null;
-            /** Sort Order */
-            sort_order?: number | null;
-            /** Stadium Id */
-            stadium_id?: number | null;
+        /** AdminTeamOfWeekResponse */
+        AdminTeamOfWeekResponse: {
+            /** Id */
+            id: number;
+            /** Locale */
+            locale: string;
+            /**
+             * Payload
+             * @default []
+             */
+            payload: unknown[];
+            /** Scheme */
+            scheme?: string | null;
+            /** Season Id */
+            season_id: number;
+            /** Tour Key */
+            tour_key: string;
+        };
+        /** AdminTeamOfWeekUpdateRequest */
+        AdminTeamOfWeekUpdateRequest: {
+            /** Locale */
+            locale?: string | null;
+            /** Payload */
+            payload?: unknown[] | null;
+            /** Scheme */
+            scheme?: string | null;
+            /** Season Id */
+            season_id?: number | null;
+            /** Tour Key */
+            tour_key?: string | null;
         };
         /** AdminUserCreateRequest */
         AdminUserCreateRequest: {
@@ -3720,15 +3358,15 @@ export type components = {
             id: number;
             /** Name */
             name: string;
+            /**
+             * Seasons
+             * @default []
+             */
+            seasons: components["schemas"]["SeasonBrief"][];
             /** Short Name */
             short_name?: string | null;
             /** Slug */
             slug?: string | null;
-            /**
-             * Tournaments
-             * @default []
-             */
-            tournaments: components["schemas"]["TournamentInChampionship"][];
         };
         /** CityListResponse */
         CityListResponse: {
@@ -3982,8 +3620,6 @@ export type components = {
             season_id: number;
             /** Season Name */
             season_name?: string | null;
-            /** Tournament Name */
-            tournament_name?: string | null;
             /**
              * Upcoming Games
              * @default []
@@ -4057,10 +3693,55 @@ export type components = {
             /** Url */
             url: string;
         };
-        /** FinishedLineupsBackfillRequest */
-        FinishedLineupsBackfillRequest: {
-            /** Game Ids */
-            game_ids?: string[] | null;
+        /** FrontMapEntry */
+        FrontMapEntry: {
+            /** Colors */
+            colors?: Record<string, never> | null;
+            /** Current Round */
+            current_round?: number | null;
+            /** Final Stage Ids */
+            final_stage_ids?: number[] | null;
+            /**
+             * Has Bracket
+             * @default false
+             */
+            has_bracket: boolean;
+            /**
+             * Has Table
+             * @default false
+             */
+            has_table: boolean;
+            /** Logo */
+            logo?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Season Id */
+            season_id?: number | null;
+            /**
+             * Seasons
+             * @default []
+             */
+            seasons: components["schemas"]["SeasonOption"][];
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
+            /** Sponsor Name */
+            sponsor_name?: string | null;
+            /** Total Rounds */
+            total_rounds?: number | null;
+            /** Tournament Format */
+            tournament_format?: string | null;
+            /** Tournament Type */
+            tournament_type?: string | null;
+        };
+        /** FrontMapResponse */
+        FrontMapResponse: {
+            /** Items */
+            items: {
+                [key: string]: components["schemas"]["FrontMapEntry"];
+            };
         };
         /**
          * GameEventResponse
@@ -4158,6 +3839,16 @@ export type components = {
             home_team?: components["schemas"]["TeamInGame"] | null;
             /** Id */
             id: number;
+            /**
+             * Is Schedule Tentative
+             * @default false
+             */
+            is_schedule_tentative: boolean;
+            /**
+             * Is Technical
+             * @default false
+             */
+            is_technical: boolean;
             /** Protocol Url */
             protocol_url?: string | null;
             /** Season Id */
@@ -4232,36 +3923,6 @@ export type components = {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
-        /**
-         * LineupSyncResponse
-         * @description Response for lineup sync operation.
-         */
-        LineupSyncResponse: {
-            /** Away Formation */
-            away_formation?: string | null;
-            /** Error */
-            error?: string | null;
-            /** Game Id */
-            game_id: number;
-            /** Home Formation */
-            home_formation?: string | null;
-            /** Lineup Count */
-            lineup_count: number;
-        };
-        /**
-         * LiveSyncResponse
-         * @description Response for live sync operations.
-         */
-        LiveSyncResponse: {
-            /** Error */
-            error?: string | null;
-            /** Game Id */
-            game_id: number;
-            /** Is Live */
-            is_live?: boolean | null;
-            /** New Events Count */
-            new_events_count?: number | null;
-        };
         /** LoginRequest */
         LoginRequest: {
             /** Email */
@@ -4298,6 +3959,8 @@ export type components = {
         NewsListItem: {
             /** Article Type */
             article_type?: string | null;
+            /** Championship Code */
+            championship_code?: string | null;
             /** Excerpt */
             excerpt?: string | null;
             /** Id */
@@ -4317,8 +3980,6 @@ export type components = {
             slider_order?: number | null;
             /** Title */
             title: string;
-            /** Tournament Id */
-            tournament_id?: string | null;
         };
         /** NewsListResponse */
         NewsListResponse: {
@@ -4332,6 +3993,18 @@ export type components = {
             per_page: number;
             /** Total */
             total: number;
+        };
+        /** NewsReactionsResponse */
+        NewsReactionsResponse: {
+            /**
+             * Liked
+             * @default false
+             */
+            liked: boolean;
+            /** Likes */
+            likes: number;
+            /** Views */
+            views: number;
         };
         /** PageListResponse */
         PageListResponse: {
@@ -4592,6 +4265,8 @@ export type components = {
         PlayerTournamentHistoryEntry: {
             /** Assists */
             assists?: number | null;
+            /** Championship Name */
+            championship_name?: string | null;
             /** Games Played */
             games_played?: number | null;
             /** Goals */
@@ -4610,8 +4285,6 @@ export type components = {
             team_id?: number | null;
             /** Team Name */
             team_name?: string | null;
-            /** Tournament Name */
-            tournament_name?: string | null;
             /** Yellow Cards */
             yellow_cards?: number | null;
         };
@@ -4682,6 +4355,8 @@ export type components = {
             date_end?: string | null;
             /** Date Start */
             date_start?: string | null;
+            /** Frontend Code */
+            frontend_code?: string | null;
             /** Id */
             id: number;
             /** Name */
@@ -4691,6 +4366,8 @@ export type components = {
              * @default true
              */
             sync_enabled: boolean;
+            /** Tournament Type */
+            tournament_type?: string | null;
         };
         /**
          * SeasonGoalsByPeriodResponse
@@ -4712,7 +4389,7 @@ export type components = {
         SeasonGroupsResponse: {
             /** Groups */
             groups: {
-                [key: string]: components["schemas"]["TeamTournamentResponse"][];
+                [key: string]: components["schemas"]["SeasonParticipantResponse"][];
             };
             /** Season Id */
             season_id: number;
@@ -4724,27 +4401,106 @@ export type components = {
             /** Total */
             total: number;
         };
+        /** SeasonOption */
+        SeasonOption: {
+            /** Name */
+            name?: string | null;
+            /** Season Id */
+            season_id: number;
+            /** Year */
+            year: number;
+        };
+        /** SeasonParticipantListResponse */
+        SeasonParticipantListResponse: {
+            /** Items */
+            items: components["schemas"]["SeasonParticipantResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** SeasonParticipantResponse */
+        SeasonParticipantResponse: {
+            /**
+             * Fine Points
+             * @default 0
+             */
+            fine_points: number;
+            /** Group Name */
+            group_name?: string | null;
+            /** Id */
+            id: number;
+            /**
+             * Is Disqualified
+             * @default false
+             */
+            is_disqualified: boolean;
+            /** Season Id */
+            season_id: number;
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
+            /** Team Id */
+            team_id: number;
+            /** Team Logo */
+            team_logo?: string | null;
+            /** Team Name */
+            team_name?: string | null;
+        };
         /** SeasonResponse */
         SeasonResponse: {
+            /** Championship Id */
+            championship_id?: number | null;
             /** Championship Name */
             championship_name?: string | null;
+            /** Colors */
+            colors?: Record<string, never> | null;
+            /** Current Round */
+            current_round?: number | null;
             /** Date End */
             date_end?: string | null;
             /** Date Start */
             date_start?: string | null;
+            /** Final Stage Ids */
+            final_stage_ids?: number[] | null;
+            /** Frontend Code */
+            frontend_code?: string | null;
+            /**
+             * Has Bracket
+             * @default false
+             */
+            has_bracket: boolean;
+            /**
+             * Has Table
+             * @default false
+             */
+            has_table: boolean;
             /** Id */
             id: number;
+            /** Logo */
+            logo?: string | null;
             /** Name */
             name: string;
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
+            /** Sponsor Name */
+            sponsor_name?: string | null;
+            /** Sponsor Name Kz */
+            sponsor_name_kz?: string | null;
             /**
              * Sync Enabled
              * @default true
              */
             sync_enabled: boolean;
-            /** Tournament Id */
-            tournament_id?: number | null;
-            /** Tournament Name */
-            tournament_name?: string | null;
+            /** Total Rounds */
+            total_rounds?: number | null;
+            /** Tournament Format */
+            tournament_format?: string | null;
+            /** Tournament Type */
+            tournament_type?: string | null;
         };
         /**
          * SeasonStatisticsResponse
@@ -4849,19 +4605,6 @@ export type components = {
             /** Stage Number */
             stage_number?: number | null;
         };
-        /** SyncResponse */
-        SyncResponse: {
-            /** Details */
-            details?: Record<string, never> | null;
-            /** Message */
-            message: string;
-            status: components["schemas"]["SyncStatus"];
-        };
-        /**
-         * SyncStatus
-         * @enum {string}
-         */
-        SyncStatus: "success" | "partial" | "failed";
         /** TeamBrief */
         TeamBrief: {
             /** Id */
@@ -4898,6 +4641,71 @@ export type components = {
             team_name: string;
             /** Url */
             url: string;
+        };
+        /** TeamOfWeekListResponse */
+        TeamOfWeekListResponse: {
+            /** Items */
+            items: components["schemas"]["TeamOfWeekResponse"][];
+            /** Total */
+            total: number;
+        };
+        /** TeamOfWeekPlayerEntry */
+        TeamOfWeekPlayerEntry: {
+            /** Amplua */
+            amplua?: string | null;
+            /**
+             * Captain
+             * @default false
+             */
+            captain: boolean;
+            /** Command Id */
+            command_id?: number | null;
+            /** Command Logo */
+            command_logo?: string | null;
+            /**
+             * First Name
+             * @default
+             */
+            first_name: string;
+            /**
+             * Full Name
+             * @default
+             */
+            full_name: string;
+            /** Id */
+            id?: string | null;
+            /**
+             * Last Name
+             * @default
+             */
+            last_name: string;
+            /** Number */
+            number?: number | null;
+            /** Ordering */
+            ordering?: number | null;
+            /** Person Id */
+            person_id?: number | null;
+            /** Photo */
+            photo?: string | null;
+            /** Position */
+            position?: string | null;
+            /** Team */
+            team?: Record<string, never> | null;
+        };
+        /** TeamOfWeekResponse */
+        TeamOfWeekResponse: {
+            /** Id */
+            id: number;
+            /** Locale */
+            locale: string;
+            /** Payload */
+            payload: components["schemas"]["TeamOfWeekPlayerEntry"][];
+            /** Scheme */
+            scheme?: string | null;
+            /** Season Id */
+            season_id: number;
+            /** Tour Key */
+            tour_key: string;
         };
         /** TeamOverviewCoachPreview */
         TeamOverviewCoachPreview: {
@@ -5063,12 +4871,12 @@ export type components = {
         };
         /** TeamOverviewSeason */
         TeamOverviewSeason: {
+            /** Championship Id */
+            championship_id?: number | null;
             /** Id */
             id: number;
             /** Name */
             name: string;
-            /** Tournament Id */
-            tournament_id?: number | null;
         };
         /** TeamOverviewStadium */
         TeamOverviewStadium: {
@@ -5176,6 +4984,26 @@ export type components = {
             team_logo?: string | null;
             /** Team Name */
             team_name?: string | null;
+        };
+        /** TeamSeasonEntry */
+        TeamSeasonEntry: {
+            /** Championship Name */
+            championship_name?: string | null;
+            /** Frontend Code */
+            frontend_code?: string | null;
+            /** Season Id */
+            season_id: number;
+            /** Season Name */
+            season_name?: string | null;
+            /** Season Year */
+            season_year?: number | null;
+        };
+        /** TeamSeasonsResponse */
+        TeamSeasonsResponse: {
+            /** Items */
+            items: components["schemas"]["TeamSeasonEntry"][];
+            /** Total */
+            total: number;
         };
         /** TeamSeasonStatsResponse */
         TeamSeasonStatsResponse: {
@@ -5391,55 +5219,6 @@ export type components = {
             sort_by: string;
             /** Total */
             total: number;
-        };
-        /** TeamTournamentListResponse */
-        TeamTournamentListResponse: {
-            /** Items */
-            items: components["schemas"]["TeamTournamentResponse"][];
-            /** Total */
-            total: number;
-        };
-        /** TeamTournamentResponse */
-        TeamTournamentResponse: {
-            /**
-             * Fine Points
-             * @default 0
-             */
-            fine_points: number;
-            /** Group Name */
-            group_name?: string | null;
-            /** Id */
-            id: number;
-            /**
-             * Is Disqualified
-             * @default false
-             */
-            is_disqualified: boolean;
-            /** Season Id */
-            season_id: number;
-            /**
-             * Sort Order
-             * @default 0
-             */
-            sort_order: number;
-            /** Team Id */
-            team_id: number;
-            /** Team Logo */
-            team_logo?: string | null;
-            /** Team Name */
-            team_name?: string | null;
-        };
-        /** TournamentInChampionship */
-        TournamentInChampionship: {
-            /** Id */
-            id: number;
-            /** Name */
-            name: string;
-            /**
-             * Seasons
-             * @default []
-             */
-            seasons: components["schemas"]["SeasonBrief"][];
         };
         /** ValidationError */
         ValidationError: {
@@ -6175,8 +5954,12 @@ export interface operations {
     list_materials_api_v1_admin_news_materials_get: {
         parameters: {
             query?: {
+                /** @description NEWS, ANALYTICS, or UNCLASSIFIED */
+                article_type?: string | null;
                 page?: number;
                 per_page?: number;
+                /** @description Search in title/excerpt/content */
+                search?: string | null;
             };
             header?: never;
             path?: never;
@@ -6334,6 +6117,41 @@ export interface operations {
             };
         };
     };
+    set_material_article_type_api_v1_admin_news_materials__group_id__article_type_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                group_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminNewsArticleTypeUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNewsMaterialResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_missing_translation_api_v1_admin_news_materials__group_id__translation__lang__post: {
         parameters: {
             query?: never;
@@ -6370,226 +6188,16 @@ export interface operations {
             };
         };
     };
-    live_active_games_api_v1_admin_ops_live_active_games_get: {
+    classify_materials_api_v1_admin_news_materials_classify_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    live_events_api_v1_admin_ops_live_events__game_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["GameEventsListResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    live_start_api_v1_admin_ops_live_start__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LiveSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    live_stop_api_v1_admin_ops_live_stop__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LiveSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    live_sync_events_api_v1_admin_ops_live_sync_events__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    live_sync_lineup_api_v1_admin_ops_live_sync_lineup__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LineupSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_all_game_events_api_v1_admin_ops_sync_all_game_events_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_finished_lineups_positions_api_v1_admin_ops_sync_finished_lineups_positions_post: {
-        parameters: {
-            query?: {
-                batch_size?: number;
-                limit?: number | null;
-                season_id?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
+        requestBody: {
             content: {
-                "application/json": components["schemas"]["FinishedLineupsBackfillRequest"] | null;
+                "application/json": components["schemas"]["AdminNewsClassifyRequest"];
             };
         };
         responses: {
@@ -6599,7 +6207,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SyncResponse"];
+                    "application/json": components["schemas"]["AdminNewsClassifyResponse"];
                 };
             };
             /** @description Validation Error */
@@ -6609,325 +6217,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_full_api_v1_admin_ops_sync_full_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_events_api_v1_admin_ops_sync_game_events__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_lineup_api_v1_admin_ops_sync_game_lineup__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_stats_api_v1_admin_ops_sync_game_stats__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_games_api_v1_admin_ops_sync_games_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_player_season_stats_api_v1_admin_ops_sync_player_season_stats_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_players_api_v1_admin_ops_sync_players_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_score_table_api_v1_admin_ops_sync_score_table_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_team_logos_api_v1_admin_ops_sync_team_logos_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-        };
-    };
-    sync_team_season_stats_api_v1_admin_ops_sync_team_season_stats_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_teams_api_v1_admin_ops_sync_teams_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
                 };
             };
         };
@@ -7416,7 +6705,7 @@ export interface operations {
             };
         };
     };
-    list_playoff_brackets_api_v1_admin_playoff_brackets_get: {
+    list_season_participants_api_v1_admin_season_participants_get: {
         parameters: {
             query: {
                 limit?: number;
@@ -7435,7 +6724,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminPlayoffBracketsListResponse"];
+                    "application/json": components["schemas"]["AdminSeasonParticipantsListResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7449,7 +6738,7 @@ export interface operations {
             };
         };
     };
-    create_playoff_bracket_api_v1_admin_playoff_brackets_post: {
+    create_season_participant_api_v1_admin_season_participants_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -7458,7 +6747,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AdminPlayoffBracketCreateRequest"];
+                "application/json": components["schemas"]["AdminSeasonParticipantCreateRequest"];
             };
         };
         responses: {
@@ -7468,7 +6757,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminPlayoffBracketResponse"];
+                    "application/json": components["schemas"]["AdminSeasonParticipantResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7482,7 +6771,7 @@ export interface operations {
             };
         };
     };
-    delete_playoff_bracket_api_v1_admin_playoff_brackets__id__delete: {
+    delete_season_participant_api_v1_admin_season_participants__id__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -7511,7 +6800,7 @@ export interface operations {
             };
         };
     };
-    update_playoff_bracket_api_v1_admin_playoff_brackets__id__patch: {
+    update_season_participant_api_v1_admin_season_participants__id__patch: {
         parameters: {
             query?: never;
             header?: never;
@@ -7522,7 +6811,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AdminPlayoffBracketUpdateRequest"];
+                "application/json": components["schemas"]["AdminSeasonParticipantUpdateRequest"];
             };
         };
         responses: {
@@ -7532,7 +6821,105 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminPlayoffBracketResponse"];
+                    "application/json": components["schemas"]["AdminSeasonParticipantResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_seasons_api_v1_admin_seasons_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSeasonsListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_season_api_v1_admin_seasons__id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSeasonResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_season_api_v1_admin_seasons__id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminSeasonUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminSeasonResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7676,12 +7063,14 @@ export interface operations {
             };
         };
     };
-    list_team_tournaments_api_v1_admin_team_tournaments_get: {
+    list_team_of_week_api_v1_admin_team_of_week_get: {
         parameters: {
-            query: {
+            query?: {
                 limit?: number;
+                locale?: string | null;
                 offset?: number;
-                season_id: number;
+                season_id?: number | null;
+                tour_key?: string | null;
             };
             header?: never;
             path?: never;
@@ -7695,7 +7084,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminTeamTournamentsListResponse"];
+                    "application/json": components["schemas"]["AdminTeamOfWeekListResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7709,7 +7098,7 @@ export interface operations {
             };
         };
     };
-    create_team_tournament_api_v1_admin_team_tournaments_post: {
+    create_team_of_week_api_v1_admin_team_of_week_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -7718,7 +7107,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AdminTeamTournamentCreateRequest"];
+                "application/json": components["schemas"]["AdminTeamOfWeekCreateRequest"];
             };
         };
         responses: {
@@ -7728,7 +7117,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminTeamTournamentResponse"];
+                    "application/json": components["schemas"]["AdminTeamOfWeekResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7742,7 +7131,38 @@ export interface operations {
             };
         };
     };
-    delete_team_tournament_api_v1_admin_team_tournaments__id__delete: {
+    get_team_of_week_api_v1_admin_team_of_week__id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminTeamOfWeekResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_team_of_week_api_v1_admin_team_of_week__id__delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -7771,7 +7191,7 @@ export interface operations {
             };
         };
     };
-    update_team_tournament_api_v1_admin_team_tournaments__id__patch: {
+    update_team_of_week_api_v1_admin_team_of_week__id__patch: {
         parameters: {
             query?: never;
             header?: never;
@@ -7782,7 +7202,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AdminTeamTournamentUpdateRequest"];
+                "application/json": components["schemas"]["AdminTeamOfWeekUpdateRequest"];
             };
         };
         responses: {
@@ -7792,7 +7212,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AdminTeamTournamentResponse"];
+                    "application/json": components["schemas"]["AdminTeamOfWeekResponse"];
                 };
             };
             /** @description Validation Error */
@@ -7980,6 +7400,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChampionshipResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_front_map_api_v1_championships_front_map_get: {
+        parameters: {
+            query?: {
+                lang?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FrontMapResponse"];
                 };
             };
             /** @description Validation Error */
@@ -8680,6 +8131,10 @@ export interface operations {
             query?: {
                 date_from?: string | null;
                 date_to?: string | null;
+                /** @description Show only final stage matches */
+                final?: boolean;
+                /** @description Filter by group name (e.g. 'A', 'B') */
+                group?: string | null;
                 group_by_date?: boolean;
                 hide_past?: boolean;
                 lang?: string;
@@ -8817,57 +8272,6 @@ export interface operations {
             };
         };
     };
-    get_active_games_api_v1_live_active_games_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    get_websocket_connections_api_v1_live_connections__game_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_game_events_api_v1_live_events__game_id__get: {
         parameters: {
             query?: never;
@@ -8899,142 +8303,26 @@ export interface operations {
             };
         };
     };
-    start_live_sync_api_v1_live_start__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LiveSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    stop_live_sync_api_v1_live_stop__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LiveSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_events_api_v1_live_sync_events__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_lineup_api_v1_live_sync_lineup__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LineupSyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     get_news_list_api_v1_news_get: {
         parameters: {
             query?: {
                 /** @description Filter by type: news or analytics */
                 article_type?: string | null;
+                /** @description Filter by championship code (pl, 1l, cup, 2l, el) */
+                championship_code?: string | null;
+                /** @description Filter from publish date (inclusive) */
+                date_from?: string | null;
+                /** @description Filter to publish date (inclusive) */
+                date_to?: string | null;
                 lang?: string;
                 /** @description Page number */
                 page?: number;
                 /** @description Items per page */
                 per_page?: number;
-                /** @description Filter by tournament ID (pl, 1l, cup, 2l, el) */
-                tournament_id?: string | null;
+                /** @description Search in title/excerpt/content */
+                search?: string | null;
+                /** @description Sorting mode */
+                sort?: string;
             };
             header?: never;
             path?: never;
@@ -9095,11 +8383,104 @@ export interface operations {
             };
         };
     };
+    toggle_news_like_api_v1_news__news_id__like_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                news_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_news_navigation_api_v1_news__news_id__navigation_get: {
         parameters: {
             query?: {
                 lang?: string;
             };
+            header?: never;
+            path: {
+                news_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_news_reactions_api_v1_news__news_id__reactions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                news_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsReactionsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    record_news_view_api_v1_news__news_id__view_post: {
+        parameters: {
+            query?: never;
             header?: never;
             path: {
                 news_id: number;
@@ -9164,11 +8545,11 @@ export interface operations {
     get_latest_news_api_v1_news_latest_get: {
         parameters: {
             query?: {
+                /** @description Filter by championship code (pl, 1l, cup, 2l, el) */
+                championship_code?: string | null;
                 lang?: string;
                 /** @description Number of news items */
                 limit?: number;
-                /** @description Filter by tournament ID (pl, 1l, cup, 2l, el) */
-                tournament_id?: string | null;
             };
             header?: never;
             path?: never;
@@ -9199,9 +8580,9 @@ export interface operations {
     get_slider_news_api_v1_news_slider_get: {
         parameters: {
             query?: {
+                /** @description Filter by championship code (pl, 1l, cup, 2l, el) */
+                championship_code?: string | null;
                 lang?: string;
-                /** @description Filter by tournament ID (pl, 1l, cup, 2l, el) */
-                tournament_id?: string | null;
             };
             header?: never;
             path?: never;
@@ -9852,6 +9233,8 @@ export interface operations {
     get_results_grid_api_v1_seasons__season_id__results_grid_get: {
         parameters: {
             query?: {
+                /** @description Show only final stage matches */
+                final?: boolean;
                 /** @description Filter by group name (e.g. 'A', 'B') */
                 group?: string | null;
                 lang?: string;
@@ -10020,6 +9403,8 @@ export interface operations {
     get_season_table_api_v1_seasons__season_id__table_get: {
         parameters: {
             query?: {
+                /** @description Show only final stage matches */
+                final?: boolean;
                 /** @description Filter by group name (e.g. 'A', 'B') */
                 group?: string | null;
                 /** @description Filter home/away games */
@@ -10115,7 +9500,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TeamTournamentListResponse"];
+                    "application/json": components["schemas"]["SeasonParticipantListResponse"];
                 };
             };
             /** @description Validation Error */
@@ -10129,10 +9514,12 @@ export interface operations {
             };
         };
     };
-    sync_all_game_events_api_v1_sync_all_game_events_post: {
+    get_team_of_week_api_v1_team_of_week_get: {
         parameters: {
-            query?: {
-                season_id?: number;
+            query: {
+                locale?: string;
+                season_id: number;
+                tour_key?: string | null;
             };
             header?: never;
             path?: never;
@@ -10146,7 +9533,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SyncResponse"];
+                    "application/json": components["schemas"]["TeamOfWeekListResponse"];
                 };
             };
             /** @description Validation Error */
@@ -10156,325 +9543,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_full_api_v1_sync_full_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_events_api_v1_sync_game_events__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_lineup_api_v1_sync_game_lineup__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_game_stats_api_v1_sync_game_stats__game_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                game_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_games_api_v1_sync_games_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_player_season_stats_api_v1_sync_player_season_stats_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_players_api_v1_sync_players_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_score_table_api_v1_sync_score_table_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_team_logos_api_v1_sync_team_logos_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-        };
-    };
-    sync_team_season_stats_api_v1_sync_team_season_stats_post: {
-        parameters: {
-            query?: {
-                season_id?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    sync_teams_api_v1_sync_teams_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SyncResponse"];
                 };
             };
         };
@@ -10674,6 +9742,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_team_seasons_api_v1_teams__team_id__seasons_get: {
+        parameters: {
+            query?: {
+                lang?: string;
+            };
+            header?: never;
+            path: {
+                team_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamSeasonsResponse"];
                 };
             };
             /** @description Validation Error */

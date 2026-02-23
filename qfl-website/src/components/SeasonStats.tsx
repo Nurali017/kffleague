@@ -54,13 +54,12 @@ interface StatItemProps {
   label: string;
   value: string;
   icon?: React.ReactNode;
-  isFirst?: boolean;
   isLast?: boolean;
 }
 
-function StatItem({ label, value, icon, isFirst, isLast }: StatItemProps) {
+function StatItem({ label, value, icon, isLast }: StatItemProps) {
   return (
-    <div className={`p-4 md:p-6 ${!isLast ? 'border-r border-gray-200 dark:border-dark-border sm:border-r' : ''} ${!isLast ? 'border-b sm:border-b-0' : ''} hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-all duration-200 group cursor-default`}>
+    <div className={`p-4 md:p-6 ${!isLast ? 'sm:border-r border-gray-200 dark:border-dark-border' : ''} ${!isLast ? 'border-b sm:border-b-0' : ''} hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-all duration-200 group cursor-default`}>
       <div className="text-[10px] md:text-xs font-bold text-gray-600 dark:text-slate-400 uppercase tracking-wide mb-2">
         {label}
       </div>
@@ -90,7 +89,7 @@ function StatsSkeleton() {
           {[...Array(4)].map((_, rowIndex) => (
             <div key={rowIndex} className={`grid grid-cols-1 sm:grid-cols-3 ${rowIndex < 3 ? 'border-b border-gray-200' : ''}`}>
               {[...Array(3)].map((_, colIndex) => (
-                <div key={colIndex} className={`p-4 md:p-6 ${colIndex < 2 ? 'border-r border-gray-200 sm:border-r' : ''} ${colIndex < 2 ? 'border-b sm:border-b-0' : ''}`}>
+                <div key={colIndex} className={`p-4 md:p-6 ${colIndex < 2 ? 'sm:border-r border-gray-200' : ''} ${colIndex < 2 ? 'border-b sm:border-b-0' : ''}`}>
                   <div className="h-3 w-24 bg-gray-200 dark:bg-dark-surface-soft rounded mb-3" />
                   <div className="h-8 w-16 bg-gray-200 dark:bg-dark-surface-soft rounded" />
                 </div>
@@ -158,13 +157,13 @@ export function SeasonStats({ seasonId: seasonIdProp }: SeasonStatsProps = {}) {
   return (
     <section className="py-4 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan">
+        <div className="mb-4 flex flex-col items-start gap-2 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-bold text-primary dark:text-accent-cyan sm:text-2xl">
             {seasonTitle}
           </h2>
           <Link
             href="/stats"
-            className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
+            className="group flex items-center text-sm font-medium text-gray-500 transition-colors hover:text-primary dark:text-slate-400 dark:hover:text-accent-cyan"
           >
             {t('seasonStats.moreData')}
             <svg className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +184,6 @@ export function SeasonStats({ seasonId: seasonIdProp }: SeasonStatsProps = {}) {
                   label={stat.label}
                   value={stat.value}
                   icon={stat.icon}
-                  isFirst={colIndex === 0}
                   isLast={colIndex === row.length - 1}
                 />
               ))}

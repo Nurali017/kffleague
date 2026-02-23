@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import Link from 'next/link';
 import { Youtube, Instagram, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,24 +11,22 @@ const TikTokIcon = () => (
 );
 
 export function Footer() {
-  const { t, i18n } = useTranslation('footer');
-  const { t: tCommon } = useTranslation('common');
-  const lang = i18n.language === 'kz' ? 'kz' : 'ru';
+  const { t } = useTranslation('footer');
   const currentYear = new Date().getFullYear();
 
   const tournaments = [
-    t('tournaments.premierLeague', 'ПРЕМЬЕР-ЛИГА'),
-    t('tournaments.firstLeague', 'БІРІНШІ ЛИГА'),
-    t('tournaments.cup', 'OLIMPBET ҚАЗАҚСТАН КУБОГЫ'),
-    t('tournaments.superCup', 'СУПЕРКУБОК'),
-    t('tournaments.secondLeague', 'ЕКІНШІ ЛИГА'),
-    t('tournaments.womenLeague', 'ӘЙЕЛДЕР ЛИГАСЫ'),
+    { key: 'tournaments.premierLeague', href: '/table?tournament=pl', defaultValue: 'ПРЕМЬЕР-ЛИГА' },
+    { key: 'tournaments.firstLeague', href: '/table?tournament=1l', defaultValue: 'ПЕРВАЯ ЛИГА' },
+    { key: 'tournaments.cup', href: '/table?tournament=cup', defaultValue: 'OLIMPBET КУБОК КАЗАХСТАНА' },
+    { key: 'tournaments.superCup', href: '/matches', defaultValue: 'СУПЕРКУБОК' },
+    { key: 'tournaments.secondLeague', href: '/table?tournament=2l', defaultValue: 'ВТОРАЯ ЛИГА' },
+    { key: 'tournaments.womenLeague', href: '/table?tournament=el', defaultValue: 'ЖЕНСКАЯ ЛИГА' },
   ];
 
   const info = [
-    t('info.news', 'ЖАҢАЛЫҚТАР'),
-    t('info.documents', 'ҚҰЖАТТАР'),
-    t('info.contacts', 'БАЙЛАНЫСТАР'),
+    { key: 'info.news', href: '/news', defaultValue: 'НОВОСТИ' },
+    { key: 'info.documents', href: '/league/documents', defaultValue: 'ДОКУМЕНТЫ' },
+    { key: 'info.contacts', href: '/contacts', defaultValue: 'КОНТАКТЫ' },
   ];
 
   return (
@@ -41,22 +39,23 @@ export function Footer() {
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 py-10 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-16">
           <div className="lg:col-span-3">
-            <a href="/" className="block mb-4">
+            <Link href="/" className="block mb-4">
               <img
                 src="/logo.png"
-                alt={tCommon('league.name', 'Қазақстан Премьер-Лигасы')}
+                alt={t('brand.logoAlt', 'Премьер-лига Казахстана')}
                 className="h-24 md:h-36 w-auto brightness-0 invert"
               />
-            </a>
+            </Link>
             <div className="text-white font-bold text-sm leading-tight">
-              <p>{tCommon('league.country', 'ҚАЗАҚСТАН')}</p>
-              <p>{tCommon('league.premierLeague', 'ПРЕМЬЕР-ЛИГАСЫ')}</p>
-              <p className="text-accent">{tCommon('league.sponsor', 'ALATAU CITY BANK')}</p>
+              <p>{t('brand.country', 'КАЗАХСТАН')}</p>
+              <p>{t('brand.premierLeague', 'ПРЕМЬЕР-ЛИГА')}</p>
+              <p className="text-accent">{t('brand.sponsor', 'ALATAU CITY BANK')}</p>
             </div>
             <a
               href="https://t.me/kffleague"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={t('social.telegram', 'Telegram')}
               className="flex items-center gap-2 mt-4 text-white/80 hover:text-white transition-colors text-sm"
             >
               <Send className="w-4 h-4" />
@@ -70,13 +69,13 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               {tournaments.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
+                <li key={item.key}>
+                  <Link
+                    href={item.href}
                     className="text-white/80 hover:text-white text-sm transition-colors"
                   >
-                    {item}
-                  </a>
+                    {t(item.key, item.defaultValue)}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -88,13 +87,13 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               {info.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
+                <li key={item.key}>
+                  <Link
+                    href={item.href}
                     className="text-white/80 hover:text-white text-sm transition-colors"
                   >
-                    {item}
-                  </a>
+                    {t(item.key, item.defaultValue)}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -111,10 +110,7 @@ export function Footer() {
 
             <div className="text-left lg:text-right">
               <p className="text-white/60 text-xs mb-2 max-w-[300px]">
-                {t('partners.techPartner', lang === 'kz'
-                  ? 'Ресми технологиялық, деректер және инновациялық серіктес'
-                  : 'Official Tech, Data & Innovation Partner'
-                )}
+                {t('partners.techPartner', 'Официальный технологический, дата- и инновационный партнер')}
               </p>
               <img src="/sota.svg" alt="SOTA" className="h-7 w-auto lg:ml-auto" />
             </div>
@@ -138,6 +134,7 @@ export function Footer() {
                 href="https://www.instagram.com/pflkaz/"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={t('social.instagram', 'Instagram')}
                 className="text-white/60 hover:text-white transition-colors"
               >
                 <Instagram className="w-5 h-5" />
@@ -146,6 +143,7 @@ export function Footer() {
                 href="https://www.tiktok.com/@kff_league?lang=ru-RU"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={t('social.tiktok', 'TikTok')}
                 className="text-white/60 hover:text-white transition-colors"
               >
                 <TikTokIcon />
@@ -154,6 +152,7 @@ export function Footer() {
                 href="https://t.me/kffleague"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={t('social.telegram', 'Telegram')}
                 className="text-white/60 hover:text-white transition-colors"
               >
                 <Send className="w-5 h-5" />
@@ -162,6 +161,7 @@ export function Footer() {
                 href="https://www.youtube.com/@KFFLEAGUE-2025"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={t('social.youtube', 'YouTube')}
                 className="text-white/60 hover:text-white transition-colors"
               >
                 <Youtube className="w-5 h-5" />

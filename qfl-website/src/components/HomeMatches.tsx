@@ -9,6 +9,8 @@ import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
 import { Game } from '@/types';
 import {
+  HOME_MATCHES_PRESEASON_DATE_FROM,
+  HOME_MATCHES_PRESEASON_DATE_TO,
   getHomeMatchesQueryPlan,
   getHomeMatchesTourFallback,
 } from '@/lib/home/homeMatchesQueryPlan';
@@ -34,6 +36,8 @@ interface DisplayGroup {
   games: Game[];
 }
 
+const HOME_MATCHES_DEFAULT_VISIBLE_COUNT = 8;
+
 export function HomeMatches() {
   const { t, i18n } = useTranslation('match');
   const { effectiveSeasonId, currentRound, currentTournament } = useTournament();
@@ -41,6 +45,7 @@ export function HomeMatches() {
     tournamentId: currentTournament.id,
     seasonId: effectiveSeasonId,
     currentRound,
+    totalRounds: currentTournament.totalRounds ?? null,
   });
   const useTourBasedMatches = homeMatchesQueryPlan.source === 'tour';
 
@@ -137,7 +142,34 @@ export function HomeMatches() {
         games: group.games,
       }));
 
-  const displayGroups: DisplayGroup[] = groupedForDisplay;
+  const isSuperCupAndRoundOneMode =
+    homeMatchesQueryPlan.source === 'matchCenter' &&
+    homeMatchesQueryPlan.matchCenterFilters.date_from === HOME_MATCHES_PRESEASON_DATE_FROM &&
+    homeMatchesQueryPlan.matchCenterFilters.date_to === HOME_MATCHES_PRESEASON_DATE_TO;
+
+  const displayGroups: DisplayGroup[] = isSuperCupAndRoundOneMode
+    ? groupedForDisplay
+    : groupedForDisplay.reduce<{ groups: DisplayGroup[]; remaining: number }>(
+        (acc, group) => {
+          if (acc.remaining <= 0) {
+            return acc;
+          }
+
+          const gamesForGroup = group.games.slice(0, acc.remaining);
+          if (gamesForGroup.length === 0) {
+            return acc;
+          }
+
+          acc.groups.push({
+            date: group.date,
+            dateLabel: group.dateLabel,
+            games: gamesForGroup,
+          });
+          acc.remaining -= gamesForGroup.length;
+          return acc;
+        },
+        { groups: [], remaining: HOME_MATCHES_DEFAULT_VISIBLE_COUNT }
+      ).groups;
 
   return (
     <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full flex flex-col overflow-hidden">

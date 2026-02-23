@@ -11,7 +11,8 @@ const { useMatchCenterMock, useMatchesMock, useTournamentMock } = vi.hoisted(() 
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, defaultValue?: string) => defaultValue ?? key,
+    t: (key: string, defaultValue?: unknown) =>
+      typeof defaultValue === 'string' ? defaultValue : key,
     i18n: { language: 'ru' },
   }),
 }));
@@ -57,10 +58,12 @@ function makeGame(id: number, homeName: string, awayName: string, date: string, 
 
 describe('HomeMatches', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
+
     useTournamentMock.mockReturnValue({
       effectiveSeasonId: 200,
       currentRound: 2,
-      currentTournament: { id: 'pl' },
+      currentTournament: { id: 'pl', totalRounds: null },
     });
 
     useMatchesMock.mockReturnValue({
@@ -135,5 +138,52 @@ describe('HomeMatches', () => {
       .filter((el) => /^\/matches\/\d+$/.test(el.getAttribute('href') ?? ''));
 
     expect(matchLinks).toHaveLength(9);
+  });
+
+  it('keeps compact list for non pre-season tournaments', () => {
+    useTournamentMock.mockReturnValue({
+      effectiveSeasonId: 85,
+      currentRound: null,
+      currentTournament: { id: '1l', totalRounds: 30 },
+    });
+
+    useMatchesMock.mockReturnValue({
+      matches: [
+        makeGame(6001, 'Тeam 1', 'Тeam 2', '2026-03-10', '12:00:00'),
+        makeGame(6002, 'Тeam 3', 'Тeam 4', '2026-03-10', '13:00:00'),
+        makeGame(6003, 'Тeam 5', 'Тeam 6', '2026-03-10', '14:00:00'),
+        makeGame(6004, 'Тeam 7', 'Тeam 8', '2026-03-10', '15:00:00'),
+        makeGame(6005, 'Тeam 9', 'Тeam 10', '2026-03-10', '16:00:00'),
+        makeGame(6006, 'Тeam 11', 'Тeam 12', '2026-03-11', '12:00:00'),
+        makeGame(6007, 'Тeam 13', 'Тeam 14', '2026-03-11', '13:00:00'),
+        makeGame(6008, 'Тeam 15', 'Тeam 16', '2026-03-11', '14:00:00'),
+        makeGame(6009, 'Тeam 17', 'Тeam 18', '2026-03-11', '15:00:00'),
+      ],
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+
+    render(<HomeMatches />);
+
+    expect(useMatchesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        seasonId: 85,
+        tour: 30,
+        enabled: true,
+      })
+    );
+
+    expect(useMatchCenterMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        enabled: false,
+      })
+    );
+
+    const matchLinks = screen
+      .getAllByRole('link')
+      .filter((el) => /^\/matches\/\d+$/.test(el.getAttribute('href') ?? ''));
+
+    expect(matchLinks).toHaveLength(8);
   });
 });
