@@ -6,6 +6,7 @@ import {
   TeamDetail,
   TeamOverviewResponse,
   TeamPlayersResponse,
+  TeamSeasonEntry,
   TeamStats,
 } from '@/types';
 import { Game } from '@/types/match';
@@ -186,6 +187,25 @@ export const teamService = {
         season_id: seasonId,
         ...(language ? { lang: language } : {}),
       }
+    );
+
+    if (!response.success) {
+      return [];
+    }
+
+    return response.data.items;
+  },
+
+  async getTeamSeasons(
+    teamId: number,
+    language?: string
+  ): Promise<TeamSeasonEntry[]> {
+    const response = await apiClient.get<{
+      items: TeamSeasonEntry[];
+      total: number;
+    }>(
+      ENDPOINTS.TEAM_SEASONS(teamId),
+      language ? { lang: language } : undefined
     );
 
     if (!response.success) {

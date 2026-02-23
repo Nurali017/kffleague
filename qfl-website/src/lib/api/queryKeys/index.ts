@@ -21,6 +21,8 @@ export const queryKeys = {
       ['/teams', teamId, 'games', seasonId, language] as const,
     coaches: (teamId: number, seasonId: number, language: string) =>
       ['/teams', teamId, 'coaches', seasonId, language] as const,
+    seasons: (teamId: number, language: string) =>
+      ['/teams', teamId, 'seasons', language] as const,
   },
   players: {
     byId: (playerId: number, seasonId: number, language: string) =>

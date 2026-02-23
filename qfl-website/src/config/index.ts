@@ -4,8 +4,8 @@ export const config = {
     serverBaseUrl: process.env.API_BASE_URL || 'http://localhost:8000/api/v1',
   },
   league: {
-    defaultSeasonId: Number(process.env.NEXT_PUBLIC_DEFAULT_SEASON_ID) || 61,
-    defaultTour: Number(process.env.NEXT_PUBLIC_DEFAULT_TOUR) || 26,
+    defaultSeasonId: Number(process.env.NEXT_PUBLIC_DEFAULT_SEASON_ID) || 200,
+    defaultTour: Number(process.env.NEXT_PUBLIC_DEFAULT_TOUR) || 1,
   },
   i18n: {
     defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'ru',

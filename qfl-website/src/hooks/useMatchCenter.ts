@@ -8,11 +8,12 @@ import { useRoutePrefetchValue } from '@/contexts/RoutePrefetchContext';
 
 interface UseMatchCenterOptions extends MatchCenterFilters {
   enabled?: boolean;
+  fetchAll?: boolean;
 }
 
 export function useMatchCenter(options: UseMatchCenterOptions = {}) {
   const { i18n } = useTranslation();
-  const { enabled = true, ...filters } = options;
+  const { enabled = true, fetchAll = false, ...filters } = options;
 
   const filtersWithDefaults: MatchCenterFilters = {
     group_by_date: true,
@@ -26,7 +27,11 @@ export function useMatchCenter(options: UseMatchCenterOptions = {}) {
 
   const { data, error, isLoading, mutate } = useSWR(
     enabled ? queryKeys.games.center(filtersHash) : null,
-    () => matchService.getMatchCenter(filtersWithDefaults) as Promise<GroupedMatchesResponse>,
+    () => (
+      fetchAll
+        ? matchService.getMatchCenterAll(filtersWithDefaults)
+        : matchService.getMatchCenter(filtersWithDefaults)
+    ) as Promise<GroupedMatchesResponse>,
     {
       fallbackData: prefetched,
     }

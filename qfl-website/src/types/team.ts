@@ -345,6 +345,12 @@ export interface TeamOverviewCoachPreview {
   country_name: string | null;
 }
 
+export interface TeamSeasonEntry {
+  season_id: number;
+  season_name: string | null;
+  championship_name: string | null;
+}
+
 export interface TeamOverviewResponse {
   team: TeamOverviewTeam;
   season: TeamOverviewSeason | null;

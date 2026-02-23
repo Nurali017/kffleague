@@ -39,7 +39,7 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
       - MINIO_SECURE=false
-      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - ALLOWED_ORIGINS=https://${SITE_DOMAIN}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
@@ -145,7 +145,7 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
       - MINIO_SECURE=false
-      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
       db:
@@ -170,7 +170,7 @@ services:
     environment:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
       - REDIS_URL=redis://qfl-redis:6379/0
-      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-61}
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     depends_on:
       db:

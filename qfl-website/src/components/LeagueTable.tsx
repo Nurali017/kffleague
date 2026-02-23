@@ -20,7 +20,7 @@ export function LeagueTable() {
   const { effectiveSeasonId, showTable, currentTournament } = useTournament();
   const { standings, loading, error, refetch } = useLeagueTable({
     seasonId: effectiveSeasonId,
-    limit: 14
+    limit: 16
   });
 
   // Show placeholder for non-table tournaments (e.g., Cup)
@@ -55,7 +55,7 @@ export function LeagueTable() {
   const getPositionDotColor = (position: number) => {
     if (position === 1) return 'bg-accent'; // Чемпион
     if (position <= 4) return 'bg-primary'; // Еврокубки
-    if (position === 14) return 'bg-red-500'; // Вылет
+    if (position === 16) return 'bg-red-500'; // Вылет
     return null; // No dot for regular positions
   };
 

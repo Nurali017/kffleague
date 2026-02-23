@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useId } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 interface Option {
@@ -12,11 +12,12 @@ interface Option {
 interface MultiSelectProps {
   options: Option[];
   selected: (number | string)[];
-  onChange: (selected: any[]) => void;
+  onChange: (selected: Array<number | string>) => void;
   placeholder?: string;
   className?: string;
-  isStringId?: boolean;
   variant?: 'default' | 'hero';
+  mode?: 'multiple' | 'single';
+  selectedCountLabel?: (count: number) => string;
 }
 
 export function MultiSelect({
@@ -25,11 +26,13 @@ export function MultiSelect({
   onChange,
   placeholder = 'Select...',
   className = '',
-  isStringId = false,
   variant = 'default',
+  mode = 'multiple',
+  selectedCountLabel,
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputGroupName = useId();
   const isHero = variant === 'hero';
 
   // Close on outside click
@@ -48,6 +51,16 @@ export function MultiSelect({
   }, [isOpen]);
 
   const toggleOption = (id: number | string) => {
+    if (mode === 'single') {
+      if (selected.includes(id)) {
+        onChange([]);
+      } else {
+        onChange([id]);
+      }
+      setIsOpen(false);
+      return;
+    }
+
     if (selected.includes(id)) {
       onChange(selected.filter(s => s !== id));
     } else {
@@ -78,7 +91,9 @@ export function MultiSelect({
           </span>
         ) : (
           <span className={isHero ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-slate-100'}>
-            {selectedOptions.length} выбрано
+            {selectedCountLabel
+              ? selectedCountLabel(selectedOptions.length)
+              : `${selectedOptions.length} selected`}
           </span>
         )}
         <ChevronDown
@@ -104,7 +119,8 @@ export function MultiSelect({
               }`}
             >
               <input
-                type="checkbox"
+                type={mode === 'single' ? 'radio' : 'checkbox'}
+                name={mode === 'single' ? inputGroupName : undefined}
                 checked={selected.includes(option.id)}
                 onChange={() => toggleOption(option.id)}
                 className={`w-4 h-4 text-primary rounded focus:ring-primary dark:focus:ring-blue-500 ${

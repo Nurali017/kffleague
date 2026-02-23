@@ -15,7 +15,7 @@ export const TOURNAMENT_COLORS: Record<string, TournamentColors> = {
 export const TOURNAMENTS: Record<string, Tournament> = {
   pl: {
     id: 'pl',  // Used for news filtering
-    seasonId: 61,
+    seasonId: 200,
     type: 'league',
     format: 'round_robin',
     name: {
@@ -35,8 +35,6 @@ export const TOURNAMENTS: Record<string, Tournament> = {
     order: 1,
     hasTable: true,
     hasBracket: false,
-    currentRound: 26,
-    totalRounds: 33,
   },
   '1l': {
     id: '1l',  // Used for news filtering
@@ -136,7 +134,7 @@ export const DEFAULT_TOURNAMENT_ID = 'pl';
 
 export const SEASONS: Season[] = [
   {
-    id: 0,
+    id: 200,
     year: '2026',
     tournaments: Object.values(TOURNAMENTS),
     isCurrentSeason: true,

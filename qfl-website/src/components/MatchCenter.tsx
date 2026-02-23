@@ -35,6 +35,7 @@ export function MatchCenter() {
   // Fetch data with current filters
   const { groups, total, loading, error, refetch } = useMatchCenter({
     season_id: filters.season_id || effectiveSeasonId,
+    fetchAll: true,
     ...filters,
   });
   const hasActiveFilters =

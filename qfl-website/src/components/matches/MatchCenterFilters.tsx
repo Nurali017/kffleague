@@ -63,12 +63,32 @@ export function MatchCenterFilters({
     { id: 'finished', name: t('statuses.finished') },
   ];
 
-  const handleToursChange = (tourIds: number[]) => {
-    onFilterChange({ ...filters, tours: tourIds.length > 0 ? tourIds : undefined });
+  const handleToursChange = (tourIds: Array<number | string>) => {
+    const parsedTours = tourIds.map((id) => Number(id)).filter(Number.isFinite);
+    onFilterChange({ ...filters, tours: parsedTours.length > 0 ? parsedTours : undefined });
   };
 
-  const handleTeamsChange = (teamIds: number[]) => {
-    onFilterChange({ ...filters, team_ids: teamIds.length > 0 ? teamIds : undefined });
+  const handleTeamsChange = (teamIds: Array<number | string>) => {
+    const parsedTeamIds = teamIds.map((id) => Number(id)).filter(Number.isFinite);
+    onFilterChange({ ...filters, team_ids: parsedTeamIds.length > 0 ? parsedTeamIds : undefined });
+  };
+
+  const handleMonthChange = (monthIds: Array<number | string>) => {
+    const nextMonth = monthIds.length > 0 ? Number(monthIds[0]) : undefined;
+    onFilterChange({
+      ...filters,
+      month: Number.isFinite(nextMonth) ? nextMonth : undefined,
+    });
+  };
+
+  const handleStatusChange = (statusIds: Array<number | string>) => {
+    const nextStatus = statusIds[0];
+    onFilterChange({
+      ...filters,
+      status: typeof nextStatus === 'string'
+        ? (nextStatus as 'upcoming' | 'finished' | 'live' | 'all')
+        : undefined,
+    });
   };
 
   const handleHidePastToggle = () => {
@@ -217,6 +237,7 @@ export function MatchCenterFilters({
               onChange={handleToursChange}
               placeholder={t('filters.allTours')}
               variant={isHero ? 'hero' : 'default'}
+              selectedCountLabel={(count) => t('filters.selectedCount', { count })}
             />
           </div>
 
@@ -227,23 +248,14 @@ export function MatchCenterFilters({
             }`}>
               {t('filters.month')}
             </label>
-            <select
-              value={filters.month || ''}
-              onChange={(e) => onFilterChange({
-                ...filters,
-                month: e.target.value ? Number(e.target.value) : undefined
-              })}
-              className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                isHero
-                  ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
-                  : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
-              }`}
-            >
-              <option value="">{t('filters.allMonths')}</option>
-              {months.map(m => (
-                <option key={m.id} value={m.id}>{m.name}</option>
-              ))}
-            </select>
+            <MultiSelect
+              options={months}
+              selected={filters.month ? [filters.month] : []}
+              onChange={handleMonthChange}
+              placeholder={t('filters.allMonths')}
+              variant={isHero ? 'hero' : 'default'}
+              mode="single"
+            />
           </div>
 
           {/* Clubs Multi-Select */}
@@ -259,6 +271,7 @@ export function MatchCenterFilters({
               onChange={handleTeamsChange}
               placeholder={t('filters.allClubs')}
               variant={isHero ? 'hero' : 'default'}
+              selectedCountLabel={(count) => t('filters.selectedCount', { count })}
             />
           </div>
 
@@ -269,23 +282,14 @@ export function MatchCenterFilters({
             }`}>
               {t('filters.status')}
             </label>
-            <select
-              value={filters.status || ''}
-              onChange={(e) => onFilterChange({
-                ...filters,
-                status: (e.target.value || undefined) as 'upcoming' | 'finished' | 'live' | 'all' | undefined
-              })}
-              className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                isHero
-                  ? 'bg-white/85 dark:bg-white/10 border-gray-200 dark:border-white/15 text-gray-900 dark:text-white'
-                  : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100'
-              }`}
-            >
-              <option value="">{t('statuses.all')}</option>
-              {statuses.map(s => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
-            </select>
+            <MultiSelect
+              options={statuses}
+              selected={filters.status ? [filters.status] : []}
+              onChange={handleStatusChange}
+              placeholder={t('statuses.all')}
+              variant={isHero ? 'hero' : 'default'}
+              mode="single"
+            />
           </div>
 
           {/* Hide Past Toggle */}
@@ -360,7 +364,7 @@ export function MatchCenterFilters({
               }`}>
                 {filters.tours.length === 1
                   ? `${t('tour')} ${filters.tours[0]}`
-                  : `${filters.tours.length} ${t('tour').toLowerCase()}`}
+                  : t('filters.selectedCount', { count: filters.tours.length })}
                 <button
                   onClick={() => onFilterChange({ ...filters, tours: undefined })}
                   className="hover:bg-white/20 rounded-full p-0.5"

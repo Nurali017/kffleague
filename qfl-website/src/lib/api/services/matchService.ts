@@ -26,6 +26,53 @@ type MatchCenterQuery = Record<
   string | number | boolean | Array<string | number>
 >;
 
+const MATCH_CENTER_PAGE_LIMIT = 100;
+
+function getMatchCenterItemCount(
+  response: GroupedMatchesResponse | StandardMatchesResponse
+): number {
+  if ('groups' in response) {
+    return response.groups.reduce((sum, group) => sum + group.games.length, 0);
+  }
+
+  return response.items.length;
+}
+
+function mergeGroupedMatchCenterPages(
+  pages: GroupedMatchesResponse[]
+): GroupedMatchesResponse {
+  const groupedByDate = new Map<string, GroupedMatchesResponse['groups'][number]>();
+
+  for (const page of pages) {
+    for (const group of page.groups) {
+      const existing = groupedByDate.get(group.date);
+      if (existing) {
+        existing.games = [...existing.games, ...group.games];
+        continue;
+      }
+
+      groupedByDate.set(group.date, {
+        ...group,
+        games: [...group.games],
+      });
+    }
+  }
+
+  return {
+    groups: Array.from(groupedByDate.values()),
+    total: pages[0]?.total ?? 0,
+  };
+}
+
+function mergeStandardMatchCenterPages(
+  pages: StandardMatchesResponse[]
+): StandardMatchesResponse {
+  return {
+    items: pages.flatMap((page) => page.items),
+    total: pages[0]?.total ?? 0,
+  };
+}
+
 export const matchService = {
   async getGamesByTour(
     seasonId: number = DEFAULT_SEASON_ID,
@@ -131,8 +178,8 @@ export const matchService = {
     if (filters.hide_past !== undefined) params.hide_past = filters.hide_past;
     if (filters.group_by_date !== undefined) params.group_by_date = filters.group_by_date;
     if (filters.language) params.lang = filters.language;
-    if (filters.limit) params.limit = filters.limit;
-    if (filters.offset) params.offset = filters.offset;
+    if (filters.limit !== undefined) params.limit = filters.limit;
+    if (filters.offset !== undefined) params.offset = filters.offset;
 
     const response = await apiClient.get<GroupedMatchesResponse | StandardMatchesResponse>(
       ENDPOINTS.GAMES,
@@ -144,5 +191,44 @@ export const matchService = {
     }
 
     return response.data;
+  },
+
+  async getMatchCenterAll(
+    filters: MatchCenterFilters = {}
+  ): Promise<GroupedMatchesResponse | StandardMatchesResponse> {
+    const pageFilters: MatchCenterFilters = {
+      ...filters,
+      limit: MATCH_CENTER_PAGE_LIMIT,
+      offset: 0,
+    };
+
+    const firstPage = await matchService.getMatchCenter(pageFilters);
+    const total = firstPage.total ?? 0;
+    const pages: Array<GroupedMatchesResponse | StandardMatchesResponse> = [firstPage];
+
+    let fetched = getMatchCenterItemCount(firstPage);
+    let offset = MATCH_CENTER_PAGE_LIMIT;
+
+    while (fetched < total) {
+      const nextPage = await matchService.getMatchCenter({
+        ...pageFilters,
+        offset,
+      });
+
+      const nextPageCount = getMatchCenterItemCount(nextPage);
+      if (nextPageCount === 0) {
+        break;
+      }
+
+      pages.push(nextPage);
+      fetched += nextPageCount;
+      offset += MATCH_CENTER_PAGE_LIMIT;
+    }
+
+    if ('groups' in firstPage) {
+      return mergeGroupedMatchCenterPages(pages as GroupedMatchesResponse[]);
+    }
+
+    return mergeStandardMatchCenterPages(pages as StandardMatchesResponse[]);
   },
 };

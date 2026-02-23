@@ -1,7 +1,8 @@
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
-import { TeamCoach, TeamDetail, TeamOverviewResponse, TeamStats, SquadPlayer } from '@/types';
+import { TeamCoach, TeamDetail, TeamOverviewResponse, TeamSeasonEntry, TeamStats, SquadPlayer } from '@/types';
+import { SeasonTournamentItem } from '@/components/shared/SeasonTournamentSelector';
 import { Game } from '@/types/match';
 import { teamService } from '@/lib/api/services/teamService';
 import { queryKeys } from '@/lib/api/queryKeys';
@@ -204,5 +205,37 @@ export function useTeamGames(
     loading: isLoading,
     error,
     refetch: mutate,
+  };
+}
+
+function extractYear(name: string): string {
+  const match = name?.match(/(\d{4})/);
+  return match ? match[1] : '';
+}
+
+// Team seasons hook - fetches only seasons the team participated in
+export function useTeamSeasons(teamId: number | null) {
+  const { i18n } = useTranslation();
+  const { data, error, isLoading } = useSWR<SeasonTournamentItem[]>(
+    teamId ? queryKeys.teams.seasons(teamId, i18n.language) : null,
+    async () => {
+      const entries = await teamService.getTeamSeasons(teamId!, i18n.language);
+      return entries.map((e) => ({
+        seasonId: e.season_id,
+        seasonName: e.season_name ?? '',
+        year: extractYear(e.season_name ?? ''),
+        tournamentName: e.championship_name ?? '',
+      }));
+    },
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 600000,
+    }
+  );
+
+  return {
+    items: data ?? [],
+    loading: isLoading,
+    error,
   };
 }

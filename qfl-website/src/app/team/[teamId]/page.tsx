@@ -14,10 +14,9 @@ import {
   TeamPageTabs,
   TeamSquad,
 } from '@/components/team';
-import { useTeamGames, useTeamOverview, useTeamPlayers, useTeamStats } from '@/hooks/useTeam';
+import { useTeamGames, useTeamOverview, useTeamPlayers, useTeamSeasons, useTeamStats } from '@/hooks/useTeam';
 import { useTournament } from '@/contexts/TournamentContext';
 import { PageSeasonProvider } from '@/contexts/PageSeasonContext';
-import { useChampionshipsTree } from '@/hooks/useChampionshipsTree';
 import { SeasonTournamentSelector } from '@/components/shared/SeasonTournamentSelector';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
@@ -55,8 +54,8 @@ export default function TeamPage({ params }: TeamPageProps) {
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
-  // Local season selector state
-  const { items: treeItems } = useChampionshipsTree();
+  // Local season selector state — only seasons the team participated in
+  const { items: treeItems } = useTeamSeasons(teamId);
   const seasonFromUrl = searchParams.get('season');
 
   const defaultSeasonId = useMemo(() => {
