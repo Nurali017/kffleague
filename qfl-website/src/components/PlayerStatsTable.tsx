@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { ChevronRight } from 'lucide-react';
 import { usePlayerStats } from '@/hooks';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';

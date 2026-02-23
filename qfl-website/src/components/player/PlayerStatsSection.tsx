@@ -14,7 +14,7 @@ interface PlayerStatsSectionProps {
 export function PlayerStatsSection({ stats, variant = 'clarity' }: PlayerStatsSectionProps) {
   const { t, i18n } = useTranslation('player');
   const lang = (i18n.language === 'ru' ? 'ru' : 'kz') as 'ru' | 'kz';
-  const { currentTournament, availableTournaments, setTournament } = useTournament();
+  const { currentTournament, availableTournaments, setTournament, isSwitching } = useTournament();
   const isStudio = variant === 'studio';
   const isData = variant === 'data';
 
@@ -52,7 +52,11 @@ export function PlayerStatsSection({ stats, variant = 'clarity' }: PlayerStatsSe
             <div className="relative group">
               <select
                 value={currentTournament.id}
-                onChange={(event) => setTournament(event.target.value)}
+                disabled={isSwitching}
+                onChange={(event) => {
+                  if (isSwitching) return;
+                  setTournament(event.target.value);
+                }}
                 className={cn(
                   'min-h-[44px] appearance-none rounded-lg border px-4 pr-10 text-sm font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2',
                   isStudio

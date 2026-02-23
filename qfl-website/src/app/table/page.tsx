@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTournament } from '@/contexts/TournamentContext';
 import { useCupSchedule, useLeagueTable, useMatchCenter, useResultsGrid } from '@/hooks';
@@ -16,7 +16,7 @@ import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { LoadingSpinner } from '@/components/ui';
 import { HeroBackground } from '@/components/ui/HeroBackground';
 import { DEFAULT_TOUR } from '@/lib/api/endpoints';
-import { updateSearchParams } from '@/lib/utils/urlState';
+import { buildSearchParams } from '@/lib/utils/urlState';
 import { CupSchedule } from '@/components/cup';
 import { MatchCard } from '@/components/matches/MatchCard';
 
@@ -65,6 +65,8 @@ export default function LeagueTablePage() {
   const { t } = useTranslation('table');
   const { t: tErrors } = useTranslation('errors');
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const { currentTournament, effectiveSeasonId, showTable, showBracket } = useTournament();
   const isCup = showBracket;
   const isSecondLeague = currentTournament.id === '2l';
@@ -104,7 +106,8 @@ export default function LeagueTablePage() {
 
   // Update URL when filters or tab change
   useEffect(() => {
-    updateSearchParams(
+    const nextParams = buildSearchParams(
+      searchParams,
       {
         tab: activeTab !== 'standings' ? activeTab : undefined,
         tour_from: tourFrom !== 1 ? tourFrom : undefined,
@@ -112,10 +115,17 @@ export default function LeagueTablePage() {
         home_away: homeAway ?? undefined,
         round_key: isCup ? roundKey ?? undefined : undefined,
         phase: showTable && isSecondLeague && phase !== 'groupA' ? phase : undefined,
-      },
-      { replace: true }
+      }
     );
-  }, [activeTab, tourFrom, tourTo, homeAway, roundKey, phase, isCup, isSecondLeague, showTable]);
+    const currentQuery = searchParams.toString();
+    const nextQuery = nextParams.toString();
+    const currentUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+    const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+
+    if (nextUrl !== currentUrl) {
+      router.replace(nextUrl, { scroll: false });
+    }
+  }, [activeTab, homeAway, isCup, isSecondLeague, pathname, phase, roundKey, router, searchParams, showTable, tourFrom, tourTo]);
 
   const groupFilter = isSecondLeague && phase === 'groupA'
     ? 'A'

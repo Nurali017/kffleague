@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {

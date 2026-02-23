@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Game } from '@/types/match';

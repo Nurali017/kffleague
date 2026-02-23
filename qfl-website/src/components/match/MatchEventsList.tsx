@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { Circle } from 'lucide-react';
 import { EnhancedMatchEvent, GameTeam } from '@/types';
 import { GoalIcon, YellowCardIcon, RedCardIcon, SubstitutionIcon, PenaltyIcon } from './MatchEventIcons';

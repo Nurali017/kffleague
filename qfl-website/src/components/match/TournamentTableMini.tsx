@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { ChevronRight } from 'lucide-react';
 import { useLeagueTable } from '@/hooks';
 import { getTeamHref } from '@/lib/utils/entityRoutes';

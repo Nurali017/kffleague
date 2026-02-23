@@ -2,7 +2,7 @@
 
 import { Game } from '@/types/match';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { ArrowRight } from 'lucide-react';
 
 interface TeamOverviewCardsProps {

@@ -1,18 +1,18 @@
 import { NewsFilters, MatchCenterFilters } from '@/types';
 
 /**
- * Обновить URL search параметры без перезагрузки страницы
+ * Создать новый набор query-параметров на основе текущих и обновлений.
+ * Функция чистая: не выполняет навигацию и не мутирует window.history.
  */
-export function updateSearchParams(
-  params: Record<string, string | number | undefined>,
-  options?: { replace?: boolean }
-): void {
-  if (typeof window === 'undefined') return;
+export function buildSearchParams(
+  current: URLSearchParams | string,
+  params: Record<string, string | number | undefined | null>
+): URLSearchParams {
+  const searchParams =
+    current instanceof URLSearchParams
+      ? new URLSearchParams(current.toString())
+      : new URLSearchParams(current);
 
-  const url = new URL(window.location.href);
-  const searchParams = new URLSearchParams(url.search);
-
-  // Обновить или удалить параметры
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === '' || value === null) {
       searchParams.delete(key);
@@ -21,17 +21,7 @@ export function updateSearchParams(
     }
   });
 
-  // Обновить URL без перезагрузки
-  const queryString = searchParams.toString();
-  const newUrl = queryString ? `${url.pathname}?${queryString}` : url.pathname;
-  const currentUrl = `${url.pathname}${url.search}`;
-  if (newUrl === currentUrl) return;
-
-  if (options?.replace) {
-    window.history.replaceState({}, '', newUrl);
-  } else {
-    window.history.pushState({}, '', newUrl);
-  }
+  return searchParams;
 }
 
 /**
@@ -72,21 +62,6 @@ export function getPageFromSearchParams(searchParams: URLSearchParams): number {
   const page = searchParams.get('page');
   const pageNum = parseInt(page || '1', 10);
   return pageNum > 0 ? pageNum : 1;
-}
-
-/**
- * Синхронизировать фильтры и страницу с URL
- */
-export function syncFiltersToUrl(filters: NewsFilters, page: number): void {
-  updateSearchParams({
-    championship_code: filters.championship_code,
-    article_type: filters.article_type,
-    search: filters.search,
-    sort: filters.sort,
-    dateFrom: filters.dateFrom,
-    dateTo: filters.dateTo,
-    page: page > 1 ? page : undefined, // Не показывать page=1 в URL
-  });
 }
 
 /**
@@ -131,26 +106,4 @@ export function getMatchCenterFiltersFromUrl(searchParams: URLSearchParams): Mat
   if (hidePast) filters.hide_past = hidePast === 'true';
 
   return filters;
-}
-
-/**
- * Синхронизировать фильтры матч-центра с URL
- */
-export function syncMatchCenterFiltersToUrl(filters: MatchCenterFilters): void {
-  const params: Record<string, any> = {};
-
-  if (filters.season_id) params.season_id = filters.season_id;
-  if (filters.final) {
-    params.final = 'true';
-  } else if (filters.group) {
-    params.group = filters.group;
-  }
-  if (filters.tours?.length) params.tours = filters.tours.join(',');
-  if (filters.team_ids?.length) params.team_ids = filters.team_ids.join(',');
-  if (filters.month) params.month = filters.month;
-  if (filters.year) params.year = filters.year;
-  if (filters.status) params.status = filters.status;
-  if (filters.hide_past) params.hide_past = 'true';
-
-  updateSearchParams(params);
 }

@@ -50,6 +50,7 @@ export function TournamentSwitcherView({
   if (!currentTournament) return null;
 
   const triggerLabel = getTournamentLabel(currentTournament, lang);
+  const activeLabel = lang === 'kz' ? 'ТАҢДАЛҒАН' : 'ВЫБРАН';
 
   return (
     <div className="lg:hidden">
@@ -164,7 +165,7 @@ export function TournamentSwitcherView({
                       </div>
                       {active && (
                         <span className="text-[11px] font-extrabold px-2 py-1 rounded-full bg-accent/20 text-primary-dark dark:bg-accent/15 dark:text-accent">
-                          ACTIVE
+                          {activeLabel}
                         </span>
                       )}
                     </button>

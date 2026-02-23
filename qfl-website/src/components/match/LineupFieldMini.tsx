@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';

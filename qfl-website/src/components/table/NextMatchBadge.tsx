@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { Home, Plane } from 'lucide-react';
 import { NextGame } from '@/types';
 

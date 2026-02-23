@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';

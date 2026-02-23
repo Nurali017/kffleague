@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DateGroup, TeamStanding } from '@/types';

@@ -1,8 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 
 import {
+  buildSearchParams,
   getMatchCenterFiltersFromUrl,
-  syncMatchCenterFiltersToUrl,
 } from './urlState';
 
 describe('urlState match-center phase filters', () => {
@@ -30,15 +30,19 @@ describe('urlState match-center phase filters', () => {
     expect(filters.group).toBeUndefined();
   });
 
-  it('syncs final phase to URL', () => {
-    syncMatchCenterFiltersToUrl({
+  it('builds final phase query params without mutating input', () => {
+    const initial = new URLSearchParams('season_id=80&group=A&tours=1,2');
+    const next = buildSearchParams(initial, {
       season_id: 80,
-      final: true,
+      group: undefined,
+      final: 'true',
+      tours: undefined,
     });
 
-    const params = new URLSearchParams(window.location.search);
-    expect(params.get('season_id')).toBe('80');
-    expect(params.get('final')).toBe('true');
-    expect(params.get('group')).toBeNull();
+    expect(initial.get('group')).toBe('A');
+    expect(next.get('season_id')).toBe('80');
+    expect(next.get('final')).toBe('true');
+    expect(next.get('group')).toBeNull();
+    expect(next.get('tours')).toBeNull();
   });
 });

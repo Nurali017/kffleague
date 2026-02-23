@@ -3,14 +3,22 @@ import { fireEvent, render, screen, waitFor } from '@/test/utils';
 import { TournamentProvider, useTournament } from './TournamentContext';
 
 const pushMock = vi.fn();
+const replaceMock = vi.fn();
 const { getFrontMapMock } = vi.hoisted(() => ({
   getFrontMapMock: vi.fn(),
 }));
 let searchParamsMock = new URLSearchParams();
 let pathnameMock = '/table';
 
+function applyNavigation(url: string) {
+  const parsed = new URL(url, 'http://localhost');
+  pathnameMock = parsed.pathname;
+  searchParamsMock = new URLSearchParams(parsed.search);
+  window.history.replaceState({}, '', `${parsed.pathname}${parsed.search}`);
+}
+
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: pushMock }),
+  useRouter: () => ({ push: pushMock, replace: replaceMock }),
   usePathname: () => pathnameMock,
   useSearchParams: () => searchParamsMock,
 }));
@@ -26,12 +34,14 @@ function Harness() {
     effectiveSeasonId,
     setTournament,
     currentTournament,
+    isSwitching,
   } = useTournament();
 
   return (
     <div>
       <div data-testid="season-id">{effectiveSeasonId}</div>
       <div data-testid="tournament-id">{currentTournament.id}</div>
+      <div data-testid="is-switching">{String(isSwitching)}</div>
       <button onClick={() => setTournament('pl')}>set-pl</button>
       <button onClick={() => setTournament('2l')}>set-2l</button>
       <button onClick={() => setTournament('cup')}>set-cup</button>
@@ -42,9 +52,13 @@ function Harness() {
 describe('TournamentContext', () => {
   beforeEach(() => {
     pushMock.mockReset();
+    replaceMock.mockReset();
+
     pushMock.mockImplementation((url: string) => {
-      const query = url.split('?')[1] || '';
-      searchParamsMock = new URLSearchParams(query);
+      applyNavigation(url);
+    });
+    replaceMock.mockImplementation((url: string) => {
+      applyNavigation(url);
     });
 
     getFrontMapMock.mockReset();
@@ -56,14 +70,18 @@ describe('TournamentContext', () => {
       el: { season_id: 84, has_table: true, has_bracket: false, sort_order: 5 },
     });
 
-    searchParamsMock = new URLSearchParams('tournament=pl');
     pathnameMock = '/table';
+    searchParamsMock = new URLSearchParams('tournament=pl');
+    window.history.replaceState({}, '', '/table?tournament=pl');
     localStorage.clear();
     document.cookie = 'qfl_tournament=; path=/; max-age=0';
   });
 
   it('maps 2l to unified season 80', async () => {
+    pathnameMock = '/table';
     searchParamsMock = new URLSearchParams('tournament=2l');
+    window.history.replaceState({}, '', '/table?tournament=2l');
+
     render(
       <TournamentProvider>
         <Harness />
@@ -76,7 +94,7 @@ describe('TournamentContext', () => {
     });
   });
 
-  it('switches between tournaments correctly', async () => {
+  it('canonicalizes missing season in query via replace', async () => {
     render(
       <TournamentProvider>
         <Harness />
@@ -84,23 +102,11 @@ describe('TournamentContext', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
+      expect(replaceMock).toHaveBeenCalledWith('/table?tournament=pl&season=61', { scroll: false });
     });
+  });
 
-    fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('80');
-    });
-
-    fireEvent.click(screen.getByRole('button', { name: 'set-pl' }));
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-    expect(pushMock).toHaveBeenCalledWith('/table?tournament=pl&season=61&round=26', { scroll: false });
-  }, 15000);
-
-  it('uses dynamic front-map season ids', async () => {
-    searchParamsMock = new URLSearchParams('tournament=pl');
+  it('uses dynamic front-map season ids for canonicalization', async () => {
     getFrontMapMock.mockResolvedValueOnce({
       pl: { season_id: 999, has_table: true, sort_order: 1 },
       '1l': { season_id: 888, has_table: true, sort_order: 2 },
@@ -117,133 +123,62 @@ describe('TournamentContext', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('season-id')).toHaveTextContent('999');
+      expect(replaceMock).toHaveBeenCalledWith('/table?tournament=pl&season=999', { scroll: false });
     });
-    expect(pushMock).toHaveBeenCalledWith('/table?tournament=pl&season=999', { scroll: false });
   });
 
-  it('redirects to selected tournament home from player details', async () => {
-    pathnameMock = '/player/157';
+  it('prefers client persisted tournament over initial fallback when query is missing', async () => {
+    pathnameMock = '/table';
+    searchParamsMock = new URLSearchParams();
+    window.history.replaceState({}, '', '/table');
+    localStorage.setItem('qfl_selected_tournament', '2l');
+
     render(
+      <TournamentProvider initialTournamentId="pl">
+        <Harness />
+      </TournamentProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('tournament-id')).toHaveTextContent('2l');
+      expect(replaceMock).toHaveBeenCalledWith('/table?tournament=2l&season=80', { scroll: false });
+    });
+  });
+
+  it('keeps tournament when route changes to detail page without query', async () => {
+    pathnameMock = '/table';
+    searchParamsMock = new URLSearchParams('tournament=2l&season=80');
+    window.history.replaceState({}, '', '/table?tournament=2l&season=80');
+
+    const { rerender } = render(
       <TournamentProvider>
         <Harness />
       </TournamentProvider>
     );
 
     await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=2l&season=80', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home with round when available', async () => {
-    pathnameMock = '/player/157';
-    searchParamsMock = new URLSearchParams('tournament=2l');
-
-    render(
-      <TournamentProvider>
-        <Harness />
-      </TournamentProvider>
-    );
-
-    await waitFor(() => {
+      expect(screen.getByTestId('tournament-id')).toHaveTextContent('2l');
       expect(screen.getByTestId('season-id')).toHaveTextContent('80');
     });
 
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-pl' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=pl&season=61&round=26', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home from team details', async () => {
-    pathnameMock = '/team/91';
-
-    render(
-      <TournamentProvider>
-        <Harness />
-      </TournamentProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=cup&season=71', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home from team details with trailing slash', async () => {
-    pathnameMock = '/team/91/';
-
-    render(
-      <TournamentProvider>
-        <Harness />
-      </TournamentProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=cup&season=71', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home from plural teams details path', async () => {
-    pathnameMock = '/teams/91';
-
-    render(
-      <TournamentProvider>
-        <Harness />
-      </TournamentProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=cup&season=71', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home from localized team details path', async () => {
-    pathnameMock = '/kz/team/91';
-
-    render(
-      <TournamentProvider>
-        <Harness />
-      </TournamentProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
-    });
-
-    pushMock.mockClear();
-    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=cup&season=71', { scroll: false });
-    });
-  });
-
-  it('redirects to selected tournament home from match details', async () => {
+    replaceMock.mockClear();
     pathnameMock = '/matches/123';
+    searchParamsMock = new URLSearchParams();
+    window.history.replaceState({}, '', '/matches/123');
 
+    rerender(
+      <TournamentProvider>
+        <Harness />
+      </TournamentProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('tournament-id')).toHaveTextContent('2l');
+      expect(replaceMock).toHaveBeenCalledWith('/matches/123?tournament=2l&season=80', { scroll: false });
+    });
+  });
+
+  it('switches between tournaments using URL-first navigation', async () => {
     render(
       <TournamentProvider>
         <Harness />
@@ -257,12 +192,43 @@ describe('TournamentContext', () => {
     pushMock.mockClear();
     fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/?tournament=2l&season=80', { scroll: false });
+      expect(pushMock).toHaveBeenCalledWith('/table?tournament=2l&season=80', { scroll: false });
+      expect(screen.getByTestId('season-id')).toHaveTextContent('80');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'set-pl' }));
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith('/table?tournament=pl&season=61&round=26', { scroll: false });
+      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
+    });
+  }, 15000);
+
+  it('redirects to selected tournament home from details routes', async () => {
+    pathnameMock = '/player/157';
+    searchParamsMock = new URLSearchParams('tournament=pl&season=61');
+    window.history.replaceState({}, '', '/player/157?tournament=pl&season=61');
+
+    render(
+      <TournamentProvider>
+        <Harness />
+      </TournamentProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
+    });
+
+    pushMock.mockClear();
+    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith('/?tournament=cup&season=71', { scroll: false });
     });
   });
 
   it('keeps current route on match center list', async () => {
     pathnameMock = '/matches';
+    searchParamsMock = new URLSearchParams('tournament=pl&season=61');
+    window.history.replaceState({}, '', '/matches?tournament=pl&season=61');
 
     render(
       <TournamentProvider>
@@ -276,21 +242,20 @@ describe('TournamentContext', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
     await waitFor(() => {
-      expect(screen.getByTestId('season-id')).toHaveTextContent('80');
+      expect(pushMock).toHaveBeenCalledWith('/matches?tournament=2l&season=80', { scroll: false });
     });
-
-    expect(pushMock).toHaveBeenCalledWith('/matches?tournament=2l&season=80', { scroll: false });
   });
 
-  it('does not rollback tournament on teams list when query is stale in-flight', async () => {
-    pathnameMock = '/teams';
+  it('prevents rapid multi-switch while navigation is in-flight on list routes', async () => {
+    pathnameMock = '/table';
     searchParamsMock = new URLSearchParams('tournament=pl&season=61');
+    window.history.replaceState({}, '', '/table?tournament=pl&season=61');
 
     const pushCalls: string[] = [];
     pushMock.mockReset();
     pushMock.mockImplementation((url: string) => {
       pushCalls.push(url);
-      // Simulate in-flight navigation: URL/search params are not updated yet.
+      // Simulate in-flight transition: URL/search params not updated yet.
     });
 
     render(
@@ -304,14 +269,50 @@ describe('TournamentContext', () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
+    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
+    fireEvent.click(screen.getByRole('button', { name: 'set-pl' }));
+
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/teams?tournament=2l&season=80', { scroll: false });
+      expect(pushCalls).toEqual(['/table?tournament=2l&season=80']);
+      expect(screen.getByTestId('is-switching')).toHaveTextContent('true');
+    });
+  });
+
+  it('prevents rapid multi-switch while navigation is in-flight on details routes', async () => {
+    pathnameMock = '/team/91';
+    searchParamsMock = new URLSearchParams('tournament=pl&season=61');
+    window.history.replaceState({}, '', '/team/91?tournament=pl&season=61');
+
+    const pushCalls: string[] = [];
+    pushMock.mockReset();
+    pushMock.mockImplementation((url: string) => {
+      pushCalls.push(url);
+      // Simulate in-flight transition: URL/search params not updated yet.
     });
 
-    expect(pushCalls).not.toContain('/teams?tournament=pl&season=80');
+    render(
+      <TournamentProvider>
+        <Harness />
+      </TournamentProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('season-id')).toHaveTextContent('61');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'set-2l' }));
+    fireEvent.click(screen.getByRole('button', { name: 'set-cup' }));
+
+    await waitFor(() => {
+      expect(pushCalls).toEqual(['/?tournament=2l&season=80']);
+      expect(screen.getByTestId('is-switching')).toHaveTextContent('true');
+    });
   });
 
   it('does not navigate when selecting active tournament', async () => {
+    searchParamsMock = new URLSearchParams('tournament=pl&season=61');
+    window.history.replaceState({}, '', '/table?tournament=pl&season=61');
+
     render(
       <TournamentProvider>
         <Harness />

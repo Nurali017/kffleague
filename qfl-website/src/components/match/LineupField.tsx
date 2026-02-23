@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { MatchLineups, GameTeam, LineupPlayerExtended, LineupRenderingMode } from '@/types';
 import { buildPlacedPlayers, orderStartersForPlacement } from '@/lib/utils/lineupPlacement';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';

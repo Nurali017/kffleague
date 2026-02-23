@@ -9,7 +9,7 @@ export function TournamentSwitcher() {
   const { i18n } = useTranslation();
   const lang = i18n.language === 'kz' ? 'kz' : 'ru';
 
-  const { availableTournaments, currentTournament, setTournament } = useTournament();
+  const { availableTournaments, currentTournament, setTournament, isSwitching } = useTournament();
   const [open, setOpen] = useState(false);
 
   if (availableTournaments.length <= 1) return null;
@@ -21,8 +21,10 @@ export function TournamentSwitcher() {
       lang={lang}
       open={open}
       onOpenChange={setOpen}
-      onSelect={(id) => setTournament(id)}
+      onSelect={(id) => {
+        if (isSwitching) return;
+        setTournament(id);
+      }}
     />
   );
 }
-

@@ -43,13 +43,19 @@ const tournaments: Tournament[] = [
   },
 ];
 
-function Harness({ onSelect }: { onSelect: (id: string) => void }) {
+function Harness({
+  onSelect,
+  lang = 'ru',
+}: {
+  onSelect: (id: string) => void;
+  lang?: 'ru' | 'kz';
+}) {
   const [open, setOpen] = useState(false);
   return (
     <TournamentSwitcherView
       tournaments={tournaments}
       currentId="pl"
-      lang="ru"
+      lang={lang}
       open={open}
       onOpenChange={setOpen}
       onSelect={onSelect}
@@ -91,5 +97,25 @@ describe('TournamentSwitcherView', () => {
       expect(screen.queryByRole('dialog', { name: /выбор турнира/i })).not.toBeInTheDocument();
     });
     expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('shows localized active badge in russian and hides legacy ACTIVE label', () => {
+    const onSelect = vi.fn();
+    render(<Harness onSelect={onSelect} lang="ru" />);
+
+    fireEvent.click(screen.getByRole('button', { name: /выбрать турнир/i }));
+
+    expect(screen.getByText('ВЫБРАН')).toBeInTheDocument();
+    expect(screen.queryByText('ACTIVE')).not.toBeInTheDocument();
+  });
+
+  it('shows localized active badge in kazakh and hides legacy ACTIVE label', () => {
+    const onSelect = vi.fn();
+    render(<Harness onSelect={onSelect} lang="kz" />);
+
+    fireEvent.click(screen.getByRole('button', { name: /выбрать турнир/i }));
+
+    expect(screen.getByText('ТАҢДАЛҒАН')).toBeInTheDocument();
+    expect(screen.queryByText('ACTIVE')).not.toBeInTheDocument();
   });
 });

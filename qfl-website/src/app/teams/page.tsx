@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
+import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import Image from 'next/image';
 import { useTeams } from '@/hooks';
 import { useTournament } from '@/contexts/TournamentContext';

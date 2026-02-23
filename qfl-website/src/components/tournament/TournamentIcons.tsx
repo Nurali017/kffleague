@@ -7,23 +7,27 @@ import { Tournament } from '@/types/tournament';
 interface TournamentIconProps {
   tournament: Tournament;
   isActive: boolean;
+  disabled: boolean;
   onClick: () => void;
 }
 
-function TournamentIcon({ tournament, isActive, onClick }: TournamentIconProps) {
+function TournamentIcon({ tournament, isActive, disabled, onClick }: TournamentIconProps) {
   const { i18n } = useTranslation();
   const lang = i18n.language as 'ru' | 'kz';
   const tournamentName = tournament.name[lang] || tournament.name.short || tournament.name.ru;
 
   return (
     <button
+      type="button"
       onClick={onClick}
+      disabled={disabled}
       className={`
         flex shrink-0 flex-col items-center gap-1 px-3 py-2 md:px-5 md:py-3 transition-all duration-200
         hover:opacity-100 group border-b-[3px]
         ${isActive
           ? 'opacity-100 border-accent-soft'
           : 'opacity-50 hover:opacity-80 border-transparent hover:border-white/30'}
+        ${disabled ? 'cursor-not-allowed opacity-40 hover:opacity-40' : ''}
       `}
       title={tournamentName}
       suppressHydrationWarning
@@ -55,7 +59,7 @@ function TournamentIcon({ tournament, isActive, onClick }: TournamentIconProps) 
 }
 
 export function TournamentIcons() {
-  const { availableTournaments, currentTournament, setTournament } =
+  const { availableTournaments, currentTournament, setTournament, isSwitching } =
     useTournament();
 
   return (
@@ -65,7 +69,11 @@ export function TournamentIcons() {
           key={tournament.id}
           tournament={tournament}
           isActive={currentTournament.id === tournament.id}
-          onClick={() => setTournament(tournament.id)}
+          disabled={isSwitching}
+          onClick={() => {
+            if (isSwitching) return;
+            setTournament(tournament.id);
+          }}
         />
       ))}
     </div>
