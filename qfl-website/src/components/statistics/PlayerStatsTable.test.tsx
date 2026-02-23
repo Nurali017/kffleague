@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/test/utils';
 import { PlayerStatsTable } from './PlayerStatsTable';
 import { ExtendedPlayerStat } from '@/types/statistics';
@@ -53,20 +54,23 @@ describe('PlayerStatsTable', () => {
     renderWithProviders(
       <PlayerStatsTable
         subTab="key_stats"
-        filters={{ club: 'all', position: 'all', nationality: 'all' }}
+        filters={{ club: 'all', nationality: 'all' }}
         players={[createPlayer()]}
       />
     );
 
     expect(document.querySelector('a[href="/player/10"]')).toBeInTheDocument();
     expect(document.querySelector('a[href="/team/20"]')).toBeInTheDocument();
+    expect(screen.getByText('Ivanov I.')).toBeInTheDocument();
+    expect(screen.queryByText(/^Поз$/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('Astana')).not.toBeInTheDocument();
   });
 
   it('does not render links for invalid ids', () => {
     renderWithProviders(
       <PlayerStatsTable
         subTab="key_stats"
-        filters={{ club: 'all', position: 'all', nationality: 'all' }}
+        filters={{ club: 'all', nationality: 'all' }}
         players={[
           createPlayer({
             player_id: 0,
@@ -79,5 +83,31 @@ describe('PlayerStatsTable', () => {
 
     expect(document.querySelector('a[href="/player/0"]')).not.toBeInTheDocument();
     expect(document.querySelector('a[href="/team/0"]')).not.toBeInTheDocument();
+  });
+
+  it('shows and hides mobile scroll hint after horizontal scroll interaction', async () => {
+    renderWithProviders(
+      <PlayerStatsTable
+        subTab="key_stats"
+        filters={{ club: 'all', nationality: 'all' }}
+        players={[createPlayer()]}
+      />
+    );
+
+    const container = screen.getByTestId('player-stats-scroll-container');
+    Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1200 });
+    Object.defineProperty(container, 'clientWidth', { configurable: true, value: 300 });
+
+    fireEvent(window, new Event('resize'));
+    await waitFor(() => {
+      expect(screen.getByTestId('player-stats-scroll-hint')).toBeInTheDocument();
+    });
+
+    Object.defineProperty(container, 'scrollLeft', { configurable: true, value: 16, writable: true });
+    fireEvent.scroll(container);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('player-stats-scroll-hint')).not.toBeInTheDocument();
+    });
   });
 });

@@ -37,10 +37,10 @@ export function StatisticsHero({ stats, goalsByPeriod, goalsByPeriodMeta }: Stat
     ];
 
     return (
-        <div className="relative overflow-hidden text-white py-8 md:py-10">
+        <div className="relative overflow-hidden text-white py-6 md:py-10">
             <HeroBackground />
             <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
-                <div className="grid md:grid-cols-2 gap-8 items-start">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8 items-start">
                     {/* Left: Season stats table */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -48,17 +48,21 @@ export function StatisticsHero({ stats, goalsByPeriod, goalsByPeriodMeta }: Stat
                         transition={{ delay: 0.1 }}
                         className="bg-white/10 rounded-2xl border border-white/15 backdrop-blur-sm overflow-hidden"
                     >
-                        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 text-[11px] md:text-xs uppercase tracking-wider text-white/70">
+                        <div
+                            data-testid="stats-hero-summary-grid"
+                            className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/10"
+                        >
                             {summaryItems.map((item) => (
-                                <div key={item.label} className="px-4 py-3 md:px-6 md:py-4 text-center">
-                                    {item.label}
-                                </div>
-                            ))}
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 text-3xl md:text-4xl font-bold text-white">
-                            {summaryItems.map((item) => (
-                                <div key={item.label} className="px-4 py-4 md:px-6 md:py-5 text-center">
-                                    {item.value}
+                                <div
+                                    key={item.label}
+                                    className="bg-white/[0.03] px-3 py-3 md:px-5 md:py-4 text-center"
+                                >
+                                    <div className="text-[10px] md:text-xs uppercase tracking-wider text-white/70">
+                                        {item.label}
+                                    </div>
+                                    <div className="mt-1 md:mt-2 text-2xl md:text-4xl font-bold text-white leading-tight">
+                                        {item.value}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -69,7 +73,7 @@ export function StatisticsHero({ stats, goalsByPeriod, goalsByPeriodMeta }: Stat
                         initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-white/5 rounded-2xl p-6 backdrop-blur-sm border border-white/10"
+                        className="bg-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-sm border border-white/10"
                     >
                         {hasChartData ? (
                             <GoalTimingChart data={goalsByPeriod ?? []} meta={goalsByPeriodMeta ?? undefined} />

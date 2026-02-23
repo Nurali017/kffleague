@@ -79,3 +79,11 @@ export function formatMatchDayDate(dateStr: string, language: string): string {
     year: 'numeric',
   });
 }
+
+export function formatMatchTime(raw: string | null | undefined): string | undefined {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  const parsed = trimmed.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (!parsed) return trimmed;
+  return `${parsed[1].padStart(2, '0')}:${parsed[2]}`;
+}

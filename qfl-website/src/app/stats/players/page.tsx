@@ -12,7 +12,6 @@ import {
     PlayerStatsNationality,
     PlayerStatsNationalityFilter,
     PlayerStatsSortBy,
-    PositionCode,
 } from '@/types';
 
 export default function PlayersStatsPage() {
@@ -20,7 +19,6 @@ export default function PlayersStatsPage() {
     const effectiveSeasonId = usePreSeasonEffectiveId('previous');
     const [subTab, setSubTab] = useState<StatSubTab>('key_stats');
     const [selectedClub, setSelectedClub] = useState('all');
-    const [selectedPosition, setSelectedPosition] = useState('all');
     const [selectedNationality, setSelectedNationality] = useState<PlayerStatsNationalityFilter>('all');
 
     const sortBy: PlayerStatsSortBy = (() => {
@@ -51,8 +49,6 @@ export default function PlayersStatsPage() {
             ? Number(selectedClub)
             : undefined;
 
-    const positionCode =
-        selectedPosition !== 'all' ? (selectedPosition as PositionCode) : undefined;
     const nationality =
         selectedNationality !== 'all'
             ? (selectedNationality as PlayerStatsNationality)
@@ -64,7 +60,6 @@ export default function PlayersStatsPage() {
         seasonId: effectiveSeasonId,
         sortBy,
         teamId,
-        positionCode,
         nationality,
     });
 
@@ -82,8 +77,6 @@ export default function PlayersStatsPage() {
                 mode="players"
                 selectedClub={selectedClub}
                 onClubChange={setSelectedClub}
-                selectedPosition={selectedPosition}
-                onPositionChange={setSelectedPosition}
                 selectedNationality={selectedNationality}
                 onNationalityChange={setSelectedNationality}
                 teams={teamsList.map((team) => ({
@@ -106,7 +99,6 @@ export default function PlayersStatsPage() {
                         subTab={subTab}
                         filters={{
                             club: selectedClub,
-                            position: selectedPosition,
                             nationality: selectedNationality,
                         }}
                         players={players}

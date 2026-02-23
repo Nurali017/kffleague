@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test/utils';
 import { ClubStatsTable } from './ClubStatsTable';
 import { TeamStatistics } from '@/types/statistics';
@@ -41,5 +42,16 @@ describe('ClubStatsTable', () => {
     );
 
     expect(document.querySelector('a[href="/team/0"]')).not.toBeInTheDocument();
+  });
+
+  it('renders mobile scroll hint container', () => {
+    renderWithProviders(
+      <ClubStatsTable
+        subTab="key_stats"
+        teams={[createTeam()]}
+      />
+    );
+
+    expect(screen.getByTestId('club-stats-scroll-hint')).toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { useTranslation } from 'react-i18next';
 import { formatValue, getColumnsForSubTab } from '@/lib/mock/statisticsHelpers';
@@ -12,7 +12,7 @@ import { TableSkeleton } from './TableSkeleton';
 
 interface PlayerStatsTableProps {
     subTab: StatSubTab;
-    filters: { club: string; position: string; nationality: PlayerStatsNationalityFilter };
+    filters: { club: string; nationality: PlayerStatsNationalityFilter };
     players: ExtendedPlayerStat[];
     loading?: boolean;
 }
@@ -40,8 +40,21 @@ function toFiniteNumber(value: unknown): number | null {
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function toCompactPlayerName(firstName?: string | null, lastName?: string | null): string {
+    const first = (firstName || '').trim();
+    const last = (lastName || '').trim();
+
+    if (last && first) return `${last} ${first[0].toUpperCase()}.`;
+    if (last) return last;
+    if (first) return first;
+    return '—';
+}
+
 export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerStatsTableProps) {
     const { t } = useTranslation('statistics');
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+    const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
+    const [hasInteractedWithXScroll, setHasInteractedWithXScroll] = useState(false);
 
     // Get columns based on subTab
     const columns = useMemo(() => getColumnsForSubTab(subTab, 'players'), [subTab]);
@@ -61,8 +74,6 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
         return players.filter(p => {
             // Phase filter would go here if data supported it
             if (filters.club !== 'all' && p.team_id.toString() !== filters.club) return false;
-            const pos = p.position_code ?? null;
-            if (filters.position !== 'all' && pos !== filters.position) return false;
             const countryCode = p.country?.code?.toUpperCase() ?? null;
             if (filters.nationality === 'kz' && countryCode !== 'KZ') return false;
             if (filters.nationality === 'foreign' && (!countryCode || countryCode === 'KZ')) return false;
@@ -95,34 +106,70 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
         }
     };
 
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const updateOverflow = () => {
+            const overflow = container.scrollWidth > container.clientWidth + 1;
+            setHasHorizontalOverflow(overflow);
+            if (!overflow) {
+                setHasInteractedWithXScroll(false);
+            }
+        };
+
+        const handleScroll = () => {
+            if (container.scrollLeft > 8) {
+                setHasInteractedWithXScroll(true);
+            }
+        };
+
+        updateOverflow();
+        container.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', updateOverflow);
+        return () => {
+            container.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', updateOverflow);
+        };
+    }, [players.length, columns.length]);
+
     if (loading) return <TableSkeleton rows={10} columns={columns.length + 3} />;
+
+    const showMobileScrollHint = hasHorizontalOverflow && !hasInteractedWithXScroll;
 
     return (
         <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm">
-            {/* Mobile scroll indicator */}
-            <div className="relative">
-                <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
-            </div>
-            <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] md:min-w-[800px]">
+            {showMobileScrollHint && (
+                <div
+                    data-testid="player-stats-scroll-hint"
+                    className="md:hidden px-3 py-2 text-[11px] text-gray-500 dark:text-slate-400 border-b border-gray-200 dark:border-dark-border"
+                >
+                    {t('table.scrollHint', { defaultValue: 'Проведите влево, чтобы увидеть все столбцы.' })}
+                </div>
+            )}
+            <div ref={scrollContainerRef} data-testid="player-stats-scroll-container" className="relative overflow-x-auto no-scrollbar">
+                {showMobileScrollHint && (
+                    <div className="md:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-dark-surface to-transparent z-20" />
+                )}
+                {showMobileScrollHint && (
+                    <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
+                )}
+                <table className="w-full min-w-[680px] md:min-w-[800px]">
                     <thead className="bg-gray-50 dark:bg-dark-surface-soft border-b border-gray-200 dark:border-dark-border">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider w-12 sticky left-0 bg-gray-50 dark:bg-dark-surface-soft z-10">
+                            <th className="px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider w-10 md:w-12 sticky left-0 bg-gray-50 dark:bg-dark-surface-soft z-10">
                                 #
                             </th>
-                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-12 bg-gray-50 dark:bg-dark-surface-soft z-10 w-64 border-r border-gray-100 dark:border-dark-border">
+                            <th className="px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-10 md:left-12 bg-gray-50 dark:bg-dark-surface-soft z-10 w-[180px] md:w-64 border-r border-gray-100 dark:border-dark-border">
                                 {t('table.player', { defaultValue: 'Player' })}
                             </th>
-                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
+                            <th className="px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                                 {t('table.club', { defaultValue: 'Club' })}
-                            </th>
-                            <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
-                                {t('table.pos', { defaultValue: 'Pos' })}
                             </th>
                             {columns.map(col => (
                                 <th
                                     key={col.key}
-                                    className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors ${
+                                    className={`px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors ${
                                         col.sortable
                                             ? 'text-gray-500 dark:text-slate-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-surface-soft'
                                             : 'text-gray-500 dark:text-slate-400'
@@ -163,24 +210,25 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                 key={player.player_id}
                                 className="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group"
                             >
-                                <td className="px-4 py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
+                                <td className="px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
                                     {index + 1}
                                 </td>
-                                <td className="px-4 py-2 sticky left-12 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
+                                <td className="px-2.5 md:px-4 py-2 sticky left-10 md:left-12 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
                                     {(() => {
                                         const playerHref = getPlayerHref(player.player_id);
                                         const content = (
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-2.5 md:gap-3">
                                                 <PlayerAvatar
                                                     photoUrl={player.photo_url}
                                                     firstName={player.first_name}
                                                     lastName={player.last_name}
-                                                    size="md"
+                                                    size="sm"
+                                                    className="md:w-10 md:h-10"
                                                 />
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-1.5 min-w-0">
-                                                        <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate">
-                                                            {player.last_name}
+                                                        <span className="font-bold text-gray-900 dark:text-slate-100 text-sm leading-tight truncate max-w-[112px] md:max-w-none">
+                                                            {toCompactPlayerName(player.first_name, player.last_name)}
                                                         </span>
                                                         {player.country?.flag_url ? (
                                                             <img
@@ -193,7 +241,6 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                                             />
                                                         ) : null}
                                                     </div>
-                                                    <div className="text-xs text-gray-500 dark:text-slate-400 truncate">{player.first_name}</div>
                                                 </div>
                                             </div>
                                         );
@@ -210,50 +257,40 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                         );
                                     })()}
                                 </td>
-                                <td className="px-4 py-4">
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            src={player.team_logo || TEAM_LOGO_PLACEHOLDER_SRC}
-                                            alt={player.team_name}
-                                            className="w-6 h-6 object-contain"
-                                            onError={(e) => {
-                                                const img = e.currentTarget;
-                                                if (img.dataset.fallbackApplied) return;
-                                                img.dataset.fallbackApplied = 'true';
-                                                img.src = TEAM_LOGO_PLACEHOLDER_SRC;
-                                            }}
-                                        />
-                                        {(() => {
-                                            const teamHref = getTeamHref(player.team_id);
-                                            if (!teamHref) {
-                                                return (
-                                                    <span className="text-sm text-gray-600 dark:text-slate-300 hidden xl:inline">{player.team_name}</span>
-                                                );
-                                            }
+                                <td className="px-2.5 md:px-4 py-3 md:py-4">
+                                    {(() => {
+                                        const teamHref = getTeamHref(player.team_id);
+                                        const logo = (
+                                            <img
+                                                src={player.team_logo || TEAM_LOGO_PLACEHOLDER_SRC}
+                                                alt={player.team_name}
+                                                className="w-5 h-5 md:w-6 md:h-6 object-contain shrink-0"
+                                                onError={(e) => {
+                                                    const img = e.currentTarget;
+                                                    if (img.dataset.fallbackApplied) return;
+                                                    img.dataset.fallbackApplied = 'true';
+                                                    img.src = TEAM_LOGO_PLACEHOLDER_SRC;
+                                                }}
+                                            />
+                                        );
 
-                                            return (
-                                                <Link
-                                                    href={teamHref}
-                                                    className="text-sm text-gray-600 dark:text-slate-300 hidden xl:inline hover:text-primary dark:hover:text-accent-cyan transition-colors"
-                                                >
-                                                    {player.team_name}
-                                                </Link>
-                                            );
-                                        })()}
-                                    </div>
-                                </td>
-                                <td className="px-4 py-4 text-xs font-bold text-gray-500 dark:text-slate-400">
-                                    <span
-                                        className="inline-flex min-w-[44px] items-center justify-center px-2 py-1 bg-gray-100 dark:bg-dark-surface-soft/60 rounded"
-                                        title={player.top_role || undefined}
-                                    >
-                                        {player.position_code ? t(`filters.positions.${player.position_code}`) : '—'}
-                                    </span>
+                                        if (!teamHref) return logo;
+
+                                        return (
+                                            <Link
+                                                href={teamHref}
+                                                aria-label={player.team_name}
+                                                className="inline-flex items-center justify-center rounded-md transition-colors hover:bg-blue-50/40 dark:hover:bg-cyan-500/10 p-0.5"
+                                            >
+                                                {logo}
+                                            </Link>
+                                        );
+                                    })()}
                                 </td>
                                 {columns.map(col => (
                                     <td
                                         key={col.key}
-                                        className={`px-4 py-4 text-sm text-gray-900 dark:text-slate-100 ${
+                                        className={`px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-900 dark:text-slate-100 ${
                                             sortBy === col.key
                                                 ? 'bg-blue-50/30 dark:bg-cyan-500/10 group-hover:bg-blue-50/50 dark:group-hover:bg-blue-500/20 font-bold'
                                                 : ''
@@ -266,7 +303,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                         ))}
                         {sortedPlayers.length === 0 && (
                             <tr>
-                                <td colSpan={columns.length + 4} className="px-4 py-12 text-center text-gray-500 dark:text-slate-400">
+                                <td colSpan={columns.length + 3} className="px-4 py-12 text-center text-gray-500 dark:text-slate-400">
                                     {t('table.noPlayersFound', {
                                         defaultValue: 'No players found. Try adjusting filters.',
                                     })}

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, Building, Users, Clock } from 'lucide-react';
 import { MatchDetail, EnhancedMatchEvent, PlayerCountry } from '@/types';
 import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
-import { formatMatchDayDate } from '@/lib/utils/dateFormat';
+import { formatMatchDayDate, formatMatchTime } from '@/lib/utils/dateFormat';
 import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
 import { WhistleIcon } from '@/components/icons/WhistleIcon';
@@ -20,6 +20,7 @@ interface MatchHeaderProps {
 
 export function MatchHeader({ match, events = [], eventsLoading = false, playerCountryMap = {} }: MatchHeaderProps) {
   const { t, i18n } = useTranslation('match');
+  const displayTime = formatMatchTime(match.time) || match.time;
 
   const homeLogoUrl = match.home_team.logo_url || getTeamLogo(match.home_team.id);
   const awayLogoUrl = match.away_team.logo_url || getTeamLogo(match.away_team.id);
@@ -51,7 +52,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
               <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-white/60" />
-                <span>Kick Off: {match.time}</span>
+                <span>Kick Off: {displayTime}</span>
               </div>
             </>
           )}
@@ -183,7 +184,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
             ) : (
               <div className="flex flex-col items-center">
                 <div className="text-3xl md:text-6xl font-bold text-white mb-2">
-                  {match.time || '—'}
+                  {displayTime || '—'}
                 </div>
                 <div className="px-2.5 py-1 rounded bg-accent text-primary text-[10px] sm:text-xs font-bold uppercase tracking-wider">
                   {t('upcoming')}

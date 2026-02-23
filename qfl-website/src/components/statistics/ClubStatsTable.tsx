@@ -97,8 +97,8 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
 
   return (
     <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm">
-      <div className="px-4 py-3 border-b border-gray-200 dark:border-dark-border">
-        <div className="relative max-w-md">
+      <div className="px-3 md:px-4 py-3 border-b border-gray-200 dark:border-dark-border">
+        <div className="relative max-w-full md:max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-400" />
           <input
             value={query}
@@ -121,24 +121,31 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
         </div>
       </div>
 
-      {/* Mobile scroll indicator */}
-      <div className="relative">
-          <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
+      <div
+        data-testid="club-stats-scroll-hint"
+        className="md:hidden px-3 py-2 text-[11px] text-gray-500 dark:text-slate-400 border-b border-gray-200 dark:border-dark-border"
+      >
+        {t('table.scrollHint', { defaultValue: 'Проведите влево, чтобы увидеть все столбцы.' })}
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] md:min-w-[800px]">
+
+      <div className="relative">
+        <div className="md:hidden pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-dark-surface to-transparent z-20" />
+        <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
+      </div>
+      <div className="overflow-x-auto no-scrollbar">
+        <table className="w-full min-w-[640px] md:min-w-[800px]">
           <thead className="bg-gray-50 dark:bg-dark-surface-soft border-b border-gray-200 dark:border-dark-border">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider w-16 sticky left-0 bg-gray-50 dark:bg-dark-surface-soft z-10">
+              <th className="px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider w-12 md:w-16 sticky left-0 bg-gray-50 dark:bg-dark-surface-soft z-10">
                 {t('table.position')}
               </th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-16 bg-gray-50 dark:bg-dark-surface-soft z-10 w-64 border-r border-gray-100 dark:border-dark-border">
+              <th className="px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider sticky left-12 md:left-16 bg-gray-50 dark:bg-dark-surface-soft z-10 w-[170px] md:w-64 border-r border-gray-100 dark:border-dark-border">
                 {t('table.club')}
               </th>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors ${
+                  className={`px-2.5 md:px-4 py-2.5 md:py-3 text-left text-xs font-bold uppercase tracking-wider transition-colors ${
                     col.sortable
                       ? 'text-gray-500 dark:text-slate-400 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-surface-soft'
                       : 'text-gray-500 dark:text-slate-400'
@@ -184,15 +191,15 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                 key={team.team_id}
                 className="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group"
               >
-                <td className="px-4 py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
+                <td className="px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
                   {index + 1}
                 </td>
-                <td className="px-4 py-4 sticky left-16 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
-                  <div className="flex items-center gap-3">
+                <td className="px-2.5 md:px-4 py-3 md:py-4 sticky left-12 md:left-16 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
+                  <div className="flex items-center gap-2 md:gap-3 min-w-0">
                     <img
                       src={team.team_logo || TEAM_LOGO_PLACEHOLDER_SRC}
                       alt={team.team_name}
-                      className="w-8 h-8 object-contain"
+                      className="w-7 h-7 md:w-8 md:h-8 object-contain shrink-0"
                       onError={(e) => {
                         const img = e.currentTarget;
                         if (img.dataset.fallbackApplied) return;
@@ -204,7 +211,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                       const teamHref = getTeamHref(team.team_id);
                       if (!teamHref) {
                         return (
-                          <span className="font-semibold text-gray-900 dark:text-slate-100">
+                          <span className="font-semibold text-sm md:text-base text-gray-900 dark:text-slate-100 truncate max-w-[108px] md:max-w-none">
                             {team.team_name}
                           </span>
                         );
@@ -213,7 +220,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                       return (
                         <Link
                           href={teamHref}
-                          className="font-semibold text-gray-900 dark:text-slate-100 hover:text-primary dark:hover:text-accent-cyan transition-colors"
+                          className="font-semibold text-sm md:text-base text-gray-900 dark:text-slate-100 hover:text-primary dark:hover:text-accent-cyan transition-colors truncate max-w-[108px] md:max-w-none"
                         >
                           {team.team_name}
                         </Link>
@@ -224,7 +231,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`px-4 py-4 text-sm text-gray-900 dark:text-slate-100 ${
+                    className={`px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-900 dark:text-slate-100 ${
                       sortBy === col.key
                         ? 'bg-blue-50/30 dark:bg-cyan-500/10 group-hover:bg-blue-50/50 dark:group-hover:bg-blue-500/20 font-semibold'
                         : ''

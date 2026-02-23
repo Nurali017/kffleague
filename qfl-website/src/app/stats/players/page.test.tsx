@@ -3,10 +3,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '@/test/utils';
 import PlayersStatsPage from './page';
 
-const { usePlayerStatsMock, useTeamsMock, useTournamentMock } = vi.hoisted(() => ({
+const {
+  usePlayerStatsMock,
+  useTeamsMock,
+  useTournamentMock,
+  usePreSeasonEffectiveIdMock,
+} = vi.hoisted(() => ({
   usePlayerStatsMock: vi.fn(),
   useTeamsMock: vi.fn(),
   useTournamentMock: vi.fn(),
+  usePreSeasonEffectiveIdMock: vi.fn(),
 }));
 
 vi.mock('@/hooks', () => ({
@@ -16,6 +22,7 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/contexts/TournamentContext', () => ({
   useTournament: () => useTournamentMock(),
+  usePreSeasonEffectiveId: (...args: unknown[]) => usePreSeasonEffectiveIdMock(...args),
 }));
 
 vi.mock('@/config/tournaments', () => ({
@@ -39,10 +46,10 @@ describe('Players stats page season selection', () => {
     usePlayerStatsMock.mockReset();
     useTeamsMock.mockReset();
     useTournamentMock.mockReset();
+    usePreSeasonEffectiveIdMock.mockReset();
 
-    useTournamentMock.mockReturnValue({
-      effectiveSeasonId: 180,
-    });
+    useTournamentMock.mockReturnValue({});
+    usePreSeasonEffectiveIdMock.mockReturnValue(180);
     usePlayerStatsMock.mockReturnValue({
       players: [],
       loading: false,
@@ -58,9 +65,11 @@ describe('Players stats page season selection', () => {
   it('uses effectiveSeasonId for both players stats and teams filter', () => {
     renderWithProviders(<PlayersStatsPage />);
 
+    const firstCallArg = usePlayerStatsMock.mock.calls[0]?.[0] as Record<string, unknown>;
     expect(usePlayerStatsMock).toHaveBeenCalledWith(
       expect.objectContaining({ seasonId: 180 })
     );
+    expect(firstCallArg).not.toHaveProperty('positionCode');
     expect(useTeamsMock).toHaveBeenCalledWith(180);
     expect(usePlayerStatsMock).not.toHaveBeenCalledWith(
       expect.objectContaining({ seasonId: 61 })

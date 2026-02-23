@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
@@ -15,44 +14,6 @@ interface PlayerPageHeroProps {
   variant?: PlayerPageVariant;
 }
 
-interface MetaCardProps {
-  label: string;
-  value: React.ReactNode;
-  variant: PlayerPageVariant;
-}
-
-function MetaCard({ label, value, variant }: MetaCardProps) {
-  return (
-    <div
-      className={cn(
-        'rounded-xl border px-3 py-3 md:px-4',
-        variant === 'studio'
-          ? 'border-white/20 bg-white/10 backdrop-blur-md'
-          : variant === 'data'
-            ? 'border-slate-200 bg-slate-50 dark:border-dark-border dark:bg-dark-surface/70'
-            : 'border-white/20 bg-white/10'
-      )}
-    >
-      <p
-        className={cn(
-          'mb-1 text-[10px] font-bold uppercase tracking-wider',
-          variant === 'data' ? 'text-slate-500 dark:text-slate-400' : 'text-white/60'
-        )}
-      >
-        {label}
-      </p>
-      <p
-        className={cn(
-          'text-sm font-bold md:text-base',
-          variant === 'data' ? 'text-slate-900 dark:text-slate-100' : 'text-white'
-        )}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
-
 function getAge(dob?: string | null) {
   if (!dob) return null;
   const birthDate = new Date(dob);
@@ -62,15 +23,43 @@ function getAge(dob?: string | null) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
+function toFlagEmoji(countryCode?: string | null) {
+  if (!countryCode) return null;
+  const normalizedCode = countryCode.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(normalizedCode)) return null;
+  return String.fromCodePoint(...[...normalizedCode].map((char) => 127397 + char.charCodeAt(0)));
+}
+
 export function PlayerPageHero({ player, team, variant = 'clarity' }: PlayerPageHeroProps) {
   const { t, i18n } = useTranslation('player');
   const lang = i18n.language?.substring(0, 2) === 'kz' ? 'kz' : 'ru';
   const age = getAge(player.date_of_birth);
+  const dateValue = player.date_of_birth
+    ? new Date(player.date_of_birth).toLocaleDateString(lang === 'kz' ? 'kk-KZ' : 'ru-RU')
+    : '-';
   const country =
     player.country?.name ||
     player.nationality ||
     t('defaultCountry', { defaultValue: lang === 'kz' ? 'Қазақстан' : 'Казахстан' });
   const countryCode = player.country?.code ? String(player.country.code).toUpperCase() : null;
+  const metaItems = [
+    {
+      label: t('dateOfBirth', { defaultValue: lang === 'kz' ? 'Туған күні' : 'Дата рождения' }),
+      value: age != null
+        ? `${dateValue} · ${age} ${t('years', { defaultValue: lang === 'kz' ? 'жас' : 'лет' })}`
+        : dateValue,
+    },
+    {
+      label: t('heightWeight', { defaultValue: lang === 'kz' ? 'Бой, салмақ' : 'Рост, вес' }),
+      value: `${player.height ? `${player.height} см` : '-'} / ${player.weight ? `${player.weight} кг` : '-'}`,
+    },
+    {
+      label: t('citizenship', { defaultValue: lang === 'kz' ? 'Азаматтығы' : 'Гражданство' }),
+      value: country,
+    },
+  ];
+  const birthMeta = metaItems[0];
+  const citizenshipMeta = metaItems[2];
   const teamNameRaw = team?.name || player.team_name;
   const teamName = teamNameRaw?.trim()
     ? teamNameRaw
@@ -78,49 +67,10 @@ export function PlayerPageHero({ player, team, variant = 'clarity' }: PlayerPage
   const teamId = team?.id || player.team_id;
   const isStudio = variant === 'studio';
   const isData = variant === 'data';
+  const countryFlagUrl = player.country?.flag_url || null;
+  const countryFlagEmoji = toFlagEmoji(countryCode);
 
   const initials = `${player.first_name?.[0] || ''}${player.last_name?.[0] || ''}`.toUpperCase();
-  const dateValue = player.date_of_birth
-    ? new Date(player.date_of_birth).toLocaleDateString(lang === 'kz' ? 'kk-KZ' : 'ru-RU')
-    : '-';
-
-  const metaItems = [
-    {
-      label: t('dateOfBirth', { defaultValue: lang === 'kz' ? 'Туған күні' : 'Дата рождения' }),
-      value: (
-        <>
-          {dateValue}
-          {age != null && (
-            <span className={cn('ml-1', isData ? 'text-slate-500 dark:text-slate-400' : 'text-white/70')}>
-              · {age} {t('years', { defaultValue: lang === 'kz' ? 'жас' : 'лет' })}
-            </span>
-          )}
-        </>
-      ),
-    },
-    {
-      label: t('heightWeight', { defaultValue: lang === 'kz' ? 'Бой, салмақ' : 'Рост, вес' }),
-      value: `${player.height ? `${player.height} см` : '-'} / ${player.weight ? `${player.weight} кг` : '-'}`,
-    },
-    {
-      label: t('citizenship', { defaultValue: lang === 'kz' ? 'Азаматтық' : 'Гражданство' }),
-      value: (
-        <span className="inline-flex items-center gap-2">
-          {country}
-          {countryCode && (
-            <span
-              className={cn(
-                'rounded px-1.5 py-0.5 text-[10px] font-bold',
-                isData ? 'bg-slate-200 text-slate-700 dark:bg-dark-surface-soft dark:text-slate-100' : 'bg-white/20 text-white'
-              )}
-            >
-              {countryCode}
-            </span>
-          )}
-        </span>
-      ),
-    },
-  ];
 
   if (isData) {
     return (
@@ -177,13 +127,27 @@ export function PlayerPageHero({ player, team, variant = 'clarity' }: PlayerPage
                   <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 dark:bg-dark-bg dark:text-slate-200 dark:ring-slate-700 md:text-sm">
                     {player.position || t('position', { defaultValue: 'Позиция не указана' })}
                   </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 dark:bg-dark-bg dark:text-slate-200 dark:ring-slate-700 md:text-sm">
+                    <span>{birthMeta.label}: {birthMeta.value}</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 dark:bg-dark-bg dark:text-slate-200 dark:ring-slate-700 md:text-sm">
+                    {countryFlagUrl ? (
+                      <img
+                        src={countryFlagUrl}
+                        alt={`${country} flag`}
+                        className="h-3 w-5 rounded-[2px] object-cover ring-1 ring-slate-200 dark:ring-slate-600"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : countryFlagEmoji ? (
+                      <span aria-hidden className="text-sm leading-none">
+                        {countryFlagEmoji}
+                      </span>
+                    ) : null}
+                    <span>{citizenshipMeta.label}: {citizenshipMeta.value}</span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                {metaItems.map((item) => (
-                  <MetaCard key={item.label} label={item.label} value={item.value} variant={variant} />
-                ))}
               </div>
             </div>
           </div>
@@ -215,12 +179,7 @@ export function PlayerPageHero({ player, team, variant = 'clarity' }: PlayerPage
         </div>
 
         <div
-          className={cn(
-            'grid items-end gap-6 rounded-3xl border px-4 py-5 md:grid-cols-[1fr_auto] md:px-8 md:py-7',
-            isStudio
-              ? 'border-white/25 bg-black/20 shadow-[0_16px_48px_rgba(0,0,0,0.2)] backdrop-blur-md'
-              : 'border-white/15 bg-white/10 backdrop-blur-sm'
-          )}
+          className="grid items-end gap-6 rounded-3xl px-4 py-5 md:grid-cols-[1fr_auto] md:px-8 md:py-7"
         >
           <div>
             <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -242,12 +201,26 @@ export function PlayerPageHero({ player, team, variant = 'clarity' }: PlayerPage
               <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold ring-1 ring-white/20 md:text-sm">
                 {player.position || t('position', { defaultValue: 'Позиция не указана' })}
               </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              {metaItems.map((item) => (
-                <MetaCard key={item.label} label={item.label} value={item.value} variant={variant} />
-              ))}
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold ring-1 ring-white/20 md:text-sm">
+                <span>{birthMeta.label}: {birthMeta.value}</span>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold ring-1 ring-white/20 md:text-sm">
+                {countryFlagUrl ? (
+                  <img
+                    src={countryFlagUrl}
+                    alt={`${country} flag`}
+                    className="h-3 w-5 rounded-[2px] object-cover ring-1 ring-white/20"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : countryFlagEmoji ? (
+                  <span aria-hidden className="text-sm leading-none">
+                    {countryFlagEmoji}
+                  </span>
+                ) : null}
+                <span>{citizenshipMeta.label}: {citizenshipMeta.value}</span>
+              </div>
             </div>
           </div>
 

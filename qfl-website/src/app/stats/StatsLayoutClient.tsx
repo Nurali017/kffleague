@@ -36,39 +36,42 @@ function MainTabs() {
     const teamsHref = query ? `/stats/teams?${query}` : '/stats/teams';
     const playersHref = query ? `/stats/players?${query}` : '/stats/players';
 
-  return (
+    return (
         <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-14 md:top-16 z-40 shadow-sm -mt-3 md:-mt-6">
             <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
-                <div className="flex items-center justify-between">
-                    <div className="flex gap-1 overflow-x-auto no-scrollbar">
-                        <Link
-                            href={teamsHref}
-                            className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
-                                isTeams
-                                    ? 'text-primary dark:text-accent-cyan'
-                                    : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
-                            }`}
-                        >
-                            {t('mainTabs.clubs', { defaultValue: 'Статистика клубов' })}
-                            {isTeams && (
-                                <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
-                            )}
-                        </Link>
-                        <Link
-                            href={playersHref}
-                            className={`shrink-0 px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
-                                isPlayers
-                                    ? 'text-primary dark:text-accent-cyan'
-                                    : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
-                            }`}
-                        >
-                            {t('mainTabs.players', { defaultValue: 'Статистика игроков' })}
-                            {isPlayers && (
-                                <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
-                            )}
-                        </Link>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
+                    <div className="relative min-w-0">
+                        <div className="flex gap-1 overflow-x-auto no-scrollbar -mx-1 px-1 md:mx-0 md:px-0">
+                            <Link
+                                href={teamsHref}
+                                className={`shrink-0 px-3 sm:px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
+                                    isTeams
+                                        ? 'text-primary dark:text-accent-cyan'
+                                        : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
+                                }`}
+                            >
+                                {t('mainTabs.clubs', { defaultValue: 'Статистика клубов' })}
+                                {isTeams && (
+                                    <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
+                                )}
+                            </Link>
+                            <Link
+                                href={playersHref}
+                                className={`shrink-0 px-3 sm:px-4 md:px-8 py-3 md:py-5 text-sm md:text-lg font-bold transition-all relative ${
+                                    isPlayers
+                                        ? 'text-primary dark:text-accent-cyan'
+                                        : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
+                                }`}
+                            >
+                                {t('mainTabs.players', { defaultValue: 'Статистика игроков' })}
+                                {isPlayers && (
+                                    <div className="absolute bottom-0 left-0 w-full h-1 bg-primary dark:bg-accent-cyan rounded-t-sm" />
+                                )}
+                            </Link>
+                        </div>
+                        <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent" />
                     </div>
-                    <div className="shrink-0 pr-1">
+                    <div className="flex justify-end md:block pb-3 md:pb-0 md:pr-1">
                         <SeasonYearSelector variant="inline" />
                     </div>
                 </div>

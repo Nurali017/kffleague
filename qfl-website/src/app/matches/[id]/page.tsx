@@ -15,6 +15,7 @@ import { TournamentTableMini } from '@/components/match/TournamentTableMini';
 import { MatchStatisticsTab } from '@/components/match/MatchStatisticsTab';
 import { MiniKeyStats } from '@/components/match/MiniKeyStats';
 import { H2HContentCards } from '@/components/match/H2HContentCards';
+import { MatchEventTimeline } from '@/components/match/MatchEventTimeline';
 import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
 import { isSuperCupMatch } from '@/config/featuredMatch';
 import { SuperCupMatchHeader, TrophyCabinet } from '@/components/supercup';
@@ -141,7 +142,7 @@ export default function MatchDetailPage() {
 
   return (
     <div className="bg-[#FAFBFC] dark:bg-dark-bg min-h-screen">
-      {/* 1. Hero Section includes Timeline - full width */}
+      {/* 1. Hero Section */}
       {isSuperCup ? (
         <SuperCupMatchHeader
           match={match}
@@ -159,7 +160,7 @@ export default function MatchDetailPage() {
       )}
 
       {match.is_schedule_tentative === true && (
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20 pt-4">
+        <div className={`max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20 ${isSuperCup ? 'pt-3 md:pt-4' : 'pt-4'}`}>
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-700/70 dark:bg-amber-900/25 dark:text-amber-100">
             {t('scheduleNotice.perMatch')}
           </div>
@@ -177,7 +178,7 @@ export default function MatchDetailPage() {
       />
 
       {/* 3. Tab Content - Constrained Container */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20 py-8">
+      <div className={`max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20 ${isSuperCup ? 'py-5 md:py-8' : 'py-8'}`}>
 
         {/* Lineups tab - full width without sidebar */}
         {activeTab === 'lineups' && showLineupsTab && (
@@ -208,9 +209,22 @@ export default function MatchDetailPage() {
 
         {/* Overview tab - with sidebar layout */}
         {activeTab === 'overview' && (
-          <div className={`grid grid-cols-1 ${isSuperCup ? '' : 'lg:grid-cols-[1fr_380px]'} gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+          <div className={`grid grid-cols-1 ${isSuperCup ? '' : 'lg:grid-cols-[1fr_380px]'} ${isSuperCup ? 'gap-5 md:gap-8' : 'gap-8'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
             {/* Left Column - main content */}
-            <div className="space-y-8">
+            <div className={isSuperCup ? 'space-y-5 md:space-y-8' : 'space-y-8'}>
+              {isSuperCup && (
+                <div className="md:hidden -mx-4 sm:-mx-6" data-testid="supercup-mobile-overview-timeline">
+                  <MatchEventTimeline
+                    events={events?.events || []}
+                    homeTeam={match.home_team}
+                    awayTeam={match.away_team}
+                    currentMinute={match.minute || (match.status === 'finished' ? 90 : 0)}
+                    loading={eventsLoading}
+                    playerCountryMap={playerCountryMap}
+                  />
+                </div>
+              )}
+
               {isSuperCup && (
                 <TrophyCabinet variant="full" />
               )}

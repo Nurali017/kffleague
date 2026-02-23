@@ -3,10 +3,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '@/test/utils';
 import StatsLayout from './StatsLayoutClient';
 
-const { useSeasonStatsMock, useSeasonGoalsByPeriodMock, useTournamentMock } = vi.hoisted(() => ({
+const {
+  useSeasonStatsMock,
+  useSeasonGoalsByPeriodMock,
+  useTournamentMock,
+  usePreSeasonEffectiveIdMock,
+} = vi.hoisted(() => ({
   useSeasonStatsMock: vi.fn(),
   useSeasonGoalsByPeriodMock: vi.fn(),
   useTournamentMock: vi.fn(),
+  usePreSeasonEffectiveIdMock: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -21,6 +27,7 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/contexts/TournamentContext', () => ({
   useTournament: () => useTournamentMock(),
+  usePreSeasonEffectiveId: (...args: unknown[]) => usePreSeasonEffectiveIdMock(...args),
 }));
 
 vi.mock('@/config/tournaments', () => ({
@@ -39,18 +46,23 @@ vi.mock('@/components/ui/HeroBackground', () => ({
   HeroBackground: () => <div data-testid="hero-background" />,
 }));
 
+vi.mock('@/components/ui/SeasonYearSelector', () => ({
+  SeasonYearSelector: () => <div data-testid="season-year-selector" />,
+}));
+
 describe('StatsLayoutClient season selection', () => {
   beforeEach(() => {
     useTournamentMock.mockReset();
     useSeasonStatsMock.mockReset();
     useSeasonGoalsByPeriodMock.mockReset();
+    usePreSeasonEffectiveIdMock.mockReset();
 
     useTournamentMock.mockReturnValue({
-      effectiveSeasonId: 180,
       currentTournament: {
         name: { ru: 'Вторая лига', kz: 'Екінші Лига', short: '2Л' },
       },
     });
+    usePreSeasonEffectiveIdMock.mockReturnValue(180);
     useSeasonStatsMock.mockReturnValue({
       stats: {
         season_name: '2026',
@@ -80,5 +92,6 @@ describe('StatsLayoutClient season selection', () => {
     expect(useSeasonGoalsByPeriodMock).toHaveBeenCalledWith({ seasonId: 180 });
     expect(useSeasonStatsMock).not.toHaveBeenCalledWith({ seasonId: 61 });
     expect(screen.getByTestId('statistics-hero')).toBeInTheDocument();
+    expect(screen.getByTestId('season-year-selector')).toBeInTheDocument();
   });
 });

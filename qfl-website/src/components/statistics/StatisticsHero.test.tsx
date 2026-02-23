@@ -77,4 +77,18 @@ describe('StatisticsHero', () => {
     expect(screen.queryByTestId('goal-timing-chart')).not.toBeInTheDocument();
     expect(screen.getByText('Данные по таймингу голов пока недоступны.')).toBeInTheDocument();
   });
+
+  it('keeps summary stats in responsive 2x2 grid layout', () => {
+    render(
+      <StatisticsHero
+        stats={baseStats}
+        goalsByPeriod={null}
+        goalsByPeriodMeta={null}
+      />
+    );
+
+    const grid = screen.getByTestId('stats-hero-summary-grid');
+    expect(grid.className).toContain('grid-cols-2');
+    expect(grid.className).toContain('md:grid-cols-4');
+  });
 });

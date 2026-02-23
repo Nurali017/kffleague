@@ -3,9 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '@/test/utils';
 import TeamsStatsPage from './page';
 
-const { useTeamStatsTableMock, useTournamentMock } = vi.hoisted(() => ({
+const { useTeamStatsTableMock, useTournamentMock, usePreSeasonEffectiveIdMock } = vi.hoisted(() => ({
   useTeamStatsTableMock: vi.fn(),
   useTournamentMock: vi.fn(),
+  usePreSeasonEffectiveIdMock: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -24,6 +25,7 @@ vi.mock('@/hooks', () => ({
 
 vi.mock('@/contexts/TournamentContext', () => ({
   useTournament: () => useTournamentMock(),
+  usePreSeasonEffectiveId: (...args: unknown[]) => usePreSeasonEffectiveIdMock(...args),
 }));
 
 vi.mock('@/config/tournaments', () => ({
@@ -46,15 +48,16 @@ describe('Teams stats page season selection', () => {
   beforeEach(() => {
     useTeamStatsTableMock.mockReset();
     useTournamentMock.mockReset();
+    usePreSeasonEffectiveIdMock.mockReset();
 
     useTournamentMock.mockReturnValue({
-      effectiveSeasonId: 180,
       currentTournament: {
         hasTable: true,
         hasBracket: false,
         name: { ru: 'Вторая лига', kz: 'Екінші Лига', short: '2Л' },
       },
     });
+    usePreSeasonEffectiveIdMock.mockReturnValue(180);
     useTeamStatsTableMock.mockReturnValue({
       teams: [{ team_id: 1 }],
       loading: false,

@@ -1,4 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { fireEvent } from '@testing-library/react';
 
 import { renderWithProviders, screen } from '@/test/utils';
 
@@ -9,6 +10,8 @@ const useMatchEventsMock = vi.fn();
 const useMatchLineupMock = vi.fn();
 const useMatchStatsMock = vi.fn();
 const matchTabsMock = vi.fn();
+const superCupMatchHeaderMock = vi.fn();
+const matchEventTimelineMock = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useParams: () => ({ id: 'game-1' }),
@@ -25,15 +28,41 @@ vi.mock('@/components/MatchHeader', () => ({
   MatchHeader: () => <div data-testid="match-header" />,
 }));
 
+vi.mock('@/components/match/MatchEventTimeline', () => ({
+  MatchEventTimeline: (props: unknown) => {
+    matchEventTimelineMock(props);
+    return <div data-testid="match-event-timeline" />;
+  },
+}));
+
+vi.mock('@/components/supercup', () => ({
+  SuperCupMatchHeader: (props: unknown) => {
+    superCupMatchHeaderMock(props);
+    return <div data-testid="supercup-match-header" />;
+  },
+  TrophyCabinet: () => <div data-testid="trophy-cabinet" />,
+}));
+
 vi.mock('@/components/match/MatchTabs', () => ({
-  MatchTabs: (props: { protocolUrl?: string | null; showLineupsTab?: boolean }) => {
+  MatchTabs: (props: {
+    protocolUrl?: string | null;
+    showLineupsTab?: boolean;
+    onTabChange: (tab: 'overview' | 'h2h') => void;
+  }) => {
     matchTabsMock(props);
     return (
       <div
         data-testid="match-tabs"
         data-protocol-url={props.protocolUrl ?? ''}
         data-show-lineups={props.showLineupsTab === false ? 'false' : 'true'}
-      />
+      >
+        <button type="button" onClick={() => props.onTabChange('overview')}>
+          overview-tab
+        </button>
+        <button type="button" onClick={() => props.onTabChange('h2h')}>
+          h2h-tab
+        </button>
+      </div>
     );
   },
 }));
@@ -96,9 +125,17 @@ const baseMatch = {
   is_schedule_tentative: false,
 };
 
+const superCupMatch = {
+  ...baseMatch,
+  home_team: { id: 13, name: 'Team 1' },
+  away_team: { id: 90, name: 'Team 2' },
+};
+
 describe('MatchDetailPage protocol tabs integration', () => {
   beforeEach(() => {
     matchTabsMock.mockReset();
+    superCupMatchHeaderMock.mockReset();
+    matchEventTimelineMock.mockReset();
     useMatchEventsMock.mockReturnValue({ events: { events: [] }, loading: false });
     useMatchLineupMock.mockReturnValue({ lineup: null, loading: false });
     useMatchStatsMock.mockReturnValue({ stats: null, loading: false });
@@ -219,5 +256,49 @@ describe('MatchDetailPage protocol tabs integration', () => {
     expect(
       screen.queryByText('Дата и время этого матча предварительные и могут быть изменены.')
     ).not.toBeInTheDocument();
+  });
+
+  it('does not render super cup mobile overview timeline for non-supercup matches', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: baseMatch,
+      loading: false,
+      error: null,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(screen.queryByTestId('supercup-mobile-overview-timeline')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('supercup-match-header')).not.toBeInTheDocument();
+  });
+
+  it('renders super cup mobile overview timeline inside overview content', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: superCupMatch,
+      loading: false,
+      error: null,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(screen.getByTestId('supercup-match-header')).toBeInTheDocument();
+    expect(screen.getByTestId('supercup-mobile-overview-timeline')).toBeInTheDocument();
+    expect(matchEventTimelineMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides super cup mobile overview timeline when switching away from overview tab', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: superCupMatch,
+      loading: false,
+      error: null,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+    expect(screen.getByTestId('supercup-mobile-overview-timeline')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'h2h-tab' }));
+    expect(screen.queryByTestId('supercup-mobile-overview-timeline')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'overview-tab' }));
+    expect(screen.getByTestId('supercup-mobile-overview-timeline')).toBeInTheDocument();
   });
 });

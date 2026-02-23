@@ -27,6 +27,7 @@ export function MatchTabs({
   isSuperCup = false,
 }: MatchTabsProps) {
   const { t } = useTranslation('match');
+  const hasProtocol = Boolean(protocolUrl);
 
   const tabs: Tab[] = [
     { id: 'overview', labelKey: 'tabs.overview' },
@@ -48,7 +49,7 @@ export function MatchTabs({
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={`
-                    py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm font-bold transition-all duration-200 whitespace-nowrap border-b-2 outline-none focus-visible:ring-2 ${isSuperCup ? 'focus-visible:ring-amber-400' : 'focus-visible:ring-blue-500'} rounded-t-lg
+                    ${isSuperCup ? 'min-h-[44px] px-3 py-2.5 text-[13px]' : 'py-3 px-2 text-xs'} md:min-h-0 md:py-4 md:px-4 md:text-sm font-bold transition-all duration-200 whitespace-nowrap border-b-2 outline-none focus-visible:ring-2 ${isSuperCup ? 'focus-visible:ring-amber-400' : 'focus-visible:ring-blue-500'} rounded-t-lg
                     ${isActive
                       ? isSuperCup
                         ? 'text-amber-500 border-amber-500'
@@ -63,22 +64,35 @@ export function MatchTabs({
             })}
           </nav>
 
-          {protocolUrl && (
+          {hasProtocol && isSuperCup && (
             <a
-              href={protocolUrl}
+              href={protocolUrl || undefined}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center justify-center px-4 py-2 mb-2 rounded-lg bg-primary text-white text-sm font-semibold whitespace-nowrap hover:opacity-90 transition-opacity"
+              data-testid="protocol-link-mobile-inline"
+              className="md:hidden inline-flex h-10 items-center justify-center rounded-lg bg-amber-400 text-[#0a1628] px-3 text-[11px] font-bold uppercase tracking-wide whitespace-nowrap shrink-0 mb-1 hover:opacity-90 transition-opacity"
+            >
+              {t('tabs.protocol')}
+            </a>
+          )}
+
+          {hasProtocol && (
+            <a
+              href={protocolUrl || undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="protocol-link-desktop"
+              className={`hidden md:inline-flex items-center justify-center px-4 py-2 mb-2 rounded-lg text-sm font-semibold whitespace-nowrap hover:opacity-90 transition-opacity ${isSuperCup ? 'bg-amber-400 text-[#0a1628]' : 'bg-primary text-white'}`}
             >
               {t('tabs.protocol')}
             </a>
           )}
         </div>
 
-        {protocolUrl && (
-          <div className="md:hidden pb-3">
+        {hasProtocol && !isSuperCup && (
+          <div className="md:hidden pb-3" data-testid="protocol-link-mobile-stacked">
             <a
-              href={protocolUrl}
+              href={protocolUrl || undefined}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
