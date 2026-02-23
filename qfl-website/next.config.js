@@ -7,7 +7,7 @@ const nextConfig = {
       'via.placeholder.com',
       'upload.wikimedia.org',
       'localhost',
-      process.env.NEXT_PUBLIC_SITE_DOMAIN || 'kff.1sportkz.com',
+      process.env.NEXT_PUBLIC_SITE_DOMAIN || 'kffleague.kz',
     ],
   },
   async rewrites() {

@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://kff.1sportkz.com';
+export const SITE_URL = 'https://kffleague.kz';
 
 export const SITE_NAME = 'Қазақстан Премьер-Лигасы';
 export const SITE_NAME_RU = 'Казахстанская Премьер-Лига';

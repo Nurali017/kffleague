@@ -10,7 +10,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 COMPOSE="docker compose -f $PROJECT_DIR/docker-compose.prod.yml"
-KAISAR_DIR="/opt/kaisar"
 INITIAL=false
 
 if [[ "${1:-}" == "--initial" ]]; then
@@ -77,8 +76,8 @@ $COMPOSE up -d celery_worker celery_beat
 
 # ---------- Nginx config ----------
 echo "[6/7] Updating nginx config..."
-cp "$PROJECT_DIR/nginx/conf.d/default.conf" "$KAISAR_DIR/nginx/conf.d/kff.conf"
-docker exec kaisar-nginx nginx -t && docker exec kaisar-nginx nginx -s reload
+cp "$PROJECT_DIR/nginx/conf.d/default.conf" /home/debian/1sport/qfl-nginx/kffleague.kz.conf
+docker exec onesport-admin nginx -t && docker exec onesport-admin nginx -s reload
 echo "Nginx reloaded."
 
 # ---------- Verify ----------
