@@ -205,40 +205,62 @@ export function LineupField({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px_1fr] gap-0 lg:gap-6 items-start">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px_1fr] gap-0 lg:gap-6 items-start">
 
-      {/* Desktop List: Home - Hidden on Mobile */}
-      <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
-        <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
-          <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 object-contain" alt={homeTeam.name} />
-          <span className="font-bold text-gray-900">{homeTeam.name}</span>
+        {/* Desktop List: Home - Hidden on Mobile */}
+        <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
+          <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
+            <img src={homeTeam.logo_url || getTeamLogo(homeTeam.id) || ''} className="w-8 h-8 object-contain" alt={homeTeam.name} />
+            <span className="font-bold text-gray-900">{homeTeam.name}</span>
+          </div>
+          {homeStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
         </div>
-        {homeStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
+
+        {/* Field Visualization - The Star */}
+        <FieldVisualization
+          homeStarters={homeStartersOrdered}
+          awayStarters={awayStartersOrdered}
+          homeFormation={lineups.home_team.formation}
+          awayFormation={lineups.away_team.formation}
+          homeColor={homeColor}
+          awayColor={awayColor}
+          homeTeam={homeTeam}
+          awayTeam={awayTeam}
+          homeCoach={lineups.home_team.coach_name}
+          awayCoach={lineups.away_team.coach_name}
+        />
+
+        {/* Desktop List: Away - Hidden on Mobile */}
+        <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
+          <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
+            <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 object-contain" alt={awayTeam.name} />
+            <span className="font-bold text-gray-900">{awayTeam.name}</span>
+          </div>
+          {awayStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
+        </div>
+
       </div>
 
-      {/* Field Visualization - The Star */}
-      <FieldVisualization
-        homeStarters={homeStartersOrdered}
-        awayStarters={awayStartersOrdered}
-        homeFormation={lineups.home_team.formation}
-        awayFormation={lineups.away_team.formation}
-        homeColor={homeColor}
-        awayColor={awayColor}
-        homeTeam={homeTeam}
-        awayTeam={awayTeam}
-        homeCoach={lineups.home_team.coach_name}
-        awayCoach={lineups.away_team.coach_name}
-      />
-
-      {/* Desktop List: Away - Hidden on Mobile */}
-      <div className="hidden lg:block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm h-[800px] overflow-y-auto">
-        <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center gap-3 sticky top-0 z-10">
-          <img src={awayTeam.logo_url || getTeamLogo(awayTeam.id) || ''} className="w-8 h-8 object-contain" alt={awayTeam.name} />
-          <span className="font-bold text-gray-900">{awayTeam.name}</span>
-        </div>
-        {awayStartersOrdered.map(p => <PlayerRow key={p.player_id} player={p} />)}
+      {/* Mobile Player Lists - visible only on small screens */}
+      <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <TeamLineupListCard
+          team={homeTeam}
+          logoUrl={homeTeam.logo_url}
+          starters={homeStartersOrdered}
+          substitutes={lineups.home_team.substitutes || []}
+          startersTitle={startersTitle}
+          substitutesTitle={substitutesTitle}
+        />
+        <TeamLineupListCard
+          team={awayTeam}
+          logoUrl={awayTeam.logo_url}
+          starters={awayStartersOrdered}
+          substitutes={lineups.away_team.substitutes || []}
+          startersTitle={startersTitle}
+          substitutesTitle={substitutesTitle}
+        />
       </div>
-
     </div>
   );
 }
@@ -423,7 +445,7 @@ function PlayerMarker({ player, position, teamColor }: PlayerMarkerProps) {
             className="w-3 h-[9px] object-cover rounded-[1px] shadow-sm"
           />
         )}
-        <span className="text-[10px] md:text-[11px] font-medium text-white text-center leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[90px] truncate tracking-wide">
+        <span className="text-[10px] md:text-[11px] font-medium text-white text-center leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] max-w-[70px] md:max-w-[90px] truncate whitespace-nowrap tracking-wide">
           {player.last_name}
         </span>
         {player.is_captain && (

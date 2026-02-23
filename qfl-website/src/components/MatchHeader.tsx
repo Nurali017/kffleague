@@ -35,7 +35,7 @@ export function MatchHeader({ match, events = [], eventsLoading = false, playerC
     <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
       <HeroBackground />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-3 sm:px-4 md:px-20 py-5 md:py-8">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-5 md:py-8">
 
         {/* Match Information Bar */}
         <div className="mb-6 md:mb-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 md:gap-4 text-xs md:text-sm text-white/80">

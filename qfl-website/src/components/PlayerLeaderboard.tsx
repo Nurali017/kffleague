@@ -264,11 +264,16 @@ function PlayerLeaderboardSkeleton() {
   );
 }
 
-export function PlayerLeaderboard() {
+interface PlayerLeaderboardProps {
+  seasonId?: number;
+}
+
+export function PlayerLeaderboard({ seasonId: seasonIdProp }: PlayerLeaderboardProps = {}) {
   const { t } = useTranslation();
   const { t: tErrors } = useTranslation('errors');
   const { effectiveSeasonId } = useTournament();
-  const { scorers, assisters, cleanSheets, loading, error, refetch } = usePlayerLeaderboard({ limit: 5, seasonId: effectiveSeasonId });
+  const resolvedSeasonId = seasonIdProp ?? effectiveSeasonId;
+  const { scorers, assisters, cleanSheets, loading, error, refetch } = usePlayerLeaderboard({ limit: 5, seasonId: resolvedSeasonId });
 
   if (loading) {
     return <PlayerLeaderboardSkeleton />;

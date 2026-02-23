@@ -78,7 +78,7 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
                         />
                       ) : null}
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-[9px] font-bold shrink-0 ${logoUrl ? 'hidden' : ''}`}
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0 ${logoUrl ? 'hidden' : ''}`}
                         style={{ backgroundColor: teamColor }}
                       >
                         {team.team_name[0]}

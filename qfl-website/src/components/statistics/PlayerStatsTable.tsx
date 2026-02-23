@@ -99,6 +99,10 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
 
     return (
         <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm">
+            {/* Mobile scroll indicator */}
+            <div className="relative">
+                <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
+            </div>
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[720px] md:min-w-[800px]">
                     <thead className="bg-gray-50 dark:bg-dark-surface-soft border-b border-gray-200 dark:border-dark-border">

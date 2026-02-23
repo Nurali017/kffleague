@@ -1,8 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
 
 export interface SeasonTournamentItem {
   seasonId: number;
@@ -22,8 +21,6 @@ export function SeasonTournamentSelector({
   selectedSeasonId,
   onSeasonChange,
 }: SeasonTournamentSelectorProps) {
-  const { t } = useTranslation('common');
-
   const { years, tournamentsByYear, selectedYear } = useMemo(() => {
     const byYear = new Map<string, SeasonTournamentItem[]>();
     for (const item of items) {
@@ -60,53 +57,49 @@ export function SeasonTournamentSelector({
     }
   };
 
-  const handleTournamentChange = (seasonId: number) => {
-    onSeasonChange(seasonId);
-  };
-
   if (!items.length) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div className="relative">
-        <label className="block text-[10px] font-bold text-slate-400 dark:text-white/50 uppercase tracking-wider mb-1">
-          {t('seasonSelector.year', 'Жыл')}
-        </label>
-        <div className="relative">
-          <select
-            value={selectedYear}
-            onChange={(e) => handleYearChange(e.target.value)}
-            className="appearance-none bg-white dark:bg-dark-surface border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 pr-8 text-sm font-bold text-slate-900 dark:text-white cursor-pointer hover:border-gray-300 dark:hover:border-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 dark:focus:ring-cyan-300/30"
+    <div className="space-y-2.5">
+      {/* Year pills */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+        {years.map((year) => (
+          <button
+            key={year}
+            type="button"
+            onClick={() => handleYearChange(year)}
+            className={cn(
+              'rounded-full px-3.5 py-1.5 text-sm font-bold whitespace-nowrap transition-all',
+              selectedYear === year
+                ? 'bg-primary text-white shadow-sm dark:bg-cyan-600'
+                : 'bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 dark:bg-white/10 dark:text-white/60 dark:hover:bg-white/15 dark:hover:text-white/80'
+            )}
           >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-white/50 pointer-events-none" />
-        </div>
+            {year}
+          </button>
+        ))}
       </div>
 
-      <div className="relative">
-        <label className="block text-[10px] font-bold text-slate-400 dark:text-white/50 uppercase tracking-wider mb-1">
-          {t('seasonSelector.tournament', 'Турнир')}
-        </label>
-        <div className="relative">
-          <select
-            value={selectedSeasonId ?? ''}
-            onChange={(e) => handleTournamentChange(Number(e.target.value))}
-            className="appearance-none bg-white dark:bg-dark-surface border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 pr-8 text-sm font-bold text-slate-900 dark:text-white cursor-pointer hover:border-gray-300 dark:hover:border-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 dark:focus:ring-cyan-300/30"
-          >
-            {currentTournaments.map((item) => (
-              <option key={item.seasonId} value={item.seasonId}>
-                {item.tournamentName}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-white/50 pointer-events-none" />
+      {/* Tournament pills (only when multiple tournaments in the selected year) */}
+      {currentTournaments.length > 1 && (
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+          {currentTournaments.map((item) => (
+            <button
+              key={item.seasonId}
+              type="button"
+              onClick={() => onSeasonChange(item.seasonId)}
+              className={cn(
+                'rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-all border',
+                selectedSeasonId === item.seasonId
+                  ? 'bg-primary/10 text-primary border-primary/20 dark:bg-cyan-300/15 dark:text-cyan-300 dark:border-cyan-300/25'
+                  : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:border-white/10 dark:text-white/50 dark:hover:border-white/20 dark:hover:text-white/70'
+              )}
+            >
+              {item.tournamentName}
+            </button>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }

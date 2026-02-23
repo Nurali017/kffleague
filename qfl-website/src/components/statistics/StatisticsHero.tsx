@@ -39,7 +39,7 @@ export function StatisticsHero({ stats, goalsByPeriod, goalsByPeriodMeta }: Stat
     return (
         <div className="relative overflow-hidden text-white py-8 md:py-10">
             <HeroBackground />
-            <div className="relative z-10 max-w-[1440px] mx-auto px-4 md:px-20">
+            <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
                 <div className="grid md:grid-cols-2 gap-8 items-start">
                     {/* Left: Season stats table */}
                     <motion.div

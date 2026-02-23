@@ -93,6 +93,7 @@ const baseMatch = {
   ticket_url: null,
   video_url: null,
   protocol_url: null as string | null,
+  is_schedule_tentative: false,
 };
 
 describe('MatchDetailPage protocol tabs integration', () => {
@@ -190,5 +191,33 @@ describe('MatchDetailPage protocol tabs integration', () => {
 
     expect(screen.getByTestId('match-tabs')).toHaveAttribute('data-show-lineups', 'true');
     expect(screen.getByTestId('lineup-field-mini')).toBeInTheDocument();
+  });
+
+  it('shows schedule disclaimer for tentative match', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: { ...baseMatch, is_schedule_tentative: true },
+      loading: false,
+      error: null,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(
+      screen.getByText('Дата и время этого матча предварительные и могут быть изменены.')
+    ).toBeInTheDocument();
+  });
+
+  it('hides schedule disclaimer for non-tentative match', () => {
+    useMatchDetailMock.mockReturnValue({
+      match: { ...baseMatch, is_schedule_tentative: false },
+      loading: false,
+      error: null,
+    });
+
+    renderWithProviders(<MatchDetailPage />);
+
+    expect(
+      screen.queryByText('Дата и время этого матча предварительные и могут быть изменены.')
+    ).not.toBeInTheDocument();
   });
 });

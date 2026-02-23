@@ -130,7 +130,7 @@ export function MatchCenter() {
               {/* Matches in this date group */}
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
                 {group.games.map((match) => (
-                  <MatchCard key={match.id} match={match} showTour />
+                  <MatchCard key={match.id} match={match} showTour showScheduleDisclaimer />
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 export * from './TeamPageHero';
 export * from './TeamPageTabs';
+export * from './TeamYearFilter';
 export * from './TeamKits';
 export * from './TeamNews';
 export * from './TeamSquad';

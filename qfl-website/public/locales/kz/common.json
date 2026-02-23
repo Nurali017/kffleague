@@ -1,6 +1,6 @@
 {
   "league": {
-    "name": "Қазақстан Премьер-Лигасы",
+    "name": "Қазақстан Премьер-лигасы",
     "shortName": "ҚПЛ",
     "sponsor": "ALATAU CITY BANK",
     "country": "ҚАЗАҚСТАН",
@@ -10,16 +10,16 @@
     "readMore": "Толығырақ оқу",
     "fullTable": "Толық кесте",
     "fullStats": "Толық статистика",
-    "allVideos": "Барлық бейнелер",
-    "allMatches": "Барлық матчтар",
-    "retry": "Қайталап көру",
-    "fullScorers": "Бомбардирлердің толық тізімі",
+    "allVideos": "Барлық бейне",
+    "allMatches": "Барлық матч",
+    "retry": "Қайталап көріңіз",
+    "fullScorers": "Сұрмергендердің толық тізімі",
     "backToTable": "Кестеге оралу"
   },
   "sections": {
-    "matchCenter": "Матч Орталығы",
+    "matchCenter": "Матч орталығы",
     "leagueTable": "Турнир кестесі",
-    "scorers": "Бомбардирлер",
+    "scorers": "Сұрмергендер",
     "seasonStats": "ҚПЛ {{season}} маусым статистикасы"
   },
   "table": {
@@ -40,44 +40,48 @@
     "goalsHeader": "Соғылған голдар",
     "assistsHeader": "Нәтижелі пастар",
     "cleanSheetsHeader": "Құрғақ матчтар",
-    "topScorers": "СҮРМЕРГЕНДЕР",
+    "topScorers": "СҰРМЕРГЕНДЕР",
     "topAssisters": "АССИСТЕНТТЕР",
     "topKeepers": "ҚАҚПАШЫЛАР"
   },
   "seasonStatLabels": {
-    "matchesPlayed": "Ойналған матчтар",
+    "matchesPlayed": "Ойнаған матчтар",
     "goalsScored": "Соғылған голдар",
-    "avgPerMatch": "Матчқа орташа",
+    "avgPerMatch": "Матчқа орташа есеппен",
     "cleanSheets": "Құрғақ матчтар",
-    "yellowCards": "Сары карточкалар",
-    "redCards": "Қызыл карточкалар"
+    "yellowCards": "Сары қағаздар",
+    "redCards": "Қызыл қағаздар"
   },
   "noData": {
-    "noNews": "Көрсетілетін жаңалықтар жоқ",
+    "noNews": "Көрсету үшін жаңалық жоқ",
     "noMatches": "Алдағы матчтар жоқ"
   },
   "matchCenter": {
     "tour": "{{number}}-тур"
+  },
+  "seasonSelector": {
+    "year": "Жыл",
+    "tournament": "Турнир"
   },
   "news": "Жаңалықтар",
   "seasonStats": {
     "matchesPlayed": "ОЙНАЛҒАН МАТЧТАР",
     "wins": "ЖЕҢІСТЕР",
     "draws": "ТЕҢ ОЙЫНДАР",
-    "totalAttendance": "ЖАЛПЫ КӨРЕРМЕНДЕР",
+    "totalAttendance": "Жалпы көрермен саны",
     "goals": "ГОЛДАР",
-    "goalsPerMatch": "ГОЛДАР (МАТЧҚА ОРТАША)",
-    "penalties": "ПЕНАЛЬТИЛЕР",
-    "penaltiesScored": "ОРЫНДАЛҒАН ПЕНАЛЬТИЛЕР",
-    "foulsPerMatch": "ФОЛДАР (МАТЧҚА ОРТАША)",
-    "yellowCards": "САРЫ КАРТОЧКАЛАР",
-    "doubleYellowCards": "ЕКІНШІ САРЫ КАРТОЧКАЛАР",
-    "redCards": "ҚЫЗЫЛ КАРТОЧКАЛАР",
-    "title": "{{season}} статистикасы",
+    "goalsPerMatch": "ГОЛДАР (ОРТАША ЕСЕППЕН)",
+    "penalties": "ПЕНАЛЬТИ",
+    "penaltiesScored": "Сәтті орындалған пенальтилер",
+    "foulsPerMatch": "ФОЛДАР (ОРТАША ЕСЕППЕН)",
+    "yellowCards": "САРЫ ҚАҒАЗДАР",
+    "doubleYellowCards": "ЕКІНШІ САРЫ ҚАҒАЗДАР",
+    "redCards": "ҚЫЗЫЛ ҚАҒАЗДАР",
+    "title": "{{season}} статистика",
     "titleDefault": "Маусым статистикасы",
     "moreData": "Көбірек деректер",
-    "loadError": "Статистиканы жүктеу қатесі",
-    "disclaimer": "* Жоғарыда көрсетілген статистика ойын турының соңғы матчы аяқталғаннан кейін 24 сағат өткен соң ресми болып саналады."
+    "loadError": "Статистика жүктелмеді",
+    "disclaimer": "* Көрсетілген статистика соңғы ойын туры аяқталғаннан кейін 24 сағат ішінде ресми есепке алынады."
   },
   "team": {
     "founded": "Құрылған",
@@ -86,12 +90,12 @@
     "capacity": "Сыйымдылығы",
     "position": "Позиция",
     "form": "Форма",
-    "recentMatches": "Соңғы матчтар",
+    "recentMatches": "Кейінгі матчтар",
     "upcomingMatches": "Алдағы матчтар",
     "squad": "Құрам",
     "statistics": "Статистика",
     "teamNews": "Команда жаңалықтары",
-    "viewAllNews": "Барлық жаңалықтар",
+    "viewAllNews": "Барлық жаңалық",
     "cleanSheets": "Құрғақ матчтар",
     "winPercentage": "Жеңіс пайызы",
     "positions": {
@@ -103,8 +107,8 @@
   },
   "tableLegend": {
     "champion": "Чемпион",
-    "europeanCups": "Еуропа кубоктары",
-    "relegation": "Түсу"
+    "europeanCups": "Еурокубок",
+    "relegation": "Төменгі топқа түсу"
   },
   "playerLeaderboard": {
     "title": "Маусым көшбасшылары",
@@ -114,7 +118,7 @@
   },
   "newsSection": {
     "title": "Жаңалықтар",
-    "viewAll": "Барлық жаңалықтар"
+    "viewAll": "Барлық жаңалық"
   },
   "home": {
     "cup": {
@@ -122,29 +126,29 @@
       "playoffTitle": "Плей-офф"
     },
     "secondLeague": {
-      "groupATitle": "Лига A",
-      "groupBTitle": "Лига B",
+      "groupATitle": "A лигасы",
+      "groupBTitle": "B лигасы",
       "finalTitle": "Финал"
     }
   },
   "search": {
     "placeholder": "Жаңалықтарды іздеу...",
     "closeSearch": "Іздеуді жабу",
-    "noResults": "«{{query}}» сұранысы бойынша ештеңе табылмады",
+    "noResults": "«{{query}}» сұрау бойынша ештеңе табылмады",
     "minChars": "Іздеу үшін кемінде 2 таңба енгізіңіз",
     "quickLinks": "Жылдам сілтемелер",
     "escHint": "Жабу үшін ESC басыңыз"
   },
   "accessibility": {
     "close": "Жабу",
-    "backToTop": "Жоғарыға",
+    "backToTop": "Жоғары",
     "previousSlide": "Алдыңғы слайд",
     "nextSlide": "Келесі слайд",
-    "goToSlide": "{{n}} слайдқа өту",
-    "switchToDark": "Қараңғы тақырыпқа ауысу",
-    "switchToLight": "Жарық тақырыпқа ауысу"
+    "goToSlide": "{{n}} Слайдқа өту",
+    "switchToDark": "Қараңғы режимге ауысу",
+    "switchToLight": "Жарық режимге ауысу"
   },
   "dataUnavailable": "Деректер қолжетімсіз",
   "technicalWin": "Техникалық жеңіс",
-  "noEvents": "Көрсетілетін оқиғалар жоқ"
+  "noEvents": "Көрсету үшін оқиға жоқ"
 }

@@ -111,7 +111,7 @@ export function HeadToHeadMini({
               <span className="text-3xl font-black text-gray-800 leading-none">
                 {overall.team1_wins}
               </span>
-              <span className="text-[9px] text-gray-400 font-bold uppercase mt-1">
+              <span className="text-[10px] text-gray-400 font-bold uppercase mt-1">
                 {t('h2h.wins', 'Побед')}
               </span>
             </div>
@@ -122,7 +122,7 @@ export function HeadToHeadMini({
               <span className="text-xl font-bold text-gray-400 leading-none mb-1">
                 {overall.draws}
               </span>
-              <span className="text-[9px] text-gray-400 font-bold uppercase">
+              <span className="text-[10px] text-gray-400 font-bold uppercase">
                 {t('h2h.draws', 'Ничьих')}
               </span>
             </div>
@@ -133,7 +133,7 @@ export function HeadToHeadMini({
               <span className="text-3xl font-black text-gray-800 leading-none">
                 {overall.team2_wins}
               </span>
-              <span className="text-[9px] text-gray-400 font-bold uppercase mt-1">
+              <span className="text-[10px] text-gray-400 font-bold uppercase mt-1">
                 {t('h2h.wins', 'Побед')}
               </span>
             </div>

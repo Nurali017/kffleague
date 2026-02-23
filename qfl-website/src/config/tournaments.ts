@@ -132,6 +132,38 @@ export const TOURNAMENTS: Record<string, Tournament> = {
 
 export const DEFAULT_TOURNAMENT_ID = 'pl';
 
+// Pre-season configuration
+// When seasonStarted is false, certain pages/blocks show data from the previous season:
+//   Home: PlayerLeaderboard, SeasonStats, LeagueTable
+//   Pages: /stats, /table, /team/[id], /player/[id]
+// Toggle seasonStarted to true once the new season has real data (2-3 rounds played)
+export const PRE_SEASON_CONFIG = {
+  seasonStarted: false,
+  currentSeasonId: 200,   // 2026 PL season
+  previousSeasonId: 61,   // 2025 PL season
+} as const;
+
+/**
+ * Hint for which season a page section should default to during pre-season.
+ * - 'current':  show the new season (e.g. 2026 matches, teams)
+ * - 'previous': show the old season (e.g. 2025 stats, table, leaderboards)
+ */
+export type PreSeasonPageHint = 'current' | 'previous';
+
+/**
+ * Returns the overridden season ID for PL during pre-season, or null if no override needed.
+ */
+export function getPreSeasonSeasonId(
+  tournamentId: string,
+  hint: PreSeasonPageHint
+): number | null {
+  if (PRE_SEASON_CONFIG.seasonStarted) return null;
+  if (tournamentId !== 'pl') return null;
+  return hint === 'current'
+    ? PRE_SEASON_CONFIG.currentSeasonId
+    : PRE_SEASON_CONFIG.previousSeasonId;
+}
+
 export const SEASONS: Season[] = [
   {
     id: 200,

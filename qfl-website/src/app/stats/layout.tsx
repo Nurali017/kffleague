@@ -7,6 +7,7 @@ import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { getServerPrefetchContext, safePrefetch } from '@/lib/api/server/prefetch';
 import { prefetchKeys } from '@/lib/api/prefetchKeys';
 import { buildMetadata, getSeoLang } from '@/lib/seo/metadata';
+import { PRE_SEASON_CONFIG } from '@/config/tournaments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getSeoLang();
@@ -25,20 +26,25 @@ interface StatsLayoutProps {
 }
 
 export default async function StatsLayout({ children }: StatsLayoutProps) {
-  const { language, seasonId } = getServerPrefetchContext();
-  const effectiveSeasonId = seasonId || DEFAULT_SEASON_ID;
+  const { language, seasonId, tournamentId } = getServerPrefetchContext();
+  let baseSeasonId = seasonId || DEFAULT_SEASON_ID;
+
+  // Pre-season: stats pages show previous season data
+  if (!PRE_SEASON_CONFIG.seasonStarted && tournamentId === 'pl' && baseSeasonId === PRE_SEASON_CONFIG.currentSeasonId) {
+    baseSeasonId = PRE_SEASON_CONFIG.previousSeasonId;
+  }
 
   const [seasonStats, goalsByPeriod] = await Promise.all([
-    safePrefetch(() => seasonStatsService.getSeasonStatistics(effectiveSeasonId, language)),
-    safePrefetch(() => seasonStatsService.getGoalsByPeriod(effectiveSeasonId)),
+    safePrefetch(() => seasonStatsService.getSeasonStatistics(baseSeasonId, language)),
+    safePrefetch(() => seasonStatsService.getGoalsByPeriod(baseSeasonId)),
   ]);
 
   const prefetch: Record<string, unknown> = {};
   if (seasonStats !== undefined) {
-    prefetch[prefetchKeys.seasonStats(effectiveSeasonId, language)] = seasonStats;
+    prefetch[prefetchKeys.seasonStats(baseSeasonId, language)] = seasonStats;
   }
   if (goalsByPeriod !== undefined) {
-    prefetch[prefetchKeys.seasonGoalsByPeriod(effectiveSeasonId)] = goalsByPeriod;
+    prefetch[prefetchKeys.seasonGoalsByPeriod(baseSeasonId)] = goalsByPeriod;
   }
 
   return (

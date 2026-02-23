@@ -10,6 +10,103 @@
   animation: hero-progress linear forwards;
 }
 
+/* Super Cup Hero ambient animations */
+@keyframes sc-pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.12); }
+}
+@keyframes sc-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes sc-ray-sweep {
+  0% { transform: translateX(-200%) rotate(-45deg); }
+  100% { transform: translateX(200%) rotate(-45deg); }
+}
+.animate-sc-pulse-glow {
+  animation: sc-pulse-glow 3s ease-in-out infinite;
+}
+.animate-sc-float {
+  animation: sc-float 4s ease-in-out infinite;
+}
+.animate-sc-ray-sweep {
+  animation: sc-ray-sweep 8s ease-in-out infinite;
+}
+@keyframes sc-countdown-tick {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes sc-separator-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-sc-countdown-tick {
+  animation: sc-countdown-tick 1s ease-in-out infinite;
+}
+.animate-sc-separator-blink {
+  animation: sc-separator-blink 1s step-end infinite;
+}
+/* Super Cup Trophy Cabinet animations */
+@keyframes sc-trophy-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(251,191,36,0.3), inset 0 0 8px rgba(251,191,36,0.05); }
+  50% { box-shadow: 0 0 20px rgba(251,191,36,0.5), inset 0 0 12px rgba(251,191,36,0.1); }
+}
+@keyframes sc-bar-fill {
+  from { width: 0%; }
+  to { width: var(--bar-width, 100%); }
+}
+@keyframes sc-border-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes sc-pill-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-sc-trophy-glow {
+  animation: sc-trophy-glow 3s ease-in-out infinite;
+}
+.animate-sc-bar-fill {
+  animation: sc-bar-fill 1s ease-out forwards;
+}
+.animate-sc-border-shimmer {
+  background-size: 200% 100%;
+  animation: sc-border-shimmer 3s linear infinite;
+}
+.animate-sc-pill-pop {
+  animation: sc-pill-pop 0.4s ease-out forwards;
+}
+
+/* H2H shimmer for skeleton loading */
+@keyframes h2h-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-h2h-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: h2h-shimmer 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sc-pulse-glow,
+  .animate-sc-float,
+  .animate-sc-ray-sweep,
+  .animate-sc-countdown-tick,
+  .animate-sc-separator-blink,
+  .animate-sc-trophy-glow,
+  .animate-sc-bar-fill,
+  .animate-sc-border-shimmer,
+  .animate-sc-pill-pop,
+  .animate-h2h-shimmer {
+    animation: none;
+  }
+  .animate-sc-bar-fill {
+    width: var(--bar-width, 100%);
+  }
+}
+
 /* League color theming — RGB channels for Tailwind opacity support */
 /* Defaults to Premier League */
 :root {
@@ -27,6 +124,7 @@
 
   body {
     @apply overflow-x-hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
 
   * {

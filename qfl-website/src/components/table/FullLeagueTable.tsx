@@ -122,7 +122,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
 
       {/* Mobile Table */}
       <div className="lg:hidden">
-        <div className="bg-primary text-white text-[10px] font-medium grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2">
+        <div className="bg-primary text-white text-[10px] font-medium grid grid-cols-[32px_1fr_28px_36px_32px_56px] gap-1 px-2 py-2">
           <div className="text-center">#</div>
           <div>{t('columns.team')}</div>
           <div className="text-center">{t('columns.playedShort')}</div>
@@ -140,7 +140,7 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
               <Link
                 key={team.team_id}
                 href={`/team/${team.team_id}`}
-                className={`grid grid-cols-[40px_1fr_32px_40px_36px_70px] gap-1 px-3 py-2.5 items-center hover:bg-primary/5 dark:hover:bg-blue-500/10 border-l-4 ${positionStyle.border}`}
+                className={`grid grid-cols-[32px_1fr_28px_36px_32px_56px] gap-1 px-2 py-3 items-center hover:bg-primary/5 dark:hover:bg-blue-500/10 border-l-4 min-h-[44px] ${positionStyle.border}`}
               >
                 <div className="flex items-center justify-center gap-1">
                   {positionStyle.dot && (

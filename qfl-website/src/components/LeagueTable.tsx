@@ -12,14 +12,19 @@ import { LeagueTableSkeleton } from '@/components/ui/Skeleton';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
 
-export function LeagueTable() {
+interface LeagueTableProps {
+  seasonId?: number;
+}
+
+export function LeagueTable({ seasonId: seasonIdProp }: LeagueTableProps = {}) {
   const { t } = useTranslation();
   const { t: tErrors } = useTranslation('errors');
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { effectiveSeasonId, showTable, currentTournament } = useTournament();
+  const resolvedSeasonId = seasonIdProp ?? effectiveSeasonId;
   const { standings, loading, error, refetch } = useLeagueTable({
-    seasonId: effectiveSeasonId,
+    seasonId: resolvedSeasonId,
     limit: 16
   });
 

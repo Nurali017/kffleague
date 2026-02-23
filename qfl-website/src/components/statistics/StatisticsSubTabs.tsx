@@ -36,7 +36,7 @@ export function StatisticsSubTabs({ activeSubTab, onSubTabChange, hideGoalkeepin
 
     return (
         <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border">
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
                 <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
                     {SUB_TAB_IDS.filter(id => !hideGoalkeeping || id !== 'goalkeeping').map(id => (
                         <button

@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   SEASON_TABLE: (seasonId: number) => `/seasons/${seasonId}/table`,
   SEASON_RESULTS_GRID: (seasonId: number) => `/seasons/${seasonId}/results-grid`,
   SEASON_GAMES: (seasonId: number) => `/seasons/${seasonId}/games`,
+  SEASON_STAGES: (seasonId: number) => `/seasons/${seasonId}/stages`,
   CUP_OVERVIEW: (seasonId: number) => `/cup/${seasonId}/overview`,
   CUP_SCHEDULE: (seasonId: number) => `/cup/${seasonId}/schedule`,
   SEASON_PLAYER_STATS: (seasonId: number) => `/seasons/${seasonId}/player-stats`,

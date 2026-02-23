@@ -59,6 +59,82 @@ export interface PreviousMeeting {
   season_name: string | null;
 }
 
+// Phase 1: Fun Facts
+
+export interface H2HBiggestWin {
+  game_id: number;
+  date: string;
+  score: string;
+  goal_difference: number;
+}
+
+export interface H2HGoalsByHalf {
+  team1_first_half: number;
+  team1_second_half: number;
+  team2_first_half: number;
+  team2_second_half: number;
+}
+
+export interface H2HFunFacts {
+  avg_goals_per_match: number;
+  over_2_5_percent: number;
+  btts_percent: number;
+  team1_biggest_win: H2HBiggestWin | null;
+  team2_biggest_win: H2HBiggestWin | null;
+  team1_unbeaten_streak: number;
+  team2_unbeaten_streak: number;
+  goals_by_half: H2HGoalsByHalf | null;
+}
+
+// Phase 1: Aggregated Match Stats
+
+export interface H2HTeamMatchStats {
+  avg_possession: number | null;
+  avg_shots: number | null;
+  avg_shots_on_goal: number | null;
+  avg_corners: number | null;
+  avg_fouls: number | null;
+  total_yellow_cards: number;
+  total_red_cards: number;
+}
+
+export interface H2HAggregatedMatchStats {
+  matches_with_stats: number;
+  team1: H2HTeamMatchStats;
+  team2: H2HTeamMatchStats;
+}
+
+// Phase 2: Top Performers
+
+export interface H2HTopPerformer {
+  player_id: number;
+  player_name: string;
+  team_id: number;
+  photo_url: string | null;
+  count: number;
+}
+
+export interface H2HTopPerformers {
+  top_scorers: H2HTopPerformer[];
+  top_assisters: H2HTopPerformer[];
+}
+
+// Phase 3: Enhanced Season Stats
+
+export interface H2HEnhancedSeasonTeamStats {
+  xg: number | null;
+  xg_per_match: number | null;
+  possession_avg: number | null;
+  pass_accuracy_avg: number | null;
+  duel_ratio: number | null;
+  shots_per_match: number | null;
+}
+
+export interface H2HEnhancedSeasonStats {
+  team1: H2HEnhancedSeasonTeamStats | null;
+  team2: H2HEnhancedSeasonTeamStats | null;
+}
+
 export interface HeadToHeadResponse {
   team1_id: number;
   team1_name: string;
@@ -72,6 +148,10 @@ export interface HeadToHeadResponse {
   };
   season_table: SeasonTableEntry[];
   previous_meetings: PreviousMeeting[];
+  fun_facts: H2HFunFacts | null;
+  match_stats: H2HAggregatedMatchStats | null;
+  top_performers: H2HTopPerformers | null;
+  enhanced_season_stats: H2HEnhancedSeasonStats | null;
 }
 
 // Computed metrics helpers

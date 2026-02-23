@@ -6,6 +6,7 @@ import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { getServerPrefetchContext, safePrefetch } from '@/lib/api/server/prefetch';
 import { prefetchKeys } from '@/lib/api/prefetchKeys';
 import { buildMetadata, getSeoLang } from '@/lib/seo/metadata';
+import { PRE_SEASON_CONFIG } from '@/config/tournaments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getSeoLang();
@@ -26,8 +27,13 @@ interface StatsTeamsLayoutProps {
 export default async function StatsTeamsLayout({
   children,
 }: StatsTeamsLayoutProps) {
-  const { language, seasonId } = getServerPrefetchContext();
-  const effectiveSeasonId = seasonId || DEFAULT_SEASON_ID;
+  const { language, seasonId, tournamentId } = getServerPrefetchContext();
+  let effectiveSeasonId = seasonId || DEFAULT_SEASON_ID;
+
+  // Pre-season: stats pages show previous season data
+  if (!PRE_SEASON_CONFIG.seasonStarted && tournamentId === 'pl' && effectiveSeasonId === PRE_SEASON_CONFIG.currentSeasonId) {
+    effectiveSeasonId = PRE_SEASON_CONFIG.previousSeasonId;
+  }
   const sortBy = 'points';
   const limit = 50;
   const offset = 0;

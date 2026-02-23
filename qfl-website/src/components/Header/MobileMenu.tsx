@@ -88,7 +88,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 overflow-y-auto h-[calc(100vh-180px)]">
+        <nav className="p-4 overflow-y-auto h-[calc(100dvh-180px)]">
           <motion.ul
             className="space-y-1"
             variants={menuItemsStagger}
@@ -156,7 +156,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                               <Link
                                 href={child.href || '#'}
                                 onClick={handleLinkClick}
-                                className={`block px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                className={`block px-4 py-2 min-h-[44px] flex items-center text-sm font-medium rounded-lg transition-colors ${
                                   pathname === child.href
                                     ? 'text-accent bg-white/10'
                                     : 'text-white/80 hover:text-white hover:bg-white/5'

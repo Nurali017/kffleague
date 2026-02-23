@@ -1,5 +1,5 @@
 {
-  "load_error": "Команда деректерін жүктеу мүмкін болмады",
+  "load_error": "Команда деректері жүктелмеді",
   "tabs": {
     "overview": "Шолу",
     "matches": "Матчтар",
@@ -18,7 +18,7 @@
   },
   "buttons": {
     "matchCentre": "Матч орталығы",
-    "viewAllFixtures": "Барлық матчтар",
+    "viewAllFixtures": "Барлық матч",
     "seeAllStats": "Барлық статистика",
     "viewFullTable": "Толық кесте"
   },
@@ -36,7 +36,7 @@
     "homeShort": "Ү",
     "awayShort": "Қ"
   },
-  "tbd": "Белгісіз",
+  "tbd": "Анықталып жатыр",
   "no_stats": "Статистика қолжетімсіз",
   "about": "Команда туралы",
   "season_stats": "Маусым статистикасы",
@@ -44,7 +44,7 @@
     "games": "Ойындар",
     "wins": "Жеңістер",
     "draws": "Тең",
-    "losses": "Жеңілістер",
+    "losses": "Жеңіліс",
     "goals": "Голдар",
     "points": "Ұпайлар"
   },
@@ -65,7 +65,7 @@
     "noUpcomingMatches": "Алдағы матчтар жоқ",
     "noRecentMatches": "Ойналған матчтар жоқ"
   },
-  "coming_soon": "Жақында қосылады",
+  "coming_soon": "Жақында ашылады",
   "staff_title": "Жаттықтырушылар",
   "transfers_title": "Трансферлер",
   "lastMatch": "Соңғы матч",
@@ -74,7 +74,7 @@
   "noPlayedMatches": "Ойналған матчтар жоқ",
   "noUpcomingMatches": "Алдағы матчтар жоқ",
   "noSquadData": "Құрам туралы деректер жоқ",
-  "allMatches": "Барлық матчтар",
+  "allMatches": "Барлық матч",
   "total": "Барлығы",
   "keyStats": "Негізгі статистика",
   "clubNames": {

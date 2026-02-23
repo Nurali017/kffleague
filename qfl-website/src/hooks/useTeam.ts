@@ -1,8 +1,8 @@
+import { useMemo } from 'react';
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { TeamCoach, TeamDetail, TeamOverviewResponse, TeamSeasonEntry, TeamStats, SquadPlayer } from '@/types';
-import { SeasonTournamentItem } from '@/components/shared/SeasonTournamentSelector';
 import { Game } from '@/types/match';
 import { teamService } from '@/lib/api/services/teamService';
 import { queryKeys } from '@/lib/api/queryKeys';
@@ -208,24 +208,35 @@ export function useTeamGames(
   };
 }
 
-function extractYear(name: string): string {
-  const match = name?.match(/(\d{4})/);
-  return match ? match[1] : '';
+export interface TeamYearOption {
+  seasonId: number;
+  year: string;
 }
 
-// Team seasons hook - fetches only seasons the team participated in
-export function useTeamSeasons(teamId: number | null) {
+function extractYearFromName(name: string | null): number | null {
+  if (!name) return null;
+  const match = name.match(/(\d{4})/);
+  return match ? Number(match[1]) : null;
+}
+
+function resolveSeasonYear(entry: TeamSeasonEntry): number | null {
+  if (typeof entry.season_year === 'number' && Number.isFinite(entry.season_year)) {
+    return entry.season_year;
+  }
+  return extractYearFromName(entry.season_name);
+}
+
+function normalizeTournamentCode(value: string | null | undefined): string {
+  return (value ?? '').trim().toLowerCase();
+}
+
+// Team seasons hook - fetches team seasons and returns one season per year for the selected tournament
+export function useTeamSeasons(teamId: number | null, tournamentCode: string | null) {
   const { i18n } = useTranslation();
-  const { data, error, isLoading } = useSWR<SeasonTournamentItem[]>(
+  const { data, error, isLoading } = useSWR<TeamSeasonEntry[]>(
     teamId ? queryKeys.teams.seasons(teamId, i18n.language) : null,
     async () => {
-      const entries = await teamService.getTeamSeasons(teamId!, i18n.language);
-      return entries.map((e) => ({
-        seasonId: e.season_id,
-        seasonName: e.season_name ?? '',
-        year: extractYear(e.season_name ?? ''),
-        tournamentName: e.championship_name ?? '',
-      }));
+      return teamService.getTeamSeasons(teamId!, i18n.language);
     },
     {
       revalidateOnFocus: false,
@@ -233,8 +244,33 @@ export function useTeamSeasons(teamId: number | null) {
     }
   );
 
+  const items = useMemo<TeamYearOption[]>(() => {
+    if (!data?.length) return [];
+
+    const byYear = new Map<number, TeamYearOption>();
+    const normalizedTournamentCode = normalizeTournamentCode(tournamentCode);
+    const filteredByTournament = normalizedTournamentCode
+      ? data.filter((entry) => normalizeTournamentCode(entry.frontend_code) === normalizedTournamentCode)
+      : data;
+    // Fallback for legacy/incomplete data where seasons don't have frontend_code.
+    const source = filteredByTournament.length > 0 ? filteredByTournament : data;
+
+    for (const entry of source) {
+      const year = resolveSeasonYear(entry);
+      if (year === null || byYear.has(year)) continue;
+      byYear.set(year, {
+        seasonId: entry.season_id,
+        year: String(year),
+      });
+    }
+
+    return Array.from(byYear.entries())
+      .sort((a, b) => b[0] - a[0])
+      .map(([, option]) => option);
+  }, [data, tournamentCode]);
+
   return {
-    items: data ?? [],
+    items,
     loading: isLoading,
     error,
   };

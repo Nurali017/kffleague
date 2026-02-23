@@ -4,8 +4,8 @@
   "period": "Өту мерзімі",
   "participants": "Қатысушылар",
   "tabs": {
-    "standings": "Турнирлік кесте",
-    "results": "Соңғы нәтижелер"
+    "standings": "Турнир кестесі",
+    "results": "Кейінгі нәтижелер"
   },
   "filters": {
     "title": "Сүзгілер",
@@ -15,9 +15,9 @@
     "away": "Қонақта"
   },
   "phase": {
-    "all": "Барлық матчтар",
-    "groupA": "Лига A",
-    "groupB": "Лига B",
+    "all": "Барлық матч",
+    "groupA": "A лигасы",
+    "groupB": "B лига сы",
     "final": "Финал"
   },
   "columns": {
@@ -39,27 +39,27 @@
   "legend": {
     "champion": "Чемпион",
     "euroCups": "Еурокубоктар",
-    "relegation": "Төмендеу",
+    "relegation": "Төменгі топқа түсу",
     "win": "Жеңіс",
     "draw": "Тең",
     "loss": "Жеңіліс"
   },
   "cup": {
     "schedule": "Кубок кестесі",
-    "allRounds": "Барлық раундтар",
-    "noSchedule": "Таңдалған раунд бойынша матчтар жоқ",
+    "allRounds": "Барлық раунд",
+    "noSchedule": "Таңдалған кезең бойынша матчтар жоқ",
     "groups": "Топтар",
     "group": "Топ",
-    "currentRound": "Ағымдағы раунд",
-    "recentResults": "Соңғы нәтижелер",
+    "currentRound": "Қазіргі кезең",
+    "recentResults": "Кейінгі нәтижелер",
     "upcomingGames": "Алдағы матчтар",
     "noRecentResults": "Ойналған матчтар жоқ",
     "noUpcomingGames": "Алдағы матчтар жоқ",
-    "homePlayoffRoundsTitle": "Плей-офф раундтары",
-    "homeRoundFilterLabel": "Раундты таңдау",
-    "homeNoPlayoffRounds": "Плей-офф раундтары әлі анықталмады",
-    "bracket": "Плей-офф торы",
-    "noBracket": "Плей-офф торы әлі анықталмады",
+    "homePlayoffRoundsTitle": "Плей-офф кезеңі",
+    "homeRoundFilterLabel": "Кезеңді таңдау",
+    "homeNoPlayoffRounds": "Плей-офф кезеңі әлі анықталмады",
+    "bracket": "Плей-офф кестесі",
+    "noBracket": "Плей-офф кестесі әзірге анықталған жоқ",
     "penalties": "пен."
   },
   "updating": "Жаңартылуда..."

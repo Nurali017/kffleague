@@ -19,6 +19,7 @@ import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { buildSearchParams } from '@/lib/utils/urlState';
 import { CupSchedule } from '@/components/cup';
 import { MatchCard } from '@/components/matches/MatchCard';
+import { SeasonYearSelector } from '@/components/ui/SeasonYearSelector';
 
 type LeaguePhase = 'all' | 'groupA' | 'groupB' | 'final';
 
@@ -236,12 +237,13 @@ export default function LeagueTablePage() {
           patternClassName="absolute inset-x-0 top-0 h-[320px] md:h-[400px]"
         />
 
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4">
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
           {/* Title - dynamic based on tournament type */}
-          <div className="pt-6 md:pt-8 pb-6">
+          <div className="pt-6 md:pt-8 pb-6 flex items-center justify-between gap-4">
             <h1 className="text-2xl md:text-4xl font-bold text-white">
               {showBracket ? t('bracketTitle', { defaultValue: 'Кубок турнирі' }) : t('title')}
             </h1>
+            <SeasonYearSelector variant="hero" />
           </div>
 
           {/* Bracket View for Cup tournaments */}

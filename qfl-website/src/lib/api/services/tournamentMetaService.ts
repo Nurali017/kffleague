@@ -3,6 +3,12 @@ import { ENDPOINTS } from '../endpoints';
 import { TournamentColors } from '@/types/tournament';
 import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
+export interface SeasonOption {
+  season_id: number;
+  year: number;
+  name?: string | null;
+}
+
 export interface FrontMapEntry {
   season_id: number | null;
   name?: string | null;
@@ -17,6 +23,7 @@ export interface FrontMapEntry {
   current_round?: number | null;
   total_rounds?: number | null;
   sort_order?: number;
+  seasons?: SeasonOption[];
 }
 
 interface FrontMapResponse {

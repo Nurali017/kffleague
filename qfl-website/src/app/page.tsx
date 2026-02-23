@@ -19,10 +19,11 @@ import {
 } from '@/lib/api/services';
 import { getServerPrefetchContext, safePrefetch } from '@/lib/api/server/prefetch';
 import { prefetchKeys } from '@/lib/api/prefetchKeys';
-import { DEFAULT_SEASON_ID, DEFAULT_TOUR } from '@/lib/api/endpoints';
+import { DEFAULT_SEASON_ID } from '@/lib/api/endpoints';
 import { buildMetadata, getSeoLang, getDefaultDescription } from '@/lib/seo/metadata';
 import { SITE_NAME } from '@/lib/seo/constants';
-import { DEFAULT_TOURNAMENT_ID, getTournamentById } from '@/config/tournaments';
+import { DEFAULT_TOURNAMENT_ID, getTournamentById, PRE_SEASON_CONFIG } from '@/config/tournaments';
+import { SUPER_CUP_HERO_ENABLED } from '@/config/featuredMatch';
 import {
   MatchCenterFilters,
   CupOverviewResponse,
@@ -31,6 +32,8 @@ import {
   LeagueTableResponse,
 } from '@/types';
 import { TournamentHomeContent, type CupHomeData, type SecondLeagueHomeData } from '@/components/home';
+import { SuperCupHero } from '@/components/home/SuperCupHero';
+import { getHomeMatchesQueryPlan } from '@/lib/home/homeMatchesQueryPlan';
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = getSeoLang();
@@ -43,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 function buildMatchCenterFiltersHash(
   language: string,
-  filters: Omit<MatchCenterFilters, 'group_by_date' | 'language'>
+  filters: MatchCenterFilters
 ) {
   return JSON.stringify({
     group_by_date: true,
@@ -61,23 +64,25 @@ export default async function HomePage() {
   const isSecondLeague = currentTournamentId === '2l';
   const isCup = currentTournamentId === 'cup';
 
-  const tour = tournament?.currentRound ?? DEFAULT_TOUR;
-  const shouldPrefetchByTour = typeof tournament?.currentRound === 'number';
-
   const newsLimit = 5;
   const leaderboardLimit = 5;
   const secondLeagueMatchLimit = 6;
 
-  const homeMatchFilters: MatchCenterFilters = {
-    season_id: effectiveSeasonId,
-    group_by_date: true,
-    language,
-    limit: 20,
-  };
-  const homeMatchFiltersHash = buildMatchCenterFiltersHash(language, {
-    season_id: effectiveSeasonId,
-    limit: 20,
+  // Pre-season: matches show the new season (2026), stats/leaderboards/table fall back to previous
+  const preSeasonFallback = !PRE_SEASON_CONFIG.seasonStarted && effectiveSeasonId === PRE_SEASON_CONFIG.currentSeasonId;
+  const displaySeasonId = effectiveSeasonId; // matches always use current season
+  const leaderboardSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
+  const statsSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
+  const tableSeasonId = preSeasonFallback ? PRE_SEASON_CONFIG.previousSeasonId : effectiveSeasonId;
+  const homeMatchesQueryPlan = getHomeMatchesQueryPlan({
+    tournamentId: currentTournamentId,
+    seasonId: displaySeasonId,
+    currentRound: tournament?.currentRound ?? null,
   });
+
+  const homeMatchFiltersHash = homeMatchesQueryPlan.source === 'matchCenter'
+    ? buildMatchCenterFiltersHash(language, homeMatchesQueryPlan.matchCenterFilters)
+    : null;
 
   let matches: unknown;
   let stats: unknown;
@@ -160,29 +165,32 @@ export default async function HomePage() {
       tableRes,
       playerLeaderboardRes,
     ] = await Promise.all([
-      shouldPrefetchByTour
-        ? safePrefetch(() => matchService.getGamesByTour(effectiveSeasonId, tour, language))
-        : safePrefetch(() => matchService.getMatchCenter(homeMatchFilters)),
+      homeMatchesQueryPlan.source === 'tour'
+        ? safePrefetch(() => matchService.getGamesByTour(displaySeasonId, homeMatchesQueryPlan.tour, language))
+        : safePrefetch(() => matchService.getMatchCenter({
+            ...homeMatchesQueryPlan.matchCenterFilters,
+            language,
+          })),
       safePrefetch(() => newsService.getSlider(language, newsLimit, currentTournamentId)),
       safePrefetch(() => newsService.getLatest(language, newsLimit, currentTournamentId)),
-      safePrefetch(() => seasonStatsService.getSeasonStatistics(effectiveSeasonId, language)),
-      safePrefetch(() => leagueService.getTable(effectiveSeasonId, undefined, language)),
+      safePrefetch(() => seasonStatsService.getSeasonStatistics(statsSeasonId, language)),
+      safePrefetch(() => leagueService.getTable(tableSeasonId, undefined, language)),
       safePrefetch(async () => {
         const [scorersRes, assistersRes, cleanSheetsRes] = await Promise.all([
           playerStatsService.getPlayerStats({
-            seasonId: effectiveSeasonId,
+            seasonId: leaderboardSeasonId,
             sortBy: 'goals',
             limit: leaderboardLimit,
             language,
           }),
           playerStatsService.getPlayerStats({
-            seasonId: effectiveSeasonId,
+            seasonId: leaderboardSeasonId,
             sortBy: 'assists',
             limit: leaderboardLimit,
             language,
           }),
           playerStatsService.getPlayerStats({
-            seasonId: effectiveSeasonId,
+            seasonId: leaderboardSeasonId,
             sortBy: 'dry_match',
             limit: leaderboardLimit,
             language,
@@ -273,20 +281,20 @@ export default async function HomePage() {
 
   if (!isSecondLeague && !isCup) {
     if (matches !== undefined) {
-      if (shouldPrefetchByTour) {
-        prefetch[prefetchKeys.matchesByTour(effectiveSeasonId, tour, language)] = matches;
-      } else {
+      if (homeMatchesQueryPlan.source === 'tour') {
+        prefetch[prefetchKeys.matchesByTour(displaySeasonId, homeMatchesQueryPlan.tour, language)] = matches;
+      } else if (homeMatchFiltersHash) {
         prefetch[prefetchKeys.matchCenter(homeMatchFiltersHash)] = matches;
       }
     }
 
     if (stats !== undefined) {
-      prefetch[prefetchKeys.seasonStats(effectiveSeasonId, language)] = stats;
+      prefetch[prefetchKeys.seasonStats(statsSeasonId, language)] = stats;
     }
 
     if (table !== undefined) {
       prefetch[prefetchKeys.leagueTable(
-        effectiveSeasonId,
+        tableSeasonId,
         undefined,
         undefined,
         undefined,
@@ -297,7 +305,7 @@ export default async function HomePage() {
     }
 
     if (playerLeaderboard !== undefined) {
-      prefetch[prefetchKeys.playerLeaderboard(effectiveSeasonId, leaderboardLimit, language)] = playerLeaderboard;
+      prefetch[prefetchKeys.playerLeaderboard(leaderboardSeasonId, leaderboardLimit, language)] = playerLeaderboard;
     }
   }
 
@@ -343,10 +351,10 @@ export default async function HomePage() {
       <div className="max-w-[1400px] mx-auto px-4 py-6 md:py-10 space-y-6 md:space-y-8 dark:bg-dark-bg">
         {/* Row 1: Hero + HomeMatches */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
-          <div className="lg:col-span-9 h-[340px] sm:h-[420px] lg:h-[500px]">
-            <HeroSection />
+          <div className="lg:col-span-9 h-[420px] sm:h-[500px] lg:h-[580px]">
+            {currentTournamentId === 'pl' && SUPER_CUP_HERO_ENABLED ? <SuperCupHero /> : <HeroSection />}
           </div>
-          <div className="lg:col-span-3 h-[360px] sm:h-[420px] lg:h-[500px]">
+          <div className="lg:col-span-3 lg:min-h-[500px]">
             <HomeMatches />
           </div>
         </div>
@@ -356,12 +364,12 @@ export default async function HomePage() {
           {/* News section */}
           <section className="lg:col-span-9 bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 flex flex-col">
             <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
-              <h2 className="text-xl md:text-2xl font-bold text-primary dark:text-accent-cyan tracking-tight">Жаңалықтар</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-primary dark:text-accent-cyan tracking-tight">{language === 'kz' ? 'Жаңалықтар' : 'Новости'}</h2>
               <Link
                 href="/news"
                 className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
               >
-                Барлық жаңалықтар
+                {language === 'kz' ? 'Барлық жаңалықтар' : 'Все новости'}
                 <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
@@ -377,16 +385,16 @@ export default async function HomePage() {
 
           {/* LeagueTable - same height as news */}
           <div className="lg:col-span-3 h-full">
-            <LeagueTable />
+            <LeagueTable seasonId={tableSeasonId} />
           </div>
         </div>
 
         <section>
-          <PlayerLeaderboard />
+          <PlayerLeaderboard seasonId={leaderboardSeasonId} />
         </section>
 
         <section>
-          <SeasonStats />
+          <SeasonStats seasonId={statsSeasonId} />
         </section>
 
         <section>

@@ -59,6 +59,19 @@ export interface ResultsGridResponse {
   teams: TeamResultsGrid[];
 }
 
+export interface SeasonStage {
+  id: number;
+  season_id: number;
+  name: string;
+  stage_number: number | null;
+  sort_order: number;
+}
+
+export interface SeasonStagesResponse {
+  items: SeasonStage[];
+  total: number;
+}
+
 export interface StadiumInfo {
   id?: number;
   name: string;
@@ -349,6 +362,8 @@ export interface TeamSeasonEntry {
   season_id: number;
   season_name: string | null;
   championship_name: string | null;
+  frontend_code?: string | null;
+  season_year?: number | null;
 }
 
 export interface TeamOverviewResponse {

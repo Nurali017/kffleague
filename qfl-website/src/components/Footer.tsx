@@ -101,7 +101,7 @@ export function Footer() {
           </div>
 
           <div className="lg:col-span-4 flex flex-col items-start lg:items-end">
-            <div className="flex items-center gap-4 md:gap-6 mb-8">
+            <div className="flex items-center gap-3 md:gap-6 mb-8">
               <img src="/official/kff.svg" alt="KFF" className="h-10 md:h-14 w-auto" />
               <span className="text-white font-black text-xl md:text-2xl tracking-tight">
                 FIFA

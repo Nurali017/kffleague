@@ -59,6 +59,10 @@
   "matchCenter": {
     "tour": "Тур {{number}}"
   },
+  "seasonSelector": {
+    "year": "Год",
+    "tournament": "Турнир"
+  },
   "news": "Новости",
   "seasonStats": {
     "matchesPlayed": "СЫГРАННЫЕ МАТЧИ",

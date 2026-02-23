@@ -28,6 +28,7 @@ import {
   DEFAULT_PLAYER_PAGE_VARIANT,
 } from '@/components/player/playerPageVariants';
 import { SeasonTournamentSelector, SeasonTournamentItem } from '@/components/shared/SeasonTournamentSelector';
+import { PRE_SEASON_CONFIG } from '@/config/tournaments';
 
 // Loading skeleton component
 function PlayerPageSkeleton() {
@@ -125,11 +126,20 @@ export default function PlayerProfilePage() {
   }, [apiTournaments]);
 
   // Season from URL or first available from tournaments
+  // Pre-season: prefer previous season if available in player's tournaments
   const seasonFromUrl = searchParams.get('season');
   const defaultSeasonId = useMemo(() => {
     if (seasonFromUrl) {
       const parsed = Number(seasonFromUrl);
       if (Number.isFinite(parsed)) return parsed;
+    }
+    if (!PRE_SEASON_CONFIG.seasonStarted) {
+      // Try the exact PL previous season first
+      const prevItem = selectorItems.find((item) => item.seasonId === PRE_SEASON_CONFIG.previousSeasonId);
+      if (prevItem) return prevItem.seasonId;
+      // Fallback: any 2025 season the player participated in (e.g. 1L, Cup)
+      const any2025 = selectorItems.find((item) => item.year === '2025');
+      if (any2025) return any2025.seasonId;
     }
     return selectorItems[0]?.seasonId ?? null;
   }, [seasonFromUrl, selectorItems]);

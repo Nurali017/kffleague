@@ -1,6 +1,12 @@
 import { apiClient } from '../client';
 import { ENDPOINTS, DEFAULT_SEASON_ID } from '../endpoints';
-import { TeamStanding, TableFilters, LeagueTableResponse, ResultsGridResponse } from '@/types';
+import {
+  TeamStanding,
+  TableFilters,
+  LeagueTableResponse,
+  ResultsGridResponse,
+  SeasonStagesResponse,
+} from '@/types';
 import { getErrorMessage } from '@/lib/i18n/errorMessages';
 
 export const leagueService = {
@@ -55,6 +61,22 @@ export const leagueService = {
 
     if (!response.success) {
       throw new Error(response.error?.message || getErrorMessage('fetchResultsGrid'));
+    }
+
+    return response.data;
+  },
+
+  async getStages(
+    seasonId: number = DEFAULT_SEASON_ID,
+    language?: string
+  ): Promise<SeasonStagesResponse> {
+    const response = await apiClient.get<SeasonStagesResponse>(
+      ENDPOINTS.SEASON_STAGES(seasonId),
+      language ? { lang: language } : undefined
+    );
+
+    if (!response.success) {
+      throw new Error(response.error?.message || getErrorMessage('fetchLeagueTable'));
     }
 
     return response.data;

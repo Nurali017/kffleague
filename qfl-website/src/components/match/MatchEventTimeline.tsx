@@ -73,14 +73,14 @@ export function MatchEventTimeline({
 
   if (loading) {
     return (
-      <div className="w-full mt-6 md:mt-8 opacity-50 px-4 md:px-20">
+      <div className="w-full mt-6 md:mt-8 opacity-50 px-4 sm:px-6 md:px-10 lg:px-20">
         <div className="h-1 bg-white/20 w-full rounded" />
       </div>
     );
   }
 
   return (
-    <div className="w-full mt-8 md:mt-10 mb-6 md:mb-8 select-none px-4 md:px-20 relative">
+    <div className="w-full mt-8 md:mt-10 mb-6 md:mb-8 select-none px-4 sm:px-6 md:px-10 lg:px-20 relative">
 
       {/* Mobile Timeline (touch) */}
       <div className="md:hidden" data-testid="match-timeline-mobile">

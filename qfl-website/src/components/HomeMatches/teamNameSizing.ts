@@ -1,6 +1,6 @@
 import { GameTeam } from '@/types';
 
-export type TeamNameFontClass = 'text-[11px]' | 'text-[9px]';
+export type TeamNameFontClass = 'text-[11px]' | 'text-[10px]';
 
 export interface TeamNameSizingResult {
   fullName: string;
@@ -58,13 +58,13 @@ export function getTeamNameSizing(
     return {
       fullName,
       displayName: fullName,
-      fontClass: 'text-[9px]',
+      fontClass: 'text-[10px]',
     };
   }
 
   return {
     fullName,
     displayName: pickShortName(team, language) ?? firstWord(fullName),
-    fontClass: 'text-[9px]',
+    fontClass: 'text-[10px]',
   };
 }

@@ -32,6 +32,7 @@ export interface Game {
   visitors: number | null;
   is_live: boolean;
   is_technical?: boolean;
+  is_schedule_tentative?: boolean;
   status: "upcoming" | "live" | "finished";
   ticket_url: string | null;
   video_url: string | null;

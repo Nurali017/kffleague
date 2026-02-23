@@ -121,6 +121,10 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
         </div>
       </div>
 
+      {/* Mobile scroll indicator */}
+      <div className="relative">
+          <div className="md:hidden pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-dark-surface to-transparent z-20" />
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] md:min-w-[800px]">
           <thead className="bg-gray-50 dark:bg-dark-surface-soft border-b border-gray-200 dark:border-dark-border">

@@ -2,7 +2,6 @@
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { useTranslation } from 'react-i18next';
-import { MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Game } from '@/types';
 import { getTeamLogo, HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
@@ -11,9 +10,23 @@ interface MatchCardProps {
   match: Game;
   showTour?: boolean;
   className?: string;
+  showScheduleDisclaimer?: boolean;
 }
 
-export function MatchCard({ match, showTour = true, className = '' }: MatchCardProps) {
+function formatMatchTime(raw: string | null | undefined): string | undefined {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  const parsed = trimmed.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (!parsed) return trimmed;
+  return `${parsed[1].padStart(2, '0')}:${parsed[2]}`;
+}
+
+export function MatchCard({
+  match,
+  showTour = true,
+  className = '',
+  showScheduleDisclaimer = false,
+}: MatchCardProps) {
   const { t } = useTranslation('match');
 
   const homeLogoUrl = match.home_team.logo_url || getTeamLogo(match.home_team.id);
@@ -24,6 +37,9 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
   const isFinished = match.status === 'finished' && match.home_score !== null && match.away_score !== null;
   const isLive = match.is_live || match.status === 'live';
   const isUpcoming = match.status === 'upcoming';
+  const shouldShowScheduleDisclaimer = showScheduleDisclaimer && match.is_schedule_tentative === true;
+  const displayTime = formatMatchTime(match.time);
+  const displayDateTime = match.date && displayTime ? `${match.date}, ${displayTime}` : match.date || displayTime;
 
   return (
     <motion.div
@@ -42,7 +58,7 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
                   </span>
                 )}
                 <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5">
-                  {match.date && match.time ? `${match.date}, ${match.time}` : match.date || match.time}
+                  {displayDateTime}
                 </p>
               </div>
               {isLive ? (
@@ -163,7 +179,7 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
                 </span>
               )}
               <span className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
-                {match.date && match.time ? `${match.date}, ${match.time}` : match.date || match.time}
+                {displayDateTime}
               </span>
             </div>
 
@@ -273,6 +289,12 @@ export function MatchCard({ match, showTour = true, className = '' }: MatchCardP
               ) : null}
             </div>
           </div>
+
+          {shouldShowScheduleDisclaimer && (
+            <p className="mt-2 text-[11px] leading-snug text-amber-700 dark:text-amber-300">
+              {t('scheduleNotice.perMatch')}
+            </p>
+          )}
         </div>
       </Link>
     </motion.div>

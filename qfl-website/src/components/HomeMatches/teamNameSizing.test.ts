@@ -13,13 +13,13 @@ describe('getTeamNameSizing', () => {
     });
   });
 
-  it('uses 9px font and full name for 13-24 chars', () => {
+  it('uses 10px font and full name for 13-24 chars', () => {
     const result = getTeamNameSizing({ name: 'B'.repeat(24) });
 
     expect(result).toEqual({
       fullName: 'B'.repeat(24),
       displayName: 'B'.repeat(24),
-      fontClass: 'text-[9px]',
+      fontClass: 'text-[10px]',
     });
   });
 
@@ -32,7 +32,7 @@ describe('getTeamNameSizing', () => {
     expect(result).toEqual({
       fullName: 'Очень Длинное Название Команды Проверка',
       displayName: 'ОДНК',
-      fontClass: 'text-[9px]',
+      fontClass: 'text-[10px]',
     });
   });
 
@@ -69,7 +69,7 @@ describe('getTeamNameSizing', () => {
     expect(result).toEqual({
       fullName: 'Очень Длинное Название Команды Проверка',
       displayName: 'Очень',
-      fontClass: 'text-[9px]',
+      fontClass: 'text-[10px]',
     });
   });
 
@@ -85,7 +85,7 @@ describe('getTeamNameSizing', () => {
     expect(result).toEqual({
       fullName: 'Очень Длинное Название Команды Проверка',
       displayName: 'СК',
-      fontClass: 'text-[9px]',
+      fontClass: 'text-[10px]',
     });
   });
 

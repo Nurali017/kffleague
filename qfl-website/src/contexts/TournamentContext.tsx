@@ -16,10 +16,13 @@ import {
   TOURNAMENTS,
   SEASONS,
   DEFAULT_TOURNAMENT_ID,
+  PRE_SEASON_CONFIG,
   getTournamentById,
   getActiveTournaments,
   isLeagueTournament,
   isCupTournament,
+  getPreSeasonSeasonId,
+  type PreSeasonPageHint,
 } from '@/config/tournaments';
 import {
   setTournamentCookie,
@@ -126,6 +129,7 @@ interface TournamentContextValue {
   currentRound: number | null;
   availableTournaments: Tournament[];
   availableSeasons: Season[];
+  tournamentSeasons: Array<{ seasonId: number; year: string }>;
   setTournament: (tournamentId: string) => void;
   setSeason: (seasonId: number) => void;
   setRound: (round: number) => void;
@@ -206,6 +210,7 @@ export function TournamentProvider({
 
   const seasonFromUrl = getNumericSearchParam(searchParams, 'season');
   const fallbackSeasonId = getSeasonIdFromFrontMap(resolvedTournamentId, frontMap);
+
   const isAutoManagedSeason =
     seasonFromUrl !== null &&
     autoManagedSeasonRef.current !== null &&
@@ -438,6 +443,25 @@ export function TournamentProvider({
     root.style.setProperty('--league-accent-soft', colors.accentSoft);
   }, [currentTournament]);
 
+  const tournamentSeasons = useMemo(() => {
+    if (frontMap?.[resolvedTournamentId]?.seasons?.length) {
+      return frontMap[resolvedTournamentId].seasons!.map((s) => ({
+        seasonId: s.season_id,
+        year: String(s.year),
+      }));
+    }
+    // No front-map data: show only the current tournament's season
+    // to avoid offering invalid years (e.g. 2026 for 1L that has no 2026 season)
+    const t = getTournamentById(resolvedTournamentId);
+    if (t) {
+      const matchingSeason = SEASONS.find((s) => s.id === t.seasonId);
+      if (matchingSeason) {
+        return [{ seasonId: matchingSeason.id, year: matchingSeason.year }];
+      }
+    }
+    return SEASONS.map((s) => ({ seasonId: s.id, year: s.year }));
+  }, [frontMap, resolvedTournamentId]);
+
   const value = useMemo<TournamentContextValue>(
     () => ({
       currentTournament,
@@ -446,6 +470,7 @@ export function TournamentProvider({
       currentRound,
       availableTournaments,
       availableSeasons: SEASONS,
+      tournamentSeasons,
       setTournament,
       setSeason,
       setRound,
@@ -461,6 +486,7 @@ export function TournamentProvider({
       currentRound,
       effectiveSeasonId,
       availableTournaments,
+      tournamentSeasons,
       setTournament,
       setSeason,
       setRound,
@@ -481,4 +507,20 @@ export function useTournament() {
     throw new Error('useTournament must be used within TournamentProvider');
   }
   return context;
+}
+
+/**
+ * Returns the effective season ID with pre-season override applied.
+ * - hint='current' → keeps the new season (e.g. 200 for 2026 PL)
+ * - hint='previous' → falls back to previous season (e.g. 61 for 2025 PL)
+ *
+ * Only overrides when the user hasn't manually selected a different season.
+ */
+export function usePreSeasonEffectiveId(hint: PreSeasonPageHint): number {
+  const { effectiveSeasonId, currentTournament } = useTournament();
+  const override = getPreSeasonSeasonId(currentTournament.id, hint);
+  if (override !== null && effectiveSeasonId === PRE_SEASON_CONFIG.currentSeasonId) {
+    return override;
+  }
+  return effectiveSeasonId;
 }

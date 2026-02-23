@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { notFound, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'motion/react';
@@ -15,9 +15,8 @@ import {
   TeamSquad,
 } from '@/components/team';
 import { useTeamGames, useTeamOverview, useTeamPlayers, useTeamSeasons, useTeamStats } from '@/hooks/useTeam';
-import { useTournament } from '@/contexts/TournamentContext';
+import { useTournament, usePreSeasonEffectiveId } from '@/contexts/TournamentContext';
 import { PageSeasonProvider } from '@/contexts/PageSeasonContext';
-import { SeasonTournamentSelector } from '@/components/shared/SeasonTournamentSelector';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ErrorMessage } from '@/components/ui/ErrorMessage';
 import { fadeInUp, staggerContainer } from '@/lib/motion/variants';
@@ -31,7 +30,8 @@ interface TeamPageProps {
 
 export default function TeamPage({ params }: TeamPageProps) {
   const { t, i18n } = useTranslation('team');
-  const { effectiveSeasonId: globalSeasonId, currentTournament } = useTournament();
+  const { currentTournament, setSeason } = useTournament();
+  const effectiveSeasonId = usePreSeasonEffectiveId('previous');
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -54,27 +54,14 @@ export default function TeamPage({ params }: TeamPageProps) {
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
-  // Local season selector state — only seasons the team participated in
-  const { items: treeItems } = useTeamSeasons(teamId);
-  const seasonFromUrl = searchParams.get('season');
-
-  const defaultSeasonId = useMemo(() => {
-    if (seasonFromUrl) {
-      const parsed = Number(seasonFromUrl);
-      if (Number.isFinite(parsed)) return parsed;
-    }
-    return globalSeasonId;
-  }, [seasonFromUrl, globalSeasonId]);
-
-  const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
+  const { items: yearItems } = useTeamSeasons(teamId, currentTournament.id);
 
   useEffect(() => {
-    if (selectedSeasonId === null && defaultSeasonId) {
-      setSelectedSeasonId(defaultSeasonId);
+    if (!yearItems.length) return;
+    if (!yearItems.some((item) => item.seasonId === effectiveSeasonId)) {
+      setSeason(yearItems[0].seasonId);
     }
-  }, [defaultSeasonId, selectedSeasonId]);
-
-  const effectiveSeasonId = selectedSeasonId ?? defaultSeasonId;
+  }, [yearItems, effectiveSeasonId, setSeason]);
 
   const { overview, loading: overviewLoading, error: overviewError } = useTeamOverview(teamId, effectiveSeasonId);
   const { stats: detailedStats } = useTeamStats(activeTab === 'overview' ? teamId : null, effectiveSeasonId);
@@ -113,20 +100,15 @@ export default function TeamPage({ params }: TeamPageProps) {
           tournamentName={tournamentName}
         />
 
-        {/* Season/Tournament Selector */}
-        {treeItems.length > 0 && (
-          <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4">
-            <SeasonTournamentSelector
-              items={treeItems}
-              selectedSeasonId={effectiveSeasonId}
-              onSeasonChange={setSelectedSeasonId}
-            />
-          </div>
-        )}
+        <TeamPageTabs
+          activeTab={activeTab}
+          onChange={handleTabChange}
+          yearItems={yearItems}
+          selectedSeasonId={effectiveSeasonId}
+          onSeasonChange={setSeason}
+        />
 
-        <TeamPageTabs activeTab={activeTab} onChange={handleTabChange} />
-
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-8 md:space-y-10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8 md:space-y-10">
           {activeTab === 'overview' ? (
             <motion.div
               initial="hidden"

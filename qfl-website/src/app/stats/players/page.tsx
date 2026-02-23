@@ -7,7 +7,7 @@ import { StatisticsSubTabs } from '@/components/statistics/StatisticsSubTabs';
 import { StatisticsFilters } from '@/components/statistics/StatisticsFilters';
 import { PlayerStatsTable } from '@/components/statistics/PlayerStatsTable';
 import { StatSubTab } from '@/types/statistics';
-import { useTournament } from '@/contexts/TournamentContext';
+import { usePreSeasonEffectiveId } from '@/contexts/TournamentContext';
 import {
     PlayerStatsNationality,
     PlayerStatsNationalityFilter,
@@ -17,7 +17,7 @@ import {
 
 export default function PlayersStatsPage() {
     const { t } = useTranslation('statistics');
-    const { effectiveSeasonId } = useTournament();
+    const effectiveSeasonId = usePreSeasonEffectiveId('previous');
     const [subTab, setSubTab] = useState<StatSubTab>('key_stats');
     const [selectedClub, setSelectedClub] = useState('all');
     const [selectedPosition, setSelectedPosition] = useState('all');
@@ -93,7 +93,7 @@ export default function PlayersStatsPage() {
                 }))}
             />
 
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20 py-6 md:py-8">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20 py-6 md:py-8">
                 {error ? (
                     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
                         <p className="text-red-600 dark:text-red-400">

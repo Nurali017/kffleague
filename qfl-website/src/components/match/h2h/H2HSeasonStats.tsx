@@ -3,7 +3,7 @@
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import { useTranslation } from 'react-i18next';
 import { GameTeam } from '@/types';
-import { SeasonTableEntry, H2HComputedMetrics } from '@/types/h2h';
+import { SeasonTableEntry, H2HComputedMetrics, H2HEnhancedSeasonStats } from '@/types/h2h';
 import { getTeamHref } from '@/lib/utils/entityRoutes';
 import { StatBar } from '../StatBar';
 
@@ -14,6 +14,7 @@ interface H2HSeasonStatsProps {
   metrics: H2HComputedMetrics;
   homeColor: string;
   awayColor: string;
+  enhancedStats?: H2HEnhancedSeasonStats | null;
 }
 
 export function H2HSeasonStats({
@@ -23,16 +24,15 @@ export function H2HSeasonStats({
   metrics,
   homeColor,
   awayColor,
+  enhancedStats,
 }: H2HSeasonStatsProps) {
   const { t } = useTranslation('match');
   const homeTeamHref = getTeamHref(homeTeam.id);
   const awayTeamHref = getTeamHref(awayTeam.id);
 
-  // Find teams in season table
   const homeEntry = seasonTable.find((t) => t.team_id === homeTeam.id);
   const awayEntry = seasonTable.find((t) => t.team_id === awayTeam.id);
 
-  // Calculate additional metrics from season table
   const homeGoalsPerGame = homeEntry
     ? homeEntry.goals_scored / (homeEntry.games_played || 1)
     : 0;
@@ -54,12 +54,18 @@ export function H2HSeasonStats({
     ? (awayEntry.wins / (awayEntry.games_played || 1)) * 100
     : 0;
 
+  const t1 = enhancedStats?.team1;
+  const t2 = enhancedStats?.team2;
+
   return (
     <div className="space-y-6">
-      {/* Position in table */}
+      {/* Position in table — gradient split card */}
       {homeEntry && awayEntry && (
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-          <div className="text-center">
+        <div className="flex items-stretch rounded-xl overflow-hidden">
+          <div
+            className="flex-1 p-3 text-center"
+            style={{ backgroundColor: `${homeColor}08` }}
+          >
             <span className="text-2xl font-black text-gray-900">
               #{homeEntry.position || '-'}
             </span>
@@ -76,7 +82,7 @@ export function H2HSeasonStats({
               {t('h2h.tablePosition', 'позиция')}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center justify-center px-3 bg-gray-50">
             <span className="text-[10px] text-gray-400 uppercase font-medium">
               {t('h2h.points', 'Очки')}
             </span>
@@ -90,7 +96,10 @@ export function H2HSeasonStats({
               </span>
             </div>
           </div>
-          <div className="text-center">
+          <div
+            className="flex-1 p-3 text-center"
+            style={{ backgroundColor: `${awayColor}08` }}
+          >
             <span className="text-2xl font-black text-gray-900">
               #{awayEntry.position || '-'}
             </span>
@@ -110,7 +119,7 @@ export function H2HSeasonStats({
         </div>
       )}
 
-      {/* Stats comparison */}
+      {/* Performance stats */}
       <div className="space-y-5">
         <StatBar
           label={t('h2h.goalsPerGame', 'Голов за игру')}
@@ -118,6 +127,7 @@ export function H2HSeasonStats({
           awayValue={parseFloat(awayGoalsPerGame.toFixed(1))}
           homeColor={homeColor}
           awayColor={awayColor}
+          animated
         />
 
         <StatBar
@@ -126,6 +136,7 @@ export function H2HSeasonStats({
           awayValue={parseFloat(awayConcededPerGame.toFixed(1))}
           homeColor={homeColor}
           awayColor={awayColor}
+          animated
         />
 
         <StatBar
@@ -134,6 +145,7 @@ export function H2HSeasonStats({
           awayValue={Math.round(awayWinRate)}
           homeColor={homeColor}
           awayColor={awayColor}
+          animated
         />
 
         {homeEntry && awayEntry && (
@@ -143,14 +155,79 @@ export function H2HSeasonStats({
             awayValue={awayEntry.clean_sheets}
             homeColor={homeColor}
             awayColor={awayColor}
+            animated
           />
         )}
       </div>
 
+      {/* Advanced stats */}
+      {(t1?.xg_per_match != null || t1?.possession_avg != null) && (
+        <div className="space-y-5 pt-4 border-t border-gray-100">
+          <div className="text-[10px] text-gray-400 uppercase font-medium text-center tracking-wider">
+            {t('h2h.enhanced.title', 'Расширенная статистика')}
+          </div>
+
+          {t1?.xg_per_match != null && t2?.xg_per_match != null && (
+            <StatBar
+              label={t('h2h.enhanced.xgPerMatch', 'xG / матч')}
+              homeValue={parseFloat(t1.xg_per_match.toFixed(2))}
+              awayValue={parseFloat(t2.xg_per_match.toFixed(2))}
+              homeColor={homeColor}
+              awayColor={awayColor}
+              animated
+            />
+          )}
+
+          {t1?.possession_avg != null && t2?.possession_avg != null && (
+            <StatBar
+              label={t('h2h.enhanced.possessionAvg', 'Владение (%)')}
+              homeValue={parseFloat(t1.possession_avg.toFixed(1))}
+              awayValue={parseFloat(t2.possession_avg.toFixed(1))}
+              homeColor={homeColor}
+              awayColor={awayColor}
+              animated
+            />
+          )}
+
+          {t1?.pass_accuracy_avg != null && t2?.pass_accuracy_avg != null && (
+            <StatBar
+              label={t('h2h.enhanced.passAccuracy', 'Точность пасов (%)')}
+              homeValue={parseFloat(t1.pass_accuracy_avg.toFixed(1))}
+              awayValue={parseFloat(t2.pass_accuracy_avg.toFixed(1))}
+              homeColor={homeColor}
+              awayColor={awayColor}
+              animated
+            />
+          )}
+
+          {t1?.duel_ratio != null && t2?.duel_ratio != null && (
+            <StatBar
+              label={t('h2h.enhanced.duelRatio', 'Единоборства (%)')}
+              homeValue={parseFloat(t1.duel_ratio.toFixed(1))}
+              awayValue={parseFloat(t2.duel_ratio.toFixed(1))}
+              homeColor={homeColor}
+              awayColor={awayColor}
+              animated
+            />
+          )}
+
+          {t1?.shots_per_match != null && t2?.shots_per_match != null && (
+            <StatBar
+              label={t('h2h.enhanced.shotsPerMatch', 'Удары / матч')}
+              homeValue={parseFloat(t1.shots_per_match.toFixed(1))}
+              awayValue={parseFloat(t2.shots_per_match.toFixed(1))}
+              homeColor={homeColor}
+              awayColor={awayColor}
+              animated
+            />
+          )}
+        </div>
+      )}
+
       {/* Additional stats row */}
       {homeEntry && awayEntry && (
         <div className="grid grid-cols-3 gap-2 pt-4 border-t border-gray-100">
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
+          <div className="text-center p-2 bg-[#FAFBFC] rounded-lg border border-gray-100">
             <div className="flex items-center justify-center gap-2">
               <span className="text-sm font-bold" style={{ color: homeColor }}>
                 {homeEntry.wins}
@@ -160,11 +237,11 @@ export function H2HSeasonStats({
                 {awayEntry.wins}
               </span>
             </div>
-            <p className="text-[9px] text-gray-500 uppercase mt-1">
+            <p className="text-[10px] text-gray-500 uppercase mt-1">
               {t('h2h.seasonWins', 'Побед')}
             </p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
+          <div className="text-center p-2 bg-[#FAFBFC] rounded-lg border border-gray-100">
             <div className="flex items-center justify-center gap-2">
               <span className="text-sm font-bold" style={{ color: homeColor }}>
                 {homeEntry.goals_scored}
@@ -174,11 +251,11 @@ export function H2HSeasonStats({
                 {awayEntry.goals_scored}
               </span>
             </div>
-            <p className="text-[9px] text-gray-500 uppercase mt-1">
-              {t('h2h.goalsScored', 'Голов')}
+            <p className="text-[10px] text-gray-500 uppercase mt-1">
+              {t('h2h.goalsScored', 'голов')}
             </p>
           </div>
-          <div className="text-center p-2 bg-gray-50 rounded-lg">
+          <div className="text-center p-2 bg-[#FAFBFC] rounded-lg border border-gray-100">
             <div className="flex items-center justify-center gap-2">
               <span className="text-sm font-bold" style={{ color: homeColor }}>
                 {homeEntry.goal_difference > 0 ? '+' : ''}
@@ -190,7 +267,7 @@ export function H2HSeasonStats({
                 {awayEntry.goal_difference}
               </span>
             </div>
-            <p className="text-[9px] text-gray-500 uppercase mt-1">
+            <p className="text-[10px] text-gray-500 uppercase mt-1">
               {t('h2h.goalDiff', 'Разница')}
             </p>
           </div>

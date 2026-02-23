@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 import { useTournament } from '@/contexts/TournamentContext';
-import { teamService } from '@/lib/api/services';
+import { leagueService, teamService } from '@/lib/api/services';
 import { MatchCenterFilters as FiltersType } from '@/types';
 import { MultiSelect } from '@/components/ui';
 
@@ -28,14 +28,15 @@ export function MatchCenterFilters({
   const { i18n } = useTranslation();
   const { currentTournament, effectiveSeasonId } = useTournament();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const resolvedSeasonId = filters.season_id || effectiveSeasonId;
   const isHero = variant === 'hero';
   const isSecondLeague = currentTournament.id === '2l';
   const hasFinalPhase = (currentTournament.finalStageIds?.length ?? 0) > 0;
 
   // Load teams from season participants endpoint to support cup/2l flows.
   const { data: teamsData } = useSWR(
-    ['teams-list', filters.season_id || effectiveSeasonId, i18n.language],
-    () => teamService.getTeams(filters.season_id || effectiveSeasonId, i18n.language)
+    ['teams-list', resolvedSeasonId, i18n.language],
+    () => teamService.getTeams(resolvedSeasonId, i18n.language)
   );
 
   const teams = teamsData?.map(team => ({
@@ -44,10 +45,58 @@ export function MatchCenterFilters({
     logo_url: team.logo_url,
   })) ?? [];
 
-  // Generate tour options (1-26) for MultiSelect
-  const tours = Array.from({ length: 26 }, (_, i) => ({
-    id: i + 1,
-    name: `${t('tour')} ${i + 1}`,
+  // Load season stages to build dynamic tour options.
+  const { data: stagesData } = useSWR(
+    ['season-stages', resolvedSeasonId, i18n.language],
+    () => leagueService.getStages(resolvedSeasonId, i18n.language)
+  );
+
+  const stageTourNumbers = Array.from(
+    new Set(
+      (stagesData?.items ?? [])
+        .map((stage) => {
+          const stageNumber = Number(stage.stage_number);
+          if (Number.isInteger(stageNumber) && stageNumber > 0) {
+            return stageNumber;
+          }
+
+          const sortOrder = Number(stage.sort_order);
+          if (Number.isInteger(sortOrder) && sortOrder > 0) {
+            return sortOrder;
+          }
+
+          return null;
+        })
+        .filter((tour): tour is number => tour !== null)
+    )
+  ).sort((a, b) => a - b);
+
+  const toursFromTotalRounds = (() => {
+    const totalRounds = Number(currentTournament.totalRounds);
+    if (!Number.isInteger(totalRounds) || totalRounds <= 0) {
+      return [];
+    }
+
+    return Array.from({ length: totalRounds }, (_, i) => i + 1);
+  })();
+
+  const toursFromSelectedFilters = Array.from(
+    new Set(
+      (filters.tours ?? [])
+        .map((tour) => Number(tour))
+        .filter((tour) => Number.isInteger(tour) && tour > 0)
+    )
+  ).sort((a, b) => a - b);
+
+  const availableTours = stageTourNumbers.length > 0
+    ? stageTourNumbers
+    : toursFromTotalRounds.length > 0
+      ? toursFromTotalRounds
+      : toursFromSelectedFilters;
+
+  const tours = availableTours.map((tour) => ({
+    id: tour,
+    name: `${t('tour')} ${tour}`,
   }));
 
   // Generate month options for MultiSelect

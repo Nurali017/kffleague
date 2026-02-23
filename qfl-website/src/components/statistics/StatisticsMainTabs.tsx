@@ -8,7 +8,7 @@ interface StatisticsMainTabsProps {
 export function StatisticsMainTabs({ activeTab, onTabChange }: StatisticsMainTabsProps) {
     return (
         <div className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-            <div className="max-w-[1440px] mx-auto px-4 md:px-20">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
                 <div className="flex gap-1">
                     <button
                         onClick={() => onTabChange('clubs')}

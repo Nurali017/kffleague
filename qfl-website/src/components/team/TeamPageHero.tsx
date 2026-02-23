@@ -29,8 +29,8 @@ export function TeamPageHero({ team, summary, seasonName, tournamentName }: Team
         style={{ backgroundColor: accent }}
       />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-4 md:px-8">
-        <div className="px-4 py-5 md:px-8 md:py-7">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8">
+        <div className="py-5 md:px-8 md:py-7">
           <div className="flex flex-col sm:flex-row sm:items-center gap-5 md:gap-6">
             <div className="h-24 w-24 md:h-32 md:w-32 shrink-0">
               {team.logo_url ? (

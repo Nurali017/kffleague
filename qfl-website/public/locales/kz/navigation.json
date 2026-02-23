@@ -6,9 +6,9 @@
     "players": "Ойыншылар",
     "referees": "Төрешілер",
     "news": "Жаңалықтар",
-    "newsAll": "Барлық жаңалықтар",
+    "newsAll": "Барлық жаңалық",
     "newsType": "Жаңалықтар",
-    "analytics": "Спорттық мақала",
+    "analytics": "Спорт мақаласы",
     "matches": "Матчтар",
     "media": "Медиа",
     "video": "Бейне",
@@ -21,9 +21,9 @@
   "search": "Іздеу",
   "searchPlaceholder": "Сайттан іздеу",
   "profile": "Профиль",
-  "liveBadge": "Тікелей",
+  "liveBadge": "Онлайн",
   "openMenu": "Мәзірді ашу",
   "closeMenu": "Мәзірді жабу",
-  "comingSoon": "Жақында",
-  "comingSoonBadge": "(жақында)"
+  "comingSoon": "Жуырда",
+  "comingSoonBadge": "(жуырда)"
 }

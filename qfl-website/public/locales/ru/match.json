@@ -78,7 +78,57 @@
       "winFull": "Победа",
       "drawFull": "Ничья",
       "lossFull": "Поражение"
+    },
+    "funFacts": {
+      "title": "Интересные факты",
+      "goalsPerMatch": "голов / матч",
+      "over25": "тотал > 2.5",
+      "btts": "обе забили",
+      "goalsByHalf": "голы по таймам",
+      "biggestWin": "крупнейшая победа",
+      "unbeatenStreak": "серия без поражений"
+    },
+    "matchStats": {
+      "title": "Статистика H2H матчей",
+      "avgPossession": "Ср. владение (%)",
+      "avgShots": "Удары",
+      "avgShotsOnGoal": "Удары в створ",
+      "avgCorners": "Угловые",
+      "avgFouls": "Фолы",
+      "yellowCards": "Жёлтые карточки",
+      "redCards": "Красные карточки",
+      "basedOn": "На основе {{count}} матчей"
+    },
+    "topPerformers": {
+      "title": "Лучшие в H2H",
+      "topScorers": "Бомбардиры",
+      "topAssisters": "Ассистенты"
+    },
+    "enhanced": {
+      "xgPerMatch": "xG / матч",
+      "possessionAvg": "Владение (%)",
+      "passAccuracy": "Точность пасов (%)",
+      "duelRatio": "Единоборства (%)",
+      "shotsPerMatch": "Удары / матч"
     }
+  },
+  "superCupHero": {
+    "badge": "The Super Cup",
+    "matchCta": "Открыть матч",
+    "ticketCta": "Купить билет",
+    "countdownDays": "дн",
+    "countdownHours": "ч",
+    "countdownMinutes": "мин",
+    "countdownSeconds": "сек",
+    "countdownLabel": "До начала матча"
+  },
+  "trophyCabinet": {
+    "title": "Трофейный кабинет",
+    "championships": "Чемпионат",
+    "cups": "Кубок",
+    "superCups": "Суперкубок",
+    "total": "Всего",
+    "trophies": "трофеев"
   },
   "media": {
     "title": "Медиа",
@@ -186,6 +236,10 @@
   "protocolCard": {
     "title": "Протокол матча",
     "open": "Открыть протокол"
+  },
+  "scheduleNotice": {
+    "global": "Календарь носит предварительный характер и может корректироваться по ходу сезона.",
+    "perMatch": "Дата и время этого матча предварительные и могут быть изменены."
   },
   "buyTicket": "Купить билет",
   "totalMatches": "Найдено матчей: {{count}}",

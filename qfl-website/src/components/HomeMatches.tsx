@@ -5,9 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { useTournament } from '@/contexts/TournamentContext';
 import { useMatchCenter, useMatches } from '@/hooks';
-import { DEFAULT_TOUR } from '@/lib/api/endpoints';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
 import { getTeamLogo } from '@/lib/utils/teamLogos';
+import { Game } from '@/types';
+import {
+  getHomeMatchesQueryPlan,
+  getHomeMatchesTourFallback,
+} from '@/lib/home/homeMatchesQueryPlan';
 import {
   getTeamNameSizing,
   TeamNameFontClass,
@@ -15,13 +19,30 @@ import {
 
 const TEAM_NAME_FONT_CLASS_MAP: Record<TeamNameFontClass, string> = {
   'text-[11px]': 'text-[11px]',
-  'text-[9px]': 'text-[9px]',
+  'text-[10px]': 'text-[10px]',
 };
+
+function formatKickoffTime(raw: string | null): string {
+  if (!raw) return '-';
+  if (raw.length >= 5) return raw.slice(0, 5);
+  return raw;
+}
+
+interface DisplayGroup {
+  date: string;
+  dateLabel: string;
+  games: Game[];
+}
 
 export function HomeMatches() {
   const { t, i18n } = useTranslation('match');
-  const { effectiveSeasonId, currentRound } = useTournament();
-  const useTourBasedMatches = currentRound !== null;
+  const { effectiveSeasonId, currentRound, currentTournament } = useTournament();
+  const homeMatchesQueryPlan = getHomeMatchesQueryPlan({
+    tournamentId: currentTournament.id,
+    seasonId: effectiveSeasonId,
+    currentRound,
+  });
+  const useTourBasedMatches = homeMatchesQueryPlan.source === 'tour';
 
   const {
     matches: tourMatches,
@@ -29,18 +50,23 @@ export function HomeMatches() {
     error: tourMatchesError,
   } = useMatches({
     seasonId: effectiveSeasonId,
-    tour: currentRound ?? DEFAULT_TOUR,
+    tour: getHomeMatchesTourFallback(homeMatchesQueryPlan),
     enabled: useTourBasedMatches,
   });
+
+  const matchCenterFilters = homeMatchesQueryPlan.source === 'matchCenter'
+    ? homeMatchesQueryPlan.matchCenterFilters
+    : {
+        season_id: effectiveSeasonId,
+        group_by_date: true,
+      };
 
   const {
     groups,
     loading: groupedMatchesLoading,
     error: groupedMatchesError,
   } = useMatchCenter({
-    season_id: effectiveSeasonId,
-    group_by_date: true,
-    limit: 20,
+    ...matchCenterFilters,
     enabled: !useTourBasedMatches,
   });
 
@@ -85,13 +111,33 @@ export function HomeMatches() {
     );
   }
 
-  // Show up to 6 matches to fit without scroll
-  const displayGames = matches.slice(0, 8);
+  const groupedForDisplay = useTourBasedMatches
+    ? (() => {
+        const grouped = new Map<string, Game[]>();
 
-  // Get date from first match for display
-  const matchDate = displayGames.length > 0 && displayGames[0].date
-    ? formatMatchDate(displayGames[0].date, i18n.language)
-    : '';
+        for (const game of matches) {
+          const key = game.date || 'unknown';
+          if (!grouped.has(key)) {
+            grouped.set(key, []);
+          }
+          grouped.get(key)!.push(game);
+        }
+
+        return Array.from(grouped.entries()).map(([groupDate, groupGames]) => ({
+          date: groupDate,
+          dateLabel: groupDate === 'unknown'
+            ? t('dateUnknown', 'Дата уточняется')
+            : formatMatchDate(groupDate, i18n.language),
+          games: groupGames,
+        }));
+      })()
+    : groups.map((group) => ({
+        date: group.date,
+        dateLabel: group.date_label || formatMatchDate(group.date, i18n.language),
+        games: group.games,
+      }));
+
+  const displayGroups: DisplayGroup[] = groupedForDisplay;
 
   return (
     <div className="bg-white dark:bg-dark-surface border border-gray-100 dark:border-dark-border rounded-xl shadow-sm p-4 md:p-6 h-full flex flex-col overflow-hidden">
@@ -109,91 +155,92 @@ export function HomeMatches() {
         </Link>
       </div>
 
-      {/* Date header */}
-      {matchDate && (
-        <div className="text-sm text-gray-500 dark:text-slate-400 mb-3">
-          {matchDate}
-        </div>
-      )}
-
       <div className="space-y-2 flex-1">
-        {displayGames.length === 0 ? (
+        {displayGroups.length === 0 ? (
           <p className="text-gray-500 dark:text-slate-400 text-sm text-center py-8">
             {t('noData.noMatches', { ns: 'common' })}
           </p>
         ) : (
-          displayGames.map((game) => {
-            const homeTeamDisplay = getTeamNameSizing(game.home_team, i18n.language);
-            const awayTeamDisplay = getTeamNameSizing(game.away_team, i18n.language);
+          displayGroups.map((group) => (
+            <div key={group.date} className="space-y-2">
+              <div className="text-sm text-gray-500 dark:text-slate-400 pt-1">
+                {group.dateLabel}
+              </div>
 
-            return (
-              <Link
-                key={game.id}
-                href={`/matches/${game.id}`}
-                className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-1.5 md:p-2 transition-colors"
-              >
-                {/* Teams */}
-                <div className="flex items-center justify-between gap-1.5">
-                  {/* Home team */}
-                  <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                    <img
-                      src={game.home_team.logo_url || getTeamLogo(game.home_team.id) || '/images/team-placeholder.png'}
-                      alt={game.home_team.name}
-                      className="w-6 h-6 object-contain flex-shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/team-placeholder.png';
-                      }}
-                    />
-                    <span
-                      title={homeTeamDisplay.fullName}
-                      className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight ${TEAM_NAME_FONT_CLASS_MAP[homeTeamDisplay.fontClass]}`}
-                    >
-                      {homeTeamDisplay.displayName}
-                    </span>
-                  </div>
+              {group.games.map((game) => {
+                const homeTeamDisplay = getTeamNameSizing(game.home_team, i18n.language);
+                const awayTeamDisplay = getTeamNameSizing(game.away_team, i18n.language);
 
-                  {/* Score or Time */}
-                  <div className="flex-shrink-0 text-center min-w-[44px] sm:min-w-[52px]">
-                    {game.home_score !== null && game.away_score !== null ? (
-                      <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100">
-                        {game.home_score} : {game.away_score}
+                return (
+                  <Link
+                    key={game.id}
+                    href={`/matches/${game.id}`}
+                    className="block bg-gray-50 dark:bg-dark-surface-soft hover:bg-gray-100 dark:hover:bg-dark-surface-soft rounded-lg p-2 sm:p-2.5 transition-colors"
+                  >
+                    {/* Teams */}
+                    <div className="flex items-center justify-between gap-1.5">
+                      {/* Home team */}
+                      <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                        <img
+                          src={game.home_team.logo_url || getTeamLogo(game.home_team.id) || '/images/team-placeholder.png'}
+                          alt={game.home_team.name}
+                          className="w-6 h-6 object-contain flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.src = '/images/team-placeholder.png';
+                          }}
+                        />
+                        <span
+                          title={homeTeamDisplay.fullName}
+                          className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight ${TEAM_NAME_FONT_CLASS_MAP[homeTeamDisplay.fontClass]}`}
+                        >
+                          {homeTeamDisplay.displayName}
+                        </span>
                       </div>
-                    ) : (
-                      <div className="text-sm text-gray-500 dark:text-slate-400 font-medium">
-                        {game.time || '-'}
+
+                      {/* Score or Time */}
+                      <div className="flex-shrink-0 text-center min-w-[44px] sm:min-w-[52px]">
+                        {game.home_score !== null && game.away_score !== null ? (
+                          <div className="text-sm sm:text-base font-bold text-gray-900 dark:text-slate-100">
+                            {game.home_score} : {game.away_score}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-500 dark:text-slate-400 font-medium">
+                            {formatKickoffTime(game.time)}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Away team */}
+                      <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
+                        <span
+                          title={awayTeamDisplay.fullName}
+                          className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight text-right ${TEAM_NAME_FONT_CLASS_MAP[awayTeamDisplay.fontClass]}`}
+                        >
+                          {awayTeamDisplay.displayName}
+                        </span>
+                        <img
+                          src={game.away_team.logo_url || getTeamLogo(game.away_team.id) || '/images/team-placeholder.png'}
+                          alt={game.away_team.name}
+                          className="w-6 h-6 object-contain flex-shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.src = '/images/team-placeholder.png';
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Live badge */}
+                    {(game.is_live || game.status === 'live') && (
+                      <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
+                        <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                        LIVE
                       </div>
                     )}
-                  </div>
-
-                  {/* Away team */}
-                  <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
-                    <span
-                      title={awayTeamDisplay.fullName}
-                      className={`font-medium text-gray-900 dark:text-slate-100 truncate leading-tight text-right ${TEAM_NAME_FONT_CLASS_MAP[awayTeamDisplay.fontClass]}`}
-                    >
-                      {awayTeamDisplay.displayName}
-                    </span>
-                    <img
-                      src={game.away_team.logo_url || getTeamLogo(game.away_team.id) || '/images/team-placeholder.png'}
-                      alt={game.away_team.name}
-                      className="w-6 h-6 object-contain flex-shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/team-placeholder.png';
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Live badge */}
-                {(game.is_live || game.status === 'live') && (
-                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
-                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                    LIVE
-                  </div>
-                )}
-              </Link>
-            );
-          })
+                  </Link>
+                );
+              })}
+            </div>
+          ))
         )}
       </div>
     </div>

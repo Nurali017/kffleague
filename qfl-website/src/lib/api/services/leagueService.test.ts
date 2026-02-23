@@ -40,4 +40,27 @@ describe('leagueService phase filters', () => {
       { group: 'B', lang: 'ru' }
     );
   });
+
+  it('requests season stages with language parameter', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue({
+      success: true,
+      data: { items: [], total: 0 },
+    } as any);
+
+    await leagueService.getStages(200, 'ru');
+
+    expect(apiClient.get).toHaveBeenCalledWith(
+      '/seasons/200/stages',
+      { lang: 'ru' }
+    );
+  });
+
+  it('throws when season stages request fails', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue({
+      success: false,
+      error: { message: 'Failed to load stages' },
+    } as any);
+
+    await expect(leagueService.getStages(200, 'ru')).rejects.toThrow('Failed to load stages');
+  });
 });

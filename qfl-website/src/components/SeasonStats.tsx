@@ -106,10 +106,15 @@ function StatsSkeleton() {
   );
 }
 
-export function SeasonStats() {
+interface SeasonStatsProps {
+  seasonId?: number;
+}
+
+export function SeasonStats({ seasonId: seasonIdProp }: SeasonStatsProps = {}) {
   const { t } = useTranslation('common');
   const { effectiveSeasonId } = useTournament();
-  const { stats, loading, error } = useSeasonStats({ seasonId: effectiveSeasonId });
+  const resolvedSeasonId = seasonIdProp ?? effectiveSeasonId;
+  const { stats, loading, error } = useSeasonStats({ seasonId: resolvedSeasonId });
 
   if (loading) {
     return <StatsSkeleton />;

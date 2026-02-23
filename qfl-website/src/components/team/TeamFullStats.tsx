@@ -88,7 +88,7 @@ function MatchesDonut({ played, won, drawn, lost }: { played: number; won: numbe
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-2xl font-black text-slate-900 dark:text-white">{played}</span>
-                    <span className="text-[9px] text-slate-500 dark:text-white/60 text-center leading-tight max-w-[84px]">
+                    <span className="text-[10px] text-slate-500 dark:text-white/60 text-center leading-tight max-w-[84px]">
                         {tStats('labels.matchesPlayed', 'Сыграно матчей')}
                     </span>
                 </div>

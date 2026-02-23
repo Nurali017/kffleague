@@ -14,6 +14,8 @@ interface MatchTabsProps {
   onTabChange: (tab: TabId) => void;
   protocolUrl?: string | null;
   showLineupsTab?: boolean;
+  showStatisticsTab?: boolean;
+  isSuperCup?: boolean;
 }
 
 export function MatchTabs({
@@ -21,19 +23,21 @@ export function MatchTabs({
   onTabChange,
   protocolUrl,
   showLineupsTab = true,
+  showStatisticsTab = true,
+  isSuperCup = false,
 }: MatchTabsProps) {
   const { t } = useTranslation('match');
 
   const tabs: Tab[] = [
     { id: 'overview', labelKey: 'tabs.overview' },
     ...(showLineupsTab ? [{ id: 'lineups', labelKey: 'tabs.lineups' } as Tab] : []),
-    { id: 'statistics', labelKey: 'tabs.statistics' },
+    ...(showStatisticsTab ? [{ id: 'statistics', labelKey: 'tabs.statistics' } as Tab] : []),
     { id: 'h2h', labelKey: 'tabs.h2h' },
   ];
 
   return (
     <div className="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border sticky top-14 md:top-16 z-30 shadow-sm">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-20">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-20">
         <div className="flex items-end gap-2 md:gap-4">
           <nav className="flex flex-1 min-w-0 gap-1 md:gap-8 overflow-x-auto scrollbar-hide -mb-px">
             {tabs.map((tab) => {
@@ -44,9 +48,11 @@ export function MatchTabs({
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
                   className={`
-                    py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm font-bold transition-all duration-200 whitespace-nowrap border-b-2 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-t-lg
+                    py-3 md:py-4 px-2 md:px-4 text-xs md:text-sm font-bold transition-all duration-200 whitespace-nowrap border-b-2 outline-none focus-visible:ring-2 ${isSuperCup ? 'focus-visible:ring-amber-400' : 'focus-visible:ring-blue-500'} rounded-t-lg
                     ${isActive
-                      ? 'text-primary dark:text-accent-cyan border-primary dark:border-accent-cyan'
+                      ? isSuperCup
+                        ? 'text-amber-500 border-amber-500'
+                        : 'text-primary dark:text-accent-cyan border-primary dark:border-accent-cyan'
                       : 'text-gray-500 dark:text-slate-400 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-500'
                     }
                   `}
