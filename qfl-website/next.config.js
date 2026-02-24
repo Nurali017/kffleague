@@ -2,12 +2,12 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: [
-      'images.unsplash.com',
-      'via.placeholder.com',
-      'upload.wikimedia.org',
-      'localhost',
-      process.env.NEXT_PUBLIC_SITE_DOMAIN || 'kffleague.kz',
+    remotePatterns: [
+      { protocol: 'https', hostname: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'kffleague.kz' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'via.placeholder.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
   },
   async rewrites() {
