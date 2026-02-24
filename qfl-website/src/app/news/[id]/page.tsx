@@ -15,6 +15,7 @@ import { NewsNavigation } from '@/components/news/NewsNavigation';
 import { ImageGallery } from '@/components/news/ImageGallery';
 import { HeroBackground } from '@/components/ui/HeroBackground';
 import { formatNewsDate } from '@/lib/utils/dateFormat';
+import { normalizeNewsHtmlContent, normalizeNewsMediaUrl } from '@/lib/utils/newsHtmlNormalizer';
 import { fadeInUp, staggerContainer } from '@/lib/motion/variants';
 
 function NewsDetailSkeleton() {
@@ -101,7 +102,19 @@ export default function NewsDetailPage() {
   }
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : `/news/${news.id}`;
-  const galleryImages = news.images?.map((img) => img.url) ?? [];
+  const normalizedContent = normalizeNewsHtmlContent(news.content, {
+    sourceUrl: news.source_url,
+  });
+  const normalizedImageUrl = normalizeNewsMediaUrl(news.image_url, {
+    sourceUrl: news.source_url,
+  });
+  const galleryImages = (
+    news.images?.map((img) =>
+      normalizeNewsMediaUrl(img.url, {
+        sourceUrl: news.source_url,
+      })
+    ) ?? []
+  ).filter((url): url is string => Boolean(url));
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-bg">
@@ -181,10 +194,10 @@ export default function NewsDetailPage() {
           className="bg-white dark:bg-dark-surface rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border overflow-hidden"
         >
           {/* Main Image */}
-          {news.image_url && (
+          {normalizedImageUrl && (
             <div className="relative h-[250px] md:h-[450px] overflow-hidden">
               <img
-                src={news.image_url}
+                src={normalizedImageUrl}
                 alt={news.title}
                 className="w-full h-full object-cover"
               />
@@ -193,10 +206,10 @@ export default function NewsDetailPage() {
 
           {/* Article Body */}
           <div className="p-6 md:p-10">
-            {news.content && (
+            {normalizedContent && (
               <div
                 className="news-content text-gray-700 dark:text-slate-300 text-base md:text-lg leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: news.content }}
+                dangerouslySetInnerHTML={{ __html: normalizedContent }}
               />
             )}
 

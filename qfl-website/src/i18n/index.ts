@@ -81,7 +81,7 @@ export default i18n;
 
 export const getCurrentLanguage = (): SupportedLanguage => {
   const lang = i18n.language?.substring(0, 2) as SupportedLanguage;
-  return SUPPORTED_LANGUAGES.includes(lang) ? lang : 'ru';
+  return SUPPORTED_LANGUAGES.includes(lang) ? lang : 'kz';
 };
 
 export const changeLanguage = async (lng: SupportedLanguage): Promise<void> => {

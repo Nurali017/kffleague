@@ -8,6 +8,6 @@ export const config = {
     defaultTour: Number(process.env.NEXT_PUBLIC_DEFAULT_TOUR) || 1,
   },
   i18n: {
-    defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'ru',
+    defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'kz',
   },
 } as const;

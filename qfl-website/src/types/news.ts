@@ -13,6 +13,7 @@ export interface NewsArticle {
   excerpt?: string;
   content?: string;
   image_url?: string;
+  source_url?: string | null;
   championship_code?: string;  // Championship code: pl, 1l, cup, 2l, el
   article_type?: ArticleType | null;
   publish_date: string;
