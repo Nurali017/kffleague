@@ -32,6 +32,12 @@ echo "[1/7] Pulling latest code..."
 git fetch origin main
 git reset --hard origin/main
 
+echo "Pulling backend..."
+cd "$PROJECT_DIR/backend" && git fetch origin main && git reset --hard origin/main && cd "$PROJECT_DIR"
+
+echo "Pulling frontend..."
+cd "$PROJECT_DIR/qfl-website" && git fetch origin main && git reset --hard origin/main && cd "$PROJECT_DIR"
+
 # ---------- Build ----------
 echo "[2/7] Building Docker images..."
 $COMPOSE build --parallel

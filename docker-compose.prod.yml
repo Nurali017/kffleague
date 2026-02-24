@@ -5,7 +5,15 @@
 services:
   # =================== FRONTEND (Next.js) ===================
   frontend:
-    image: nsaghyndykuly/qfl-frontend:latest
+    image: qfl-frontend:latest
+    build:
+      context: ./qfl-website
+      args:
+        NEXT_PUBLIC_API_BASE_URL: /api/v1
+        NEXT_PUBLIC_DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-ru}
+        NEXT_PUBLIC_GA_MEASUREMENT_ID: ${GA_MEASUREMENT_ID:-}
+        NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${GOOGLE_SITE_VERIFICATION:-}
+        NEXT_PUBLIC_YANDEX_VERIFICATION: ${YANDEX_VERIFICATION:-}
     container_name: qfl-frontend
     environment:
       - NODE_ENV=production
@@ -28,7 +36,9 @@ services:
 
   # =================== BACKEND (FastAPI + Gunicorn) ===================
   backend:
-    image: nsaghyndykuly/qfl-backend:latest
+    image: qfl-backend:latest
+    build:
+      context: ./backend
     container_name: qfl-backend
     environment:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
@@ -133,7 +143,7 @@ services:
 
   # =================== CELERY WORKER ===================
   celery_worker:
-    image: nsaghyndykuly/qfl-backend:latest
+    image: qfl-backend:latest
     container_name: qfl-celery-worker
     command: celery -A app.tasks worker -l info --concurrency=2
     environment:
@@ -164,7 +174,7 @@ services:
 
   # =================== CELERY BEAT (Scheduler) ===================
   celery_beat:
-    image: nsaghyndykuly/qfl-backend:latest
+    image: qfl-backend:latest
     container_name: qfl-celery-beat
     command: celery -A app.tasks beat -l info --pidfile=/tmp/celerybeat.pid
     environment:

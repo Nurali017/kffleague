@@ -1,0 +1,22 @@
+# Service repositories (cloned separately)
+backend/
+qfl-website/
+qfl-admin/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS / IDE
+.DS_Store
+.cursor/
+.claude/
+*.jpg
+*.png
+*.docx
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
