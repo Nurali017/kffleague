@@ -348,6 +348,7 @@ export default async function HomePage() {
     { id: 3, title: 'Премьер-лиганың 21-турының үздік голдары', youtubeId: 'K_6ov7ERSuE' },
     { id: 4, title: 'Премьер-лиганың 20-турының үздік голдары', youtubeId: 'hSb0s6kj_JA' },
   ];
+  const allVideosHref = 'https://youtube.com/@qpl_kz';
   const showSuperCupHero = currentTournamentId === 'pl' && SUPER_CUP_HERO_ENABLED;
   const heroContainerClassName = showSuperCupHero
     ? 'lg:col-span-9 h-[520px] sm:h-[500px] lg:h-[580px]'
@@ -405,7 +406,7 @@ export default async function HomePage() {
         </section>
 
         <section>
-          <VideoGrid title="Медиа" videos={mediaVideos} />
+          <VideoGrid title="Медиа" videos={mediaVideos} allVideosHref={allVideosHref} />
         </section>
       </div>
     </RoutePrefetchProvider>

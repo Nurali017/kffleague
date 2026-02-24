@@ -1,8 +1,17 @@
-import { describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test/utils';
 import { ClubStatsTable } from './ClubStatsTable';
 import { TeamStatistics } from '@/types/statistics';
+
+const { routerPushMock } = vi.hoisted(() => ({
+  routerPushMock: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPushMock }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 function createTeam(overrides: Partial<TeamStatistics> = {}): TeamStatistics {
   return {
@@ -22,6 +31,10 @@ function createTeam(overrides: Partial<TeamStatistics> = {}): TeamStatistics {
 }
 
 describe('ClubStatsTable', () => {
+  beforeEach(() => {
+    routerPushMock.mockReset();
+  });
+
   it('renders team links for valid ids', () => {
     renderWithProviders(
       <ClubStatsTable
@@ -53,5 +66,20 @@ describe('ClubStatsTable', () => {
     );
 
     expect(screen.getByTestId('club-stats-scroll-hint')).toBeInTheDocument();
+  });
+
+  it('navigates when a row is clicked', () => {
+    renderWithProviders(
+      <ClubStatsTable
+        subTab="key_stats"
+        teams={[createTeam()]}
+      />
+    );
+
+    const row = screen.getByText('Astana').closest('tr');
+    expect(row).toBeTruthy();
+    fireEvent.click(row!);
+
+    expect(routerPushMock).toHaveBeenCalledWith('/team/20', undefined);
   });
 });

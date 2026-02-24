@@ -69,7 +69,7 @@ export function MainNav({ navItems, hasLiveMatch, onMobileMenuToggle, isScrolled
             return (
               <Link
                 key={item.key}
-                href={item.href || '#'}
+                href={item.href}
                 className={`relative text-base font-bold transition-colors duration-200 ${
                   isActive ? 'text-[#E5B73B] dark:text-accent' : 'hover:text-primary-light dark:hover:text-accent'
                 }`}

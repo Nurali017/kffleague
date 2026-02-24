@@ -27,7 +27,7 @@ describe('Footer', () => {
     const expectedLinks = [
       { name: 'ПРЕМЬЕР-ЛИГА', href: '/table?tournament=pl' },
       { name: 'ПЕРВАЯ ЛИГА', href: '/table?tournament=1l' },
-      { name: 'OLIMPBET КУБОК КАЗАХСТАНА', href: '/table?tournament=cup' },
+      { name: 'КУБОК КАЗАХСТАНА', href: '/table?tournament=cup' },
       { name: 'СУПЕРКУБОК', href: '/matches' },
       { name: 'ВТОРАЯ ЛИГА', href: '/table?tournament=2l' },
       { name: 'ЖЕНСКАЯ ЛИГА', href: '/table?tournament=el' },

@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 
 /* ---------- CircleProgress ---------- */
 
@@ -92,6 +94,8 @@ export function FeaturedStatBlock({
   accentBg = 'bg-emerald-800',
 }: FeaturedStatBlockProps) {
   const { t } = useTranslation('statistics');
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const mobileSliderRef = useRef<HTMLDivElement | null>(null);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
@@ -144,74 +148,90 @@ export function FeaturedStatBlock({
 
       <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm flex flex-col lg:flex-row">
         {/* Left: Featured card */}
-        <div className={`${accentBg} relative w-full lg:w-[340px] xl:w-[380px] shrink-0 min-h-[280px] md:min-h-[320px] flex flex-col`}>
-          {/* Player/team photo */}
-          {featured.photoUrl && (
-            <div className="absolute right-0 top-0 bottom-0 w-[55%] overflow-hidden">
-              <img
-                src={featured.photoUrl}
-                alt={featured.name}
-                className="h-full w-full object-contain object-bottom opacity-90"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-current to-transparent opacity-40 pointer-events-none" style={{ color: 'inherit' }} />
-            </div>
-          )}
-
-          <div className="relative z-10 flex flex-col justify-between h-full p-4 md:p-5">
-            <div>
-              <span className="text-white/50 text-xs font-bold">1</span>
-              {featured.firstName && (
-                <div className="text-white/80 text-sm mt-4">{featured.firstName}</div>
-              )}
-              <div className="text-white text-xl md:text-2xl font-extrabold uppercase tracking-tight leading-tight">
-                {featured.name}
-              </div>
-              {featured.teamName && featured.teamLogoUrl && (
-                <div className="flex items-center gap-2 mt-2">
+        {(() => {
+          const featuredCard = (
+            <div className={`${accentBg} relative w-full lg:w-[340px] xl:w-[380px] shrink-0 min-h-[280px] md:min-h-[320px] flex flex-col`}>
+              {/* Player/team photo */}
+              {featured.photoUrl && (
+                <div className="absolute right-0 top-0 bottom-0 w-[55%] overflow-hidden">
                   <img
-                    src={featured.teamLogoUrl}
-                    alt={featured.teamName}
-                    className="w-6 h-6 object-contain"
+                    src={featured.photoUrl}
+                    alt={featured.name}
+                    className="h-full w-full object-contain object-bottom opacity-90"
                     onError={(e) => {
-                      e.currentTarget.src = TEAM_PLACEHOLDER;
+                      e.currentTarget.style.display = 'none';
                     }}
                   />
-                  <span className="text-white/70 text-xs">{featured.teamName}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-current to-transparent opacity-40 pointer-events-none" style={{ color: 'inherit' }} />
                 </div>
               )}
-            </div>
 
-            <div className="mt-4">
-              <div className="flex items-baseline gap-4 mb-1">
+              <div className="relative z-10 flex flex-col justify-between h-full p-4 md:p-5">
                 <div>
-                  <span className="text-white/60 text-[10px] uppercase tracking-wider block">
-                    {featured.mainStat.label}
-                  </span>
-                  <span className="text-white text-3xl font-black">{featured.mainStat.value}</span>
-                </div>
-                {featured.secondaryStat && (
-                  <div>
-                    <span className="text-white/60 text-[10px] uppercase tracking-wider block">
-                      {featured.secondaryStat.label}
-                    </span>
-                    <span className="text-white text-3xl font-black">{featured.secondaryStat.value}</span>
+                  <span className="text-white/50 text-xs font-bold">1</span>
+                  {featured.firstName && (
+                    <div className="text-white/80 text-sm mt-4">{featured.firstName}</div>
+                  )}
+                  <div className="text-white text-xl md:text-2xl font-extrabold uppercase tracking-tight leading-tight">
+                    {featured.name}
                   </div>
-                )}
-              </div>
-
-              {featured.circles.length > 0 && (
-                <div className="flex flex-wrap gap-3 mt-3">
-                  {featured.circles.map((c, i) => (
-                    <CircleProgress key={i} value={c.value} label={c.label} />
-                  ))}
+                  {featured.teamName && featured.teamLogoUrl && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <img
+                        src={featured.teamLogoUrl}
+                        alt={featured.teamName}
+                        className="w-6 h-6 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.src = TEAM_PLACEHOLDER;
+                        }}
+                      />
+                      <span className="text-white/70 text-xs">{featured.teamName}</span>
+                    </div>
+                  )}
                 </div>
-              )}
+
+                <div className="mt-4">
+                  <div className="flex items-baseline gap-4 mb-1">
+                    <div>
+                      <span className="text-white/60 text-[10px] uppercase tracking-wider block">
+                        {featured.mainStat.label}
+                      </span>
+                      <span className="text-white text-3xl font-black">{featured.mainStat.value}</span>
+                    </div>
+                    {featured.secondaryStat && (
+                      <div>
+                        <span className="text-white/60 text-[10px] uppercase tracking-wider block">
+                          {featured.secondaryStat.label}
+                        </span>
+                        <span className="text-white text-3xl font-black">{featured.secondaryStat.value}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {featured.circles.length > 0 && (
+                    <div className="flex flex-wrap gap-3 mt-3">
+                      {featured.circles.map((c, i) => (
+                        <CircleProgress key={i} value={c.value} label={c.label} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+
+          if (!featured.href) return featuredCard;
+
+          return (
+            <Link
+              href={featured.href}
+              className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-accent-cyan"
+              aria-label={featured.name}
+            >
+              {featuredCard}
+            </Link>
+          );
+        })()}
 
         {/* Right: Ranking table (desktop) + slider (mobile) */}
         <div className="flex-1 min-w-0">
@@ -232,10 +252,28 @@ export function FeaturedStatBlock({
               </thead>
               <tbody>
                 {rankings.map((entry) => {
-                  const row = (
+                  const rowHasHref = Boolean(entry.href);
+
+                  return (
                     <tr
                       key={entry.rank}
-                      className="border-b border-gray-100 dark:border-dark-border last:border-b-0 hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors"
+                      className={`border-b border-gray-100 dark:border-dark-border last:border-b-0 transition-colors ${
+                        rowHasHref ? 'hover:bg-gray-50 dark:hover:bg-dark-surface-soft cursor-pointer' : ''
+                      }`}
+                      role={rowHasHref ? 'link' : undefined}
+                      tabIndex={rowHasHref ? 0 : undefined}
+                      onClick={(event) => {
+                        if (!rowHasHref) return;
+                        if (shouldSkipPrimaryNavigation(event)) return;
+                        navigatePrimary(router, entry.href, searchParams);
+                      }}
+                      onKeyDown={(event) => {
+                        if (!rowHasHref) return;
+                        if (event.key !== 'Enter' && event.key !== ' ') return;
+                        if (shouldSkipPrimaryNavigation(event)) return;
+                        event.preventDefault();
+                        navigatePrimary(router, entry.href, searchParams);
+                      }}
                     >
                       <td className="px-3 py-2.5 text-sm text-gray-500 dark:text-slate-400 font-medium">
                         {entry.rank}
@@ -287,12 +325,6 @@ export function FeaturedStatBlock({
                       </td>
                     </tr>
                   );
-
-                  return entry.href ? (
-                    <Link key={entry.rank} href={entry.href} className="contents">
-                      {row}
-                    </Link>
-                  ) : row;
                 })}
               </tbody>
             </table>

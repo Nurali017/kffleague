@@ -14,7 +14,7 @@ interface LanguageSwitcherProps {
 export function LanguageSwitcher({ variant = 'light' }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
 
-  const currentLang = (i18n.language?.substring(0, 2) || 'ru') as SupportedLanguage;
+  const currentLang = (i18n.language?.substring(0, 2) || 'kz') as SupportedLanguage;
 
   const handleLanguageChange = async (lng: SupportedLanguage) => {
     await changeLanguage(lng);

@@ -1,6 +1,7 @@
 'use client';
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,6 +12,7 @@ import {
 } from '@/types/team';
 import { getMatchHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 import { EmptyState, SectionCard, SectionHeader } from './TeamUiPrimitives';
 import { TeamPlayerStats } from './TeamPlayerStats';
 
@@ -162,6 +164,8 @@ function FormCard({ items }: { items: TeamOverviewFormEntry[] }) {
 
 function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
   const { t } = useTranslation('table');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   if (!rows.length) {
     return (
@@ -195,8 +199,29 @@ function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.team_id} className="border-b border-gray-100 dark:border-white/10 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5">
+            {rows.map((row) => {
+              const teamHref = getTeamHref(row.team_id);
+              return (
+              <tr
+                key={row.team_id}
+                className={`border-b border-gray-100 dark:border-white/10 last:border-0 hover:bg-gray-50 dark:hover:bg-white/5 ${
+                  teamHref ? 'cursor-pointer' : ''
+                }`}
+                role={teamHref ? 'link' : undefined}
+                tabIndex={teamHref ? 0 : undefined}
+                onClick={(event) => {
+                  if (!teamHref) return;
+                  if (shouldSkipPrimaryNavigation(event)) return;
+                  navigatePrimary(router, teamHref, searchParams);
+                }}
+                onKeyDown={(event) => {
+                  if (!teamHref) return;
+                  if (event.key !== 'Enter' && event.key !== ' ') return;
+                  if (shouldSkipPrimaryNavigation(event)) return;
+                  event.preventDefault();
+                  navigatePrimary(router, teamHref, searchParams);
+                }}
+              >
                 <td className="py-2.5 px-4 font-bold text-slate-400 dark:text-white/50">{row.position}</td>
                 <td className="py-2.5">
                   <div className="flex items-center gap-2.5">
@@ -223,7 +248,7 @@ function StandingsCard({ rows }: { rows: TeamOverviewStandingEntry[] }) {
                 </td>
                 <td className="py-2.5 px-4 text-right font-black text-slate-900 dark:text-white">{row.points}</td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>

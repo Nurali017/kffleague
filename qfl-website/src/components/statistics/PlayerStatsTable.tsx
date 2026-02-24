@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { formatValue, getColumnsForSubTab } from '@/lib/mock/statisticsHelpers';
 import { ExtendedPlayerStat, StatSubTab } from '@/types/statistics';
 import { PlayerStatsNationalityFilter } from '@/types';
 import { getPlayerHref, getTeamHref } from '@/lib/utils/entityRoutes';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 import { TableSkeleton } from './TableSkeleton';
 
 interface PlayerStatsTableProps {
@@ -51,8 +53,10 @@ function toCompactPlayerName(firstName?: string | null, lastName?: string | null
 }
 
 export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerStatsTableProps) {
-    const { t } = useTranslation('statistics');
-    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useTranslation('statistics');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const [hasHorizontalOverflow, setHasHorizontalOverflow] = useState(false);
     const [hasInteractedWithXScroll, setHasInteractedWithXScroll] = useState(false);
 
@@ -205,17 +209,35 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedPlayers.map((player, index) => (
+                        {sortedPlayers.map((player, index) => {
+                            const playerHref = getPlayerHref(player.player_id);
+
+                            return (
                             <tr
                                 key={player.player_id}
-                                className="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group"
+                                className={`border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group ${
+                                    playerHref ? 'cursor-pointer' : ''
+                                }`}
+                                role={playerHref ? 'link' : undefined}
+                                tabIndex={playerHref ? 0 : undefined}
+                                onClick={(event) => {
+                                    if (!playerHref) return;
+                                    if (shouldSkipPrimaryNavigation(event)) return;
+                                    navigatePrimary(router, playerHref, searchParams);
+                                }}
+                                onKeyDown={(event) => {
+                                    if (!playerHref) return;
+                                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                                    if (shouldSkipPrimaryNavigation(event)) return;
+                                    event.preventDefault();
+                                    navigatePrimary(router, playerHref, searchParams);
+                                }}
                             >
                                 <td className="px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
                                     {index + 1}
                                 </td>
                                 <td className="px-2.5 md:px-4 py-2 sticky left-10 md:left-12 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10 border-r border-gray-100 dark:border-dark-border">
                                     {(() => {
-                                        const playerHref = getPlayerHref(player.player_id);
                                         const content = (
                                             <div className="flex items-center gap-2.5 md:gap-3">
                                                 <PlayerAvatar
@@ -300,7 +322,7 @@ export function PlayerStatsTable({ subTab, filters, players, loading }: PlayerSt
                                     </td>
                                 ))}
                             </tr>
-                        ))}
+                        )})}
                         {sortedPlayers.length === 0 && (
                             <tr>
                                 <td colSpan={columns.length + 3} className="px-4 py-12 text-center text-gray-500 dark:text-slate-400">

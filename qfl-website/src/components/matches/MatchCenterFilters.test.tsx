@@ -140,4 +140,17 @@ describe('MatchCenterFilters', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Тур 27' }));
     expect(screen.getByLabelText('Тур 27')).toBeInTheDocument();
   });
+
+  it('uses readable text classes on mobile show-filters button in dark mode', () => {
+    renderWithProviders(
+      <MatchCenterFilters
+        filters={{}}
+        onFilterChange={vi.fn()}
+      />
+    );
+
+    const showFiltersButton = screen.getByRole('button', { name: 'Показать фильтры' });
+    expect(showFiltersButton).toHaveClass('text-gray-900');
+    expect(showFiltersButton).toHaveClass('dark:text-slate-100');
+  });
 });

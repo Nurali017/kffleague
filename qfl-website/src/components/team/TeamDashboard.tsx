@@ -39,7 +39,7 @@ export function MiniLeagueTable() {
             </div>
 
             <div className="mt-4 text-center border-t border-gray-100 pt-3">
-                <Link href="#" className="text-xs font-bold text-blue-500 flex items-center justify-center gap-1 hover:underline">
+                <Link href="/table" className="text-xs font-bold text-blue-500 flex items-center justify-center gap-1 hover:underline">
                     Full table <ArrowRight className="w-3 h-3" />
                 </Link>
             </div>

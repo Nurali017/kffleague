@@ -8,7 +8,7 @@ interface MiniStatCardProps {
   name: string;
   sublabel?: string;
   value: number | string;
-  href: string;
+  href?: string | null;
   bgColor?: string;
 }
 
@@ -23,7 +23,7 @@ export function MiniStatCard({
   href,
   bgColor = 'bg-gray-100 dark:bg-dark-surface-soft',
 }: MiniStatCardProps) {
-  return (
+  const content = (
     <div className="bg-white dark:bg-dark-surface rounded-xl border border-gray-200 dark:border-dark-border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400 px-3 pt-3 pb-2">
         {title}
@@ -62,17 +62,26 @@ export function MiniStatCard({
             <span className="text-sm font-bold text-gray-900 dark:text-slate-100">
               {value}
             </span>
-            <Link
-              href={href}
-              className="text-gray-400 hover:text-primary dark:hover:text-accent-cyan transition-colors"
-            >
+            <span className="text-gray-400 dark:text-slate-500 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </Link>
+            </span>
           </div>
         </div>
       </div>
     </div>
+  );
+
+  if (!href) return content;
+
+  return (
+    <Link
+      href={href}
+      className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-accent-cyan"
+      aria-label={name}
+    >
+      {content}
+    </Link>
   );
 }

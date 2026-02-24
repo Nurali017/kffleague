@@ -4,6 +4,7 @@ import { Download, FileText, File } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { DocumentItem } from '@/types';
+import { shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 
 interface DocumentCardProps {
   document: DocumentItem;
@@ -14,13 +15,35 @@ export function DocumentCard({ document }: DocumentCardProps) {
 
   // Determine if it's a PDF
   const isPdf = document.url?.toLowerCase().endsWith('.pdf');
+  const hasUrl = Boolean(document.url);
+
+  const openDocument = () => {
+    if (!document.url) return;
+    window.open(document.url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <>
       <motion.div
         initial="rest"
         whileHover="hover"
-        className="group bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-5 flex items-center gap-5 hover:border-primary/20 dark:hover:border-accent-cyan/30 transition-colors"
+        className={`group bg-white dark:bg-dark-surface rounded-xl border border-gray-100 dark:border-dark-border p-5 flex items-center gap-5 hover:border-primary/20 dark:hover:border-accent-cyan/30 transition-colors ${
+          hasUrl ? 'cursor-pointer' : ''
+        }`}
+        role={hasUrl ? 'link' : undefined}
+        tabIndex={hasUrl ? 0 : undefined}
+        onClick={(event) => {
+          if (!hasUrl) return;
+          if (shouldSkipPrimaryNavigation(event)) return;
+          openDocument();
+        }}
+        onKeyDown={(event) => {
+          if (!hasUrl) return;
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          if (shouldSkipPrimaryNavigation(event)) return;
+          event.preventDefault();
+          openDocument();
+        }}
         variants={{
           rest: {
             boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -62,18 +85,29 @@ export function DocumentCard({ document }: DocumentCardProps) {
         </div>
 
         {/* Download Button */}
-        <motion.a
-          href={document.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ backgroundColor: '#E5B73B', color: '#1E4D8C' }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl font-medium flex-shrink-0"
-          transition={{ duration: 0.3 }}
-        >
-          <Download className="w-4 h-4" />
-          <span className="hidden sm:inline">{t('documents.download')}</span>
-        </motion.a>
+        {hasUrl ? (
+          <motion.a
+            href={document.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-primary-click-stop="true"
+            whileHover={{ backgroundColor: '#E5B73B', color: '#1E4D8C' }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl font-medium flex-shrink-0"
+            transition={{ duration: 0.3 }}
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('documents.download')}</span>
+          </motion.a>
+        ) : (
+          <div
+            aria-disabled="true"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium flex-shrink-0 bg-gray-300 dark:bg-slate-700 text-gray-500 dark:text-slate-300 cursor-not-allowed"
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('documents.download')}</span>
+          </div>
+        )}
       </motion.div>
     </>
   );

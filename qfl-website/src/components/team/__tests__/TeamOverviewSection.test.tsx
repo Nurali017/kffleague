@@ -1,7 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent } from '@testing-library/react';
 import { renderWithProviders, screen } from '@/test/utils';
 import { TeamOverviewSection } from '../TeamOverviewSection';
 import { TeamOverviewLeaders } from '@/types/team';
+
+const { routerPushMock } = vi.hoisted(() => ({
+  routerPushMock: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPushMock }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 const leadersMock: TeamOverviewLeaders = {
   top_scorer: {
@@ -50,6 +60,10 @@ const leadersMock: TeamOverviewLeaders = {
 };
 
 describe('TeamOverviewSection', () => {
+  beforeEach(() => {
+    routerPushMock.mockReset();
+  });
+
   it('renders core overview content', () => {
     renderWithProviders(
       <TeamOverviewSection
@@ -132,5 +146,35 @@ describe('TeamOverviewSection', () => {
 
     expect(screen.getAllByText(/Нет сыгранных матчей/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/Нет предстоящих матчей/i)).toBeInTheDocument();
+  });
+
+  it('navigates when standings row is clicked', () => {
+    renderWithProviders(
+      <TeamOverviewSection
+        recentMatch={null}
+        formLast5={[]}
+        upcomingMatches={[]}
+        standingsWindow={[
+          {
+            position: 1,
+            team_id: 13,
+            team_name: 'Кайрат',
+            team_logo: null,
+            games_played: 12,
+            points: 26,
+            goal_difference: 12,
+            goals_scored: 23,
+            goals_conceded: 11,
+          },
+        ]}
+        leaders={leadersMock}
+      />
+    );
+
+    const row = screen.getByText('Кайрат').closest('tr');
+    expect(row).toBeTruthy();
+    fireEvent.click(row!);
+
+    expect(routerPushMock).toHaveBeenCalledWith('/team/13', undefined);
   });
 });

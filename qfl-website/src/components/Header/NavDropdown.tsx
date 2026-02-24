@@ -51,18 +51,12 @@ export function NavDropdown({ item, isActive }: NavDropdownProps) {
       onMouseLeave={handleMouseLeave}
     >
       <Link
-        href={item.href || '#'}
+        href={item.href}
         className={`flex items-center gap-1 text-base font-bold ${
           isActive || hasActiveChild ? 'text-accent' : 'hover:text-accent'
         }`}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        onClick={(e) => {
-          // Если нет href, предотвращаем переход
-          if (!item.href || item.href === '#') {
-            e.preventDefault();
-          }
-        }}
         suppressHydrationWarning
       >
         {item.label}
@@ -87,7 +81,7 @@ export function NavDropdown({ item, isActive }: NavDropdownProps) {
             {item.children?.map((child) => (
               <Link
                 key={child.key}
-                href={child.href || '#'}
+                href={child.href}
                 className={`block px-4 py-3 text-sm font-medium ${
                   pathname === child.href
                     ? 'bg-primary text-white'

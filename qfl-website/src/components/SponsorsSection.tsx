@@ -4,7 +4,6 @@ import React from 'react';
 
 const sponsors = [
   { name: 'Alatau City Bank', logo: '/sponsors/alatau-city-bank.webp', url: '#' },
-  { name: 'Olimpbet', logo: '/sponsors/olimpbet.webp', url: '#' },
   { name: 'Sport+', logo: '/sponsors/sport-plus.webp', url: '#' },
   { name: 'QazSport', logo: '/sponsors/qazsport.webp', url: '#' },
   { name: 'Kinopoisk', logo: '/sponsors/kinopoisk.webp', url: '#' },

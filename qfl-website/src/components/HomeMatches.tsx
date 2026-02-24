@@ -131,7 +131,7 @@ export function HomeMatches() {
         return Array.from(grouped.entries()).map(([groupDate, groupGames]) => ({
           date: groupDate,
           dateLabel: groupDate === 'unknown'
-            ? t('dateUnknown', 'Дата уточняется')
+            ? t('dateUnknown', 'Күні нақтыланады')
             : formatMatchDate(groupDate, i18n.language),
           games: groupGames,
         }));
@@ -182,7 +182,7 @@ export function HomeMatches() {
           href="/matches"
           className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center transition-colors group"
         >
-          Барлығы
+          {t('viewAll', { ns: 'match' })}
           <ChevronRight className="w-4 h-4 ml-0.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>

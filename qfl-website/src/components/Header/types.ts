@@ -1,7 +1,7 @@
 export interface NavItem {
   key: string;
   label: string;
-  href?: string;
+  href: string;
   children?: NavItem[];
   isLive?: boolean;
 }

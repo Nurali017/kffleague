@@ -1,8 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/test/utils';
 import { PlayerStatsTable } from './PlayerStatsTable';
 import { ExtendedPlayerStat } from '@/types/statistics';
+
+const { routerPushMock } = vi.hoisted(() => ({
+  routerPushMock: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPushMock }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 function createPlayer(overrides: Partial<ExtendedPlayerStat> = {}): ExtendedPlayerStat {
   return {
@@ -50,6 +59,10 @@ function createPlayer(overrides: Partial<ExtendedPlayerStat> = {}): ExtendedPlay
 }
 
 describe('PlayerStatsTable', () => {
+  beforeEach(() => {
+    routerPushMock.mockReset();
+  });
+
   it('renders player and team links for valid ids', () => {
     renderWithProviders(
       <PlayerStatsTable
@@ -109,5 +122,21 @@ describe('PlayerStatsTable', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('player-stats-scroll-hint')).not.toBeInTheDocument();
     });
+  });
+
+  it('navigates when row is clicked', () => {
+    renderWithProviders(
+      <PlayerStatsTable
+        subTab="key_stats"
+        filters={{ club: 'all', nationality: 'all' }}
+        players={[createPlayer()]}
+      />
+    );
+
+    const row = screen.getByText('Ivanov I.').closest('tr');
+    expect(row).toBeTruthy();
+    fireEvent.click(row!);
+
+    expect(routerPushMock).toHaveBeenCalledWith('/player/10', undefined);
   });
 });

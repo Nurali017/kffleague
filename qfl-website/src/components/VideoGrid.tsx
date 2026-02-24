@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Play, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'motion/react';
@@ -16,11 +17,14 @@ type Video = {
 interface VideoGridProps {
   title: string;
   videos: Video[];
+  allVideosHref: string;
 }
 
-export function VideoGrid({ title, videos }: VideoGridProps) {
+export function VideoGrid({ title, videos, allVideosHref }: VideoGridProps) {
   const { t } = useTranslation();
   const [activeVideo, setActiveVideo] = useState<Video | null>(null);
+  const isExternalAllVideosHref =
+    allVideosHref.startsWith('http://') || allVideosHref.startsWith('https://');
 
   const getYoutubeThumbnail = (youtubeId: string) =>
     `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
@@ -32,7 +36,10 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
           <h2 className="text-2xl font-bold text-primary dark:text-accent-cyan">
             {title}
           </h2>
-          <motion.button
+          <Link
+            href={allVideosHref}
+            target={isExternalAllVideosHref ? '_blank' : undefined}
+            rel={isExternalAllVideosHref ? 'noopener noreferrer' : undefined}
             className="text-gray-500 dark:text-slate-400 font-medium text-sm hover:text-primary dark:hover:text-accent-cyan flex items-center group"
           >
             {t('buttons.allVideos')}
@@ -45,7 +52,7 @@ export function VideoGrid({ title, videos }: VideoGridProps) {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </motion.svg>
-          </motion.button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

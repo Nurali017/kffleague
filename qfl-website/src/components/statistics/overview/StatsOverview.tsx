@@ -309,6 +309,7 @@ export function StatsOverview() {
                       name: t.team_name,
                       imageUrl: t.team_logo,
                       value: t.goals_scored ?? 0,
+                      href: getTeamHref(t.team_id),
                     }))}
                     entityLabel={t('table.club', { defaultValue: 'Клуб' })}
                     valueLabel={t('overview.total', { defaultValue: 'ВСЕГО' })}
@@ -342,6 +343,7 @@ export function StatsOverview() {
                       name: t.team_name,
                       imageUrl: t.team_logo,
                       value: t.wins ?? 0,
+                      href: getTeamHref(t.team_id),
                     }))}
                     entityLabel={t('table.club', { defaultValue: 'Клуб' })}
                     valueLabel={t('overview.total', { defaultValue: 'ВСЕГО' })}

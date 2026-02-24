@@ -190,7 +190,7 @@ export function MatchCenterFilters({
           className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors border ${
             isHero
               ? 'bg-white/90 dark:bg-white/10 border-white/20 dark:border-white/20 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/20'
-              : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft'
+              : 'bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-dark-surface-soft'
           }`}
         >
           <SlidersHorizontal className="w-4 h-4" />

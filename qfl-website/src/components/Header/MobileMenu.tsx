@@ -110,7 +110,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                       <div className="flex items-center">
                         {/* Кликабельная ссылка на главную категорию */}
                         <Link
-                          href={item.href || '#'}
+                          href={item.href}
                           onClick={handleLinkClick}
                           className={`flex-1 px-4 py-3 text-sm font-bold uppercase tracking-wide rounded-l-lg transition-colors ${
                             hasActiveChild
@@ -154,7 +154,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                           {item.children?.map((child) => (
                             <li key={child.key}>
                               <Link
-                                href={child.href || '#'}
+                                href={child.href}
                                 onClick={handleLinkClick}
                                 className={`block px-4 py-2 min-h-[44px] flex items-center text-sm font-medium rounded-lg transition-colors ${
                                   pathname === child.href
@@ -172,7 +172,7 @@ export function MobileMenu({ isOpen, onClose, navItems, hasLiveMatch }: MobileMe
                   ) : (
                     // Simple link
                     <Link
-                      href={item.href || '#'}
+                      href={item.href}
                       onClick={handleLinkClick}
                       className={`flex items-center justify-between px-4 py-3 text-sm font-bold uppercase tracking-wide rounded-lg transition-colors ${
                         isActive

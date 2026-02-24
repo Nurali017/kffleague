@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,6 +12,7 @@ import {
 } from '@/lib/mock/statisticsHelpers';
 import { StatSubTab, TeamStatistics } from '@/types/statistics';
 import { getTeamHref } from '@/lib/utils/entityRoutes';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 import { TableSkeleton } from './TableSkeleton';
 
 interface ClubStatsTableProps {
@@ -44,6 +46,8 @@ function toFiniteNumber(value: unknown): number | null {
 
 export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) {
   const { t } = useTranslation('statistics');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const columns = useMemo(() => getColumnsForSubTab(subTab, 'clubs'), [subTab]);
 
@@ -186,10 +190,28 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
           </thead>
 
           <tbody>
-            {sortedTeams.map((team, index) => (
+            {sortedTeams.map((team, index) => {
+              const teamHref = getTeamHref(team.team_id);
+              return (
               <tr
                 key={team.team_id}
-                className="border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group"
+                className={`border-b border-gray-100 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-surface-soft transition-colors group ${
+                  teamHref ? 'cursor-pointer' : ''
+                }`}
+                role={teamHref ? 'link' : undefined}
+                tabIndex={teamHref ? 0 : undefined}
+                onClick={(event) => {
+                  if (!teamHref) return;
+                  if (shouldSkipPrimaryNavigation(event)) return;
+                  navigatePrimary(router, teamHref, searchParams);
+                }}
+                onKeyDown={(event) => {
+                  if (!teamHref) return;
+                  if (event.key !== 'Enter' && event.key !== ' ') return;
+                  if (shouldSkipPrimaryNavigation(event)) return;
+                  event.preventDefault();
+                  navigatePrimary(router, teamHref, searchParams);
+                }}
               >
                 <td className="px-2.5 md:px-4 py-3 md:py-4 text-sm text-gray-500 dark:text-slate-400 font-medium sticky left-0 bg-white dark:bg-dark-surface group-hover:bg-gray-50 dark:group-hover:bg-dark-surface-soft z-10">
                   {index + 1}
@@ -208,7 +230,6 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                       }}
                     />
                     {(() => {
-                      const teamHref = getTeamHref(team.team_id);
                       if (!teamHref) {
                         return (
                           <span className="font-semibold text-sm md:text-base text-gray-900 dark:text-slate-100 truncate max-w-[108px] md:max-w-none">
@@ -241,7 +262,7 @@ export function ClubStatsTable({ subTab, teams, loading }: ClubStatsTableProps) 
                   </td>
                 ))}
               </tr>
-            ))}
+            )})}
 
             {sortedTeams.length === 0 && (
               <tr>

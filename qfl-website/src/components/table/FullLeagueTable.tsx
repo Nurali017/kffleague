@@ -1,11 +1,14 @@
 'use client';
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { TeamStanding } from '@/types';
 import { FormIndicator } from './FormIndicator';
 import { NextMatchBadge } from './NextMatchBadge';
 import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 
 interface FullLeagueTableProps {
   standings: TeamStanding[];
@@ -13,6 +16,8 @@ interface FullLeagueTableProps {
 
 export function FullLeagueTable({ standings }: FullLeagueTableProps) {
   const { t } = useTranslation('table');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Get position indicator color
   const getPositionStyle = (position: number) => {
@@ -48,11 +53,28 @@ export function FullLeagueTable({ standings }: FullLeagueTableProps) {
               const logoUrl = team.team_logo || getTeamLogo(team.team_id);
               const teamColor = getTeamColor(team.team_id);
               const positionStyle = getPositionStyle(team.position);
+              const teamHref = getTeamHref(team.team_id);
 
               return (
                 <tr
                   key={team.team_id}
-                  className={`hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors border-l-4 ${positionStyle.border}`}
+                  className={`hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors border-l-4 ${positionStyle.border} ${
+                    teamHref ? 'cursor-pointer' : ''
+                  }`}
+                  role={teamHref ? 'link' : undefined}
+                  tabIndex={teamHref ? 0 : undefined}
+                  onClick={(event) => {
+                    if (!teamHref) return;
+                    if (shouldSkipPrimaryNavigation(event)) return;
+                    navigatePrimary(router, teamHref, searchParams);
+                  }}
+                  onKeyDown={(event) => {
+                    if (!teamHref) return;
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    if (shouldSkipPrimaryNavigation(event)) return;
+                    event.preventDefault();
+                    navigatePrimary(router, teamHref, searchParams);
+                  }}
                 >
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-center gap-1.5">

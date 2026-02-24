@@ -69,7 +69,7 @@ export const TOURNAMENTS: Record<string, Tournament> = {
       kz: 'Қазақстан Кубогы',
       short: 'Кубок',
     },
-    sponsorName: 'OLIMPBET ҚАЗАҚСТАН КУБОГЫ',
+    sponsorName: 'ҚАЗАҚСТАН КУБОГЫ',
     logo: '/images/tournaments/cup.png',
     colors: {
       primary: '74 26 43',
@@ -200,4 +200,3 @@ export function isLeagueTournament(tournament: Tournament): boolean {
 export function isCupTournament(tournament: Tournament): boolean {
   return tournament.type === 'cup' || tournament.type === 'supercup';
 }
-

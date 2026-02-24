@@ -189,53 +189,60 @@ function MiniLeaderCard({
   const secondaryName = hasPlayerName ? lastName || firstName : '';
   const playerName = [firstName, lastName].filter(Boolean).join(' ').trim() || 'Player';
   const initials = `${firstName[0] || ''}${lastName[0] || ''}`.trim().toUpperCase() || 'PL';
+  const playerHref = player.player_id > 0 ? `/player/${player.player_id}` : '/stats/players';
 
   return (
-    <SectionCard className="overflow-hidden border-gray-200/90 shadow-sm dark:shadow-[0_18px_36px_rgba(3,10,25,0.42)]">
-      <div className="relative h-[104px] bg-gradient-to-r from-[#0b142f] via-[#1a2863] to-[#273790]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_85%,rgba(32,56,153,0.55),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,rgba(94,130,255,0.2),transparent_58%)]" />
+    <Link
+      href={playerHref}
+      className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-cyan-300"
+      aria-label={playerName}
+    >
+      <SectionCard className="overflow-hidden border-gray-200/90 shadow-sm dark:shadow-[0_18px_36px_rgba(3,10,25,0.42)]">
+        <div className="relative h-[104px] bg-gradient-to-r from-[#0b142f] via-[#1a2863] to-[#273790]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_85%,rgba(32,56,153,0.55),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_10%,rgba(94,130,255,0.2),transparent_58%)]" />
 
-        {player.team_logo ? (
-          <img
-            src={player.team_logo}
-            alt={player.team_name || ''}
-            className="absolute left-3 bottom-3 h-7 w-7 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]"
-          />
-        ) : (
-          <div className="absolute left-3 bottom-3 h-7 w-7 rounded-md border border-white/30 bg-white/15 text-[10px] font-black text-white flex items-center justify-center">
-            {initials}
-          </div>
-        )}
+          {player.team_logo ? (
+            <img
+              src={player.team_logo}
+              alt={player.team_name || ''}
+              className="absolute left-3 bottom-3 h-7 w-7 object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]"
+            />
+          ) : (
+            <div className="absolute left-3 bottom-3 h-7 w-7 rounded-md border border-white/30 bg-white/15 text-[10px] font-black text-white flex items-center justify-center">
+              {initials}
+            </div>
+          )}
 
-        {player.photo_url ? (
-          <img
-            src={player.photo_url}
-            alt={playerName}
-            className="absolute right-2 bottom-0 h-[102px] w-[92px] object-cover object-top"
-          />
-        ) : (
-          <div className="absolute right-3 bottom-3 h-14 w-10 rounded-lg border border-white/20 bg-white/15" />
-        )}
-      </div>
+          {player.photo_url ? (
+            <img
+              src={player.photo_url}
+              alt={playerName}
+              className="absolute right-2 bottom-0 h-[102px] w-[92px] object-cover object-top"
+            />
+          ) : (
+            <div className="absolute right-3 bottom-3 h-14 w-10 rounded-lg border border-white/20 bg-white/15" />
+          )}
+        </div>
 
-      <div className="border-t border-gray-200 dark:border-white/10 px-3 py-3">
-        <div className="flex items-end justify-between gap-2">
-          <div className="min-w-0">
-            <p className="truncate text-[10px] uppercase tracking-[0.08em] text-slate-500 dark:text-white/65">
-              {primaryName}
-            </p>
-            <p className="truncate text-sm leading-none font-black text-slate-900 dark:text-white">
-              {secondaryName || primaryName}
-            </p>
-          </div>
-          <div className="shrink-0 inline-flex items-center gap-1 text-sm font-black text-slate-900 dark:text-white">
-            <span>{value}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-500 dark:text-white/65" />
+        <div className="border-t border-gray-200 dark:border-white/10 px-3 py-3">
+          <div className="flex items-end justify-between gap-2">
+            <div className="min-w-0">
+              <p className="truncate text-[10px] uppercase tracking-[0.08em] text-slate-500 dark:text-white/65">
+                {primaryName}
+              </p>
+              <p className="truncate text-sm leading-none font-black text-slate-900 dark:text-white">
+                {secondaryName || primaryName}
+              </p>
+            </div>
+            <div className="shrink-0 inline-flex items-center gap-1 text-sm font-black text-slate-900 dark:text-white">
+              <span>{value}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-500 dark:text-white/65" />
+            </div>
           </div>
         </div>
-      </div>
-    </SectionCard>
+      </SectionCard>
+    </Link>
   );
 }
 

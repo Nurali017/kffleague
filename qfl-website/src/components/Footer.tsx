@@ -17,7 +17,7 @@ export function Footer() {
   const tournaments = [
     { key: 'tournaments.premierLeague', href: '/table?tournament=pl', defaultValue: 'ПРЕМЬЕР-ЛИГА' },
     { key: 'tournaments.firstLeague', href: '/table?tournament=1l', defaultValue: 'ПЕРВАЯ ЛИГА' },
-    { key: 'tournaments.cup', href: '/table?tournament=cup', defaultValue: 'OLIMPBET КУБОК КАЗАХСТАНА' },
+    { key: 'tournaments.cup', href: '/table?tournament=cup', defaultValue: 'КУБОК КАЗАХСТАНА' },
     { key: 'tournaments.superCup', href: '/matches', defaultValue: 'СУПЕРКУБОК' },
     { key: 'tournaments.secondLeague', href: '/table?tournament=2l', defaultValue: 'ВТОРАЯ ЛИГА' },
     { key: 'tournaments.womenLeague', href: '/table?tournament=el', defaultValue: 'ЖЕНСКАЯ ЛИГА' },

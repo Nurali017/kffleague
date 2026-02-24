@@ -1,10 +1,13 @@
 'use client';
 
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { TeamResultsGrid } from '@/types';
 import { ResultIcon } from './ResultIcon';
 import { getTeamLogo, getTeamColor } from '@/lib/utils/teamLogos';
+import { getTeamHref } from '@/lib/utils/entityRoutes';
+import { navigatePrimary, shouldSkipPrimaryNavigation } from '@/lib/utils/interactiveNavigation';
 
 interface ResultsGridProps {
   teams: TeamResultsGrid[];
@@ -13,6 +16,8 @@ interface ResultsGridProps {
 
 export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
   const { t } = useTranslation('table');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Generate array of tour numbers
   const tours = Array.from({ length: totalTours }, (_, i) => i + 1);
@@ -47,11 +52,28 @@ export function ResultsGrid({ teams, totalTours }: ResultsGridProps) {
             {teams.map((team) => {
               const logoUrl = team.team_logo || getTeamLogo(team.team_id);
               const teamColor = getTeamColor(team.team_id);
+              const teamHref = getTeamHref(team.team_id);
 
               return (
                 <tr
                   key={team.team_id}
-                  className="hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors"
+                  className={`hover:bg-primary/5 dark:hover:bg-blue-500/10 transition-colors ${
+                    teamHref ? 'cursor-pointer' : ''
+                  }`}
+                  role={teamHref ? 'link' : undefined}
+                  tabIndex={teamHref ? 0 : undefined}
+                  onClick={(event) => {
+                    if (!teamHref) return;
+                    if (shouldSkipPrimaryNavigation(event)) return;
+                    navigatePrimary(router, teamHref, searchParams);
+                  }}
+                  onKeyDown={(event) => {
+                    if (!teamHref) return;
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    if (shouldSkipPrimaryNavigation(event)) return;
+                    event.preventDefault();
+                    navigatePrimary(router, teamHref, searchParams);
+                  }}
                 >
                   {/* Position - sticky */}
                   <td className="sticky left-0 z-10 bg-white dark:bg-dark-surface py-2.5 px-3 text-center">

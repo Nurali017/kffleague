@@ -10,7 +10,7 @@ export function TeamNews() {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-black text-gray-900">Latest News</h2>
-                <Link href="#" className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
+                <Link href="/news" className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-primary transition-colors">
                     All news <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>

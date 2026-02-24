@@ -1,15 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { renderWithProviders, screen } from '@/test/utils';
 import { FeaturedStatBlock } from './FeaturedStatBlock';
 
+const { routerPushMock } = vi.hoisted(() => ({
+  routerPushMock: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPushMock }),
+  useSearchParams: () => new URLSearchParams('tournament=pl&season=61'),
+}));
+
 vi.mock('@/components/navigation/TournamentAwareLink', () => ({
   TournamentAwareLink: ({
+    href,
     children,
   }: {
+    href: string;
     children: ReactNode;
-  }) => <>{children}</>,
+  }) => <a href={href}>{children}</a>,
 }));
 
 function buildRankings(count: number) {
@@ -20,7 +31,7 @@ function buildRankings(count: number) {
     teamName: `Team ${index + 2}`,
     teamLogoUrl: null,
     value: index + 10,
-    href: `/players/${index + 2}`,
+    href: `/player/${index + 2}`,
   }));
 }
 
@@ -42,6 +53,7 @@ const baseProps = {
 describe('FeaturedStatBlock mobile ranking slider', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    routerPushMock.mockReset();
   });
 
   it('renders one mobile slide and one dot per ranking entry', () => {
@@ -91,5 +103,16 @@ describe('FeaturedStatBlock mobile ranking slider', () => {
     rerender(<FeaturedStatBlock {...baseProps} rankings={buildRankings(1)} />);
     expect(screen.queryByTestId('featured-mobile-ranking-dots')).not.toBeInTheDocument();
     expect(screen.getAllByTestId('featured-mobile-ranking-slide')).toHaveLength(1);
+  });
+
+  it('navigates on desktop row click', () => {
+    renderWithProviders(<FeaturedStatBlock {...baseProps} rankings={buildRankings(2)} />);
+
+    const desktopTable = screen.getAllByRole('table')[0];
+    const row = within(desktopTable).getByText('Player 2').closest('tr');
+    expect(row).toBeTruthy();
+    fireEvent.click(row!);
+
+    expect(routerPushMock).toHaveBeenCalledWith('/player/2?tournament=pl&season=61', undefined);
   });
 });
