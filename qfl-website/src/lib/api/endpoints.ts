@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   SEASON_TEAMS: (seasonId: number) => `/seasons/${seasonId}/teams`,
   SEASON_STATISTICS: (seasonId: number) => `/seasons/${seasonId}/statistics`,
   SEASON_GOALS_BY_PERIOD: (seasonId: number) => `/seasons/${seasonId}/goals-by-period`,
+  SEASON_LEAGUE_PERFORMANCE: (seasonId: number) => `/seasons/${seasonId}/league-performance`,
   CHAMPIONSHIPS_FRONT_MAP: '/championships/front-map',
   GAMES: '/games',
   NEWS_SLIDER: '/news/slider',

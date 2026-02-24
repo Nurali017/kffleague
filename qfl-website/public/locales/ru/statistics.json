@@ -19,6 +19,7 @@
     "goalsByPeriodCoverage": "Покрытие: {{coverage}}% ({{withEvents}}/{{total}})"
   },
   "mainTabs": {
+    "overview": "Обзор",
     "clubs": "Статистика клубов",
     "players": "Статистика игроков"
   },
@@ -151,5 +152,33 @@
   "goalsLabel": "ГОЛЫ",
   "assistsLabel": "ГОЛЕВЫЕ ПЕРЕДАЧИ",
   "player": "ИГРОК",
-  "fullList": "Полный список"
+  "fullList": "Полный список",
+  "overview": {
+    "playerStats": "Статистика игроков",
+    "teamStats": "Статистика команд",
+    "goals": "Голы",
+    "assists": "Передачи",
+    "wins": "Победы",
+    "losses": "Поражения",
+    "passes": "Пасы",
+    "appearances": "Матчи",
+    "saves": "Сейвы",
+    "cleanSheets": "Сухие матчи",
+    "redCards": "Красные карточки",
+    "total": "ВСЕГО",
+    "shotAccuracy": "Точн. ударов",
+    "conversionRate": "Реализация",
+    "passAccuracy": "Точн. паса",
+    "winPct": "Побед",
+    "drawPct": "Ничьих",
+    "lossPct": "Поражений",
+    "leaguePerformance": "Динамика в турнирной таблице",
+    "teams": "Команды",
+    "matchweek": "Тур",
+    "leaguePosition": "Позиция",
+    "reset": "Сброс",
+    "swipeRankingsHint": "Свайпните карточку, чтобы посмотреть все позиции.",
+    "swipeMiniCardsHint": "Свайпните влево, чтобы увидеть больше лидеров.",
+    "chartScrollHint": "Проведите влево, чтобы просмотреть график целиком."
+  }
 }

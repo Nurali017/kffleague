@@ -2,21 +2,17 @@
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence, LazyMotion, domAnimation, useReducedMotion } from 'motion/react';
+import { motion, LazyMotion, domAnimation, useReducedMotion } from 'motion/react';
 import { GameTeam } from '@/types';
 import { useH2H } from '@/hooks';
-import { computeH2HMetrics } from '@/types/h2h';
 import { HOME_COLOR, AWAY_COLOR } from '@/lib/utils/teamLogos';
-import { PRE_SEASON_CONFIG, SEASONS } from '@/config/tournaments';
+import { PRE_SEASON_CONFIG } from '@/config/tournaments';
 import {
-  H2HDonutChart,
-  H2HFormStreak,
+  H2HOverallRecord,
+  H2HFormGuide,
   H2HPreviousMeetings,
-  H2HSeasonStats,
+  H2HSeasonSoFar,
   H2HSkeleton,
-  H2HFunFacts,
-  H2HMatchStats,
-  H2HTopPerformers,
 } from './h2h';
 
 interface H2HContentCardsProps {
@@ -52,11 +48,6 @@ export function H2HContentCards({
     return seasonId;
   }, [seasonId]);
 
-  const isFallback = effectiveSeasonId !== seasonId;
-  const fallbackYear = isFallback
-    ? SEASONS.find(s => s.id === effectiveSeasonId)?.year ?? null
-    : null;
-
   const { data, loading, error } = useH2H({
     team1Id: homeTeam.id,
     team2Id: awayTeam.id,
@@ -76,7 +67,7 @@ export function H2HContentCards({
         <div className="text-center">
           <div className="text-red-500 text-4xl mb-4">!</div>
           <p className="text-gray-600 text-sm">
-            {t('h2h.error', 'Ошибка загрузки данных')}
+            {t('h2h.error', 'Error loading data')}
           </p>
           <p className="text-gray-400 text-xs mt-2">{error}</p>
         </div>
@@ -88,13 +79,11 @@ export function H2HContentCards({
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
         <div className="text-center text-gray-500 text-sm">
-          {t('h2h.noData', 'Нет данных о предыдущих встречах')}
+          {t('h2h.noData', 'No previous meetings data')}
         </div>
       </div>
     );
   }
-
-  const metrics = computeH2HMetrics(data);
 
   const Section = prefersReducedMotion ? 'div' : motion.div;
   const sectionProps = (i: number) =>
@@ -104,10 +93,10 @@ export function H2HContentCards({
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="space-y-8">
-        {/* 1. Hero Section - Donut Chart (self-contained dark card) */}
+      <div className="space-y-6">
+        {/* 1. Overall Record */}
         <Section {...sectionProps(0)}>
-          <H2HDonutChart
+          <H2HOverallRecord
             homeTeam={homeTeam}
             awayTeam={awayTeam}
             overall={data.overall}
@@ -116,112 +105,40 @@ export function H2HContentCards({
           />
         </Section>
 
-        {/* 2. Fun Facts (self-contained Tier 2 card) */}
-        <AnimatePresence>
-          {data.fun_facts && (
-            <Section {...sectionProps(1)}>
-              <H2HFunFacts
-                homeTeam={homeTeam}
-                awayTeam={awayTeam}
-                funFacts={data.fun_facts}
-                homeColor={homeColor}
-                awayColor={awayColor}
-              />
-            </Section>
-          )}
-        </AnimatePresence>
-
-        {/* 3. Top Performers (self-contained Tier 2 card) */}
-        <AnimatePresence>
-          {data.top_performers && (
-            <Section {...sectionProps(2)}>
-              <H2HTopPerformers
-                homeTeam={homeTeam}
-                awayTeam={awayTeam}
-                topPerformers={data.top_performers}
-                homeColor={homeColor}
-                awayColor={awayColor}
-                fallbackYear={fallbackYear}
-              />
-            </Section>
-          )}
-        </AnimatePresence>
-
-        {/* 4. Form Guide (self-contained Tier 2 card) */}
-        <Section {...sectionProps(3)}>
-          <H2HFormStreak
+        {/* 2. Form Guide */}
+        <Section {...sectionProps(1)}>
+          <H2HFormGuide
             homeTeam={homeTeam}
             awayTeam={awayTeam}
             formGuide={data.form_guide}
             homeColor={homeColor}
             awayColor={awayColor}
-            fallbackYear={fallbackYear}
           />
         </Section>
 
-        {/* 5. Two Column Layout - Season Stats & Match Stats (Tier 3 embedded) */}
-        <Section {...sectionProps(4)}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-[#FAFBFC] rounded-2xl border border-gray-100 p-6">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6 text-center">
-                {t('h2h.seasonStats', 'Показатели сезона')}{fallbackYear && ` ${fallbackYear}`}
-              </h3>
-              <H2HSeasonStats
-                homeTeam={homeTeam}
-                awayTeam={awayTeam}
-                seasonTable={data.season_table}
-                metrics={metrics}
-                homeColor={homeColor}
-                awayColor={awayColor}
-                enhancedStats={data.enhanced_season_stats}
-              />
-            </div>
-
-            {data.match_stats ? (
-              <div className="bg-[#FAFBFC] rounded-2xl border border-gray-100 p-6">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6 text-center">
-                  {t('h2h.matchStats.title', 'Статистика H2H матчей')}
-                </h3>
-                <H2HMatchStats
-                  homeTeam={homeTeam}
-                  awayTeam={awayTeam}
-                  matchStats={data.match_stats}
-                  homeColor={homeColor}
-                  awayColor={awayColor}
-                />
-              </div>
-            ) : (
-              <div className="bg-[#FAFBFC] rounded-2xl border border-gray-100 p-6">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6 text-center">
-                  {t('h2h.previousMeetings', 'История встреч')}
-                </h3>
-                <H2HPreviousMeetings
-                  meetings={data.previous_meetings}
-                  homeTeamId={homeTeam.id}
-                  awayTeamId={awayTeam.id}
-                />
-              </div>
-            )}
-          </div>
+        {/* 3. Season So Far */}
+        <Section {...sectionProps(2)}>
+          <H2HSeasonSoFar
+            homeTeam={homeTeam}
+            awayTeam={awayTeam}
+            seasonTable={data.season_table}
+            funFacts={data.fun_facts}
+            enhancedStats={data.enhanced_season_stats}
+            homeColor={homeColor}
+            awayColor={awayColor}
+          />
         </Section>
 
-        {/* 6. Previous Meetings (full-width, when match_stats exists) */}
-        <AnimatePresence>
-          {data.match_stats && (
-            <Section {...sectionProps(5)}>
-              <div className="bg-[#FAFBFC] rounded-2xl border border-gray-100 p-6">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-6 text-center">
-                  {t('h2h.previousMeetings', 'История встреч')}
-                </h3>
-                <H2HPreviousMeetings
-                  meetings={data.previous_meetings}
-                  homeTeamId={homeTeam.id}
-                  awayTeamId={awayTeam.id}
-                />
-              </div>
-            </Section>
-          )}
-        </AnimatePresence>
+        {/* 4. Previous Meetings */}
+        <Section {...sectionProps(3)}>
+          <H2HPreviousMeetings
+            meetings={data.previous_meetings}
+            homeTeamId={homeTeam.id}
+            awayTeamId={awayTeam.id}
+            homeColor={homeColor}
+            awayColor={awayColor}
+          />
+        </Section>
       </div>
     </LazyMotion>
   );

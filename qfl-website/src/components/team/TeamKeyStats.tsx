@@ -149,47 +149,54 @@ export function TeamKeyStats({ stats, details }: TeamKeyStatsProps) {
 
   return (
     <SectionCard className="p-4 md:p-5">
-      <SectionHeader title={tTeam('sections.keyStats', 'Ключевая статистика')} />
-
-      <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-[auto_1fr]">
-        {/* Left — ring + results + button */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <MatchesRing
-              played={stats.games_played}
-              won={stats.wins}
-              drawn={stats.draws}
-              lost={stats.losses}
-            />
-            <div>
-              <ResultRow value={stats.wins} label={tTeam('stats.wins', 'Победы')} color="#1947e5" />
-              <ResultRow value={stats.draws} label={tTeam('stats.draws', 'Ничьи')} color="#1fc8d7" />
-              <ResultRow value={stats.losses} label={tTeam('stats.losses', 'Поражения')} color="#ef5aa0" />
-            </div>
-          </div>
-
+      <SectionHeader
+        title={tTeam('sections.keyStats', 'Ключевая статистика')}
+        action={
           <Link
             href="/stats"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm font-bold text-primary transition-colors hover:bg-primary/10 dark:border-cyan-300/30 dark:bg-cyan-300/10 dark:text-cyan-300 dark:hover:bg-cyan-300/15"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:bg-primary/10 dark:border-cyan-300/30 dark:bg-cyan-300/10 dark:text-cyan-300 dark:hover:bg-cyan-300/15"
           >
             {tTeam('buttons.seeAllStats', 'Вся статистика')}
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3 h-3" />
           </Link>
+        }
+      />
+
+      <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-[auto_1px_1fr]">
+        {/* Left — ring + results */}
+        <div className="flex items-center gap-4">
+          <MatchesRing
+            played={stats.games_played}
+            won={stats.wins}
+            drawn={stats.draws}
+            lost={stats.losses}
+          />
+          <div>
+            <ResultRow value={stats.wins} label={tTeam('stats.wins', 'Победы')} color="#1947e5" />
+            <ResultRow value={stats.draws} label={tTeam('stats.draws', 'Ничьи')} color="#1fc8d7" />
+            <ResultRow value={stats.losses} label={tTeam('stats.losses', 'Поражения')} color="#ef5aa0" />
+          </div>
         </div>
 
+        {/* Divider */}
+        <div className="h-px bg-gray-200 dark:bg-white/10 lg:h-auto rounded-full" />
+
         {/* Right — stats grid */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 self-center">
           <MetricStat
             value={formatValue(goalsScored)}
             label={tStats('labels.goals', 'Голы')}
+            accentColor="#1947e5"
           />
           <MetricStat
             value={formatValue(goalsConceded)}
             label={tStats('labels.goalsConceded', 'Пропущенные голы')}
+            accentColor="#ef5aa0"
           />
           <MetricStat
             value={formatPercent(possession)}
             label={tStats('labels.possession', 'Владение (%)')}
+            accentColor="#1fc8d7"
           />
           <MetricStat
             value={formatPercent(passAccuracy)}

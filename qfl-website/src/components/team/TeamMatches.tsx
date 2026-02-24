@@ -3,9 +3,11 @@
 import { useMemo } from 'react';
 import { TournamentAwareLink as Link } from '@/components/navigation/TournamentAwareLink';
 import Image from 'next/image';
+import { Calendar, CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Game } from '@/types/match';
 import { formatMatchDate } from '@/lib/utils/dateFormat';
+import { cn } from '@/lib/utils/cn';
 import { EmptyState, SectionCard } from './TeamUiPrimitives';
 
 interface TeamMatchesProps {
@@ -59,9 +61,24 @@ function MatchCard({ game, teamId }: MatchCardProps) {
     }
   }
 
+  const borderClass =
+    result === 'W' ? 'border-l-emerald-500' :
+    result === 'L' ? 'border-l-rose-500' :
+    result === 'D' ? 'border-l-amber-400' :
+    'border-l-transparent';
+
+  const scoreBgClass =
+    result === 'W' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200' :
+    result === 'L' ? 'bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-200' :
+    result === 'D' ? 'bg-amber-50 text-amber-700 dark:bg-amber-400/15 dark:text-amber-200' :
+    'bg-gray-100 text-slate-900 dark:bg-white/10 dark:text-white';
+
   return (
     <Link href={`/matches/${game.id}`} className="block">
-      <SectionCard className="p-4 md:p-5 hover:border-gray-300 dark:hover:border-white/25 transition-colors">
+      <SectionCard className={cn(
+        "p-4 md:p-5 hover:border-gray-300 dark:hover:border-white/25 transition-colors border-l-[3px]",
+        borderClass,
+      )}>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-slate-500 dark:text-white/60">
             {formatMatchDate(game.date, i18n.language)}
@@ -89,7 +106,10 @@ function MatchCard({ game, teamId }: MatchCardProps) {
             <span className="truncate text-slate-900 dark:text-white">{game.home_team.name}</span>
           </div>
 
-          <div className="rounded-full bg-gray-100 dark:bg-white/10 px-3 py-1 text-sm font-black text-slate-900 dark:text-white shrink-0">
+          <div className={cn(
+            "rounded-full px-3 py-1 text-sm font-black shrink-0",
+            scoreBgClass,
+          )}>
             {isFinished ? `${game.home_score}:${game.away_score}` : (game.time?.slice(0, 5) || t('tbd', 'Уточняется'))}
           </div>
 
@@ -151,9 +171,10 @@ export function TeamMatches({ games, teamId, loading }: TeamMatchesProps) {
     <div className="space-y-8">
       {upcomingGames.length ? (
         <section>
-          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">
-            {t('matches_sections.upcoming', 'Предстоящие матчи')}
-            <span className="ml-2 text-sm font-medium text-slate-500 dark:text-white/60">({upcomingGames.length})</span>
+          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary dark:text-cyan-300" />
+            <span>{t('matches_sections.upcoming', 'Предстоящие матчи')}</span>
+            <span className="text-sm font-medium text-slate-500 dark:text-white/60">({upcomingGames.length})</span>
           </h2>
           <div className="space-y-3">
             {upcomingGames.map((game) => (
@@ -165,9 +186,10 @@ export function TeamMatches({ games, teamId, loading }: TeamMatchesProps) {
 
       {finishedGames.length ? (
         <section>
-          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white">
-            {t('matches_sections.past', 'Прошедшие матчи')}
-            <span className="ml-2 text-sm font-medium text-slate-500 dark:text-white/60">({finishedGames.length})</span>
+          <h2 className="mb-4 text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+            <span>{t('matches_sections.past', 'Прошедшие матчи')}</span>
+            <span className="text-sm font-medium text-slate-500 dark:text-white/60">({finishedGames.length})</span>
           </h2>
           <div className="space-y-3">
             {finishedGames.map((game) => (

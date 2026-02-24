@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 /**
- * Stats landing page - redirects to teams statistics
+ * Stats landing page - redirects to overview
  */
 export default function StatsPage({
     searchParams,
@@ -21,5 +21,5 @@ export default function StatsPage({
     });
 
     const query = params.toString();
-    redirect(query ? `/stats/teams?${query}` : '/stats/teams');
+    redirect(query ? `/stats/overview?${query}` : '/stats/overview');
 }

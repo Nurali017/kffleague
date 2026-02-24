@@ -40,6 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     { url: '/', priority: 1.0 },
     { url: '/matches', priority: 0.9 },
+    { url: '/matches/calendar', priority: 0.7 },
     { url: '/table', priority: 0.9 },
     { url: '/teams', priority: 0.8 },
     { url: '/stats', priority: 0.7 },

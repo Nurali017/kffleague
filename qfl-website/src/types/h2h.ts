@@ -10,6 +10,10 @@ export interface H2HOverallStats {
   team2_wins: number;
   team1_goals: number;
   team2_goals: number;
+  team1_home_wins: number;
+  team1_away_wins: number;
+  team2_home_wins: number;
+  team2_away_wins: number;
 }
 
 export interface FormGuideMatch {
@@ -57,6 +61,8 @@ export interface PreviousMeeting {
   away_score: number | null;
   tour: number | null;
   season_name: string | null;
+  home_team_logo: string | null;
+  away_team_logo: string | null;
 }
 
 // Phase 1: Fun Facts
@@ -84,6 +90,8 @@ export interface H2HFunFacts {
   team1_unbeaten_streak: number;
   team2_unbeaten_streak: number;
   goals_by_half: H2HGoalsByHalf | null;
+  team1_worst_defeat: H2HBiggestWin | null;
+  team2_worst_defeat: H2HBiggestWin | null;
 }
 
 // Phase 1: Aggregated Match Stats

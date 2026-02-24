@@ -12,7 +12,8 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => {
       const dict: Record<string, string> = {
         title: 'Матчи',
-        'scheduleNotice.global': 'Календарь носит предварительный характер и может корректироваться по ходу сезона.',
+        'scheduleNotice.global': 'Дата и время матчей могут корректироваться. Окончательное расписание публикуется за месяц до начала.',
+        'calendarPdf.cta': 'Календарь дат (PDF)',
       };
       return dict[key] ?? key;
     },
@@ -42,8 +43,12 @@ describe('MatchesPage schedule notice', () => {
     render(<MatchesPage />);
 
     expect(
-      screen.getByText('Календарь носит предварительный характер и может корректироваться по ходу сезона.')
+      screen.getByText('Дата и время матчей могут корректироваться. Окончательное расписание публикуется за месяц до начала.')
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Календарь дат (PDF)' })).toHaveAttribute(
+      'href',
+      '/matches/calendar'
+    );
     expect(screen.getByTestId('match-center')).toBeInTheDocument();
   });
 
@@ -53,8 +58,9 @@ describe('MatchesPage schedule notice', () => {
     render(<MatchesPage />);
 
     expect(
-      screen.queryByText('Календарь носит предварительный характер и может корректироваться по ходу сезона.')
+      screen.queryByText('Дата и время матчей могут корректироваться. Окончательное расписание публикуется за месяц до начала.')
     ).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Календарь дат (PDF)' })).not.toBeInTheDocument();
     expect(screen.getByTestId('match-center')).toBeInTheDocument();
   });
 });

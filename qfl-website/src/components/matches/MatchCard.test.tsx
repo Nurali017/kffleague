@@ -10,7 +10,7 @@ vi.mock('react-i18next', () => ({
       const dict: Record<string, string> = {
         tour: 'Тур',
         live: 'LIVE',
-        'scheduleNotice.perMatch': 'Дата и время этого матча предварительные и могут быть изменены.',
+        'scheduleNotice.perMatch': 'Дата и время этого матча могут корректироваться. Окончательное время подтверждается за месяц до начала.',
       };
       return dict[key] ?? key;
     },
@@ -65,7 +65,7 @@ describe('MatchCard schedule disclaimer', () => {
     render(<MatchCard match={baseMatch} showScheduleDisclaimer />);
 
     expect(
-      screen.getByText('Дата и время этого матча предварительные и могут быть изменены.')
+      screen.getByText('Дата и время этого матча могут корректироваться. Окончательное время подтверждается за месяц до начала.')
     ).toBeInTheDocument();
   });
 
@@ -73,7 +73,7 @@ describe('MatchCard schedule disclaimer', () => {
     render(<MatchCard match={baseMatch} />);
 
     expect(
-      screen.queryByText('Дата и время этого матча предварительные и могут быть изменены.')
+      screen.queryByText('Дата и время этого матча могут корректироваться. Окончательное время подтверждается за месяц до начала.')
     ).not.toBeInTheDocument();
   });
 
@@ -86,7 +86,7 @@ describe('MatchCard schedule disclaimer', () => {
     );
 
     expect(
-      screen.queryByText('Дата и время этого матча предварительные и могут быть изменены.')
+      screen.queryByText('Дата и время этого матча могут корректироваться. Окончательное время подтверждается за месяц до начала.')
     ).not.toBeInTheDocument();
   });
 });

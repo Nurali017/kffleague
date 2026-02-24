@@ -138,6 +138,7 @@ describe('HomeMatches', () => {
       .filter((el) => /^\/matches\/\d+$/.test(el.getAttribute('href') ?? ''));
 
     expect(matchLinks).toHaveLength(9);
+    expect(screen.queryByRole('link', { name: 'Календарь дат (PDF)' })).not.toBeInTheDocument();
   });
 
   it('keeps compact list for non pre-season tournaments', () => {
@@ -185,5 +186,6 @@ describe('HomeMatches', () => {
       .filter((el) => /^\/matches\/\d+$/.test(el.getAttribute('href') ?? ''));
 
     expect(matchLinks).toHaveLength(8);
+    expect(screen.queryByRole('link', { name: 'Календарь дат (PDF)' })).not.toBeInTheDocument();
   });
 });

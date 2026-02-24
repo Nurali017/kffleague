@@ -37,6 +37,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# sharp is required for Next.js Image Optimization in standalone mode
+RUN npm install --os=linux --cpu=x64 sharp@0.33.5
+
 # Copy standalone output
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

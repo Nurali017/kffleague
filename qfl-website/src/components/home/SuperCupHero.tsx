@@ -82,7 +82,7 @@ function useCountdown(targetIso: string) {
 function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="min-w-[44px] rounded-lg border border-white/18 bg-black/62 px-2 py-1.5 shadow-[0_4px_12px_rgba(0,0,0,0.35)] backdrop-blur-md sm:min-w-[68px] sm:rounded-xl sm:px-4 sm:py-3 lg:min-w-[80px] lg:px-5 lg:py-4">
+      <div className="min-w-[48px] rounded-lg border border-white/20 bg-black/60 px-2 py-1.5 shadow-[0_4px_12px_rgba(0,0,0,0.35)] backdrop-blur-md sm:min-w-[72px] sm:rounded-xl sm:px-4 sm:py-3 lg:min-w-[80px] lg:px-5 lg:py-4">
         <span
           className="block text-center text-xl font-black leading-none tabular-nums text-white sm:text-3xl lg:text-4xl"
           style={{ fontVariantNumeric: 'tabular-nums' }}
@@ -177,25 +177,25 @@ export function SuperCupHero() {
       />
 
       {/* ── Layered overlay for readability ── */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/85 via-black/56 to-black/72" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/90 via-black/68 to-black/78" />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(120%_90%_at_0%_50%,rgba(245,158,11,0.30)_0%,rgba(0,0,0,0)_66%)]" />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(120%_90%_at_100%_50%,rgba(34,197,94,0.28)_0%,rgba(0,0,0,0)_66%)]" />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(95%_65%_at_50%_52%,rgba(0,0,0,0.00)_30%,rgba(0,0,0,0.40)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[44%] pointer-events-none bg-gradient-to-t from-black/70 via-black/32 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[44%] pointer-events-none bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
       {/* ── Content ── */}
       <div className="relative z-10 flex h-full flex-col justify-between p-3.5 sm:p-5 lg:p-8">
 
         {/* TOP: Badge + metadata */}
         <motion.div variants={badgeSlideDown} className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-white/15 to-white/5 text-white/90 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full w-fit backdrop-blur-sm ring-1 ring-white/15">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-white/20 to-white/10 text-white px-3 py-1 sm:px-4 sm:py-1.5 rounded-full w-fit backdrop-blur-md ring-1 ring-white/20">
             <img src="/images/tournaments/sc.png" alt="" className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="text-[11px] sm:text-xs font-bold tracking-wider uppercase">
               {t('superCupHero.badge', SUPER_CUP_FEATURED_MATCH.heroTitle)}
             </span>
           </div>
 
-          <div className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium tracking-wide text-white/78 sm:text-[13px]">
+          <div className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-semibold tracking-wide text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] sm:text-[13px]">
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               <span>{dateLabel}</span>
@@ -216,7 +216,7 @@ export function SuperCupHero() {
         </motion.div>
 
         {/* MIDDLE: Teams + VS */}
-        <div className="my-3 flex flex-row items-center justify-center gap-3.5 sm:my-6 sm:gap-10 lg:gap-16">
+        <div className="my-auto flex flex-row items-center justify-center gap-4 sm:gap-10 lg:gap-16">
           {/* Home team */}
           <motion.div variants={teamLogoLeft}>
             <Link href={getTeamHref(featuredGame.home_team.id) || '#'} className="group flex max-w-[124px] flex-col items-center gap-1.5 sm:max-w-none sm:gap-3">
@@ -231,7 +231,7 @@ export function SuperCupHero() {
                   />
                 </div>
               </div>
-              <span className="line-clamp-2 text-center text-[13px] font-bold leading-tight tracking-tight text-white drop-shadow-lg transition-colors group-hover:text-amber-400 sm:text-lg lg:text-xl">
+              <span className="line-clamp-2 text-center text-[13px] font-extrabold leading-tight tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-colors group-hover:text-amber-400 sm:text-lg sm:font-bold lg:text-xl">
                 {featuredGame.home_team.name}
               </span>
             </Link>
@@ -258,7 +258,7 @@ export function SuperCupHero() {
                   />
                 </div>
               </div>
-              <span className="line-clamp-2 text-center text-[13px] font-bold leading-tight tracking-tight text-white drop-shadow-lg transition-colors group-hover:text-amber-400 sm:text-lg lg:text-xl">
+              <span className="line-clamp-2 text-center text-[13px] font-extrabold leading-tight tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-colors group-hover:text-amber-400 sm:text-lg sm:font-bold lg:text-xl">
                 {featuredGame.away_team.name}
               </span>
             </Link>
@@ -269,7 +269,7 @@ export function SuperCupHero() {
         <div className="flex flex-col items-center">
           <div
             data-testid="supercup-bottom-backplate"
-            className="flex w-full max-w-[360px] flex-col gap-2.5 rounded-2xl border border-white/15 bg-black/36 px-2.5 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:max-w-none sm:gap-3 sm:px-3 sm:py-3"
+            className="flex w-full max-w-[360px] flex-col gap-2.5 rounded-2xl border border-white/15 bg-black/44 px-2.5 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.35)] backdrop-blur-md sm:max-w-[480px] sm:gap-3 sm:px-4 sm:py-3 lg:max-w-[520px]"
           >
             {/* Countdown timer */}
             {!countdown.isExpired && (
@@ -278,7 +278,7 @@ export function SuperCupHero() {
                   {t('superCupHero.countdownLabel', 'До начала матча')}
                 </span>
                 <div
-                  className="grid w-full max-w-[320px] grid-cols-4 gap-1.5 sm:flex sm:w-auto sm:max-w-none sm:items-center sm:gap-3"
+                  className="grid w-full max-w-[280px] grid-cols-4 gap-2 sm:flex sm:w-auto sm:max-w-none sm:items-center sm:gap-3"
                   aria-label={t('superCupHero.countdownLabel', 'До начала матча')}
                 >
                   {countdownUnits.map((unit, index) => (
@@ -294,13 +294,13 @@ export function SuperCupHero() {
             )}
 
             {/* CTA buttons */}
-            <motion.div variants={buttonsSlideUp} className="flex w-full flex-col items-stretch gap-2.5 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+            <motion.div variants={buttonsSlideUp} className="flex w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:justify-center sm:gap-3">
               {ticketHref && (
                 <a
                   href={ticketHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white/90 px-4 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#0a1628] shadow-lg shadow-white/20 transition-all hover:bg-white hover:shadow-white/40 sm:w-auto sm:px-8 sm:py-3 sm:text-[13px]"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white/90 px-4 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#0a1628] shadow-lg shadow-white/20 transition-all hover:bg-white hover:shadow-white/40 sm:flex-1 sm:max-w-[220px] sm:px-6 sm:py-3 sm:text-[13px]"
                 >
                   {t('superCupHero.ticketCta', 'Купить билет')}
                   <ArrowRight className="w-4 h-4 ml-0.5" />
@@ -308,7 +308,7 @@ export function SuperCupHero() {
               )}
               <Link
                 href={matchHref}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.24] bg-white/[0.14] px-4 py-2.5 text-[12px] font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all hover:border-white/[0.3] hover:bg-white/[0.2] sm:w-auto sm:px-8 sm:py-3 sm:text-[13px]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.24] bg-white/[0.14] px-4 py-2.5 text-[12px] font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all hover:border-white/[0.3] hover:bg-white/[0.2] sm:flex-1 sm:max-w-[220px] sm:px-6 sm:py-3 sm:text-[13px]"
               >
                 {t('superCupHero.matchCta', 'Открыть матч')}
               </Link>

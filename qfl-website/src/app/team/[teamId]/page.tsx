@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { notFound, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   TeamCoachingStaff,
   TeamFullStats,
@@ -89,6 +89,7 @@ export default function TeamPage({ params }: TeamPageProps) {
   }
 
   const tournamentName = (currentTournament.name as Record<string, string>)[lang] || currentTournament.name.short;
+  const leaguePosition = overview.standings_window?.find(s => s.team_id === teamId)?.position ?? null;
 
   return (
     <PageSeasonProvider seasonId={effectiveSeasonId}>
@@ -98,6 +99,8 @@ export default function TeamPage({ params }: TeamPageProps) {
           summary={overview.summary}
           seasonName={overview.season?.name}
           tournamentName={tournamentName}
+          formLast5={overview.form_last5}
+          leaguePosition={leaguePosition}
         />
 
         <TeamPageTabs
@@ -109,51 +112,55 @@ export default function TeamPage({ params }: TeamPageProps) {
         />
 
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 space-y-8 md:space-y-10">
-          {activeTab === 'overview' ? (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="space-y-6"
-            >
-              <motion.div variants={fadeInUp}>
-                <TeamKeyStats stats={overview.summary} details={detailedStats} />
+          <AnimatePresence mode="wait">
+            {activeTab === 'overview' ? (
+              <motion.div
+                key="overview"
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0 }}
+                variants={staggerContainer}
+                className="space-y-6"
+              >
+                <motion.div variants={fadeInUp}>
+                  <TeamKeyStats stats={overview.summary} details={detailedStats} />
+                </motion.div>
+                <motion.div variants={fadeInUp}>
+                  <TeamOverviewSection
+                    recentMatch={overview.recent_match}
+                    formLast5={overview.form_last5}
+                    upcomingMatches={overview.upcoming_matches}
+                    standingsWindow={overview.standings_window}
+                    leaders={overview.leaders}
+                  />
+                </motion.div>
               </motion.div>
-              <motion.div variants={fadeInUp}>
-                <TeamOverviewSection
-                  recentMatch={overview.recent_match}
-                  formLast5={overview.form_last5}
-                  upcomingMatches={overview.upcoming_matches}
-                  standingsWindow={overview.standings_window}
-                  leaders={overview.leaders}
-                />
+            ) : null}
+
+            {activeTab === 'matches' ? (
+              <motion.div key="matches" initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={fadeInUp}>
+                <TeamMatches games={games} teamId={teamId} loading={gamesLoading} />
               </motion.div>
-            </motion.div>
-          ) : null}
+            ) : null}
 
-          {activeTab === 'matches' ? (
-            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-              <TeamMatches games={games} teamId={teamId} loading={gamesLoading} />
-            </motion.div>
-          ) : null}
+            {activeTab === 'squad' ? (
+              <motion.div key="squad" initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={fadeInUp}>
+                <TeamSquad players={players} loading={playersLoading} />
+              </motion.div>
+            ) : null}
 
-          {activeTab === 'squad' ? (
-            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-              <TeamSquad players={players} loading={playersLoading} />
-            </motion.div>
-          ) : null}
+            {activeTab === 'stats' ? (
+              <motion.div key="stats" initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={fadeInUp}>
+                <TeamFullStats teamId={teamId} />
+              </motion.div>
+            ) : null}
 
-          {activeTab === 'stats' ? (
-            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-              <TeamFullStats teamId={teamId} />
-            </motion.div>
-          ) : null}
-
-          {activeTab === 'staff' ? (
-            <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
-              <TeamCoachingStaff teamId={teamId} />
-            </motion.div>
-          ) : null}
+            {activeTab === 'staff' ? (
+              <motion.div key="staff" initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={fadeInUp}>
+                <TeamCoachingStaff teamId={teamId} />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </main>
     </PageSeasonProvider>

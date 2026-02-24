@@ -19,6 +19,7 @@
     "goalsByPeriodCoverage": "Жабынды: {{coverage}}% ({{withEvents}}/{{total}})"
   },
   "mainTabs": {
+    "overview": "Шолу",
     "clubs": "Клуб статистикасы",
     "players": "Ойыншылардың статистикасы"
   },
@@ -146,5 +147,33 @@
   "goalsLabel": "ГОЛДАР",
   "assistsLabel": "НӘТИЖЕЛІ ПАСТАР",
   "player": "ОЙЫНШЫ",
-  "fullList": "Толық тізім"
+  "fullList": "Толық тізім",
+  "overview": {
+    "playerStats": "Ойыншылар статистикасы",
+    "teamStats": "Командалар статистикасы",
+    "goals": "Голдар",
+    "assists": "Нәтижелі пастар",
+    "wins": "Жеңістер",
+    "losses": "Жеңілістер",
+    "passes": "Пастар",
+    "appearances": "Матчтар",
+    "saves": "Сейвтер",
+    "cleanSheets": "Құрғақ матчтар",
+    "redCards": "Қызыл қағаздар",
+    "total": "БАРЛЫҒЫ",
+    "shotAccuracy": "Соққы дәлд.",
+    "conversionRate": "Іске асыру",
+    "passAccuracy": "Пас дәлдігі",
+    "winPct": "Жеңіс",
+    "drawPct": "Тең",
+    "lossPct": "Жеңіліс",
+    "leaguePerformance": "Турнир кестесіндегі динамика",
+    "teams": "Командалар",
+    "matchweek": "Тур",
+    "leaguePosition": "Позиция",
+    "reset": "Тазалау",
+    "swipeRankingsHint": "Барлық позицияны көру үшін карточканы сырғытыңыз.",
+    "swipeMiniCardsHint": "Қосымша лидерлерді көру үшін солға сырғытыңыз.",
+    "chartScrollHint": "Графикті толық көру үшін солға сырғытыңыз."
+  }
 }
