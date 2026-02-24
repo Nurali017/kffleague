@@ -7,6 +7,7 @@ import { SponsorsSection } from '@/components/SponsorsSection';
 import { BackToTop } from '@/components/BackToTop';
 import { TournamentBar } from '@/components/tournament';
 import { JsonLd } from '@/components/JsonLd';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { getLanguageFromCookie } from '@/lib/i18n/cookies.server';
 import { getTournamentFromCookie } from '@/lib/tournament/cookies.server';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION_RU, DEFAULT_OG_IMAGE } from '@/lib/seo/constants';
@@ -42,6 +43,10 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || undefined,
   },
 };
 
@@ -104,6 +109,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: leagueColorScript }} />
       </head>
       <body className={`${montserrat.className} min-h-screen bg-[#F5F5F5] dark:bg-dark-bg`}>
+        <GoogleAnalytics />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <Providers
           initialLang={lang}

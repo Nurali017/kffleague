@@ -17,6 +17,7 @@
     "screenshots:stats": "node scripts/capture-stats-screenshots.js"
   },
   "dependencies": {
+    "@next/third-parties": "^16.1.6",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "i18next": "^23.10.0",
