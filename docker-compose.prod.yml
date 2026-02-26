@@ -11,6 +11,7 @@ services:
       - NODE_ENV=production
       - API_BASE_URL=http://qfl-backend:8000/api/v1
       - API_REWRITE_DESTINATION=http://qfl-backend:8000
+      - NEXT_PUBLIC_CUP_DRAW_ENABLED=${NEXT_PUBLIC_CUP_DRAW_ENABLED:-true}
     networks:
       - qfl-network
       - 1sport-network
@@ -25,6 +26,28 @@ services:
       resources:
         limits:
           memory: 512M
+
+  # =================== ADMIN (Next.js) ===================
+  admin:
+    image: ghcr.io/nurali017/qfl-admin:latest
+    container_name: qfl-admin
+    environment:
+      - NODE_ENV=production
+      - API_REWRITE_DESTINATION=http://qfl-backend:8000
+    networks:
+      - qfl-network
+      - 1sport-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3001/admin"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   # =================== BACKEND (FastAPI + Gunicorn) ===================
   backend:
@@ -42,6 +65,13 @@ services:
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - ALLOWED_ORIGINS=https://${SITE_DOMAIN}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CUP_DRAW_ENABLED=${CUP_DRAW_ENABLED:-true}
+      - CACHE_ENABLED=${CACHE_ENABLED:-false}
+      - SOTA_ENABLED=${SOTA_ENABLED:-true}
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
+      - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
     depends_on:
       db:
         condition: service_healthy
@@ -147,6 +177,12 @@ services:
       - MINIO_SECURE=false
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CUP_DRAW_ENABLED=${CUP_DRAW_ENABLED:-true}
+      - SOTA_ENABLED=${SOTA_ENABLED:-true}
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
+      - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
     depends_on:
       db:
         condition: service_healthy
@@ -172,6 +208,12 @@ services:
       - REDIS_URL=redis://qfl-redis:6379/0
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CUP_DRAW_ENABLED=${CUP_DRAW_ENABLED:-true}
+      - SOTA_ENABLED=${SOTA_ENABLED:-true}
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
+      - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
     depends_on:
       db:
         condition: service_healthy
