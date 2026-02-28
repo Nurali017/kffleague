@@ -22,10 +22,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
 
   # =================== ADMIN (Next.js) ===================
   admin:
@@ -44,10 +40,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 384M
 
   # =================== BACKEND (FastAPI + Gunicorn) ===================
   backend:
@@ -92,10 +84,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
 
   # =================== DATABASE (PostgreSQL) ===================
   db:
@@ -115,10 +103,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 1024M
 
   # =================== REDIS ===================
   redis:
@@ -135,10 +119,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 192M
 
   # =================== MINIO (Object Storage) ===================
   minio:
@@ -159,10 +139,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 256M
 
   # =================== CELERY WORKER ===================
   celery_worker:
@@ -196,10 +172,6 @@ services:
     networks:
       - qfl-network
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 384M
 
   # =================== CELERY BEAT (Scheduler) ===================
   celery_beat:
@@ -225,10 +197,6 @@ services:
     networks:
       - qfl-network
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 256M
 
 volumes:
   postgres_data:
