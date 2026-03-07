@@ -157,6 +157,14 @@ ssh -M -S "$TUNNEL_SOCKET" -fN \
 
 ok "MinIO tunnel open — api:9000 | ui:9001 (http://localhost:9001)"
 
+# ── Ensure MinIO bucket policy ──────────────────────────────────────────────
+log "Ensuring MinIO bucket policy..."
+(
+  cd "$ROOT/backend"
+  export $(grep -v '^#' .env | grep -E '^MINIO_' | xargs)
+  MINIO_ENDPOINT="127.0.0.1:9000" "$PYTHON" "$ROOT/scripts/minio-ensure-policy.py" 2>&1 | sed 's/^/  /'
+) && ok "MinIO policy OK" || log "⚠ MinIO policy check failed (non-fatal)"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # STEP 4 — Dump prod DB and restore locally
 # ─────────────────────────────────────────────────────────────────────────────

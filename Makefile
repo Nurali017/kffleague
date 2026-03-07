@@ -90,6 +90,30 @@ dev:
 staging:
 	bash scripts/staging.sh
 
+# ── MinIO policy: ensure all required prefixes are public ─────────────────────
+# Local (requires MinIO tunnel on :9000):
+#   make minio-policy
+# Prod (via SSH + backend container):
+#   make minio-policy-prod
+minio-policy:
+	@cd $(BACKEND_DIR) && \
+	  export $$(grep -v '^#' .env | grep -E '^MINIO_' | xargs) && \
+	  MINIO_ENDPOINT="127.0.0.1:9000" \
+	  python3 ../scripts/minio-ensure-policy.py
+
+minio-policy-prod:
+	@echo "→ Ensuring MinIO bucket policy on prod..."
+	@ssh $(PROD_HOST) 'cd $(PROD_PATH) && \
+	  export $$(grep -v "^#" .env | grep -E "^MINIO_" | xargs) && \
+	  docker exec -e MINIO_ENDPOINT=qfl-minio:9000 \
+	    -e MINIO_ACCESS_KEY="$$MINIO_ACCESS_KEY" \
+	    -e MINIO_SECRET_KEY="$$MINIO_SECRET_KEY" \
+	    -e MINIO_BUCKET="$$MINIO_BUCKET" \
+	    qfl-backend python3 -c "$$( \
+	      cat scripts/minio-ensure-policy.py \
+	    )"'
+	@echo "✓ MinIO policy updated on prod."
+
 # ── Migrate: run alembic upgrade head on PROD DB via SSH tunnel ───────────────
 # Requires tunnel to be open: make tunnel
 migrate:

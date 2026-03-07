@@ -63,7 +63,7 @@ services:
       - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
       - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
       - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
       - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
@@ -129,7 +129,7 @@ services:
       MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
     volumes:
-      - minio_data:/data
+      - /mnt/data/minio:/data
     networks:
       - qfl-network
       - 1sport-network
@@ -161,7 +161,7 @@ services:
       - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
       - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
       - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200}
     depends_on:
       db:
         condition: service_healthy
@@ -188,7 +188,7 @@ services:
       - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
       - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
       - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
-      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200}
     depends_on:
       db:
         condition: service_healthy
@@ -201,7 +201,6 @@ services:
 volumes:
   postgres_data:
   redis_data:
-  minio_data:
 
 networks:
   qfl-network:

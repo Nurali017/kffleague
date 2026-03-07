@@ -28,11 +28,11 @@ fi
 kill_port() {
   local port="$1"
   local pids
-  pids=$(lsof -ti tcp:"$port" -sTCP:LISTEN 2>/dev/null || true)
+  pids=$(lsof -ti tcp:"$port" 2>/dev/null || true)
   if [ -n "$pids" ]; then
     log "Port $port busy (PID $pids) — killing..."
     echo "$pids" | xargs kill -9 2>/dev/null || true
-    sleep 2
+    sleep 1
   fi
 }
 
