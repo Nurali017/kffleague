@@ -67,6 +67,8 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
       - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
+      - DATABASE_POOL_SIZE=5
+      - DATABASE_MAX_OVERFLOW=10
     depends_on:
       db:
         condition: service_healthy
@@ -89,6 +91,16 @@ services:
   db:
     image: postgres:15-alpine
     container_name: qfl-db
+    command: >-
+      postgres
+      -c max_connections=200
+      -c shared_buffers=512MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=64MB
+      -c checkpoint_timeout=15min
+      -c max_wal_size=2GB
+      -c effective_cache_size=1536MB
+      -c maintenance_work_mem=128MB
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -162,6 +174,7 @@ services:
       - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
       - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
       - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200}
+      - DATABASE_POOL_CLASS=null
     depends_on:
       db:
         condition: service_healthy
@@ -189,6 +202,7 @@ services:
       - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
       - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
       - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200}
+      - DATABASE_POOL_CLASS=null
     depends_on:
       db:
         condition: service_healthy
