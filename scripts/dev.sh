@@ -80,6 +80,9 @@ log "Waiting for tunnels..."
 sleep 4
 
 # ── 2. Backend ───────────────────────────────────────────────────────────────
+# Override DATABASE_URL to point at prod DB via SSH tunnel (port 5435)
+export DATABASE_URL="postgresql+asyncpg://qfl_user:Qfl2026SecureProd@127.0.0.1:5435/qfl_db"
+
 log "Starting backend (port 8000) using $PYTHON..."
 prefix_output "backend" "$C_BACKEND" \
   bash -c "cd '$ROOT/backend' && '$PYTHON' -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
