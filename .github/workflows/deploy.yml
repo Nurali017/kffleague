@@ -39,6 +39,12 @@ jobs:
             echo "=== Pulling backend image ==="
             docker pull ghcr.io/nurali017/qfl-backend:latest
 
+            echo "=== Pulling frontend image ==="
+            docker pull ghcr.io/nurali017/qfl-frontend:latest
+
+            echo "=== Pulling admin image ==="
+            docker pull ghcr.io/nurali017/qfl-admin:latest
+
             echo "=== Starting infrastructure ==="
             docker compose -f docker-compose.prod.yml up -d db redis minio
             sleep 5
@@ -72,6 +78,9 @@ jobs:
 
             echo "=== Restarting workers ==="
             docker compose -f docker-compose.prod.yml up -d --no-deps celery_worker celery_beat
+
+            echo "=== Restarting frontend & admin ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps frontend admin
 
             echo "=== Updating nginx ==="
             cp nginx/conf.d/default.conf /home/debian/1sport/qfl-nginx/kffleague.kz.conf
