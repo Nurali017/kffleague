@@ -1,0 +1,38 @@
+name: Optimize Photos (one-time)
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply changes (false = dry run)'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  optimize:
+    name: Run optimization script
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Run optimize_existing_photos.py
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 25m
+          script: |
+            set -e
+            cd /home/debian/qfl
+            FLAG=""
+            if [ "${{ inputs.apply }}" = "true" ]; then
+              FLAG="--apply"
+            fi
+            echo "=== Running photo optimization (apply=${{ inputs.apply }}) ==="
+            docker compose -f docker-compose.prod.yml exec -T backend python -m scripts.optimize_existing_photos $FLAG
+            echo "=== Done ==="
