@@ -50,16 +50,16 @@ jobs:
             sleep 5
 
             echo "=== Running migrations ==="
-            docker compose -f docker-compose.prod.yml run --rm backend alembic upgrade head
+            docker compose -f docker-compose.prod.yml run --rm qfl-backend alembic upgrade head
 
             echo "=== Restarting backend ==="
-            docker compose -f docker-compose.prod.yml up -d --no-deps backend
+            docker compose -f docker-compose.prod.yml up -d --no-deps qfl-backend
 
             echo "=== Waiting for backend health ==="
             set +e
             HEALTHY=false
             for i in $(seq 1 30); do
-              docker compose -f docker-compose.prod.yml exec -T backend \
+              docker compose -f docker-compose.prod.yml exec -T qfl-backend \
                 curl -sf http://localhost:8000/health > /dev/null 2>&1
               if [ $? -eq 0 ]; then
                 echo "Backend healthy after ${i} checks"
@@ -72,7 +72,7 @@ jobs:
             set -e
             if [ "$HEALTHY" = "false" ]; then
               echo "Backend health check failed!"
-              docker compose -f docker-compose.prod.yml logs --tail=20 backend
+              docker compose -f docker-compose.prod.yml logs --tail=20 qfl-backend
               exit 1
             fi
 

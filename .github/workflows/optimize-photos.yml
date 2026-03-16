@@ -1,8 +1,16 @@
-name: Optimize Photos (one-time)
+name: Photo Processing (one-time)
 
 on:
   workflow_dispatch:
     inputs:
+      script:
+        description: 'Script to run'
+        required: true
+        default: 'optimize'
+        type: choice
+        options:
+          - 'optimize'
+          - 'remove-bg'
       apply:
         description: 'Apply changes (false = dry run)'
         required: true
@@ -13,19 +21,19 @@ on:
           - 'true'
 
 jobs:
-  optimize:
-    name: Run optimization script
+  process:
+    name: Run photo processing script
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
 
     steps:
-      - name: Run optimize_existing_photos.py
+      - name: Run selected script
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          command_timeout: 25m
+          command_timeout: 115m
           script: |
             set -e
             cd /home/debian/qfl
@@ -33,6 +41,13 @@ jobs:
             if [ "${{ inputs.apply }}" = "true" ]; then
               FLAG="--apply"
             fi
-            echo "=== Running photo optimization (apply=${{ inputs.apply }}) ==="
-            docker compose -f docker-compose.prod.yml exec -T backend python -m scripts.optimize_existing_photos $FLAG
+
+            if [ "${{ inputs.script }}" = "remove-bg" ]; then
+              SCRIPT="scripts.remove_bg_existing_photos"
+            else
+              SCRIPT="scripts.optimize_existing_photos"
+            fi
+
+            echo "=== Running $SCRIPT (apply=${{ inputs.apply }}) ==="
+            docker compose -f docker-compose.prod.yml exec -T qfl-backend python -m $SCRIPT $FLAG
             echo "=== Done ==="

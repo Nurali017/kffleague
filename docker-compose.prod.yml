@@ -12,6 +12,7 @@ services:
       - API_BASE_URL=http://qfl-backend:8000/api/v1
       - API_REWRITE_DESTINATION=http://qfl-backend:8000
       - NEXT_PUBLIC_CUP_DRAW_ENABLED=${NEXT_PUBLIC_CUP_DRAW_ENABLED:-true}
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
     networks:
       - qfl-network
       - 1sport-network
@@ -42,7 +43,9 @@ services:
       start_period: 40s
 
   # =================== BACKEND (FastAPI + Gunicorn) ===================
-  backend:
+  # Service named 'qfl-backend' (not 'backend') to avoid DNS alias conflict
+  # with onesport-backend's 'backend' alias on shared 1sport_intranet network
+  qfl-backend:
     image: ghcr.io/nurali017/qfl-backend:latest
     container_name: qfl-backend
     environment:
@@ -70,6 +73,8 @@ services:
       - SERPER_API_KEY=${SERPER_API_KEY:-}
       - TICKET_SEARCH_ENABLED=${TICKET_SEARCH_ENABLED:-false}
       - WEATHER_ENABLED=${WEATHER_ENABLED:-true}
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
+      - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
       - DATABASE_POOL_SIZE=5
       - DATABASE_MAX_OVERFLOW=10
     depends_on:
@@ -184,6 +189,8 @@ services:
       - SERPER_API_KEY=${SERPER_API_KEY:-}
       - TICKET_SEARCH_ENABLED=${TICKET_SEARCH_ENABLED:-false}
       - WEATHER_ENABLED=${WEATHER_ENABLED:-true}
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
+      - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
       - DATABASE_POOL_CLASS=null
     depends_on:
       db:
