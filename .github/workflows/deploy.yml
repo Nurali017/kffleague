@@ -46,14 +46,14 @@ jobs:
             docker pull ghcr.io/nurali017/qfl-admin:latest
 
             echo "=== Starting infrastructure ==="
-            docker compose -f docker-compose.prod.yml up -d db redis minio
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans db redis minio
             sleep 5
 
             echo "=== Running migrations ==="
             docker compose -f docker-compose.prod.yml run --rm qfl-backend alembic upgrade head
 
             echo "=== Restarting backend ==="
-            docker compose -f docker-compose.prod.yml up -d --no-deps qfl-backend
+            docker compose -f docker-compose.prod.yml up -d --no-deps --remove-orphans qfl-backend
 
             echo "=== Waiting for backend health ==="
             set +e
