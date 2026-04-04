@@ -77,7 +77,7 @@ jobs:
             fi
 
             echo "=== Restarting workers ==="
-            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate celery_worker celery_beat
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate celery_worker celery_live_worker celery_beat
 
             echo "=== Restarting frontend & admin ==="
             docker compose -f docker-compose.prod.yml up -d --no-deps frontend admin

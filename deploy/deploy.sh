@@ -78,7 +78,7 @@ done
 $COMPOSE up -d frontend
 sleep 10
 
-$COMPOSE up -d celery_worker celery_beat
+$COMPOSE up -d celery_worker celery_live_worker celery_beat
 
 # ---------- Nginx config ----------
 echo "[6/7] Updating nginx config..."

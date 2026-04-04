@@ -218,6 +218,41 @@ services:
       - qfl-network
     restart: unless-stopped
 
+  # =================== CELERY LIVE WORKER (dedicated live queue) ===================
+  celery_live_worker:
+    image: ghcr.io/nurali017/qfl-backend:latest
+    container_name: qfl-celery-live-worker
+    command: celery -A app.tasks worker -l info --concurrency=3 -Q live -Ofair
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://qfl-redis:6379/0
+      - MINIO_ENDPOINT=qfl-minio:9000
+      - MINIO_PUBLIC_ENDPOINT=${SITE_DOMAIN}/storage
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET=${MINIO_BUCKET:-qfl-files}
+      - MINIO_SECURE=false
+      - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
+      - SOTA_ENABLED=${SOTA_ENABLED:-true}
+      - SOTA_API_EMAIL=${SOTA_API_EMAIL:-}
+      - SOTA_API_PASSWORD=${SOTA_API_PASSWORD:-}
+      - SOTA_API_BASE_URL=${SOTA_API_BASE_URL:-https://sota.id/api}
+      - SYNC_SEASON_IDS=${SYNC_SEASON_IDS:-61,85,71,80,84,200,203,204}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
+      - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
+      - DATABASE_POOL_CLASS=null
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - qfl-network
+    restart: unless-stopped
+
   # =================== CELERY BEAT (Scheduler) ===================
   celery_beat:
     image: ghcr.io/nurali017/qfl-backend:latest
