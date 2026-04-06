@@ -57,7 +57,7 @@ cleanup() {
   log "Shutting down staging environment..."
 
   # Kill background processes
-  for pid in "${PIDS[@]}"; do
+  for pid in "${PIDS[@]+"${PIDS[@]}"}"; do
     kill -9 "$pid" 2>/dev/null || true
   done
 
