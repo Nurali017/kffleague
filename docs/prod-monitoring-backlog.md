@@ -1,5 +1,20 @@
 # Production Monitoring Backlog
 
+## P3 — SEO backlog
+
+### Core Web Vitals cleanup for mobile-first SEO
+
+- **Priority:** P3
+- **Reason:** Search Console on `2026-04-12` shows no URL groups in `Good` for Core Web Vitals; mobile issues affect the largest share of search traffic.
+- **Scope:**
+  - Reduce `CLS` on desktop and mobile templates with reserved media dimensions and more stable async UI blocks.
+  - Improve mobile `LCP` with better image delivery, `next/image`, and lighter above-the-fold payloads.
+  - Improve mobile `INP` by deferring hydration for heavy widgets on match center and table surfaces.
+  - Stabilize font rendering and late-loading layout regions that shift after hydration.
+- **Acceptance:**
+  - In the next 28-day GSC Core Web Vitals window, at least part of the affected URL groups returns to `Good`.
+  - `CLS` stops appearing as a shared issue across both mobile and desktop reports.
+
 ## Сессия 3: 2026-03-08, 09:51–11:15 UTC (15:51–17:15 Astana) — 6 snapshot'ов за 1.5 часа
 
 **Контекст:** Матч #889 live (KPL 2026). Вчера задеплоены критические фиксы: `max_connections=200`, SQLAlchemy `pool_size=5/max_overflow=10`, gunicorn workers 4→2, player stats 200. Мониторинг подтверждения фиксов + поиск новых проблем. Также мониторинг самого сервера на предмет ресурсных ограничений.
