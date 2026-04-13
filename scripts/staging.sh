@@ -194,32 +194,8 @@ log "Running alembic migrations on staging DB..."
   "$PYTHON" -m alembic upgrade heads 2>&1 | sed 's/^/  /'
 ) && ok "Migrations applied" || log "⚠ Some migrations failed (may be harmless if already applied)"
 
-# ── Fetch weather for upcoming games (no Celery in staging) ──────────────────
-log "Fetching weather for upcoming games..."
-(
-  cd "$ROOT/backend"
-  DATABASE_URL="postgresql+asyncpg://${STAGING_USER}:${STAGING_PASS}@127.0.0.1:${STAGING_PORT}/${STAGING_DB}?ssl=disable" \
-  "$PYTHON" -c "
-import asyncio
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from app.services.weather import fetch_and_update_weather, _geocode_cache
-import os
-
-eng = create_async_engine(os.environ['DATABASE_URL'])
-Session = sessionmaker(eng, class_=AsyncSession, expire_on_commit=False)
-
-async def run():
-    _geocode_cache.clear()
-    async with Session() as db:
-        result = await fetch_and_update_weather(db)
-        await db.commit()
-        print(result)
-    await eng.dispose()
-
-asyncio.run(run())
-" 2>&1 | sed 's/^/  /'
-) && ok "Weather fetched" || log "⚠ Weather fetch failed (non-fatal)"
+# ── Weather fetch skipped (unreliable on local, not needed for staging) ──────
+log "Skipping weather fetch (not needed for local staging)"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # STEP 5 — Start backend (local DB + prod MinIO via tunnel)
