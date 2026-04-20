@@ -11,6 +11,7 @@ services:
       - NODE_ENV=production
       - API_BASE_URL=http://qfl-backend:8000/api/v1
       - API_REWRITE_DESTINATION=http://qfl-backend:8000
+      - FRONTEND_INTERNAL_URL=http://127.0.0.1:3000
       - NEXT_PUBLIC_CUP_DRAW_ENABLED=${NEXT_PUBLIC_CUP_DRAW_ENABLED:-true}
       - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
     networks:
