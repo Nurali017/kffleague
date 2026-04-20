@@ -72,6 +72,12 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
       - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_POSTS_ENABLED=${TELEGRAM_PUBLIC_POSTS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_CHAT_ID=${TELEGRAM_PUBLIC_CHAT_ID:-}
+      - TELETHON_API_ID=${TELETHON_API_ID:-}
+      - TELETHON_API_HASH=${TELETHON_API_HASH:-}
+      - TELETHON_PHONE=${TELETHON_PHONE:-}
+      - TELETHON_SESSION_PATH=/app/secrets/.telethon_qfl_session
       - FCMS_ENABLED=${FCMS_ENABLED:-false}
       - FCMS_BASE_URL=${FCMS_BASE_URL:-}
       - FCMS_AUTH_URL=${FCMS_AUTH_URL:-}
@@ -86,6 +92,8 @@ services:
       - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
       - DATABASE_POOL_SIZE=5
       - DATABASE_MAX_OVERFLOW=10
+    volumes:
+      - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
       db:
         condition: service_healthy
@@ -202,6 +210,12 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
       - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_POSTS_ENABLED=${TELEGRAM_PUBLIC_POSTS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_CHAT_ID=${TELEGRAM_PUBLIC_CHAT_ID:-}
+      - TELETHON_API_ID=${TELETHON_API_ID:-}
+      - TELETHON_API_HASH=${TELETHON_API_HASH:-}
+      - TELETHON_PHONE=${TELETHON_PHONE:-}
+      - TELETHON_SESSION_PATH=/app/secrets/.telethon_qfl_session
       - FCMS_ENABLED=${FCMS_ENABLED:-false}
       - FCMS_BASE_URL=${FCMS_BASE_URL:-}
       - FCMS_AUTH_URL=${FCMS_AUTH_URL:-}
@@ -218,6 +232,8 @@ services:
       - YOUTUBE_CHANNEL_ID=${YOUTUBE_CHANNEL_ID:-}
       - YOUTUBE_AUTO_LINK_ENABLED=${YOUTUBE_AUTO_LINK_ENABLED:-false}
       - DATABASE_POOL_CLASS=null
+    volumes:
+      - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
       db:
         condition: service_healthy
@@ -253,9 +269,17 @@ services:
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
       - TELEGRAM_NOTIFICATIONS_ENABLED=${TELEGRAM_NOTIFICATIONS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_POSTS_ENABLED=${TELEGRAM_PUBLIC_POSTS_ENABLED:-false}
+      - TELEGRAM_PUBLIC_CHAT_ID=${TELEGRAM_PUBLIC_CHAT_ID:-}
+      - TELETHON_API_ID=${TELETHON_API_ID:-}
+      - TELETHON_API_HASH=${TELETHON_API_HASH:-}
+      - TELETHON_PHONE=${TELETHON_PHONE:-}
+      - TELETHON_SESSION_PATH=/app/secrets/.telethon_qfl_session
       - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
       - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
       - DATABASE_POOL_CLASS=null
+    volumes:
+      - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
       db:
         condition: service_healthy
@@ -274,6 +298,8 @@ services:
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@qfl-db:5432/${POSTGRES_DB}
       - REDIS_URL=redis://qfl-redis:6379/0
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
+      - GOOGLE_DRIVE_ENABLED=${GOOGLE_DRIVE_ENABLED:-true}
+      - GOAL_VIDEO_SYNC_INTERVAL_MINUTES=${GOAL_VIDEO_SYNC_INTERVAL_MINUTES:-2}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - CUP_DRAW_ENABLED=${CUP_DRAW_ENABLED:-true}

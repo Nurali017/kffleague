@@ -20,3 +20,4 @@ qfl-admin/
 node_modules/
 __pycache__/
 *.pyc
+.telethon_qfl_session*

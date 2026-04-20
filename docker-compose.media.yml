@@ -1,0 +1,11 @@
+services:
+  media_worker:
+    image: ${BACKEND_IMAGE:-ghcr.io/nurali017/qfl-backend:latest}
+    container_name: ${MEDIA_WORKER_CONTAINER_NAME:-qfl-media-worker}
+    command: celery -A app.tasks worker -l info --concurrency=1 -Q media -Ofair
+    network_mode: host
+    env_file:
+      - .env.media
+    volumes:
+      - ${MEDIA_SECRETS_DIR:-./secrets-media}:/app/secrets:ro
+    restart: unless-stopped
