@@ -7,5 +7,5 @@ services:
     env_file:
       - .env.media
     volumes:
-      - ${MEDIA_SECRETS_DIR:-./secrets-media}:/app/secrets:ro
+      - ${MEDIA_SECRETS_DIR:-./secrets-media}:/app/secrets
     restart: unless-stopped
