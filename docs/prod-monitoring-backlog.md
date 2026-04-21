@@ -136,10 +136,11 @@
   2. Сбросить статистику: `SELECT pg_stat_reset()` для чистого baseline
   3. Перемониторить rollback ratio после сброса
 
-### 3. [qfl-db] Massive seq scans — отсутствующие индексы
+### 3. [qfl-db] Massive seq scans — отсутствующие индексы — **DONE 2026-04-20** ✓
 
-- **Severity:** CRITICAL (влияет на CPU и IO)
+- **Severity:** ~~CRITICAL~~ (влияет на CPU и IO)
 - **Тренд:** УХУДШЕНИЕ (сессия 2 фиксировала N+1, но не конкретные таблицы)
+- **Фикс:** Индексы добавлены миграциями `b5c6d7e8f9g0_add_missing_indexes.py` (stages, teams, countries, championships), `f1e2d3c4b5a6_add_broadcasters.py` (broadcasters + game_broadcasters), `zx0y1z2a3b4c5_add_broadcaster_id_index.py`, `n2v3w4x5y6z7_add_score_table_team_id_index.py`, `p3q4r5s6t7u8_add_score_table_season_id_index.py`.
 - **Данные (cumulative с последнего restart):**
 
 | Таблица | Seq scans | Idx scans | Проблема |
@@ -209,6 +210,61 @@ root 3339151 Mar06 [mariadb] <defunct>
 
 ---
 
+## Сессия 2026-04-21 — goal-video pipeline incident
+
+**Контекст:** III тур 2-й Лиги. Live-матчи Ордабасы М–Хромтау, Жас Кыран–Талас, Туран М–Хан-Тәңірі М. Семь голов забито, у 6 из 7 `video_url = NULL`, хотя клипы в Google Drive уже были. Текстовые оповещения в Telegram ушли, видеоклипы — нет.
+
+### 8. [goal-video-sync] Cursor advancing past delayed Drive-index entries — **FIXED 2026-04-21 commit `be7adbc`**
+
+- **Severity:** HIGH (блокировал отправку всех видео голов сегодня)
+- **Где:** `qfl-backend/app/services/goal_video_sync_service.py`, задача `sync_goal_videos_task` на очереди `media` (media-host `kff.kz`).
+- **Симптомы:** 18+ итераций подряд `listed=0, matched=0`, хотя в `GOOGLE_DRIVE_GOALS_FOLDER_ID` лежат свежезалитые клипы.
+- **Корень:**
+  - Google Drive индексирует `modifiedTime` с задержкой (секунды–минуты).
+  - Тик каждые 2 мин обновлял Redis-курсор `qfl:goal-videos:last-sync` на `now()` **независимо** от результата.
+  - Файл, попавший в Drive-индекс *после* тика, который бы его увидел, навсегда оказывался за горизонтом (его `modifiedTime` ниже сохранённого pointer'а).
+  - Фильтр `modifiedTime > since` на стороне Drive отсекал его каждую следующую итерацию.
+- **Фикс (`be7adbc`):**
+  - Запрос к Drive идёт с 15-минутным overlap-окном (`_SINCE_OVERLAP_MINUTES`), `_is_processed` держит re-reads идемпотентными.
+  - Pointer двигается только при непустом листинге и только до `max(modifiedTime)` найденных файлов (новая функция `_compute_next_sync_pointer`).
+  - Префильтр по `_is_processed` поднят до резолва папок, чтобы AI folder-matcher не дёргался зря на overlap-повторах.
+  - Юнит-тесты в `tests/services/test_goal_video_sync_service.py` (10/10 passed).
+- **Разблокировка инцидента:** сбросил Redis pointer на 2 часа назад (`SET qfl:goal-videos:last-sync '2026-04-21T08:30:00+00:00'`) — next tick поймал 7 зависших клипов и линковал их один за другим.
+
+### 9. [deploy] Media-host `kff.kz` не в CI/CD workflow — **TODO**
+
+- **Severity:** MEDIUM
+- **Что:** `.github/workflows/deploy.yml` сейчас деплоит только `DEPLOY_HOST` (=`kmff.kz`). Новый backend-образ для `qfl-media-worker` на `kff.kz` надо руками: `ssh root@kff.kz 'cd /root/qfl-media && docker compose --env-file .env.media -f docker-compose.media.yml pull && up -d'`.
+- **Следствие:** после push в main media-host отстаёт. Сегодня фикс `be7adbc` лежит в GHCR, на `kmff.kz` применён, на `kff.kz` — **нет** (ждёт ручного pull).
+- **План:** добавить второй job `deploy-media` в workflow + 3 GitHub Secrets (`DEPLOY_MEDIA_HOST=kff.kz`, `DEPLOY_MEDIA_USER=root`, `DEPLOY_MEDIA_SSH_KEY`).
+
+### 10. [frontend] `POST /api/revalidate → 404` — ISR-кэш страниц матчей не инвалидируется — **TODO**
+
+- **Severity:** MEDIUM (видео доезжает в БД и в Telegram, но на странице матча показывается только после следующего ISR-тика)
+- **Лог из media-worker (повторяется на каждой привязке):**
+  ```
+  HTTP Request: POST https://kffleague.kz/api/revalidate "HTTP/1.1 404 Not Found"
+  WARNING: ISR revalidation failed for game <id>: Client error '404 Not Found'
+  ```
+- **Причина:** маршрут `/api/revalidate` на фронте `qfl-frontend` (Next.js) отсутствует или переименован. `_download_and_link` в `goal_video_sync_service.py` продолжает стучаться по старому URL.
+- **Обход:** `docker restart qfl-frontend` сбрасывает весь ISR-кэш — видео появляются сразу.
+- **План:** найти актуальный revalidation-эндпоинт на фронте и поправить URL/секрет в media-воркере.
+
+### 11. [media-host] Intermittent SSL `record layer failure` to googleapis.com — **MONITOR**
+
+- **Severity:** LOW (retry сохраняет идемпотентность, но растрачивает квоту Drive API)
+- **Дата:** 2026-04-21, во время инцидента несколько download/list упало с `ssl.SSLError: [SSL] record layer failure (_ssl.c:2590)`.
+- **Поведение:** tenacity retry (3 попытки с exponential backoff) чаще всего покрывает. Файл не помечается processed — следующий тик подхватит.
+- **Если станет регулярным:** диагностика сетевого стека kff.kz ↔ `*.googleapis.com` (MTU, DNS, прокси).
+
+### 12. [goal-video-sync] Timing matcher занимает неправильный клип при нескольких близких голах — **LOW**
+
+- **Severity:** LOW (видео корректного матча, может быть клип другого события внутри того же матча)
+- **Пример:** файл `[15-24-42]` (62-я минута Жас Кыран) был привязан к event 16929 (Веремеев 63'), а не 16928 (Бораналиев 62'). В Telegram ушёл правильный матч, но подпись не совпадает с содержимым клипа.
+- **План:** усилить tiebreaker `_optimal_time_match` (использовать имя игрока из имени файла, когда оно есть) или перейти на Hungarian-assignment с окном по минуте.
+
+---
+
 ## P3 — OK (без проблем)
 
 | Container | CPU | RAM | Статус |
@@ -273,10 +329,10 @@ root 3339151 Mar06 [mariadb] <defunct>
 | 2 | ~~Настроить SQLAlchemy pool: `pool_size=5, max_overflow=10`~~ | ~~CRITICAL~~ | ~~Ограничение connections per worker~~ | **DONE** ✓ |
 | 3 | ~~Gunicorn workers 4→2~~ | ~~CRITICAL~~ | ~~Снижение connection pressure~~ | **DONE** ✓ |
 | 4 | ~~Player stats 200: пустой объект вместо 404~~ | ~~HIGH~~ | ~~-9000 404/hr~~ | **DONE** ✓ (404 упали на 99%) |
-| 5 | ISR для match/player pages (revalidate=15-30s) | **CRITICAL** | -0.7 ядра CPU, снижение load avg 7.8→5.3 | TODO |
-| 6 | Индексы: `game_broadcasters`, `stages`, `broadcasters`, `score_table` | **CRITICAL** | Устранение 400K+ seq scans | TODO |
+| 5 | ISR для match/player pages (revalidate=15-30s) | **CRITICAL** | -0.7 ядра CPU, снижение load avg 7.8→5.3 | **PARTIAL 2026-04-20** (matches=30s, player/team=60s) |
+| 6 | ~~Индексы: `game_broadcasters`, `stages`, `broadcasters`, `score_table`~~ | ~~CRITICAL~~ | ~~Устранение 400K+ seq scans~~ | **DONE 2026-04-20** ✓ (alembic `b5c6d7e8f9g0`, `n2v3w4x5y6z7`, `p3q4r5s6t7u8`, `zx0y1z2a3b4c5`, `f1e2d3c4b5a6`) |
 | 7 | Redis кеш для `seasons` (12 строк, 760K scans) | HIGH | Снижение DB нагрузки | TODO |
-| 8 | Fix `players.py:293` — `.first()` вместо `.scalar_one_or_none()` | HIGH | -500 errors на /teammates | TODO |
+| 8 | ~~Fix `players.py:293` — `.first()` вместо `.scalar_one_or_none()`~~ | ~~HIGH~~ | ~~-500 errors на /teammates~~ | **DONE 2026-04-20** ✓ (`backend/app/api/players.py:401`) |
 | 9 | nginx proxy_cache для hot endpoints (table, game info) | HIGH | Снижение backend load | TODO |
 | 10 | Исследовать PG rollback ratio 93% | MEDIUM | Снижение WAL/IO нагрузки | TODO |
 | 11 | Апгрейд сервера до 8 ядер (если ISR недостаточно) | MEDIUM | Запас CPU для роста | TODO |
@@ -414,9 +470,10 @@ FATAL: role "app" does not exist
 
 ## P1 — HIGH
 
-### 4. [qfl-backend] 26,919 ответов 404 за 3 часа (player stats)
+### 4. [qfl-backend] 26,919 ответов 404 за 3 часа (player stats) — **DONE 2026-04-20** ✓
 
-- **Severity:** HIGH
+- **Severity:** ~~HIGH~~ (исправлено)
+- **Фикс:** `backend/app/api/players.py:297-300` — при `stats is None` возвращается `None` (HTTP 200), 404 больше нет.
 - **Тренд:** УХУДШЕНИЕ (было 8,283/hr, теперь ~9,000/hr)
 - **Лог:**
 ```
@@ -433,9 +490,10 @@ GET /api/v1/players/418/stats?season_id=200&lang=ru HTTP/1.1   404
   1. Endpoint `/players/:id/stats` должен возвращать `200` с пустым объектом вместо 404
   2. Frontend: не запрашивать stats если сезон только начался, или кешировать ответ
 
-### 5. [qfl-backend] 500 ошибка на `/players/325/teammates` — продолжается
+### 5. [qfl-backend] 500 ошибка на `/players/325/teammates` — **DONE 2026-04-20** ✓
 
-- **Severity:** HIGH
+- **Severity:** ~~HIGH~~ (исправлено)
+- **Фикс:** `backend/app/api/players.py:401` — `scalars().first()` вместо `.scalar_one_or_none()`.
 - **Тренд:** БЕЗ ИЗМЕНЕНИЙ (ошибка из Сессии 1 не исправлена)
 - **Лог:**
 ```
@@ -557,9 +615,9 @@ Task sync_live_game_events succeeded in 6.68s: {'active_games': 1, 'total_new_ev
 |---|----------|----------|------------------|--------|
 | 1 | Увеличить PG `max_connections` до 200 | CRITICAL | Устранение "too many clients" (1422 FATAL/3h) | TODO |
 | 2 | Настроить SQLAlchemy pool: `pool_size=5, max_overflow=10` | CRITICAL | Ограничение connections per worker | TODO |
-| 3 | Fix `players.py:293` — `.first()` вместо `.scalar_one_or_none()` | HIGH | -500 errors на /teammates | TODO |
-| 4 | Player stats endpoint: 200 + пустой объект вместо 404 | HIGH | -9000 404/hr, снижение нагрузки | TODO |
-| 5 | ISR для match/player pages (revalidate=15-30s) | HIGH | Снижение frontend CPU с 81% до ~15% | TODO |
+| 3 | ~~Fix `players.py:293` — `.first()` вместо `.scalar_one_or_none()`~~ | ~~HIGH~~ | ~~-500 errors на /teammates~~ | **DONE 2026-04-20** ✓ (`backend/app/api/players.py:401`) |
+| 4 | ~~Player stats endpoint: 200 + пустой объект вместо 404~~ | ~~HIGH~~ | ~~-9000 404/hr, снижение нагрузки~~ | **DONE 2026-04-20** ✓ (`backend/app/api/players.py:297-300`) |
+| 5 | ISR для match/player pages (revalidate=15-30s) | HIGH | Снижение frontend CPU с 81% до ~15% | **PARTIAL 2026-04-20** (matches=30s done, player/team=60s) |
 | 6 | Redis кеширование hot endpoints (table, game stats) | HIGH | Снижение backend CPU и DB нагрузки | TODO |
 | 7 | ~~ALTER TABLE game_events ADD COLUMN source~~ | ~~CRITICAL~~ | ~~Было в Сессии 1~~ | DONE (исправлено) |
 | 8 | PgBouncer перед PostgreSQL | MEDIUM | Долгосрочная стабильность connections | TODO |
@@ -586,3 +644,290 @@ Task sync_live_game_events succeeded in 6.68s: {'active_games': 1, 'total_new_ev
 ---
 
 *Следующий мониторинг рекомендуется после внедрения P0 исправлений (max_connections, pool settings).*
+
+---
+
+## Сессия: 2026-04-19, ~15:00 UTC — после восстановления celery_beat
+
+**Контекст:** Live-матч 932 (Тобыл), целый день celery_beat был в рестарт-лупе из-за `ImportError: Missing module "rsa"` (telethon dep). После фикса (smouting rsa+pyasn1 в `/home/debian/qfl/backend/telegram-deps/` + patch `docker-compose.prod.yml` секций celery_worker и celery_beat) SOTA live-sync снова работает. Снимок нагрузки показал несколько долгоиграющих узких мест.
+
+### Snapshot сервера (15:01 UTC)
+
+| Метрика | Значение | Оценка |
+|---|---|---|
+| Load avg 1/5/15 min | **6.46 / 8.07 / 10.40** | ⚠️ высоко (4 vCPU → норма ≤ 4.0) |
+| RAM used | 4.0 / 7.8 GB | OK |
+| Swap used | **1.1 / 4.0 GB** | ⚠️ давление на память |
+| Disk %util | 10.8% | OK |
+| TCP estab | 4 | OK |
+
+Тренд: load падает 10.4 → 8.07 → 6.46, пик прошёл. Вероятно совпал с рестарт-лупом celery_beat + активностью соседнего onesport-backend.
+
+### CPU по контейнерам
+
+| Container | CPU% | RAM | Заметка |
+|---|---|---|---|
+| onesport-backend | **37.9%** | 150 MB | Не наш, соседний проект |
+| qfl-backend | 24.7% | 569 MB | Gunicorn, live-запросы от матча 932 |
+| celery-live-worker | 9.0% | 270 MB | sync матча 932 каждые 15 сек |
+| celery-worker | 8.3% | 727 MB | SOTA season_stats + goal_video_sync |
+| postgres (onesport) | 4.1% | 433 MB | Не наш |
+| qfl-db | 3.8% | 265 MB | OK |
+| celery-beat | 0.3% | 50 MB | Восстановлен, стабилен |
+
+---
+
+### 🔴 P1 — INSERT `player_tour_stats` занимает 11 сек на вызов
+
+```
+calls=19083  avg=11155.2 ms  total=212874.9 sec (~59 часов CPU БД)
+```
+
+**Почему критично:** Каждый INSERT блокирует 11 секунд. При синке туров после матчей эта таблица пишется массово, занимая весь доступный CPU БД. Суммарно занято **59 часов CPU** — больше чем все остальные запросы вместе.
+
+**Диагностика (на прод):**
+```sql
+\d+ player_tour_stats
+SELECT * FROM pg_indexes WHERE tablename='player_tour_stats';
+-- Проверить: триггеры, ON CONFLICT UPDATE на больших индексах, иностранные ключи с каскадом
+EXPLAIN ANALYZE INSERT INTO player_tour_stats (...) VALUES (...);
+```
+
+**Гипотезы:**
+- `ON CONFLICT DO UPDATE` с большим индексом → полный index scan
+- Триггер пересчёта ranks/totals синхронно
+- FK каскад проверка
+
+**Fix:** либо батч INSERT через COPY/executemany, либо вынести ranking-пересчёт в отдельный job, либо упростить ON CONFLICT.
+
+**Файлы:** `backend/app/services/sync/player_stats_sync_service.py` или похожий.
+
+---
+
+### 🔴 P1 — INSERT `player_season_stats` 3.7 сек на вызов
+
+```
+calls=15161  avg=3671.0 ms  total=55655.7 sec (~15.4 часов CPU БД)
+```
+
+Та же проблема масштабом меньше.
+
+---
+
+### 🟡 P2 — UPDATE `player_season_stats SET goal_rank=...` 6.3 сек
+
+```
+calls=3873  avg=6307.7 ms  total=24430 sec (~6.8 часов)
+```
+
+Пересчёт ranks синхронно на каждый goal. Должен быть денормализован или батчевым.
+
+---
+
+### 🟡 P2 — SOTA 404 спам для `season_id=173`
+
+```
+364 SOTA `season_stats` 404 за 10 мин ≈ 0.6 req/sec впустую
+```
+
+`sync_player_season_stats` зовёт несуществующие UUID для старого `season_id=173`. Бесполезная нагрузка на celery-worker + внешнее API + логи.
+
+**Fix:** либо убрать 173 из `SYNC_SEASON_IDS`, либо добавить graceful-skip в `sync_player_season_stats` для 404 (если пустой ответ N раз подряд — помечать сезон как inactive и не синкать).
+
+**Файлы:** `backend/app/tasks/sync_tasks.py`, `.env` → `SYNC_SEASON_IDS`.
+
+---
+
+### 🟡 P2 — SIGSEGV в celery_worker (Worker-2, job 122)
+
+```
+ERROR: Process 'ForkPoolWorker-2' pid:10 exited with 'signal 11 (SIGSEGV)'
+```
+
+Упал после batch SOTA `season_stats` запросов. Скорее всего memory corruption в C-extension (httpx/psycopg2). Celery автоматически рестартанул Worker-2.
+
+**Побочный эффект:** оставил зависшую транзакцию PID 671133 `idle in transaction (aborted)` 10+ сек на `INSERT player_season_stats` → блокирует autovacuum этой таблицы.
+
+**Fix:** 
+1. Сразу — `SELECT pg_terminate_backend(671133)` (или подождать idle timeout)
+2. Долгосрочно — добавить `statement_timeout` в БД-сессии celery_worker, чтобы мёртвые транзакции автокилялись. SQLAlchemy connect_args: `{"options": "-c statement_timeout=30s"}`.
+
+---
+
+### 🟢 P3 — `goal_video_sync_task` крутит 7-8 сек впустую каждые 2 мин
+
+```
+sync_goal_videos_task: listed=0 matched=0 elapsed=7.6s (× 30 раз/час)
+```
+
+Google Drive API зовётся впустую, когда живых матчей нет или видео ещё не выгружены. Не критично, но `GOAL_VIDEO_SYNC_INTERVAL_MINUTES=2` слишком агрессивно.
+
+**Fix:** повысить до 5 мин, либо пропускать если нет матчей в статусе `live`/`finished` за последний час.
+
+---
+
+### ✅ Что работает нормально
+
+- `celery-live-worker` — без ошибок, sync матча 932 за 1.6–3 сек
+- `celery-beat` — после фикса mount'ов rsa/pyasn1 стабилен, тики firing'ают каждые 15 сек
+- Backend gunicorn — только INFO-level socket close, никаких 500
+- Custom emoji + Telethon импорт — работает после ручной установки зависимостей
+
+---
+
+### Долг: telethon deps в image — **DONE 2026-04-20** ✓
+
+**Фикс:** `backend/requirements.txt:45-48` теперь содержит `telethon==1.43.1`, `cryptg==0.5.0`, `rsa==4.9.1`, `pyasn1==0.6.3`. Bind-mount убрать из `docker-compose.prod.yml` при следующем деплое, если ещё не убран.
+
+**Сейчас:** telethon, cryptg, pyaes, rsa, pyasn1 лежат в `/home/debian/qfl/backend/telegram-deps/` на хосте и маунтятся bind-mount'ом в 3 контейнера (qfl-backend, celery_worker, celery_beat). 
+
+**Почему плохо:**
+- Не в git — при пересоздании сервера потеряются
+- При обновлении образа надо помнить про маунты
+- Пустые dirs на хосте = сломанный импорт (как случилось с rsa/pyasn1)
+
+**Fix:** Добавить в `backend/requirements.txt`:
+```
+telethon==1.43.1
+cryptg==0.5.0
+rsa==4.9.1
+pyasn1==0.6.3
+```
+Пересобрать и задеплоить backend image. Убрать bind-mount'ы из `docker-compose.prod.yml`. Оставить только mount session-файла `.telethon_qfl_session.session`.
+
+---
+
+### Action items (в порядке приоритета)
+
+1. ~~[P0] Фикс celery_beat (rsa ImportError)~~ — **DONE** 2026-04-19
+2. [P1] Профилирование INSERT `player_tour_stats` — найти причину 11 сек (EXPLAIN ANALYZE + индексы/триггеры)
+3. ~~[P1] Добавить telethon+cryptg+rsa+pyasn1 в `requirements.txt`, убрать bind-mount'ы~~ — **DONE 2026-04-20** ✓ (`backend/requirements.txt:45-48`; bind-mount убрать из `docker-compose.prod.yml` при следующем деплое)
+4. [P2] Graceful skip SOTA 404 для несуществующих игроков / убрать `season_id=173` из `SYNC_SEASON_IDS`
+5. [P2] `statement_timeout=30s` в celery_worker DB-сессиях (избежать zombie транзакций)
+6. [P2] Убить `pg_terminate_backend(671133)` если висит
+7. [P3] `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5 + skip если нет active games
+
+---
+
+## Сессия: 2026-04-20, ~05:13 UTC — SSR prefetch timeout на `/matches/[id]`
+
+**Контекст:** Пользователь получил в браузере generic `Server Components render` error на `/matches/932`. Frontend-логи показали 193 `SSR prefetch timeout` (digest `1966969364`) за последние 10 минут, 323 за сутки — резкий всплеск именно сейчас.
+
+### Диагностика
+
+| Проверка | Результат |
+|---|---|
+| `/api/v1/games/932` прямой curl из сети контейнеров | **200 за 2–10 ms** |
+| `/api/v1/games/932/lineup` | **200 за 110 ms** |
+| `/api/v1/live/events/932` | **200 за 10 ms** |
+| `node fetch` изнутри `qfl-frontend` → бэкенд | **111 ms** |
+| `curl https://kffleague.kz/ru/matches/929` (SSR) | **3.3–3.8 s** (time_starttransfer 3.37 s) |
+| `safePrefetch`/`fetchDetailOrNotFound` timeout | **3000 ms** (`qfl-website/src/lib/api/server/prefetch.ts:57,85`) |
+| Результат: `safePrefetch` таймаутит → `generateMetadata` возвращает `{}` → отрендеренная страница содержит `og:image = /images/og-default.png` и дефолтный title (подтверждено в HTML) |
+
+**Симптом:** `fetchDetailOrNotFound` в `matches/[id]/page.tsx:21` перевыбрасывает ошибку (не 404) → error.tsx boundary → клиент видит «Server Components render» с digest `1966969364`.
+
+### Корневая причина — разовый скрипт на хосте
+
+```
+PID 2995610: ffmpeg -y -i /tmp/qfl-transcode-b7nljqtn/in.mp4 \
+  -c:v libx264 -preset medium -crf 20 -c:a aac -b:a 128k \
+  -movflags +faststart -threads 2 ...
+PPID 2989487: python /tmp/fix_missing_videos.py
+```
+
+`fix_missing_videos.py` — ручной one-shot для пяти видео (929 Кенесбек/Попов, 931 Милованович/Анане/Медина). Вызывает `app.utils.video_transcode.transcode_mp4` последовательно.
+
+**Нагрузка на хост в момент проблемы:**
+- Load avg 1/5/15: **3.70 / 2.32 / 1.51** (4 vCPU → норма ≤ 4.0)
+- `%Cpu(s)`: 66.7 us, **33.3 wa** — система I/O-bound
+- ffmpeg: **181% CPU**, 2 defunct ffmpeg от прошлых запусков (Apr19, pid 2124106, 2144203)
+- Swap: 921 MB used
+
+**Вывод:** ffmpeg `preset medium` + HDD + `threads 2` забивает диск/CPU → Next.js SSR-рендер `/matches/[id]` тормозит до 3.3+ s (хотя сами fetch'и быстрые — медленный сам React-рендер под нагрузкой). Каждый SSR hit превышает 3000 ms timeout.
+
+### 🟡 P2 — SSR prefetch timeout = 3000 ms слишком жёсткий — **DONE 2026-04-21** ✓
+
+**Риск:** Любой всплеск CPU/IO на сервере (транскод, фоновая задача, burst трафика) мгновенно ломает `/matches/[id]`, `/player/[id]`, `/team/[teamId]` — все страницы на `fetchDetailOrNotFound`/`safePrefetch`.
+
+**Статус:** `qfl-website/src/lib/api/server/prefetch.ts` уже использует `5000 ms`; дополнительной задачи на этот пункт не требуется.
+
+### 🟡 P2 — One-shot скрипты на хосте грузят прод
+
+**Проблема:** `fix_missing_videos.py` запущен напрямую `python /tmp/...` (root), параллельно с прод-нагрузкой, без nice/ionice. Остались 2 defunct ffmpeg от прошлых запусков — значит запускается не впервые.
+
+**Fix:**
+1. Для ad-hoc транскодов использовать `nice -n 19 ionice -c3 python ...` или запускать внутри celery-worker с низким приоритетом.
+2. `-preset veryfast` вместо `medium` (на этом железе разницы в качестве почти нет, скорость ×3–4).
+3. Зачистить `<defunct> ffmpeg` (reparent к init — должны убраться рестартом celery).
+
+### 🟡 P2 — `/og/lineup/[gameId]` сломан: Chromium не установлен в `qfl-frontend` — **DONE 2026-04-20** ✓
+
+**Фикс:** `qfl-website/Dockerfile` переведён на `node:22-bookworm-slim` (строка 38); `npx playwright install chromium` выполняется в билде (строки 66-67). Chromium доступен в образе, маршрут `/og/lineup/[gameId]` снова рендерит PNG.
+
+
+**Симптом:** `docker logs qfl-frontend` полон:
+```
+[og-lineup] attempt 1 failed for https://0.0.0.0:3000/kz/matches/929:
+  browserType.launch: Executable doesn't exist at
+  /ms-playwright/chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+Маршрут `qfl-website/src/app/og/lineup/[gameId]/route.tsx` импортирует `playwright` и вызывает `chromium.launch()`. В образе нет браузеров → 3 ретрая → 502. Telegram-постер из backend, который через этот endpoint получает PNG составов, сейчас не работает.
+
+**Fix:** в Dockerfile `qfl-website` добавить `npx playwright install --with-deps chromium` (или использовать официальный `mcr.microsoft.com/playwright` base).
+
+### Action items (только новые из этой сессии)
+
+1. ~~[P2] Поднять `SSR_PREFETCH_TIMEOUT_MS` (или хардкод) до 5000 ms в `qfl-website/src/lib/api/server/prefetch.ts`~~ — **DONE 2026-04-21** ✓
+2. ~~[P2] Chromium в `qfl-frontend` образе — починить `/og/lineup/[gameId]` для Telegram-постера.~~ — **DONE 2026-04-20** ✓ (`qfl-website/Dockerfile:38,66-67`)
+3. [P2] Регламент для ad-hoc хост-скриптов: `nice`/`ionice` + `-preset veryfast`; в идеале — celery-таска с priority.
+4. [P3] Зачистить defunct ffmpeg (PID 2124106, 2144203 от 19 апреля).
+
+---
+
+## Сессия: 2026-04-20 — ревизия backlog'а
+
+Верификация всех TODO предыдущих сессий против актуального кода.
+
+### Сводка
+
+- **DONE: 6**
+  - teammates fix (`backend/app/api/players.py:401`)
+  - player stats 200 вместо 404 (`backend/app/api/players.py:297-300`)
+  - индексы на `game_broadcasters` / `stages` / `broadcasters` / `score_table` (5 alembic-миграций)
+  - telethon/cryptg/rsa/pyasn1 в `backend/requirements.txt:45-48`
+  - Chromium в `qfl-frontend` образе (`qfl-website/Dockerfile:38,66-67`)
+  - ISR для `matches/[id]` — revalidate=30s (`qfl-website/src/app/[locale]/matches/[id]/layout.tsx:11`)
+
+- **PARTIAL: 2**
+  - ISR для `player/[id]` и `team/[teamId]` — сейчас 60s, требуется 15–30s (`layout.tsx:18` и `layout.tsx:14` соответственно)
+  - SOTA `season_id=173` — сезон уже исключён из `.env.example:25 SYNC_SEASON_IDS`, но per-season 404-skip в `sync_player_season_stats` не реализован (есть только per-player try/except в `backend/app/services/sync/player_sync.py:354-356`)
+
+- **OPEN: 14**
+
+### Открытые пункты в приоритете
+
+**P1 (высокий эффект на прод):**
+- INSERT `player_tour_stats` ~11 сек/вызов — профилирование + оптимизация (EXPLAIN ANALYZE, триггеры, ON CONFLICT)
+- INSERT `player_season_stats` ~3.7 сек/вызов
+- Redis-кеш для `/seasons` (760K seq scans на 12 строк; `backend/app/api/seasons/router.py:115-153`)
+- nginx `proxy_cache` для hot endpoints (table, game info)
+
+**P2:**
+- `SSR_PREFETCH_TIMEOUT_MS` 3000 → 5000 (`qfl-website/src/lib/api/server/prefetch.ts:51,79`)
+- `statement_timeout=30s` в SQLAlchemy `connect_args` (`backend/app/database.py`) — защита от zombie-транзакций после SIGSEGV
+- UPDATE `player_season_stats SET goal_rank` ~6.3 сек — денормализация ranks или батчевый пересчёт
+- PgBouncer перед PostgreSQL
+- PG rollback ratio 93% — диагностика (вероятно AUTOBEGIN без commit)
+- ISR для `player/[id]`, `team/[teamId]`: 60s → 30s
+- Регламент для ad-hoc хост-скриптов (nice/ionice или celery-task)
+- SOTA per-season 404 skip для мёртвых сезонов в `sync_player_season_stats`
+
+**P3:**
+- `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5 (`.env.example:69`) + skip если нет активных матчей
+- Docker log rotation
+- Core Web Vitals cleanup mobile (CLS/LCP/INP)
+- Зачистить defunct ffmpeg PID 2124106, 2144203 (от 2026-04-19)
+- onesport-admin nginx RAM 986 MB–1.35 GB — проверить proxy_cache / worker_connections
+- 3 zombie mariadb процессов (`kffleague-db`) — `docker restart kffleague-db` или `init: true`

@@ -92,8 +92,13 @@ services:
       - WEATHER_ENABLED=${WEATHER_ENABLED:-true}
       - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
       - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
+      - WEB_STATEMENT_TIMEOUT_MS=${WEB_STATEMENT_TIMEOUT_MS:-30000}
       - DATABASE_POOL_SIZE=5
       - DATABASE_MAX_OVERFLOW=10
+      - SOTA_DEAD_SEASON_MIN_404=${SOTA_DEAD_SEASON_MIN_404:-30}
+      - SOTA_DEAD_SEASON_404_RATIO=${SOTA_DEAD_SEASON_404_RATIO:-0.8}
+      - SOTA_DEAD_SEASON_TTL_SECONDS=${SOTA_DEAD_SEASON_TTL_SECONDS:-3600}
+      - DEBUG_SYNC_TIMINGS=${DEBUG_SYNC_TIMINGS:-false}
     volumes:
       - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
@@ -236,6 +241,10 @@ services:
       - YOUTUBE_CHANNEL_ID=${YOUTUBE_CHANNEL_ID:-}
       - YOUTUBE_AUTO_LINK_ENABLED=${YOUTUBE_AUTO_LINK_ENABLED:-false}
       - DATABASE_POOL_CLASS=null
+      - SOTA_DEAD_SEASON_MIN_404=${SOTA_DEAD_SEASON_MIN_404:-30}
+      - SOTA_DEAD_SEASON_404_RATIO=${SOTA_DEAD_SEASON_404_RATIO:-0.8}
+      - SOTA_DEAD_SEASON_TTL_SECONDS=${SOTA_DEAD_SEASON_TTL_SECONDS:-3600}
+      - DEBUG_SYNC_TIMINGS=${DEBUG_SYNC_TIMINGS:-false}
     volumes:
       - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
@@ -284,6 +293,10 @@ services:
       - REVALIDATION_SECRET=${REVALIDATION_SECRET:-}
       - FRONTEND_INTERNAL_URL=http://qfl-frontend:3000
       - DATABASE_POOL_CLASS=null
+      - SOTA_DEAD_SEASON_MIN_404=${SOTA_DEAD_SEASON_MIN_404:-30}
+      - SOTA_DEAD_SEASON_404_RATIO=${SOTA_DEAD_SEASON_404_RATIO:-0.8}
+      - SOTA_DEAD_SEASON_TTL_SECONDS=${SOTA_DEAD_SEASON_TTL_SECONDS:-3600}
+      - DEBUG_SYNC_TIMINGS=${DEBUG_SYNC_TIMINGS:-false}
     volumes:
       - /home/debian/qfl/backend/.telethon_qfl_session.session:/app/secrets/.telethon_qfl_session.session
     depends_on:
@@ -305,7 +318,7 @@ services:
       - REDIS_URL=redis://qfl-redis:6379/0
       - CURRENT_SEASON_ID=${DEFAULT_SEASON_ID:-200}
       - GOOGLE_DRIVE_ENABLED=${GOOGLE_DRIVE_ENABLED:-true}
-      - GOAL_VIDEO_SYNC_INTERVAL_MINUTES=${GOAL_VIDEO_SYNC_INTERVAL_MINUTES:-2}
+      - GOAL_VIDEO_SYNC_INTERVAL_MINUTES=${GOAL_VIDEO_SYNC_INTERVAL_MINUTES:-5}
       - TELEGRAM_PUBLIC_POSTS_ENABLED=${TELEGRAM_PUBLIC_POSTS_ENABLED:-false}
       - TELEGRAM_TOUR_ANNOUNCE_ENABLED=${TELEGRAM_TOUR_ANNOUNCE_ENABLED:-false}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
@@ -325,6 +338,10 @@ services:
       - YOUTUBE_CHANNEL_ID=${YOUTUBE_CHANNEL_ID:-}
       - YOUTUBE_AUTO_LINK_ENABLED=${YOUTUBE_AUTO_LINK_ENABLED:-false}
       - DATABASE_POOL_CLASS=null
+      - SOTA_DEAD_SEASON_MIN_404=${SOTA_DEAD_SEASON_MIN_404:-30}
+      - SOTA_DEAD_SEASON_404_RATIO=${SOTA_DEAD_SEASON_404_RATIO:-0.8}
+      - SOTA_DEAD_SEASON_TTL_SECONDS=${SOTA_DEAD_SEASON_TTL_SECONDS:-3600}
+      - DEBUG_SYNC_TIMINGS=${DEBUG_SYNC_TIMINGS:-false}
     depends_on:
       db:
         condition: service_healthy
