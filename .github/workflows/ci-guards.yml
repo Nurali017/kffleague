@@ -1,0 +1,26 @@
+name: Config Drift Guards
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  guards:
+    name: env-parity + queue-coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check compose env parity
+        run: python3 scripts/check_compose_env_parity.py
+
+      - name: Check celery queue coverage
+        run: python3 scripts/check_celery_queue_coverage.py
