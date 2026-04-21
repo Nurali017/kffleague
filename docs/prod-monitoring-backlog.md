@@ -331,7 +331,7 @@ root 3339151 Mar06 [mariadb] <defunct>
 | 4 | ~~Player stats 200: пустой объект вместо 404~~ | ~~HIGH~~ | ~~-9000 404/hr~~ | **DONE** ✓ (404 упали на 99%) |
 | 5 | ISR для match/player pages (revalidate=15-30s) | **CRITICAL** | -0.7 ядра CPU, снижение load avg 7.8→5.3 | **PARTIAL 2026-04-20** (matches=30s, player/team=60s) |
 | 6 | ~~Индексы: `game_broadcasters`, `stages`, `broadcasters`, `score_table`~~ | ~~CRITICAL~~ | ~~Устранение 400K+ seq scans~~ | **DONE 2026-04-20** ✓ (alembic `b5c6d7e8f9g0`, `n2v3w4x5y6z7`, `p3q4r5s6t7u8`, `zx0y1z2a3b4c5`, `f1e2d3c4b5a6`) |
-| 7 | Redis кеш для `seasons` (12 строк, 760K scans) | HIGH | Снижение DB нагрузки | TODO |
+| 7 | ~~Redis кеш для `seasons` (12 строк, 760K scans)~~ | ~~HIGH~~ | ~~Снижение DB нагрузки~~ | **DONE 2026-04-21** ✓ (in-process TTL 60s + invalidation; `backend/app/api/seasons/router.py:121,181`) |
 | 8 | ~~Fix `players.py:293` — `.first()` вместо `.scalar_one_or_none()`~~ | ~~HIGH~~ | ~~-500 errors на /teammates~~ | **DONE 2026-04-20** ✓ (`backend/app/api/players.py:401`) |
 | 9 | nginx proxy_cache для hot endpoints (table, game info) | HIGH | Снижение backend load | TODO |
 | 10 | Исследовать PG rollback ratio 93% | MEDIUM | Снижение WAL/IO нагрузки | TODO |
@@ -724,7 +724,7 @@ calls=3873  avg=6307.7 ms  total=24430 sec (~6.8 часов)
 
 ---
 
-### 🟡 P2 — SOTA 404 спам для `season_id=173`
+### 🟡 P2 — SOTA 404 спам для `season_id=173` — **DONE 2026-04-21** ✓
 
 ```
 364 SOTA `season_stats` 404 за 10 мин ≈ 0.6 req/sec впустую
@@ -732,13 +732,11 @@ calls=3873  avg=6307.7 ms  total=24430 sec (~6.8 часов)
 
 `sync_player_season_stats` зовёт несуществующие UUID для старого `season_id=173`. Бесполезная нагрузка на celery-worker + внешнее API + логи.
 
-**Fix:** либо убрать 173 из `SYNC_SEASON_IDS`, либо добавить graceful-skip в `sync_player_season_stats` для 404 (если пустой ответ N раз подряд — помечать сезон как inactive и не синкать).
-
-**Файлы:** `backend/app/tasks/sync_tasks.py`, `.env` → `SYNC_SEASON_IDS`.
+**Fix (2026-04-21):** сезон 173 убран из `SYNC_SEASON_IDS` + внедрён общий dead-pair guard по паре `(local_season_id, sota_season_id)` с Redis TTL (`backend/app/services/sync/guardrails.py`, `player_sync.py:198`, `player_tour_stats_sync.py:68`). Триггер — `SOTA_DEAD_SEASON_MIN_404=30`, `_RATIO=0.8`, `_TTL=3600s`. Считает только `httpx.HTTPStatusError == 404` (не 5xx/timeout), требует 0 успешных ответов в прогоне.
 
 ---
 
-### 🟡 P2 — SIGSEGV в celery_worker (Worker-2, job 122)
+### 🟡 P2 — SIGSEGV в celery_worker (Worker-2, job 122) — **PARTIAL 2026-04-21** ⚠️
 
 ```
 ERROR: Process 'ForkPoolWorker-2' pid:10 exited with 'signal 11 (SIGSEGV)'
@@ -748,13 +746,11 @@ ERROR: Process 'ForkPoolWorker-2' pid:10 exited with 'signal 11 (SIGSEGV)'
 
 **Побочный эффект:** оставил зависшую транзакцию PID 671133 `idle in transaction (aborted)` 10+ сек на `INSERT player_season_stats` → блокирует autovacuum этой таблицы.
 
-**Fix:** 
-1. Сразу — `SELECT pg_terminate_backend(671133)` (или подождать idle timeout)
-2. Долгосрочно — добавить `statement_timeout` в БД-сессии celery_worker, чтобы мёртвые транзакции автокилялись. SQLAlchemy connect_args: `{"options": "-c statement_timeout=30s"}`.
+**Fix (2026-04-21, partial):** для web-path внедрён отдельный engine с `statement_timeout=30s` через asyncpg `server_settings` — зависшие HTTP-запросы автокилятся. Celery engine оставлен без timeout'а осознанно, чтобы не убить долгие sync job'ы (`backend/app/database.py:11-43`). Zombie-транзакции в celery всё ещё возможны после SIGSEGV — нужен отдельный scoped timeout на конкретные celery-задачи или мониторинг.
 
 ---
 
-### 🟢 P3 — `goal_video_sync_task` крутит 7-8 сек впустую каждые 2 мин
+### 🟢 P3 — `goal_video_sync_task` крутит 7-8 сек впустую каждые 2 мин — **DONE 2026-04-21** ✓
 
 ```
 sync_goal_videos_task: listed=0 matched=0 elapsed=7.6s (× 30 раз/час)
@@ -762,7 +758,7 @@ sync_goal_videos_task: listed=0 matched=0 elapsed=7.6s (× 30 раз/час)
 
 Google Drive API зовётся впустую, когда живых матчей нет или видео ещё не выгружены. Не критично, но `GOAL_VIDEO_SYNC_INTERVAL_MINUTES=2` слишком агрессивно.
 
-**Fix:** повысить до 5 мин, либо пропускать если нет матчей в статусе `live`/`finished` за последний час.
+**Fix (2026-04-21):** дефолт поднят с 2 до 5 минут во всех точках (`backend/app/config.py:112`, `backend/.env.example`, `backend/docker-compose.yml`, `docker-compose.prod.yml`, `.env.production.example`, `.env.media.example`). Early-return без активных матчей уже был в `goal_video_sync_service.py:549-551`. Задача также перенесена на отдельный media-host `kff.kz`.
 
 ---
 
@@ -800,12 +796,12 @@ pyasn1==0.6.3
 ### Action items (в порядке приоритета)
 
 1. ~~[P0] Фикс celery_beat (rsa ImportError)~~ — **DONE** 2026-04-19
-2. [P1] Профилирование INSERT `player_tour_stats` — найти причину 11 сек (EXPLAIN ANALYZE + индексы/триггеры)
+2. [P1] Профилирование INSERT `player_tour_stats` — инструментарий добавлен (`DEBUG_SYNC_TIMINGS` флаг, 2026-04-21); включить на один прогон → решить batch refactor vs убрать sleep + concurrent fetch
 3. ~~[P1] Добавить telethon+cryptg+rsa+pyasn1 в `requirements.txt`, убрать bind-mount'ы~~ — **DONE 2026-04-20** ✓ (`backend/requirements.txt:45-48`; bind-mount убрать из `docker-compose.prod.yml` при следующем деплое)
-4. [P2] Graceful skip SOTA 404 для несуществующих игроков / убрать `season_id=173` из `SYNC_SEASON_IDS`
-5. [P2] `statement_timeout=30s` в celery_worker DB-сессиях (избежать zombie транзакций)
-6. [P2] Убить `pg_terminate_backend(671133)` если висит
-7. [P3] `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5 + skip если нет active games
+4. ~~[P2] Graceful skip SOTA 404 для несуществующих игроков / убрать `season_id=173`~~ — **DONE 2026-04-21** ✓ (dead-pair guard в `guardrails.py`)
+5. ~~[P2] `statement_timeout=30s` в DB-сессиях~~ — **PARTIAL 2026-04-21** (web-engine only; celery оставлен без timeout'а осознанно)
+6. [P2] Убить `pg_terminate_backend(671133)` если висит — проверить, возможно уже отвалилась
+7. ~~[P3] `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5~~ — **DONE 2026-04-21** ✓
 
 ---
 
@@ -906,28 +902,86 @@ PPID 2989487: python /tmp/fix_missing_videos.py
 
 - **OPEN: 14**
 
+> **Обновление 2026-04-21 (PR1-3 deploy):** часть открытых пунктов закрыта — см. раздел ниже «Сессия: 2026-04-21 — PR1-3 deploy». Актуальная сводка: **DONE: 10, PARTIAL: 3, OPEN: 10**.
+
 ### Открытые пункты в приоритете
 
 **P1 (высокий эффект на прод):**
-- INSERT `player_tour_stats` ~11 сек/вызов — профилирование + оптимизация (EXPLAIN ANALYZE, триггеры, ON CONFLICT)
-- INSERT `player_season_stats` ~3.7 сек/вызов
-- Redis-кеш для `/seasons` (760K seq scans на 12 строк; `backend/app/api/seasons/router.py:115-153`)
+- INSERT `player_tour_stats` ~11 сек/вызов — **инструментарий добавлен 2026-04-21** (`DEBUG_SYNC_TIMINGS`); batch refactor / убрать sleep — следующая волна
+- INSERT `player_season_stats` ~3.7 сек/вызов — то же
+- ~~Redis-кеш для `/seasons`~~ — **DONE 2026-04-21** ✓ (in-process TTL cache, не Redis, но функционально эквивалентно)
 - nginx `proxy_cache` для hot endpoints (table, game info)
 
 **P2:**
-- `SSR_PREFETCH_TIMEOUT_MS` 3000 → 5000 (`qfl-website/src/lib/api/server/prefetch.ts:51,79`)
-- `statement_timeout=30s` в SQLAlchemy `connect_args` (`backend/app/database.py`) — защита от zombie-транзакций после SIGSEGV
-- UPDATE `player_season_stats SET goal_rank` ~6.3 сек — денормализация ranks или батчевый пересчёт
+- ~~`SSR_PREFETCH_TIMEOUT_MS` 3000 → 5000~~ — **DONE** (уже было 5000 в коде)
+- ~~`statement_timeout=30s` в SQLAlchemy `connect_args`~~ — **PARTIAL 2026-04-21** (web-engine only; celery без timeout'а осознанно)
+- UPDATE `player_season_stats SET goal_rank` ~6.3 сек — денормализация ranks или батчевый пересчёт (ждёт ops-проверки перед refactor'ом)
 - PgBouncer перед PostgreSQL
 - PG rollback ratio 93% — диагностика (вероятно AUTOBEGIN без commit)
-- ISR для `player/[id]`, `team/[teamId]`: 60s → 30s
+- ISR для `player/[id]`, `team/[teamId]`: 60s → 30s — **DEFERRED** (не снижает CPU pressure, решим по метрикам)
 - Регламент для ad-hoc хост-скриптов (nice/ionice или celery-task)
-- SOTA per-season 404 skip для мёртвых сезонов в `sync_player_season_stats`
+- ~~SOTA per-season 404 skip для мёртвых сезонов~~ — **DONE 2026-04-21** ✓ (dead-pair guard в `guardrails.py`)
 
 **P3:**
-- `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5 (`.env.example:69`) + skip если нет активных матчей
+- ~~`GOAL_VIDEO_SYNC_INTERVAL_MINUTES` 2 → 5~~ — **DONE 2026-04-21** ✓
 - Docker log rotation
 - Core Web Vitals cleanup mobile (CLS/LCP/INP)
 - Зачистить defunct ffmpeg PID 2124106, 2144203 (от 2026-04-19)
 - onesport-admin nginx RAM 986 MB–1.35 GB — проверить proxy_cache / worker_connections
 - 3 zombie mariadb процессов (`kffleague-db`) — `docker restart kffleague-db` или `init: true`
+
+---
+
+## Сессия: 2026-04-21 — PR1-3 deploy (cache + guardrails + instrumentation)
+
+**Контекст:** реализация первой волны плана оптимизации. Три условных PR объединены в два коммита:
+- backend `e227ad9` (`feat(prod): seasons cache, web statement_timeout, SOTA dead-pair guard`)
+- infra `923a061` (`feat(prod): wire new env vars + baseline doc for PR1-3 deploy`)
+
+### Что задеплоено
+
+**PR 1 — hygiene + read-path relief:**
+- In-process TTL cache (60s) для `GET /api/v1/seasons` и `GET /api/v1/seasons/{id}` + синхронная инвалидация в public `PATCH /sync`, admin `POST` и admin `PATCH` (`backend/app/api/seasons/router.py:121,181`, `backend/app/services/season_api_cache.py`, `backend/app/api/admin/seasons.py:86,117`).
+- Web-only engine с `statement_timeout=30s` через asyncpg `server_settings`; celery engine оставлен без timeout'а (`backend/app/database.py:11-43`).
+- `GOAL_VIDEO_SYNC_INTERVAL_MINUTES` дефолт 2 → 5 во всех точках конфига.
+
+**PR 2 — SOTA failure damping:**
+- Dead-season guard по паре `(local_season_id, sota_season_id)` с Redis TTL (`backend/app/services/sync/guardrails.py`, применён в `player_sync.py:198` и `player_tour_stats_sync.py:68`).
+- Триггер: `SOTA_DEAD_SEASON_MIN_404=30`, `_RATIO=0.8`, `_TTL=3600s`. Только на `httpx.HTTPStatusError == 404`, не на 5xx/timeout.
+- Конфигурируемые env-vars в `docker-compose.prod.yml` (строки 95-101, 244-247, 296-299, 341-344).
+
+**PR 3 — instrumentation before write-path refactor:**
+- Агрегированные timing-метрики под `DEBUG_SYNC_TIMINGS` флагом (default off): `fetch_seconds`, `db_seconds`, `sleep_seconds`, `total_seconds`, `players_processed`, `success_count`, `not_found_count`. Одна log-строка на прогон, без per-player spam.
+- Decision gate для следующей волны: по разбивке времени выбрать batched upsert / убрать sleep / concurrent fetch.
+
+### Верификация после деплоя (2026-04-21 ~13:45 UTC)
+
+- `https://kffleague.kz/api/v1/seasons` cold: TTFB 487 ms → warm (cache hit): TTFB 113 ms (×4 speedup).
+- Все 9 контейнеров Up, 6 healthy, celery-beat/worker/live-worker пересозданы с новым образом и env-vars.
+- Backend healthy через 1 чек после `docker compose restart`.
+
+### Тесты
+- 13 новых: `tests/test_database_config.py` (3), `tests/api/test_seasons_cache.py` (5), `tests/services/test_sync_runtime_guardrails.py` (5). Все зелёные.
+- Ключевой тест: `test_player_season_stats_marks_only_dead_pair_and_keeps_other_pair` — 35 игроков с multi-sota `(173;174)`; пара `(200,173)` помечена dead после 30 × 404, пара `(200,174)` продолжает работать.
+
+### Baseline для измерения эффекта
+Оформлен в `docs/monitoring/baseline-2026-04-21.md`:
+- Как снимать (pg_stat_statements_reset → 30–60 мин окно → delta).
+- Expected deltas: `seasons.seq_scan` падает кратно, `listed=0 matched=0` в ~2.5x, появляется классификация bottleneck для extended stats.
+- Ops-чеклист для `goal_rank` перед рефактором (размер таблицы, lock contention, autovacuum).
+
+### Что осознанно не сделали
+- ISR `player/[id]`, `team/[teamId]`: 60 → 30s — отложено, не снижает capacity pressure.
+- nginx `proxy_cache` — волна 2, после суток наблюдений за in-process cache.
+- Batched upsert для `player_tour_stats` / `player_season_stats` — ждёт данных от `DEBUG_SYNC_TIMINGS`.
+- Denormalization `goal_rank` — ждёт ops-проверки.
+
+### Инцидент при деплое (разрешён)
+Backend и infra pipelines стартовали параллельно → гонка за recreate celery-контейнеров → infra упал с conflict имени `qfl-celery-live-worker` (остался в broken rename-state). Ручная очистка через `docker compose rm -sf celery_live_worker` + rerun infra pipeline (attempt 3, 35s) → успех. **Рекомендация:** в `.github/workflows/deploy.yml` у infra добавить `docker compose rm -sf` или `--remove-orphans` перед `up -d`.
+
+### Action items на следующую сессию
+1. [P1] Включить `DEBUG_SYNC_TIMINGS=true` на один прогон → классифицировать bottleneck `player_tour_stats` / `player_season_stats`.
+2. [P1] Снять delta baseline-метрик (24 ч после деплоя) → подтвердить эффект cache + dead-pair guard.
+3. [P1] По результатам (1): batched upsert или убрать sleep + concurrent fetch.
+4. [P2] nginx `proxy_cache` для `/api/v1/seasons` и `/api/v1/championships` (волна 2 плана).
+5. [P2] Ops-проверка перед `goal_rank` рефактором (чеклист в `baseline-2026-04-21.md`).
