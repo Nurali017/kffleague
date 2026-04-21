@@ -238,6 +238,13 @@ root 3339151 Mar06 [mariadb] <defunct>
 - **Следствие:** после push в main media-host отстаёт. Сегодня фикс `be7adbc` лежит в GHCR, на `kmff.kz` применён, на `kff.kz` — **нет** (ждёт ручного pull).
 - **План:** добавить второй job `deploy-media` в workflow + 3 GitHub Secrets (`DEPLOY_MEDIA_HOST=kff.kz`, `DEPLOY_MEDIA_USER=root`, `DEPLOY_MEDIA_SSH_KEY`).
 
+### 9b. [deploy] `celery_live_worker` не перезапускается в backend deploy workflow — **TODO**
+
+- **Severity:** MEDIUM
+- **Что:** `.github/workflows/deploy.yml` (backend) в секции `=== Restarting workers ===` пересоздаёт только `celery_worker` и `celery_beat`. Сервис `celery_live_worker` (queue `live`, исполняет `fetch_pregame_lineups`, `auto_start_live_games`, `sync_live_game_events`) остаётся на старом образе.
+- **Следствие 2026-04-21:** после деплоя `511a6cb` (`fix(pregame): enqueue telegram post even when SOTA reports 0 new players`) фикс `fetch_pregame_lineups` не был активирован на live-worker'е до ручного `docker compose up -d --no-deps --force-recreate celery_live_worker`. Для фиксов в `live_tasks.py` это критично.
+- **План:** в deploy workflow добавить `celery_live_worker` в список recreate-сервисов — одна строка. Можно сделать вместе с # 9 (media deploy).
+
 ### 10. [frontend] `POST /api/revalidate → 404` — ISR-кэш страниц матчей не инвалидируется — **TODO**
 
 - **Severity:** MEDIUM (видео доезжает в БД и в Telegram, но на странице матча показывается только после следующего ISR-тика)
