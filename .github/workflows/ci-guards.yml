@@ -12,7 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout infra repo
+        uses: actions/checkout@v4
+
+      - name: Checkout backend repo into ./backend
+        uses: actions/checkout@v4
+        with:
+          repository: Nurali017/qfl-backend
+          path: backend
 
       - name: Set up Python
         uses: actions/setup-python@v5
